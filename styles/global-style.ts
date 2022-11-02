@@ -9,6 +9,7 @@ export const GlobalStyle = createGlobalStyle`
     font-size: 20px;
     min-width: 320px;
   }
+
   h1, p {
     margin: 0
   }
