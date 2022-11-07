@@ -65,6 +65,7 @@ const Wrapper = styled.div`
   width: auto;
   height: 100%;
   margin-right: 1rem;
+  filter: drop-shadow(0px 0px 20px rgba(2, 2, 2, 0.7));
 `;
 
 const ImgBox = styled.div`
