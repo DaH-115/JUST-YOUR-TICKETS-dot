@@ -45,7 +45,7 @@ const Wrapper = styled.div`
 const MovieTitle = styled.h1`
   font-size: 2rem;
   color: #fff;
-  padding: 1rem;
+  padding: 1rem 1rem 0 1rem;
 `;
 
 export const getStaticProps: GetStaticProps = async () => {
