@@ -1,16 +1,20 @@
 import { ReactNode } from 'react';
 import styled from 'styled-components';
 
-const BackgroundStyle = ({
-  customMessage,
-  children,
-}: {
-  customMessage: string;
+interface BackgroundStyleProps {
   children: ReactNode;
-}) => {
+  customMessage: string;
+  backgroundColor: string;
+}
+
+const BackgroundStyle = ({
+  children,
+  customMessage,
+  backgroundColor,
+}: BackgroundStyleProps) => {
   return (
-    <Wrapper>
-      <PageTitle>
+    <Wrapper backgroundColor={backgroundColor}>
+      <PageTitle backgroundColor={backgroundColor}>
         <p>JUST</p>
         <CustomMessage>{customMessage}</CustomMessage>
         <p>TICKTES.</p>
@@ -20,18 +24,21 @@ const BackgroundStyle = ({
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ backgroundColor: string }>`
   width: 100%;
-  height: 100%;
-  background-color: ${({ theme }) => theme.colors.black};
-  box-sizing: border-box;
+  height: 100vh;
+  background-color: ${(props) =>
+    props.backgroundColor === 'black'
+      ? props.theme.colors.black
+      : props.theme.colors.yellow};
 `;
 
-const PageTitle = styled.div`
+const PageTitle = styled.div<{ backgroundColor: string }>`
   font-size: 2rem;
   font-weight: 700;
-  color: #fff;
-  border: 1px solid ${({ theme }) => theme.colors.black};
+  line-height: 2rem;
+  color: ${(props) =>
+    props.backgroundColor === 'black' ? '#fff' : props.theme.colors.black};
   margin-bottom: 3rem;
   padding: 1rem;
 `;

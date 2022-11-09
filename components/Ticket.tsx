@@ -37,7 +37,9 @@ const Ticket = ({ ...props }: TicketProps) => {
     <>
       <Wrapper>
         {!props.posterPath ? (
-          <ImgBox />
+          <ImgBox>
+            <NoneImg>IMAGE IS NONE</NoneImg>
+          </ImgBox>
         ) : (
           <ImgBox>
             <Image
@@ -72,6 +74,17 @@ const ImgBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: auto;
+  height: 100%;
+`;
+
+const NoneImg = styled.div`
+  width: 350px;
+  height: 550px;
+  font-weight: 700;
+  color: black;
+  background-color: ${({ theme }) => theme.colors.orange};
+  text-align: center;
 `;
 
 export default Ticket;
