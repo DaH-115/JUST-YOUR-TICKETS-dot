@@ -4,9 +4,14 @@ import { normalize } from 'styled-normalize';
 export const GlobalStyle = createGlobalStyle`
   ${normalize}
 
+* {
+  box-sizing: border-box;
+}
+
   html {
-    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
     font-size: 20px;
+    letter-spacing: -0.03em;
     min-width: 320px;
   }
 
