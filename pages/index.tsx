@@ -26,9 +26,9 @@ const Home: NextPage<{ topTenMovies: popMovie[] }> = ({ topTenMovies }) => {
 };
 
 const MovieTitle = styled.h1`
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: #fff;
-  padding: 1rem 1rem 0 1rem;
+  padding: 0 1rem;
 `;
 
 export const getStaticProps: GetStaticProps<{

@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 import styled from 'styled-components';
+import { AiOutlineArrowRight } from 'react-icons/ai';
 
 import MovieDetail from './MovieDetail';
+import Link from 'next/link';
 
 interface TicketProps {
   id: number;
@@ -15,7 +17,7 @@ interface TicketProps {
 }
 
 const Ticket = ({ ...props }: TicketProps) => {
-  const [gen, setGen] = useState([]);
+  const [janre, setJanre] = useState([]);
   const movieId = props.id;
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const Ticket = ({ ...props }: TicketProps) => {
         (item: { id: number; name: string }) => item.name
       );
 
-      setGen(result);
+      setJanre(result);
     })();
   }, [movieId]);
 
@@ -50,13 +52,29 @@ const Ticket = ({ ...props }: TicketProps) => {
             />
           </ImgBox>
         )}
-        <MovieDetail
-          title={props.title}
-          releaseDate={props.releaseDate}
-          rating={props.voteAverage}
-          desc={props.overview}
-          janre={gen}
-        />
+        <MovieDetailWrapper>
+          <MovieDetail
+            title={props.title}
+            releaseDate={props.releaseDate}
+            rating={props.voteAverage}
+            desc={props.overview}
+            janre={janre}
+          />
+          <Link
+            href={{
+              pathname: '/write',
+              query: { title: props.title, releaseDate: props.releaseDate },
+            }}
+            as={`/write`}
+          >
+            <ButtonWrapper>
+              <button>ADMIT ONE</button>
+              <ArrowBtn>
+                <AiOutlineArrowRight />
+              </ArrowBtn>
+            </ButtonWrapper>
+          </Link>
+        </MovieDetailWrapper>
       </Wrapper>
     </>
   );
@@ -67,7 +85,7 @@ const Wrapper = styled.div`
   width: auto;
   height: 100%;
   margin-right: 1rem;
-  filter: drop-shadow(0px 0px 20px rgba(2, 2, 2, 0.7));
+  filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.1));
 `;
 
 const ImgBox = styled.div`
@@ -85,6 +103,46 @@ const NoneImg = styled.div`
   color: black;
   background-color: ${({ theme }) => theme.colors.orange};
   text-align: center;
+`;
+
+const MovieDetailWrapper = styled.div`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 10rem;
+  color: ${({ theme }) => theme.colors.black};
+  filter: drop-shadow(0px 0px 40px rgba(50, 50, 50, 0.9));
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 5rem;
+  height: 100%;
+  background-color: #fff;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-color: ${({ theme }) => theme.colors.orange};
+  border-top-left-radius: 1rem;
+  border-end-start-radius: 1rem;
+
+  button {
+    padding-bottom: 8px;
+    border-bottom: 2px solid #fff;
+    font-weight: 700;
+  }
+`;
+
+const ArrowBtn = styled.div`
+  width: 2rem;
+  height: 2rem;
+  text-align: center;
+  margin-top: 8px;
 `;
 
 export default Ticket;

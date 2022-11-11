@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { AiOutlineArrowRight } from 'react-icons/ai';
 
 interface MovieDetailProps {
   rating: number;
@@ -10,45 +9,25 @@ interface MovieDetailProps {
 }
 
 const MovieDetail = ({ ...props }: MovieDetailProps) => {
-  const date = props.releaseDate.slice(0, 4);
+  const releaseYear = props.releaseDate.slice(0, 4);
 
   return (
-    <Wrapper>
-      <TextWrapper>
-        <MovieTitle>
-          <h1>
-            {props.title} ({date})
-          </h1>
-        </MovieTitle>
-        <p>*{props.rating} /10</p>
-        <MovieJanreWrapper>
-          {props.janre.map((item, i) => (
-            <p key={i}>{item}</p>
-          ))}
-        </MovieJanreWrapper>
-        <span>Just Your Tickets.</span>
-      </TextWrapper>
-      <ButtonWrapper>
-        <button>ADMIT ONE</button>
-        <ArrowBtn>
-          <AiOutlineArrowRight />
-        </ArrowBtn>
-      </ButtonWrapper>
-    </Wrapper>
+    <TextWrapper>
+      <MovieTitle>
+        <h1>
+          {props.title} ({releaseYear})
+        </h1>
+      </MovieTitle>
+      <p>*{props.rating} /10</p>
+      <MovieJanreWrapper>
+        {props.janre.map((item, i) => (
+          <p key={i}>{item}</p>
+        ))}
+      </MovieJanreWrapper>
+      <span>Just Your Tickets.</span>
+    </TextWrapper>
   );
 };
-
-const Wrapper = styled.div`
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 10rem;
-  color: ${({ theme }) => theme.colors.black};
-  filter: drop-shadow(0px 0px 20px rgba(50, 50, 50, 0.3));
-`;
 
 const TextWrapper = styled.div`
   width: 100%;
@@ -65,7 +44,7 @@ const TextWrapper = styled.div`
     left: 0.5rem;
     font-size: 0.8rem;
     font-weight: 700;
-    color: ${({ theme }) => theme.colors.greay};
+    color: ${({ theme }) => theme.colors.gray};
   }
 
   /* &:hover {
@@ -96,34 +75,6 @@ const MovieJanreWrapper = styled.div`
   p {
     margin-right: 8px;
   }
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 5rem;
-  height: 100%;
-  background-color: #fff;
-  padding: 1rem;
-  box-sizing: border-box;
-  background-color: ${({ theme }) => theme.colors.orange};
-  border-top-left-radius: 1rem;
-  border-end-start-radius: 1rem;
-
-  button {
-    padding-bottom: 8px;
-    border-bottom: 2px solid #fff;
-    font-weight: 700;
-  }
-`;
-
-const ArrowBtn = styled.div`
-  width: 2rem;
-  height: 2rem;
-  text-align: center;
-  margin-top: 8px;
 `;
 
 export default MovieDetail;
