@@ -5,6 +5,15 @@ const nextConfig = {
   images: {
     domains: ['image.tmdb.org'],
   },
+  async redirects() {
+    return [
+      {
+        source: '/write',
+        destination: '/search',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
