@@ -8,10 +8,11 @@ export const GlobalStyle = createGlobalStyle`
   box-sizing: border-box;
 }
 
-  html {
+html {
     font-family: 'Montserrat', sans-serif;
     font-size: 20px;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.06em;
+    color: #141414;
     min-width: 320px;
   }
 

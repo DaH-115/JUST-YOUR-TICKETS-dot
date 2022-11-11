@@ -9,7 +9,7 @@ import BackgroundStyle from '../../components/BackgroundStyle';
 import { SearchIcon } from '../../components/Header';
 import TicketList from '../../components/TicketList';
 
-const Search: NextPage = () => {
+const SearchPage: NextPage = () => {
   const [movieName, setMovieName] = useState('');
   const [searchResults, setSearchResults] = useState<popMovie[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -73,6 +73,7 @@ const FormWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 `;
 
 const StyledLabel = styled.label`
@@ -99,18 +100,18 @@ const StyledInput = styled.input`
 
   &::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${({ theme }) => theme.colors.greay};
+    color: ${({ theme }) => theme.colors.gray};
     opacity: 1; /* Firefox */
   }
 
   &::-ms-input-placeholder {
     /* Internet Explorer 10-11 */
-    color: ${({ theme }) => theme.colors.greay};
+    color: ${({ theme }) => theme.colors.gray};
   }
 
   &::-ms-input-placeholder {
     /* Microsoft Edge */
-    color: ${({ theme }) => theme.colors.greay};
+    color: ${({ theme }) => theme.colors.gray};
   }
 
   &:focus {
@@ -125,7 +126,7 @@ const InputSearchIcon = styled(SearchIcon)`
   top: 2rem;
   left: 0.2rem;
   background-color: inherit;
-  color: ${({ theme }) => theme.colors.greay};
+  color: ${({ theme }) => theme.colors.gray};
 `;
 
-export default Search;
+export default SearchPage;

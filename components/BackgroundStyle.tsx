@@ -39,7 +39,7 @@ const PageTitle = styled.div<{ backgroundColor: string }>`
   line-height: 2rem;
   color: ${(props) =>
     props.backgroundColor === 'black' ? '#fff' : props.theme.colors.black};
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   padding: 1rem;
 `;
 
