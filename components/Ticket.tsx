@@ -63,7 +63,11 @@ const Ticket = ({ ...props }: TicketProps) => {
           <Link
             href={{
               pathname: '/write',
-              query: { title: props.title, releaseDate: props.releaseDate },
+              query: {
+                title: props.title,
+                releaseDate: props.releaseDate,
+                posterImage: `https://image.tmdb.org/t/p/w500/${props.posterPath}`,
+              },
             }}
             as={`/write`}
           >

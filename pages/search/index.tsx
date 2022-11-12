@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -12,7 +12,6 @@ import TicketList from '../../components/TicketList';
 const SearchPage: NextPage = () => {
   const [movieName, setMovieName] = useState('');
   const [searchResults, setSearchResults] = useState<popMovie[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const getSearchResults = async (movieName: string) => {
     const res = await axios.get(
@@ -47,7 +46,6 @@ const SearchPage: NextPage = () => {
             value={movieName}
             onChange={inputChangeHandler}
             placeholder='Search Your Ticket.'
-            ref={inputRef}
           />
         </StyledForm>
       </FormWrapper>

@@ -1,13 +1,59 @@
+import { useRef } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import { collection, addDoc, getDocs, query } from 'firebase/firestore';
+import { db } from '../../firebase/firebase';
 
 import BackgroundStyle from '../../components/BackgroundStyle';
 
 const WritePage: NextPage = () => {
-  const { query } = useRouter();
-  const releaseYear = query.releaseDate!.slice(0, 4);
+  const { query: routerQuery } = useRouter();
+  const releaseYear = routerQuery.releaseDate!.slice(0, 4);
   const today = new Date().toLocaleDateString();
+  const ratingRef = useRef<HTMLInputElement>(null);
+  const reviewRef = useRef<HTMLTextAreaElement>(null);
+
+  const addContents = async (rating: string, reviewText: string) => {
+    try {
+      await addDoc(collection(db, 'users-tickets'), {
+        date: new Date(),
+        title: routerQuery.title,
+        releaseYear,
+        rating,
+        reviewText,
+        posterImage: routerQuery.posterImage,
+      });
+
+      console.log('Add contents complete!');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getContents = async () => {
+    const contentQuery = query(collection(db, 'users-tickets'));
+
+    try {
+      const dbContents = await getDocs(contentQuery);
+      console.log('Get contents complete!');
+
+      dbContents.forEach((item) => {
+        const usersTicket = item.data();
+        console.log(usersTicket.reviewText);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const ratingText = ratingRef.current!.value;
+    const reviewText = reviewRef.current!.value;
+
+    addContents(ratingText, reviewText);
+  };
 
   return (
     <BackgroundStyle customMessage='write✒️' backgroundColor='yellow'>
@@ -15,27 +61,28 @@ const WritePage: NextPage = () => {
         <MovieDetailWrapper>
           <p>{today}</p>
           <MovieTitle>
-            <p>* Movie Title /제목</p>"{query.title}"({releaseYear})
+            <p>* Movie Title /제목</p>"{routerQuery.title}"({releaseYear})
           </MovieTitle>
         </MovieDetailWrapper>
         <FormWrapper>
-          <StyledForm>
+          <StyledForm onSubmit={onSubmitHandler}>
             <InputWrapper>
               <StyledLabel htmlFor='rating'>* Rating /점수</StyledLabel>
               <StyledDesc>얼마나 좋았나요?</StyledDesc>
               <RatingInputWrapper>
-                <StyledInput id='rating' />
+                <StyledInput name='rating' id='rating' ref={ratingRef} />
                 <p> /10</p>
               </RatingInputWrapper>
             </InputWrapper>
             <InputWrapper>
               <StyledLabel htmlFor='review'>* Review /리뷰</StyledLabel>
               <StyledDesc>당신의 생각과 느낌을 적어보세요.</StyledDesc>
-              <StyledTextarea id='review' />
+              <StyledTextarea name='reviewText' id='review' ref={reviewRef} />
             </InputWrapper>
+            <StyledButton>Submit</StyledButton>
           </StyledForm>
         </FormWrapper>
-        <StyledButton>Submit</StyledButton>
+        <StyledButton onClick={getContents}>DB 확인</StyledButton>
       </WriteForm>
     </BackgroundStyle>
   );
