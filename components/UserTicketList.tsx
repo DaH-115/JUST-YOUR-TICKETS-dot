@@ -9,9 +9,11 @@ const UserTicketList = ({ movies }: { movies: usersTicketProps[] }) => {
     <>
       <UserTicketTitle>나의 감상티켓</UserTicketTitle>
       <Wrapper>
-        {movies.map((item: usersTicketProps) => (
+        {movies.map((item: usersTicketProps, index) => (
           <Ticket
             key={item.id}
+            movieIndex={index + 1}
+            writeDate={item.createdAt}
             title={item.title}
             voteAverage={item.rating}
             releaseDate={item.releaseYear}

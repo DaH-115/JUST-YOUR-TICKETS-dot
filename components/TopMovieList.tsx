@@ -8,7 +8,7 @@ const TopMovieList = ({ movies }: { movies: popMovie[] }) => {
     <SlideWrapper>
       <MovieTitle>인기 영화 10</MovieTitle>
       <Wrapper>
-        {movies.map((item: popMovie) => (
+        {movies.map((item: popMovie, index) => (
           <Ticket
             key={item.id}
             movieId={item.id}
@@ -16,6 +16,7 @@ const TopMovieList = ({ movies }: { movies: popMovie[] }) => {
             voteAverage={item.vote_average}
             releaseDate={item.release_date}
             posterPath={item.poster_path}
+            movieIndex={index + 1}
           />
         ))}
       </Wrapper>

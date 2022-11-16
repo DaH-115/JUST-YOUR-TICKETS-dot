@@ -6,9 +6,12 @@ import { AiOutlineArrowRight } from 'react-icons/ai';
 
 import MovieDetail from './MovieDetail';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface TicketProps {
   movieId?: number;
+  movieIndex: number;
+  writeDate?: number;
   reviewText?: string;
   voteAverage: number | string;
   title: string;
@@ -17,10 +20,11 @@ interface TicketProps {
 }
 
 const Ticket = (props: TicketProps) => {
+  const router = useRouter();
   const [janre, setJanre] = useState([]);
   const movieId = props.movieId;
   const releaseYear = props.releaseDate.slice(0, 4);
-  const admitBtnState = Boolean(props.reviewText);
+  const writeDate = new Date(props.writeDate!).toLocaleDateString();
 
   useEffect(() => {
     if (movieId) {
@@ -48,8 +52,12 @@ const Ticket = (props: TicketProps) => {
           </ImgBox>
         ) : (
           <ImgBox>
+            <MovieIndex routePath={router.pathname}>
+              {router.pathname === '/'
+                ? `${props.movieIndex}.`
+                : `No.${props.movieIndex} /${writeDate}`}
+            </MovieIndex>
             <Image
-              className='Fuck'
               src={`https://image.tmdb.org/t/p/w500/${props.posterPath}`}
               alt={props.title}
               width={360}
@@ -65,7 +73,7 @@ const Ticket = (props: TicketProps) => {
             reviewText={props.reviewText}
             janre={janre}
           />
-          {!admitBtnState && (
+          {!props.reviewText && (
             <Link
               href={{
                 pathname: '/write',
@@ -91,13 +99,30 @@ const Ticket = (props: TicketProps) => {
   );
 };
 
+const MovieIndex = styled.div<{ routePath: string }>`
+  position: absolute;
+  top: 1.8rem;
+  left: 1rem;
+  width: 100%;
+  height: 2.3rem;
+  color: #fff;
+  font-size: ${({ routePath }) => (routePath === '/' ? '2.5rem' : '1rem')};
+  font-weight: 700;
+  padding-top: 0.8rem;
+  padding-left: 1rem;
+  background: linear-gradient(90deg, black, transparent);
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+`;
+
 const TicketWrapper = styled.div`
+  width: 360px;
   padding-top: 1.8rem;
   padding-bottom: 2rem;
   padding-left: 1rem;
 
   &:last-child {
-    padding-right: 1rem;
+    margin-right: 1rem;
   }
 
   filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.1));
@@ -107,19 +132,18 @@ const ImgBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: auto;
-  height: auto;
   overflow: hidden;
   border-radius: 1.5rem;
 
   Img {
+    /* width: 100%; */
     border-radius: 1.5rem;
   }
 
   &:hover,
   &:active {
     Img {
-      scale: 110%;
+      scale: 120%;
       transition: scale ease-in 150ms;
     }
   }

@@ -12,6 +12,7 @@ export interface usersTicketProps {
   rating: string;
   reviewText: string;
   posterImage: string;
+  createdAt: number;
 }
 
 const TicketListPage: NextPage<{ usersTicket: usersTicketProps[] }> = ({
