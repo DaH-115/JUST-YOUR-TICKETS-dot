@@ -8,36 +8,40 @@ import MovieDetail from './MovieDetail';
 import Link from 'next/link';
 
 interface TicketProps {
-  id: number;
-  voteAverage: number;
+  movieId?: number;
+  reviewText?: string;
+  voteAverage: number | string;
   title: string;
-  overview: string;
   releaseDate: string;
   posterPath: string | null;
 }
 
-const Ticket = ({ ...props }: TicketProps) => {
+const Ticket = (props: TicketProps) => {
   const [janre, setJanre] = useState([]);
-  const movieId = props.id;
+  const movieId = props.movieId;
+  const releaseYear = props.releaseDate.slice(0, 4);
+  const admitBtnState = Boolean(props.reviewText);
 
   useEffect(() => {
-    (async () => {
-      const res = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
-      );
-      const data = await res.data;
+    if (movieId) {
+      (async () => {
+        const res = await axios.get(
+          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
+        );
+        const data = await res.data;
 
-      const result = data.genres.map(
-        (item: { id: number; name: string }) => item.name
-      );
+        const result = data.genres.map(
+          (item: { id: number; name: string }) => item.name
+        );
 
-      setJanre(result);
-    })();
+        setJanre(result);
+      })();
+    }
   }, [movieId]);
 
   return (
     <>
-      <Wrapper>
+      <TicketWrapper>
         {!props.posterPath ? (
           <ImgBox>
             <NoneImg>IMAGE IS NONE</NoneImg>
@@ -45,50 +49,57 @@ const Ticket = ({ ...props }: TicketProps) => {
         ) : (
           <ImgBox>
             <Image
+              className='Fuck'
               src={`https://image.tmdb.org/t/p/w500/${props.posterPath}`}
               alt={props.title}
-              width={350}
-              height={550}
+              width={360}
+              height={560}
             />
           </ImgBox>
         )}
         <MovieDetailWrapper>
           <MovieDetail
             title={props.title}
-            releaseDate={props.releaseDate}
+            releaseYear={releaseYear}
             rating={props.voteAverage}
-            desc={props.overview}
+            reviewText={props.reviewText}
             janre={janre}
           />
-          <Link
-            href={{
-              pathname: '/write',
-              query: {
-                title: props.title,
-                releaseDate: props.releaseDate,
-                posterImage: `https://image.tmdb.org/t/p/w500/${props.posterPath}`,
-              },
-            }}
-            as={`/write`}
-          >
-            <ButtonWrapper>
-              <button>ADMIT ONE</button>
-              <ArrowBtn>
-                <AiOutlineArrowRight />
-              </ArrowBtn>
-            </ButtonWrapper>
-          </Link>
+          {!admitBtnState && (
+            <Link
+              href={{
+                pathname: '/write',
+                query: {
+                  title: props.title,
+                  releaseDate: props.releaseDate,
+                  posterImage: `https://image.tmdb.org/t/p/w500/${props.posterPath}`,
+                },
+              }}
+              as={`/write`}
+            >
+              <AdmitButtonWrapper>
+                <button>Admit ONE</button>
+                <ArrowBtn>
+                  <AiOutlineArrowRight />
+                </ArrowBtn>
+              </AdmitButtonWrapper>
+            </Link>
+          )}
         </MovieDetailWrapper>
-      </Wrapper>
+      </TicketWrapper>
     </>
   );
 };
 
-const Wrapper = styled.div`
-  position: relative;
-  width: auto;
-  height: 100%;
-  margin-right: 1rem;
+const TicketWrapper = styled.div`
+  padding-top: 1.8rem;
+  padding-bottom: 2rem;
+  padding-left: 1rem;
+
+  &:last-child {
+    padding-right: 1rem;
+  }
+
   filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.1));
 `;
 
@@ -97,12 +108,26 @@ const ImgBox = styled.div`
   justify-content: center;
   align-items: center;
   width: auto;
-  height: 100%;
+  height: auto;
+  overflow: hidden;
+  border-radius: 1.5rem;
+
+  Img {
+    border-radius: 1.5rem;
+  }
+
+  &:hover,
+  &:active {
+    Img {
+      scale: 110%;
+      transition: scale ease-in 150ms;
+    }
+  }
 `;
 
 const NoneImg = styled.div`
-  width: 350px;
-  height: 550px;
+  width: 360px;
+  height: 560px;
   font-weight: 700;
   color: black;
   background-color: ${({ theme }) => theme.colors.orange};
@@ -110,18 +135,17 @@ const NoneImg = styled.div`
 `;
 
 const MovieDetailWrapper = styled.div`
-  position: absolute;
+  position: relative;
+  bottom: 1.6rem;
   left: 0;
-  bottom: 0;
   display: flex;
-  justify-content: space-between;
   width: 100%;
   height: 10rem;
   color: ${({ theme }) => theme.colors.black};
   filter: drop-shadow(0px 0px 40px rgba(50, 50, 50, 0.9));
 `;
 
-const ButtonWrapper = styled.div`
+const AdmitButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -133,7 +157,7 @@ const ButtonWrapper = styled.div`
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.colors.orange};
   border-top-left-radius: 1rem;
-  border-end-start-radius: 1rem;
+  border-bottom-right-radius: 1.5rem;
 
   button {
     padding-bottom: 8px;

@@ -7,7 +7,7 @@ import { popMovie } from '..';
 
 import BackgroundStyle from '../../components/BackgroundStyle';
 import { SearchIcon } from '../../components/Header';
-import TicketList from '../../components/TicketList';
+import SearchTicketList from '../../components/SearchTicketList';
 
 const SearchPage: NextPage = () => {
   const [movieName, setMovieName] = useState('');
@@ -51,13 +51,15 @@ const SearchPage: NextPage = () => {
       </FormWrapper>
       <SearchWrapper>
         <h1>Results.</h1>
-        <TicketList movies={searchResults} />
+        {searchResults && <SearchTicketList movies={searchResults} />}
       </SearchWrapper>
     </BackgroundStyle>
   );
 };
 
 const SearchWrapper = styled.div`
+  width: 100%;
+  height: 100vh;
   background-color: ${({ theme }) => theme.colors.black};
   color: #fff;
 

@@ -1,9 +1,8 @@
 import { GetStaticProps, NextPage } from 'next';
 import axios from 'axios';
-import styled from 'styled-components';
 
 import BackgroundStyle from '../components/BackgroundStyle';
-import TicketList from '../components/TicketList';
+import TopMovieList from '../components/TopMovieList';
 
 export interface popMovie {
   id: number;
@@ -18,18 +17,11 @@ const Home: NextPage<{ topTenMovies: popMovie[] }> = ({ topTenMovies }) => {
   return (
     <div>
       <BackgroundStyle customMessage='your💭' backgroundColor='black'>
-        <MovieTitle>인기 영화 10</MovieTitle>
-        <TicketList movies={topTenMovies} />
+        <TopMovieList movies={topTenMovies} />
       </BackgroundStyle>
     </div>
   );
 };
-
-const MovieTitle = styled.h1`
-  font-size: 1.8rem;
-  color: #fff;
-  padding: 0 1rem;
-`;
 
 export const getStaticProps: GetStaticProps<{
   topTenMovies: popMovie[];

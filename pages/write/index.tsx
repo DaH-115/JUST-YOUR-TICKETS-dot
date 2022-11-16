@@ -2,12 +2,13 @@ import { useRef } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import { collection, addDoc, getDocs, query } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 
 import BackgroundStyle from '../../components/BackgroundStyle';
 
 const WritePage: NextPage = () => {
+  const router = useRouter();
   const { query: routerQuery } = useRouter();
   const releaseYear = routerQuery.releaseDate!.slice(0, 4);
   const today = new Date().toLocaleDateString();
@@ -17,7 +18,7 @@ const WritePage: NextPage = () => {
   const addContents = async (rating: string, reviewText: string) => {
     try {
       await addDoc(collection(db, 'users-tickets'), {
-        date: new Date(),
+        createdAt: Date.now(),
         title: routerQuery.title,
         releaseYear,
         rating,
@@ -31,28 +32,13 @@ const WritePage: NextPage = () => {
     }
   };
 
-  const getContents = async () => {
-    const contentQuery = query(collection(db, 'users-tickets'));
-
-    try {
-      const dbContents = await getDocs(contentQuery);
-      console.log('Get contents complete!');
-
-      dbContents.forEach((item) => {
-        const usersTicket = item.data();
-        console.log(usersTicket.reviewText);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const ratingText = ratingRef.current!.value;
     const reviewText = reviewRef.current!.value;
 
     addContents(ratingText, reviewText);
+    router.push('/ticket-list');
   };
 
   return (
@@ -82,7 +68,6 @@ const WritePage: NextPage = () => {
             <StyledButton>Submit</StyledButton>
           </StyledForm>
         </FormWrapper>
-        <StyledButton onClick={getContents}>DB 확인</StyledButton>
       </WriteForm>
     </BackgroundStyle>
   );

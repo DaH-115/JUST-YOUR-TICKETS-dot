@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { ReactNode } from 'react';
 import styled from 'styled-components';
 
@@ -14,11 +15,13 @@ const BackgroundStyle = ({
 }: BackgroundStyleProps) => {
   return (
     <Wrapper backgroundColor={backgroundColor}>
-      <PageTitle backgroundColor={backgroundColor}>
-        <p>JUST</p>
-        <CustomMessage>{customMessage}</CustomMessage>
-        <p>TICKTES.</p>
-      </PageTitle>
+      <Link href='/'>
+        <PageTitle backgroundColor={backgroundColor}>
+          <p>JUST</p>
+          <CustomMessage>{customMessage}</CustomMessage>
+          <p>TICKTES.</p>
+        </PageTitle>
+      </Link>
       {children}
     </Wrapper>
   );
@@ -26,7 +29,7 @@ const BackgroundStyle = ({
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: ${(props) =>
     props.backgroundColor === 'black'
       ? props.theme.colors.black
@@ -39,8 +42,8 @@ const PageTitle = styled.div<{ backgroundColor: string }>`
   line-height: 2rem;
   color: ${(props) =>
     props.backgroundColor === 'black' ? '#fff' : props.theme.colors.black};
-  margin-bottom: 1rem;
   padding: 1rem;
+  padding-bottom: 3rem;
 `;
 
 const CustomMessage = styled.div`
