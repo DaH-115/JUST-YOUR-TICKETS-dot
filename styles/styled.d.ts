@@ -8,5 +8,8 @@ declare module 'styled-components' {
       orange: string;
       yellow: string;
     };
+    scrollbarStyle: {
+      scrollbarReset: string;
+    };
   }
 }

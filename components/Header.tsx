@@ -20,10 +20,10 @@ export const SearchIcon = styled.div<{ path?: string }>`
   top: 1rem;
   right: 1rem;
   z-index: 999;
-  width: 2rem;
-  height: 2rem;
+  width: 3rem;
+  height: 3rem;
   padding: 0.5rem;
-  font-size: 1.2rem;
+  font-size: 2rem;
   color: ${({ theme }) => theme.colors.black};
   background-color: ${(props) =>
     props.path === '/search'
@@ -34,8 +34,8 @@ export const SearchIcon = styled.div<{ path?: string }>`
   #search-icon {
     color: ${(props) =>
       props.path === '/search' ? '#fff' : props.theme.colors.black};
-    margin-top: -1px;
-    margin-left: -1px;
+    margin-top: 1px;
+    margin-left: 1px;
   }
 `;
 

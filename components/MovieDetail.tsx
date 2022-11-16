@@ -71,6 +71,8 @@ const MovieJanreWrapper = styled.div`
   margin-top: 0.2rem;
   font-size: 0.8rem;
 
+  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
+
   p {
     margin-right: 0.4rem;
 
@@ -83,6 +85,7 @@ const MovieJanreWrapper = styled.div`
 const StyledReviewText = styled.div`
   width: 100%;
   padding: 1rem 0;
+  padding-left: 0.2rem;
 `;
 
 export default MovieDetail;
