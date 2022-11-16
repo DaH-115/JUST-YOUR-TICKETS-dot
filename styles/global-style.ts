@@ -13,7 +13,7 @@ html {
     font-size: 20px;
     letter-spacing: -0.06em;
     color: #141414;
-    min-width: 320px;
+    min-width: 400px;
   }
 
   h1, p {
