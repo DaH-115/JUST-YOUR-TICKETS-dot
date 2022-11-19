@@ -27,7 +27,7 @@ const MovieDetail = (props: MovieDetailProps) => {
       {props.janre && (
         <MovieJanreWrapper>
           {props.janre.map((item: string, i) => (
-            <p key={i}>{item === 'Science Fiction' ? 'SF' : item}</p>
+            <li key={i}> {item === 'Science Fiction' ? 'SF' : item}</li>
           ))}
         </MovieJanreWrapper>
       )}
@@ -55,6 +55,8 @@ const MovieTitle = styled.div`
   border-bottom: 2px solid ${({ theme }) => theme.colors.black};
 
   h1 {
+    font-size: 1.2rem;
+    font-weight: 700;
     padding: 0;
   }
 
@@ -64,16 +66,17 @@ const MovieTitle = styled.div`
   }
 `;
 
-const MovieJanreWrapper = styled.div`
+const MovieJanreWrapper = styled.ul`
   display: flex;
-  width: auto;
-  overflow-x: scroll;
-  margin-top: 0.2rem;
+  flex-wrap: wrap;
+  width: 100%;
+  overflow-y: scroll;
+  margin-top: 0.4rem;
   font-size: 0.8rem;
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
-  p {
+  li {
     margin-right: 0.4rem;
 
     &:last-child {

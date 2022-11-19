@@ -42,7 +42,7 @@ const WritePage: NextPage = () => {
   };
 
   return (
-    <BackgroundStyle customMessage='write✒️' backgroundColor='yellow'>
+    <BackgroundStyle customMessage='write✒️' backgroundColor='black'>
       <WriteForm>
         <MovieDetailWrapper>
           <p>{today}</p>
@@ -81,13 +81,13 @@ const WriteForm = styled.div`
   background-color: #fff;
   border-top-left-radius: 1.5rem;
   border-top-right-radius: 1.5rem;
-  filter: drop-shadow(0px 0px 20px rgba(50, 50, 50, 0.4));
+  filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.4));
 
-  @media (min-width: 600px) {
-    position: absolute;
+  ${({ theme }) => theme.device.desktop} {
+    position: relative;
     bottom: 0;
-    right: 50%;
-    transform: translateX(50%);
+    right: -50%;
+    transform: translateX(-50%);
     height: 90%;
   }
 `;
@@ -130,7 +130,7 @@ const MovieTitle = styled.h1`
 
   p {
     font-weight: 700;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     text-align: left;
   }
 `;
@@ -175,8 +175,6 @@ const StyledTextarea = styled.textarea`
   }
 
   &:focus {
-    border: none;
-    outline: none;
     border-color: ${({ theme }) => theme.colors.orange};
     box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
   }
@@ -188,7 +186,6 @@ const StyledInput = styled.input`
   margin-top: 0.6rem;
   border-radius: 0.4rem;
   padding: 0.4rem 0.8rem;
-  border: none;
   font-size: 0.6rem;
   letter-spacing: -0.06em;
   border: 1px solid ${({ theme }) => theme.colors.gray};
@@ -210,16 +207,13 @@ const StyledInput = styled.input`
   }
 
   &:focus {
-    border: none;
-    outline: none;
     border-color: ${({ theme }) => theme.colors.orange};
     box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
   }
 `;
 
 const StyledButton = styled.button`
-  float: right;
-  width: auto;
+  width: 100%;
   height: auto;
   font-size: 0.8rem;
   font-weight: 700;

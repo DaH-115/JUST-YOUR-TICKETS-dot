@@ -50,7 +50,6 @@ const SearchPage: NextPage = () => {
         </StyledForm>
       </FormWrapper>
       <SearchWrapper>
-        <h1>Results.</h1>
         {searchResults && <SearchTicketList movies={searchResults} />}
       </SearchWrapper>
     </BackgroundStyle>
@@ -62,11 +61,6 @@ const SearchWrapper = styled.div`
   height: 100vh;
   background-color: ${({ theme }) => theme.colors.black};
   color: #fff;
-
-  h1 {
-    padding-top: 1rem;
-    padding-left: 1rem;
-  }
 `;
 
 const FormWrapper = styled.div`
@@ -85,15 +79,18 @@ const StyledLabel = styled.label`
 
 const StyledForm = styled.form`
   width: 70%;
+
+  ${({ theme }) => theme.device.desktop} {
+    width: 50%;
+  }
 `;
 
 const StyledInput = styled.input`
   width: 100%;
   height: 1.3rem;
   padding: 1rem;
-  padding-left: 2.4rem;
+  padding-left: 2.6rem;
   border-radius: 1rem;
-  border: none;
   margin-bottom: 1rem;
   font-size: 0.7rem;
   font-weight: 600;
@@ -115,18 +112,31 @@ const StyledInput = styled.input`
   }
 
   &:focus {
-    outline: none;
     border-color: ${({ theme }) => theme.colors.orange};
     box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
+  }
+
+  ${({ theme }) => theme.device.desktop} {
+    font-size: 1.2rem;
+    padding: 1.4rem 2rem;
+    padding-left: 3.5rem;
+    border-radius: 2rem;
   }
 `;
 
 const InputSearchIcon = styled(SearchIcon)`
   position: relative;
-  top: 2rem;
+  top: 2.8rem;
   left: 0.2rem;
+  font-size: 1.5rem;
   background-color: inherit;
   color: ${({ theme }) => theme.colors.gray};
+
+  ${({ theme }) => theme.device.desktop} {
+    top: 3rem;
+    left: 0.3rem;
+    font-size: 2rem;
+  }
 `;
 
 export default SearchPage;

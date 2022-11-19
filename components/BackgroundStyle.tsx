@@ -43,7 +43,13 @@ const PageTitle = styled.div<{ backgroundColor: string }>`
   color: ${(props) =>
     props.backgroundColor === 'black' ? '#fff' : props.theme.colors.black};
   padding: 1rem;
-  padding-bottom: 3rem;
+  margin-bottom: 2rem;
+
+  ${({ theme }) => theme.device.desktop} {
+    font-size: 3rem;
+    line-height: 3rem;
+    padding: 2rem;
+  }
 `;
 
 const CustomMessage = styled.div`

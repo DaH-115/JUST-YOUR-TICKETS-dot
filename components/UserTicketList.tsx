@@ -7,7 +7,10 @@ import { MovieTitle } from './TopMovieList';
 const UserTicketList = ({ movies }: { movies: usersTicketProps[] }) => {
   return (
     <>
-      <UserTicketTitle>나의 감상티켓</UserTicketTitle>
+      <UserTicketTitle>
+        나의 감상티켓
+        <p>총 {movies.length}장</p>
+      </UserTicketTitle>
       <Wrapper>
         {movies.map((item: usersTicketProps, index) => (
           <Ticket
@@ -28,12 +31,15 @@ const UserTicketList = ({ movies }: { movies: usersTicketProps[] }) => {
 
 const Wrapper = styled.div`
   display: flex;
-  overflow-x: scroll;
   background-color: ${({ theme }) => theme.colors.black};
+  overflow-x: scroll;
+
+  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 `;
 
 const UserTicketTitle = styled(MovieTitle)`
   font-size: 1.6rem;
+  line-height: 2rem;
 `;
 
 export default UserTicketList;

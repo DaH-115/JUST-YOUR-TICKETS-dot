@@ -15,4 +15,9 @@ export const theme: DefaultTheme = {
         display: none; /* 크롬, 사파리, 오페라, 엣지 */
     }`,
   },
+  device: {
+    modile: `@media all and (max-width: 375px)`,
+    tablet: `@media all and (min-width: 768px)`,
+    desktop: `@media all and (min-width: 1024px)`,
+  },
 };
