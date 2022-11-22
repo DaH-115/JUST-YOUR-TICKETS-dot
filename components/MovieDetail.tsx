@@ -4,25 +4,19 @@ interface MovieDetailProps {
   rating: number | string;
   title: string;
   releaseYear: string;
-  reviewText?: string;
-  overview?: string;
   janre?: string[];
+  overview?: string;
 }
 
 const MovieDetail = (props: MovieDetailProps) => {
   return (
-    <TextWrapper reviewText={props.reviewText}>
+    <TextWrapper>
       <MovieTitle>
         <h1>
           {props.title} ({props.releaseYear})
         </h1>
         <p>*{props.rating} /10</p>
       </MovieTitle>
-      {props.reviewText && (
-        <StyledReviewText>
-          <p>{props.reviewText}</p>
-        </StyledReviewText>
-      )}
 
       {props.janre && (
         <MovieJanreWrapper>
@@ -35,17 +29,15 @@ const MovieDetail = (props: MovieDetailProps) => {
   );
 };
 
-const TextWrapper = styled.div<{ reviewText: string | undefined }>`
+const TextWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 1rem 0.5rem;
   box-sizing: border-box;
   background-color: #fff;
 
-  border-top-right-radius: ${({ reviewText }) =>
-    !reviewText ? '1.5rem' : 'none'};
-  border-bottom-right-radius: ${({ reviewText }) =>
-    !reviewText ? 'none' : '1.5rem'};
+  border-top-right-radius: '1.5rem';
+  border-bottom-right-radius: 'none';
   border-bottom-left-radius: 1.5rem;
 `;
 
@@ -83,12 +75,6 @@ const MovieJanreWrapper = styled.ul`
       margin-right: 0;
     }
   }
-`;
-
-const StyledReviewText = styled.div`
-  width: 100%;
-  padding: 1rem 0;
-  padding-left: 0.2rem;
 `;
 
 export default MovieDetail;

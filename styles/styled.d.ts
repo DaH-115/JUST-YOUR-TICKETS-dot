@@ -12,7 +12,7 @@ declare module 'styled-components' {
       scrollbarReset: string;
     };
     device: {
-      modile: string;
+      mobile: string;
       tablet: string;
       desktop: string;
     };

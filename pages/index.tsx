@@ -2,7 +2,8 @@ import { GetStaticProps, NextPage } from 'next';
 import axios from 'axios';
 
 import BackgroundStyle from '../components/BackgroundStyle';
-import TopMovieList from '../components/TopMovieList';
+import SlideList from '../components/SlideList';
+import TopMovieSlider from '../components/TopMovieSlider';
 
 export interface popMovie {
   id: number;
@@ -15,11 +16,11 @@ export interface popMovie {
 
 const Home: NextPage<{ topTenMovies: popMovie[] }> = ({ topTenMovies }) => {
   return (
-    <div>
-      <BackgroundStyle customMessage='your💭' backgroundColor='black'>
-        <TopMovieList movies={topTenMovies} />
-      </BackgroundStyle>
-    </div>
+    <BackgroundStyle customMessage='your💭' backgroundColor='black'>
+      <SlideList title='인기 영화 10'>
+        <TopMovieSlider movies={topTenMovies} />
+      </SlideList>
+    </BackgroundStyle>
   );
 };
 

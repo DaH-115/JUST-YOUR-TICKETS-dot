@@ -1,5 +1,17 @@
 import { DefaultTheme } from 'styled-components';
 
+const size = {
+  mobile: '375px',
+  tablet: '768px',
+  desktop: '1024px',
+};
+
+const device = {
+  mobile: `@media all and (max-width: ${size.mobile})`,
+  tablet: `@media all and (min-width: ${size.tablet})`,
+  desktop: `@media all and (min-width: ${size.desktop})`,
+};
+
 export const theme: DefaultTheme = {
   colors: {
     black: '#141414',
@@ -15,9 +27,5 @@ export const theme: DefaultTheme = {
         display: none; /* 크롬, 사파리, 오페라, 엣지 */
     }`,
   },
-  device: {
-    modile: `@media all and (max-width: 375px)`,
-    tablet: `@media all and (min-width: 768px)`,
-    desktop: `@media all and (min-width: 1024px)`,
-  },
+  device,
 };
