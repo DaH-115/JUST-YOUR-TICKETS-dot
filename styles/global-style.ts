@@ -9,10 +9,11 @@ export const GlobalStyle = createGlobalStyle`
 }
 
 html {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat','Noto Sans KR', sans-serif;
     font-size: 20px;
     letter-spacing: -0.06em;
     color: #141414;
+    font-weight: 400;
     min-width: 400px;
   }
 
