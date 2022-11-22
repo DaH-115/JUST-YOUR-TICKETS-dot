@@ -49,6 +49,7 @@ const PageTitle = styled.div<{ backgroundColor: string }>`
     font-size: 3rem;
     line-height: 3rem;
     padding: 2rem;
+    margin-bottom: 5rem;
   }
 `;
 

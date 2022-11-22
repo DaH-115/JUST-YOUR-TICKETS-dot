@@ -12,7 +12,7 @@ const Header = () => {
         <HeaderLi className='home'>HOME</HeaderLi>
       </Link>
       <Link href='/ticket-list'>
-        <HeaderLi>MY TICKET LIST</HeaderLi>
+        <HeaderLi>MY TICKETS</HeaderLi>
       </Link>
       <Link href='/search'>
         <SearchIcon path={router.pathname}>
@@ -25,14 +25,15 @@ const Header = () => {
 
 const HeaderIcons = styled.ul`
   display: flex;
+  justify-content: center;
   font-weight: 700;
-  padding-left: 0.5rem;
   background-color: ${({ theme }) => theme.colors.black};
 
   ${({ theme }) => theme.device.desktop} {
     position: absolute;
-    top: 3rem;
+    top: 2rem;
     right: 6rem;
+    padding-left: 0;
   }
 `;
 
@@ -47,7 +48,7 @@ const HeaderLi = styled.li`
 
 export const SearchIcon = styled.div<{ path?: string }>`
   position: fixed;
-  top: 1rem;
+  top: 3rem;
   right: 1rem;
   z-index: 999;
   width: 3rem;
@@ -58,6 +59,7 @@ export const SearchIcon = styled.div<{ path?: string }>`
   background-color: ${({ path, theme }) =>
     path === '/search' ? theme.colors.orange : theme.colors.yellow};
   border-radius: 50%;
+  filter: drop-shadow(10px 10px 20px rgba(0, 0, 0, 1));
 
   #search-icon {
     color: ${({ path, theme }) =>
