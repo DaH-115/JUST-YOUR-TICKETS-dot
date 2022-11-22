@@ -10,7 +10,6 @@ import BackgroundStyle from '../../components/BackgroundStyle';
 const WritePage: NextPage = () => {
   const router = useRouter();
   const { query: routerQuery } = useRouter();
-  const releaseYear = routerQuery.releaseDate!.slice(0, 4);
   const today = new Date().toLocaleDateString();
   const ratingRef = useRef<HTMLInputElement>(null);
   const reviewRef = useRef<HTMLTextAreaElement>(null);
@@ -20,7 +19,7 @@ const WritePage: NextPage = () => {
       await addDoc(collection(db, 'users-tickets'), {
         createdAt: Date.now(),
         title: routerQuery.title,
-        releaseYear,
+        releaseYear: routerQuery.releaseYear,
         rating,
         reviewText,
         posterImage: routerQuery.posterImage,
@@ -47,7 +46,8 @@ const WritePage: NextPage = () => {
         <MovieDetailWrapper>
           <p>{today}</p>
           <MovieTitle>
-            <p>* Movie Title /제목</p>"{routerQuery.title}"({releaseYear})
+            <p>* Movie Title /제목</p>"{routerQuery.title}"(
+            {routerQuery.releaseYear})
           </MovieTitle>
         </MovieDetailWrapper>
         <FormWrapper>

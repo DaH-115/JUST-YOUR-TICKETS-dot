@@ -1,26 +1,30 @@
 import styled from 'styled-components';
 
-interface MovieDetailProps {
+interface MovieTextProps {
   rating: number | string;
   title: string;
   releaseYear: string;
   janre?: string[];
-  overview?: string;
 }
 
-const MovieDetail = (props: MovieDetailProps) => {
+const MovieTextDetail = ({
+  rating,
+  title,
+  releaseYear,
+  janre,
+}: MovieTextProps) => {
   return (
     <TextWrapper>
       <MovieTitle>
         <h1>
-          {props.title} ({props.releaseYear})
+          {title} ({releaseYear})
         </h1>
-        <p>*{props.rating} /10</p>
+        <p>*{rating} /10</p>
       </MovieTitle>
 
-      {props.janre && (
+      {janre && (
         <MovieJanreWrapper>
-          {props.janre.map((item: string, i) => (
+          {janre.map((item: string, i) => (
             <li key={i}> {item === 'Science Fiction' ? 'SF' : item}</li>
           ))}
         </MovieJanreWrapper>
@@ -29,6 +33,8 @@ const MovieDetail = (props: MovieDetailProps) => {
   );
 };
 
+export default MovieTextDetail;
+
 const TextWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -36,7 +42,7 @@ const TextWrapper = styled.div`
   box-sizing: border-box;
   background-color: #fff;
 
-  border-top-right-radius: '1.5rem';
+  border-top-right-radius: 1.5rem;
   border-bottom-right-radius: 'none';
   border-bottom-left-radius: 1.5rem;
 `;
@@ -76,5 +82,3 @@ const MovieJanreWrapper = styled.ul`
     }
   }
 `;
-
-export default MovieDetail;
