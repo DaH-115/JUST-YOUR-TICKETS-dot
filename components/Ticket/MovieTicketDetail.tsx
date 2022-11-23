@@ -8,6 +8,7 @@ interface TicketDetailProps {
   voteAverage: number | string;
   releaseYear: string;
   posterPath?: string;
+  reviewText?: string;
   janre?: string[];
 }
 
@@ -16,6 +17,7 @@ const MovieTicketDetail = ({
   voteAverage,
   releaseYear,
   posterPath,
+  reviewText,
   janre,
 }: TicketDetailProps) => {
   return (
@@ -24,28 +26,31 @@ const MovieTicketDetail = ({
         title={title}
         releaseYear={releaseYear}
         rating={voteAverage}
+        reviewText={reviewText}
         janre={janre}
       />
 
       {/* 🎈 GO TO "/write" PAGE BUTTON */}
-      <Link
-        href={{
-          pathname: '/write',
-          query: {
-            title: title,
-            releaseYear: releaseYear,
-            posterImage: `https://image.tmdb.org/t/p/w500/${posterPath}`,
-          },
-        }}
-        as={`/write`}
-      >
-        <AdmitButtonWrapper>
-          <button>ADMIT ONE</button>
-          <ArrowBtn>
-            <AiOutlineArrowRight />
-          </ArrowBtn>
-        </AdmitButtonWrapper>
-      </Link>
+      {!reviewText && (
+        <Link
+          href={{
+            pathname: '/write',
+            query: {
+              title: title,
+              releaseYear: releaseYear,
+              posterImage: `https://image.tmdb.org/t/p/w500/${posterPath}`,
+            },
+          }}
+          as={`/write`}
+        >
+          <AdmitButtonWrapper>
+            <button>ADMIT ONE</button>
+            <ArrowBtn>
+              <AiOutlineArrowRight />
+            </ArrowBtn>
+          </AdmitButtonWrapper>
+        </Link>
+      )}
     </MovieDetailWrapper>
   );
 };

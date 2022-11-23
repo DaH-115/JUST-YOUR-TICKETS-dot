@@ -18,7 +18,7 @@ const SlideList = ({
 export default SlideList;
 
 const Container = styled.div`
-  width: 100%;
+  width: auto;
   background-color: ${({ theme }) => theme.colors.black};
 `;
 
@@ -26,10 +26,11 @@ const SlideTitle = styled.h1`
   font-size: 1.8rem;
   font-weight: 600;
   color: #fff;
+  padding-left: 1rem;
 
   ${({ theme }) => theme.device.desktop} {
-    padding-left: 2rem;
     font-size: 2.4rem;
     font-weight: 700;
+    padding-left: 2rem;
   }
 `;

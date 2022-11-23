@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 
-import BackgroundStyle from '../../components/BackgroundStyle';
+import BackgroundStyle from '../../components/Layout/BackgroundStyle';
 
 const WritePage: NextPage = () => {
   const router = useRouter();

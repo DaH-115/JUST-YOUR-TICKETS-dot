@@ -53,6 +53,7 @@ const NoneImg = styled.div`
   height: 560px;
   font-weight: 700;
   color: black;
+  border-radius: 1rem;
   background-color: ${({ theme }) => theme.colors.orange};
   text-align: center;
 `;

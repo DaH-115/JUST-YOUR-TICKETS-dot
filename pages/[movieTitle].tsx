@@ -1,4 +1,4 @@
-import MovieDetailPage from '../../components/MovieDetailPage';
+import MovieDetailPage from '../components/MovieDetailPage';
 
 const TicketListDetailPage = () => {
   return <MovieDetailPage />;

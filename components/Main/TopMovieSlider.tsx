@@ -7,7 +7,7 @@ import {
   MdOutlineArrowForwardIos,
 } from 'react-icons/md';
 import MovieTicket from './MovieTicket';
-import { popMovie } from '../pages';
+import { popMovie } from '../../pages';
 
 const TopMovieSlider = ({ movies }: { movies: popMovie[] }) => {
   const settings = {

@@ -1,9 +1,9 @@
 import { GetStaticProps, NextPage } from 'next';
 import axios from 'axios';
 
-import BackgroundStyle from '../components/BackgroundStyle';
+import BackgroundStyle from '../components/Layout/BackgroundStyle';
 import SlideList from '../components/SlideList';
-import TopMovieSlider from '../components/TopMovieSlider';
+import TopMovieSlider from '../components/Main/TopMovieSlider';
 
 export interface popMovie {
   id: number;
@@ -11,7 +11,7 @@ export interface popMovie {
   title: string;
   overview: string;
   release_date: string;
-  poster_path: string | null;
+  poster_path?: string;
 }
 
 const Home: NextPage<{ topTenMovies: popMovie[] }> = ({ topTenMovies }) => {

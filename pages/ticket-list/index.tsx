@@ -2,25 +2,28 @@ import { GetStaticProps, NextPage } from 'next';
 import { collection, DocumentData, getDocs, query } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 
-import BackgroundStyle from '../../components/BackgroundStyle';
-import UserTicketList from '../../components/UserTicketList';
+import BackgroundStyle from '../../components/Layout/BackgroundStyle';
+import UserTicketSlider from '../../components/UserTicket/UserTicketSlider';
+import SlideList from '../../components/SlideList';
 
-export interface usersTicketProps {
-  id: string;
+export interface UserTicketProps {
+  id?: string;
   title: string;
   releaseYear: string;
-  rating: string;
-  reviewText: string;
-  posterImage: string;
+  rating: number | string;
   createdAt: number;
+  reviewText: string;
+  posterImage?: string;
 }
 
-const TicketListPage: NextPage<{ usersTicket: usersTicketProps[] }> = ({
+const TicketListPage: NextPage<{ usersTicket: UserTicketProps[] }> = ({
   usersTicket,
 }) => {
   return (
     <BackgroundStyle customMessage='your🍿' backgroundColor='black'>
-      <UserTicketList movies={usersTicket} />
+      <SlideList title='나의 티켓'>
+        <UserTicketSlider movies={usersTicket} />
+      </SlideList>
     </BackgroundStyle>
   );
 };

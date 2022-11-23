@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 interface MovieTextProps {
-  rating: number | string;
   title: string;
+  rating: number | string;
   releaseYear: string;
+  reviewText?: string;
   janre?: string[];
 }
 
@@ -11,10 +12,11 @@ const MovieTextDetail = ({
   rating,
   title,
   releaseYear,
+  reviewText,
   janre,
 }: MovieTextProps) => {
   return (
-    <TextWrapper>
+    <TextWrapper reviewState={reviewText!}>
       <MovieTitle>
         <h1>
           {title} ({releaseYear})
@@ -29,13 +31,15 @@ const MovieTextDetail = ({
           ))}
         </MovieJanreWrapper>
       )}
+
+      {reviewText && <StyledReviewText>{reviewText}</StyledReviewText>}
     </TextWrapper>
   );
 };
 
 export default MovieTextDetail;
 
-const TextWrapper = styled.div`
+const TextWrapper = styled.div<{ reviewState: string }>`
   width: 100%;
   height: 100%;
   padding: 1rem 0.5rem;
@@ -43,7 +47,8 @@ const TextWrapper = styled.div`
   background-color: #fff;
 
   border-top-right-radius: 1.5rem;
-  border-bottom-right-radius: 'none';
+  border-bottom-right-radius: ${({ reviewState }) =>
+    reviewState ? '1.5rem' : 'none'};
   border-bottom-left-radius: 1.5rem;
 `;
 
@@ -81,4 +86,12 @@ const MovieJanreWrapper = styled.ul`
       margin-right: 0;
     }
   }
+`;
+
+const StyledReviewText = styled.p`
+  width: 100%;
+  margin-top: 0.5rem;
+  overflow-y: scroll;
+
+  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 `;

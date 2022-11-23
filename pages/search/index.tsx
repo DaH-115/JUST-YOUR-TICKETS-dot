@@ -5,8 +5,8 @@ import axios from 'axios';
 import { BiSearch } from 'react-icons/bi';
 import { popMovie } from '..';
 
-import BackgroundStyle from '../../components/BackgroundStyle';
-import { SearchIcon } from '../../components/Header';
+import BackgroundStyle from '../../components/Layout/BackgroundStyle';
+import { SearchIcon } from '../../components/Layout/Header';
 import SearchTicketList from '../../components/SearchTicketList';
 
 const SearchPage: NextPage = () => {

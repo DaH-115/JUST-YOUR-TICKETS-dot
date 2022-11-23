@@ -3,18 +3,17 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import styled from 'styled-components';
 
-import InfoButton from './InfoButton';
-import PosterImage from './PosterImage';
-import MovieTicketDetail from './MovieTicketDetail';
+import InfoButton from '../Ticket/InfoButton';
+import PosterImage from '../Ticket/PosterImage';
+import MovieTicketDetail from '../Ticket/MovieTicketDetail';
 
 interface TicketProps {
   title: string;
   releaseDate: string;
   voteAverage: number | string;
+  movieIndex: number;
   posterPath?: string;
   movieId?: number;
-  movieIndex?: number;
-  writeDate?: number;
   reviewText?: string;
   overview?: string;
 }
@@ -47,11 +46,7 @@ const MovieTicket = (props: TicketProps) => {
     <TicketWrapper>
       {/* 🎈 TICKET INDEX HEADER */}
       <MovieIndex routePath={router.pathname}>
-        <MovieRank>
-          {props.movieIndex! > 10
-            ? String(props.movieIndex).slice(-1)
-            : props.movieIndex}
-        </MovieRank>
+        <MovieRank>{props.movieIndex}</MovieRank>
 
         {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
         <InfoButton
