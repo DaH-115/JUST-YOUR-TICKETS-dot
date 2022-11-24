@@ -92,7 +92,7 @@ const TextWrapper = styled.div`
   padding: 1.5rem 1rem;
   border-top-right-radius: 1rem;
   border-top-left-radius: 1rem;
-  background: linear-gradient(white 60%, ${({ theme }) => theme.colors.yellow});
+  background: linear-gradient(white 70%, ${({ theme }) => theme.colors.yellow});
 `;
 
 const ImgBox = styled.div`
@@ -129,7 +129,7 @@ const ContentText = styled.div`
 
   h1 {
     font-weight: 700;
-    border-bottom: 2px solid ${({ theme }) => theme.colors.orange};
+    border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
     padding-bottom: 0.5rem;
   }
 `;
@@ -157,7 +157,7 @@ const OverviweText = styled.p`
   font-size: 1rem;
   line-height: 1.2rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.orange};
+  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
 `;
 
 const AdmitButtonWrapper = styled.div`

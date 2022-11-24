@@ -31,7 +31,6 @@ const ImgBox = styled.div`
   justify-content: center;
   align-items: center;
   width: 360px;
-  width: 100%;
   overflow: hidden;
   border-radius: 1.5rem;
 

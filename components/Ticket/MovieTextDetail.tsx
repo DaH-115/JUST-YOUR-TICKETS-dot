@@ -2,14 +2,14 @@ import styled from 'styled-components';
 
 interface MovieTextProps {
   title: string;
-  rating: number | string;
+  voteAverage: number | string;
   releaseYear: string;
   reviewText?: string;
   janre?: string[];
 }
 
 const MovieTextDetail = ({
-  rating,
+  voteAverage,
   title,
   releaseYear,
   reviewText,
@@ -21,13 +21,13 @@ const MovieTextDetail = ({
         <h1>
           {title} ({releaseYear})
         </h1>
-        <p>*{rating} /10</p>
+        <p>*{voteAverage} /10</p>
       </MovieTitle>
 
       {janre && (
         <MovieJanreWrapper>
           {janre.map((item: string, i) => (
-            <li key={i}> {item === 'Science Fiction' ? 'SF' : item}</li>
+            <li key={i}>{item === 'Science Fiction' ? 'SF' : item}</li>
           ))}
         </MovieJanreWrapper>
       )}
@@ -41,24 +41,24 @@ export default MovieTextDetail;
 
 const TextWrapper = styled.div<{ reviewState: string }>`
   width: 100%;
-  height: 100%;
-  padding: 1rem 0.5rem;
+  padding: 0.5rem;
   box-sizing: border-box;
-  background-color: #fff;
-
-  border-top-right-radius: 1.5rem;
-  border-bottom-right-radius: ${({ reviewState }) =>
-    reviewState ? '1.5rem' : 'none'};
-  border-bottom-left-radius: 1.5rem;
+  background: linear-gradient(white 80%, ${({ theme }) => theme.colors.yellow});
+  border-left: 0.5rem solid ${({ theme }) => theme.colors.orange};
 `;
 
 const MovieTitle = styled.div`
+  width: auto;
+  height: 3.5rem;
   font-size: 0.5rem;
   color: ${({ theme }) => theme.colors.black};
-  border-bottom: 2px solid ${({ theme }) => theme.colors.black};
+  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.black};
+  overflow-y: scroll;
+
+  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
   h1 {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
     padding: 0;
   }
@@ -73,14 +73,20 @@ const MovieJanreWrapper = styled.ul`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  height: 2rem;
   overflow-y: scroll;
   margin-top: 0.4rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.black};
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
   li {
     margin-right: 0.4rem;
+
+    &::before {
+      content: '/ ';
+    }
 
     &:last-child {
       margin-right: 0;

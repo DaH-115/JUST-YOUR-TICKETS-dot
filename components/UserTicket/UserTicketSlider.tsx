@@ -43,8 +43,6 @@ const UserTicketSlider = ({ movies }: { movies: UserTicketProps[] }) => {
     ],
   };
 
-  console.log(movies);
-
   return (
     <StyledSlider {...settings}>
       {movies.map((item: UserTicketProps) => {
@@ -69,8 +67,12 @@ export default UserTicketSlider;
 const StyledSlider = styled(Slider)`
   .slick-list {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     padding: 0 1rem;
+
+    ${({ theme }) => theme.device.desktop} {
+      height: 100vh;
+    }
   }
 
   .slick-arrow {
@@ -85,7 +87,7 @@ const StyledArrow = styled.div`
   font-size: 1rem;
 
   color: ${({ theme }) => theme.colors.yellow};
-  border: 2px solid white;
+  border: 0.1rem solid white;
   border-radius: 50%;
   filter: drop-shadow(10px 10px 20px rgba(0, 0, 0, 1));
 

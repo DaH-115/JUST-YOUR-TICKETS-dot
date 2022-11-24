@@ -7,14 +7,13 @@ import InfoButton from '../Ticket/InfoButton';
 import PosterImage from '../Ticket/PosterImage';
 import MovieTicketDetail from '../Ticket/MovieTicketDetail';
 
-interface TicketProps {
+export interface TicketProps {
   title: string;
   releaseDate: string;
-  voteAverage: number | string;
+  movieId: number;
   movieIndex: number;
+  voteAverage: number | string;
   posterPath?: string;
-  movieId?: number;
-  reviewText?: string;
   overview?: string;
 }
 

@@ -59,7 +59,7 @@ export const SearchIcon = styled.div<{ path?: string }>`
   background-color: ${({ path, theme }) =>
     path === '/search' ? theme.colors.orange : theme.colors.yellow};
   border-radius: 50%;
-  filter: drop-shadow(10px 10px 20px rgba(0, 0, 0, 1));
+  filter: drop-shadow(10px 10px 10px #000000b1);
 
   #search-icon {
     color: ${({ path, theme }) =>
