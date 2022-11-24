@@ -23,11 +23,7 @@ const AdmitBtn = ({
       }}
       as={`/write`}
     >
-<<<<<<< HEAD
       <AdmitButtonWrapper>
-=======
-      <AdmitButtonWrapper searchState={route.asPath}>
->>>>>>> 6891abff4543fcdd0ed9ec34420847ef66d9e308
         <button>
           <p>ADMIT ONE</p>
         </button>
@@ -41,11 +37,7 @@ const AdmitBtn = ({
 
 export default AdmitBtn;
 
-<<<<<<< HEAD
 const AdmitButtonWrapper = styled.div`
-=======
-const AdmitButtonWrapper = styled.div<{ searchState: string }>`
->>>>>>> 6891abff4543fcdd0ed9ec34420847ef66d9e308
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -54,13 +46,6 @@ const AdmitButtonWrapper = styled.div<{ searchState: string }>`
   width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.orange};
-<<<<<<< HEAD
-=======
-  border-top-left-radius: ${({ searchState }) =>
-    searchState ? 'none' : '1rem'};
-  border-bottom-right-radius: ${({ searchState }) =>
-    searchState ? 'none' : '1.5rem'};
->>>>>>> 6891abff4543fcdd0ed9ec34420847ef66d9e308
 
   button {
     font-weight: 700;
