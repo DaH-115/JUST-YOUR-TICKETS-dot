@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
 import { MdOutlineArrowForwardIos } from 'react-icons/md';
 
 const AdmitBtn = ({
@@ -12,8 +11,6 @@ const AdmitBtn = ({
   releaseYear: string;
   posterPath?: string;
 }) => {
-  const route = useRouter();
-
   return (
     <Link
       href={{
