@@ -1,7 +1,6 @@
-import Link from 'next/link';
 import styled from 'styled-components';
 import MovieTextDetail from './MovieTextDetail';
-import { AiOutlineArrowRight } from 'react-icons/ai';
+import AdmitBtn from './AdmitBtn';
 
 interface TicketDetailProps {
   title: string;
@@ -32,24 +31,11 @@ const MovieTicketDetail = ({
 
       {/* 🎈 GO TO "/write" PAGE BUTTON */}
       {!reviewText && (
-        <Link
-          href={{
-            pathname: '/write',
-            query: {
-              title: title,
-              releaseYear: releaseYear,
-              posterImage: `https://image.tmdb.org/t/p/w500/${posterPath}`,
-            },
-          }}
-          as={`/write`}
-        >
-          <AdmitButtonWrapper>
-            <button>ADMIT ONE</button>
-            <ArrowBtn>
-              <AiOutlineArrowRight />
-            </ArrowBtn>
-          </AdmitButtonWrapper>
-        </Link>
+        <AdmitBtn
+          title={title}
+          releaseYear={releaseYear}
+          posterPath={posterPath}
+        />
       )}
     </MovieDetailWrapper>
   );
@@ -66,31 +52,4 @@ const MovieDetailWrapper = styled.div`
   height: 10rem;
   color: ${({ theme }) => theme.colors.black};
   filter: drop-shadow(0px 0px 40px rgba(50, 50, 50, 0.9));
-`;
-
-const AdmitButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  width: 100%;
-  height: 100%;
-  background-color: #fff;
-  padding: 1rem;
-  box-sizing: border-box;
-  background-color: ${({ theme }) => theme.colors.orange};
-  border-top-left-radius: 1rem;
-  border-bottom-right-radius: 1.5rem;
-
-  button {
-    font-weight: 700;
-  }
-`;
-
-const ArrowBtn = styled.div`
-  width: 2rem;
-  height: 2rem;
-  text-align: center;
-  margin-top: 8px;
 `;

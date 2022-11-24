@@ -83,7 +83,7 @@ const StyledArrow = styled.div`
   font-size: 1rem;
 
   color: ${({ theme }) => theme.colors.yellow};
-  border: 2px solid white;
+  border: 0.1rem solid white;
   border-radius: 50%;
   filter: drop-shadow(10px 10px 20px rgba(0, 0, 0, 1));
 

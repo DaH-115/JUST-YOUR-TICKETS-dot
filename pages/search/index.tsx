@@ -11,7 +11,7 @@ import SearchTicketList from '../../components/SearchTicketList';
 
 const SearchPage: NextPage = () => {
   const [movieName, setMovieName] = useState('');
-  const [searchResults, setSearchResults] = useState<popMovie[]>([]);
+  const [searchResults, setSearchResults] = useState<popMovie[]>();
 
   const getSearchResults = async (movieName: string) => {
     const res = await axios.get(
@@ -49,12 +49,42 @@ const SearchPage: NextPage = () => {
           />
         </StyledForm>
       </FormWrapper>
+
+      {/* ✔️ Test Part */}
       <SearchWrapper>
-        {searchResults && <SearchTicketList movies={searchResults} />}
+        <SearchTitle>검색 결과</SearchTitle>
+        {!searchResults ? (
+          <NoneResults>검색 결과가 없습니다.</NoneResults>
+        ) : (
+          searchResults.map((item, index) => (
+            <SearchTicketList
+              key={index}
+              movieId={item.id}
+              movieIndex={index}
+              title={item.title}
+              voteAverage={item.vote_average}
+              releaseDate={item.release_date}
+              posterPath={item.poster_path}
+              overview={item.overview}
+            />
+          ))
+        )}
       </SearchWrapper>
     </BackgroundStyle>
   );
 };
+
+const NoneResults = styled.p`
+  padding: 0 1rem;
+  font-size: 1.2rem;
+  font-weight: 400;
+`;
+
+const SearchTitle = styled.p`
+  padding: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+`;
 
 const SearchWrapper = styled.div`
   width: 100%;
@@ -78,7 +108,9 @@ const StyledLabel = styled.label`
 `;
 
 const StyledForm = styled.form`
+  display: flex;
   width: 70%;
+  margin-bottom: 1rem;
 
   ${({ theme }) => theme.device.desktop} {
     width: 50%;
@@ -89,9 +121,9 @@ const StyledInput = styled.input`
   width: 100%;
   height: 1.3rem;
   padding: 1rem;
-  padding-left: 2.6rem;
+  padding-left: 2.4rem;
+  border: none;
   border-radius: 1rem;
-  margin-bottom: 1rem;
   font-size: 0.7rem;
   font-weight: 600;
 
@@ -125,16 +157,17 @@ const StyledInput = styled.input`
 `;
 
 const InputSearchIcon = styled(SearchIcon)`
-  position: relative;
-  top: 2.8rem;
-  left: 0.2rem;
+  position: absolute;
+  top: 11.8rem;
+  left: 3.2rem;
   font-size: 1.5rem;
   background-color: inherit;
   color: ${({ theme }) => theme.colors.gray};
+  filter: none;
 
   ${({ theme }) => theme.device.desktop} {
-    top: 3rem;
-    left: 0.3rem;
+    top: 18rem;
+    left: 14rem;
     font-size: 2rem;
   }
 `;
