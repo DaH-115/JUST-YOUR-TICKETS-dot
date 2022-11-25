@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 
 import BackgroundStyle from './layout/BackgroundStyle';
-import AdmitBtn from './ticket/AdmitBtn';
+import { SlideTitle } from './styles/StyledTitle';
 
 const MovieDetailPage = () => {
   const router = useRouter();
@@ -15,6 +15,7 @@ const MovieDetailPage = () => {
 
   return (
     <BackgroundStyle backgroundColor='black' customMessage='info✔️'>
+      <SlideTitle>영화 상세 정보</SlideTitle>
       <DetailWrapper>
         <MovieDetails>
           {!posterImage ? (
@@ -86,6 +87,7 @@ const DetailWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
+  margin-top: 2rem;
 
   ${({ theme }) => theme.device.desktop} {
     display: flex;
