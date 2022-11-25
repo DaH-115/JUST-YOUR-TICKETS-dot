@@ -61,7 +61,7 @@ const WritePage: NextPage = () => {
               </RatingInputWrapper>
             </InputWrapper>
             <InputWrapper>
-              <StyledLabel htmlFor='review'>* Review /리뷰</StyledLabel>
+              <StyledLabel htmlFor='review'>* Review /나의 감상</StyledLabel>
               <StyledDesc>당신의 생각과 느낌을 적어보세요.</StyledDesc>
               <StyledTextarea name='reviewText' id='review' ref={reviewRef} />
             </InputWrapper>
@@ -149,30 +149,17 @@ const StyledForm = styled.form`
 `;
 
 const StyledTextarea = styled.textarea`
+  font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+  letter-spacing: -0.06em;
+
   width: 100%;
   height: 10rem;
   margin-top: 0.6rem;
   border-radius: 0.4rem;
   padding: 0.6rem 0.8rem;
-  font-size: 0.6rem;
+  font-size: 1rem;
   letter-spacing: -0.06em;
   border: 1px solid ${({ theme }) => theme.colors.gray};
-
-  &::placeholder {
-    /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: ${({ theme }) => theme.colors.gray};
-    opacity: 1; /* Firefox */
-  }
-
-  &::-ms-input-placeholder {
-    /* Internet Explorer 10-11 */
-    color: ${({ theme }) => theme.colors.gray};
-  }
-
-  &::-ms-input-placeholder {
-    /* Microsoft Edge */
-    color: ${({ theme }) => theme.colors.gray};
-  }
 
   &:focus {
     border-color: ${({ theme }) => theme.colors.orange};
@@ -186,7 +173,7 @@ const StyledInput = styled.input`
   margin-top: 0.6rem;
   border-radius: 0.4rem;
   padding: 0.4rem 0.8rem;
-  font-size: 0.6rem;
+  font-size: 1rem;
   letter-spacing: -0.06em;
   border: 1px solid ${({ theme }) => theme.colors.gray};
 
@@ -225,6 +212,7 @@ const StyledButton = styled.button`
 const StyledDesc = styled.p`
   margin-top: 0.2rem;
   font-size: 0.7rem;
+  font-weight: 300;
   letter-spacing: -0.09em;
   color: ${({ theme }) => theme.colors.gray};
 `;

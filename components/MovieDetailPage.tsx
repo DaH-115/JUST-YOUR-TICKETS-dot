@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import styled from 'styled-components';
 import BackgroundStyle from './Layout/BackgroundStyle';
+import AdmitBtn from './Ticket/AdmitBtn';
 
 const MovieDetailPage = () => {
   const router = useRouter();
@@ -30,21 +31,21 @@ const MovieDetailPage = () => {
             </ImgBox>
           )}
           <TextWrapper>
-            <StyledLabeling>*영화 제목</StyledLabeling>
+            <StyledLabeling>* Movie Title /제목</StyledLabeling>
             <ContentText>
               <h1>
                 {title}({releaseDate})
               </h1>
             </ContentText>
             <StyledLabeling>
-              {fromTicketList ? `*나의 점수` : '*점수'}
+              {fromTicketList ? `* Rating /나의 점수` : '* Rating /점수'}
             </StyledLabeling>
             <ContentText>
               <p>{voteAverage} /10</p>
             </ContentText>
             {janreArr && (
               <>
-                <StyledLabeling>*장르</StyledLabeling>
+                <StyledLabeling>* Janres /장르</StyledLabeling>
                 <ContentText>
                   <MovieJanreWrapper>
                     {janreArr.map((item, index) => (
@@ -56,17 +57,20 @@ const MovieDetailPage = () => {
             )}
 
             <StyledLabeling>
-              {fromTicketList ? `*나의 감상` : '*줄거리'}
+              {fromTicketList ? `* Review /나의 감상` : '* Overview /줄거리'}
             </StyledLabeling>
             <ContentText>
               <OverviweText>{overview}</OverviweText>
             </ContentText>
-            <AdmitButtonWrapper>
-              <button>ADMIT ONE</button>
-              <ArrowBtn>
-                <AiOutlineArrowRight />
-              </ArrowBtn>
-            </AdmitButtonWrapper>
+
+            {fromTicketList ? undefined : (
+              <AdmitButtonWrapper>
+                <button>ADMIT ONE</button>
+                <ArrowBtn>
+                  <AiOutlineArrowRight />
+                </ArrowBtn>
+              </AdmitButtonWrapper>
+            )}
           </TextWrapper>
         </MovieDetails>
       </DetailWrapper>
@@ -79,20 +83,54 @@ const DetailWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  ${({ theme }) => theme.device.desktop} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+
+    padding: 0 2rem;
+    padding-bottom: 4rem;
+  }
 `;
 
 const MovieDetails = styled.div`
   width: 100%;
+  height: 100%;
   max-width: 600px;
+
+  ${({ theme }) => theme.device.desktop} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+
+    background-color: ${({ theme }) => theme.colors.black};
+  }
 `;
 
 const TextWrapper = styled.div`
+  position: relative;
+  bottom: 0.8rem;
+  left: 0;
+
   width: 100%;
+  height: 100%;
   overflow: hidden;
   padding: 1.5rem 1rem;
-  border-top-right-radius: 1rem;
-  border-top-left-radius: 1rem;
+  border-radius: 1rem;
   background: linear-gradient(white 70%, ${({ theme }) => theme.colors.yellow});
+
+  ${({ theme }) => theme.device.desktop} {
+    max-width: 600px;
+    padding: 1.5rem 1rem;
+    margin-left: 2rem;
+  }
 `;
 
 const ImgBox = styled.div`
@@ -100,6 +138,11 @@ const ImgBox = styled.div`
   justify-content: center;
   align-items: center;
   filter: drop-shadow(0px 0px 50px rgba(255, 255, 255, 0.4));
+
+  Img {
+    width: 100%;
+    max-width: 400px;
+  }
 `;
 
 const NoneImg = styled.div`
@@ -124,8 +167,12 @@ const StyledLabeling = styled.p`
 
 const ContentText = styled.div`
   width: 100%;
+  height: 100%;
   font-size: 1.2rem;
   margin-bottom: 1rem;
+  overflow-y: scroll;
+
+  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
   h1 {
     font-weight: 700;
@@ -157,7 +204,6 @@ const OverviweText = styled.p`
   font-size: 1rem;
   line-height: 1.2rem;
   padding-bottom: 2rem;
-  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
 `;
 
 const AdmitButtonWrapper = styled.div`
@@ -171,6 +217,7 @@ const AdmitButtonWrapper = styled.div`
   border-radius: 1rem;
 
   button {
+    color: ${({ theme }) => theme.colors.black};
     font-size: 1rem;
     font-weight: 700;
   }
@@ -178,6 +225,7 @@ const AdmitButtonWrapper = styled.div`
 
 const ArrowBtn = styled.div`
   margin-left: 0.5rem;
+  color: ${({ theme }) => theme.colors.yellow};
 `;
 
 export default MovieDetailPage;

@@ -166,7 +166,7 @@ const InputSearchIcon = styled(SearchIcon)`
   filter: none;
 
   ${({ theme }) => theme.device.desktop} {
-    top: 18rem;
+    top: 15rem;
     left: 14rem;
     font-size: 2rem;
   }
