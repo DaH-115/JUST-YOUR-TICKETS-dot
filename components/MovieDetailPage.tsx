@@ -1,9 +1,10 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { AiOutlineArrowRight } from 'react-icons/ai';
 import styled from 'styled-components';
-import BackgroundStyle from './Layout/BackgroundStyle';
-import AdmitBtn from './Ticket/AdmitBtn';
+import { AiOutlineArrowRight } from 'react-icons/ai';
+
+import BackgroundStyle from './layout/BackgroundStyle';
+import AdmitBtn from './ticket/AdmitBtn';
 
 const MovieDetailPage = () => {
   const router = useRouter();

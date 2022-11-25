@@ -5,9 +5,9 @@ import axios from 'axios';
 import { BiSearch } from 'react-icons/bi';
 import { popMovie } from '..';
 
-import BackgroundStyle from '../../components/Layout/BackgroundStyle';
-import { SearchIcon } from '../../components/Layout/Header';
-import SearchTicketList from '../../components/SearchTicketList';
+import BackgroundStyle from '../../components/layout/BackgroundStyle';
+import { SearchIcon } from '../../components/layout/Header';
+import SearchTicketList from '../../components/search/SearchTicketList';
 
 const SearchPage: NextPage = () => {
   const [movieName, setMovieName] = useState('');

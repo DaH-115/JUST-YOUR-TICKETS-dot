@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import { TicketProps } from './Main/MovieTicket';
-import AdmitBtn from './Ticket/AdmitBtn';
-import InfoButton from './Ticket/InfoButton';
-import MovieTextDetail from './Ticket/MovieTextDetail';
+
+import { TicketProps } from '../main/MovieTicket';
+import AdmitBtn from '../ticket/AdmitBtn';
+import InfoButton from '../ticket/InfoButton';
+import MovieTextDetail from '../ticket/MovieTextDetail';
 
 const SearchTicketList = ({
   title,
@@ -79,13 +80,12 @@ const SearchResultWrapper = styled.div`
 const SearchResult = styled.div`
   display: flex;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  max-width: 600px;
   padding: 0rem 1rem;
   padding-left: 0.5rem;
   margin-bottom: 1rem;
-  width: 100%;
-  height: 150px;
-  max-width: 600px;
-  filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 0.2));
 `;
 
 const TestStyled = styled.div`

@@ -1,9 +1,9 @@
 import { GetStaticProps, NextPage } from 'next';
 import axios from 'axios';
 
-import BackgroundStyle from '../components/Layout/BackgroundStyle';
+import BackgroundStyle from '../components/layout/BackgroundStyle';
 import SlideList from '../components/SlideList';
-import TopMovieSlider from '../components/Main/TopMovieSlider';
+import TopMovieSlider from '../components/main/TopMovieSlider';
 
 export interface popMovie {
   id: number;

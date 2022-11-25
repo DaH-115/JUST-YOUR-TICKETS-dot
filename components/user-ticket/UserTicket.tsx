@@ -2,9 +2,9 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { UserTicketProps } from '../../pages/ticket-list';
 
-import InfoButton from '../Ticket/InfoButton';
-import MovieTicketDetail from '../Ticket/MovieTicketDetail';
-import PosterImage from '../Ticket/PosterImage';
+import InfoButton from '../ticket/InfoButton';
+import MovieTicketDetail from '../ticket/MovieTicketDetail';
+import PosterImage from '../ticket/PosterImage';
 
 const UserTicket = (props: UserTicketProps) => {
   const writeDate = new Date(props.createdAt).toLocaleDateString();

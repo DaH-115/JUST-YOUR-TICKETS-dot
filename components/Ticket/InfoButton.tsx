@@ -1,7 +1,7 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { AiFillInfoCircle } from 'react-icons/ai';
-import { useRouter } from 'next/router';
 
 interface InfoProps {
   title: string;

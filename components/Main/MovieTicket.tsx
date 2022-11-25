@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import styled from 'styled-components';
 
-import InfoButton from '../Ticket/InfoButton';
-import PosterImage from '../Ticket/PosterImage';
-import MovieTicketDetail from '../Ticket/MovieTicketDetail';
+import InfoButton from '../ticket/InfoButton';
+import PosterImage from '../ticket/PosterImage';
+import MovieTicketDetail from '../ticket/MovieTicketDetail';
 
 export interface TicketProps {
   title: string;

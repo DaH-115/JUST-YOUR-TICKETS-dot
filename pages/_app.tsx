@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '../styles/global-style';
 import { theme } from '../styles/theme';
 
-import Header from '../components/Layout/Header';
+import Header from '../components/layout/Header';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

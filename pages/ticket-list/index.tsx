@@ -2,8 +2,8 @@ import { GetStaticProps, NextPage } from 'next';
 import { collection, DocumentData, getDocs, query } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
 
-import BackgroundStyle from '../../components/Layout/BackgroundStyle';
-import UserTicketSlider from '../../components/UserTicket/UserTicketSlider';
+import BackgroundStyle from '../../components/layout/BackgroundStyle';
+import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
 import SlideList from '../../components/SlideList';
 
 export interface UserTicketProps {
