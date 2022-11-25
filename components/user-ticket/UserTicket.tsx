@@ -43,8 +43,13 @@ export default UserTicket;
 
 const TicketWrapper = styled.div`
   width: 360px;
-  margin-top: 2rem;
+  margin-top: 4rem;
   filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 0.2));
+
+  &:hover {
+    transform: translateY(-2rem);
+    transition: transform ease-in-out 250ms;
+  }
 `;
 
 const MovieIndex = styled.div`

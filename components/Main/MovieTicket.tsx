@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import styled from 'styled-components';
+import useGetJanres from '../hooks/useGetJanres';
 
 import InfoButton from '../ticket/InfoButton';
 import PosterImage from '../ticket/PosterImage';
@@ -19,27 +18,8 @@ export interface TicketProps {
 
 const MovieTicket = (props: TicketProps) => {
   const router = useRouter();
-  const [janre, setJanre] = useState<string[]>([]);
-  const movieId = props.movieId;
+  const janres = useGetJanres(props.movieId);
   const releaseYear = props.releaseDate.slice(0, 4);
-
-  // 🎈 GET Genres
-  useEffect(() => {
-    if (movieId) {
-      (async () => {
-        const res = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
-        );
-        const data = await res.data;
-
-        const result = data.genres.map(
-          (item: { id: number; name: string }) => item.name
-        );
-
-        setJanre(result);
-      })();
-    }
-  }, [movieId]);
 
   return (
     <TicketWrapper>
@@ -53,7 +33,7 @@ const MovieTicket = (props: TicketProps) => {
           releaseYear={releaseYear}
           posterPath={props.posterPath}
           voteAverage={props.voteAverage}
-          janre={janre}
+          janre={janres}
           overview={props.overview}
         />
       </MovieIndex>
@@ -66,7 +46,7 @@ const MovieTicket = (props: TicketProps) => {
         title={props.title}
         releaseYear={releaseYear}
         voteAverage={props.voteAverage}
-        janre={janre}
+        janre={janres}
         posterPath={props.posterPath}
       />
     </TicketWrapper>
@@ -75,8 +55,13 @@ const MovieTicket = (props: TicketProps) => {
 
 const TicketWrapper = styled.div`
   width: 360px;
-  margin-top: 2rem;
+  margin-top: 4rem;
   filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 0.2));
+
+  &:hover {
+    transform: translateY(-2rem);
+    transition: transform ease-in-out 250ms;
+  }
 `;
 
 const MovieIndex = styled.div<{ routePath: string }>`

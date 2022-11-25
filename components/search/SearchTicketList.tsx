@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
+import useGetJanres from '../hooks/useGetJanres';
 
 import { TicketProps } from '../main/MovieTicket';
 import AdmitBtn from '../ticket/AdmitBtn';
@@ -16,26 +15,8 @@ const SearchTicketList = ({
   posterPath,
   overview,
 }: TicketProps) => {
-  const [janre, setJanre] = useState<string[]>([]);
+  const janres = useGetJanres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
-
-  // 🎈 GET Genres
-  useEffect(() => {
-    if (movieId) {
-      (async () => {
-        const res = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
-        );
-        const data = await res.data;
-
-        const result = data.genres.map(
-          (item: { id: number; name: string }) => item.name
-        );
-
-        setJanre(result);
-      })();
-    }
-  }, [movieId]);
 
   return (
     <SearchResultWrapper>
@@ -44,7 +25,7 @@ const SearchTicketList = ({
           <InfoButton
             title={title}
             releaseYear={releaseYear}
-            janre={janre}
+            janre={janres}
             voteAverage={voteAverage}
             overview={overview}
             posterPath={posterPath}
@@ -53,7 +34,7 @@ const SearchTicketList = ({
         <MovieTextDetail
           title={title}
           releaseYear={releaseYear}
-          janre={janre}
+          janre={janres}
           voteAverage={voteAverage}
         />
         <AdmitBtn

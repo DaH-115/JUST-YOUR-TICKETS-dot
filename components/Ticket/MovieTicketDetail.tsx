@@ -24,7 +24,7 @@ const MovieTicketDetail = ({
       <MovieTextDetail
         title={title}
         releaseYear={releaseYear}
-        rating={voteAverage}
+        voteAverage={voteAverage}
         reviewText={reviewText}
         janre={janre}
       />
@@ -49,7 +49,7 @@ const MovieDetailWrapper = styled.div`
   left: 0;
   display: flex;
   width: 100%;
-  height: 10rem;
+  height: 100%;
   color: ${({ theme }) => theme.colors.black};
   filter: drop-shadow(0px 0px 40px rgba(50, 50, 50, 0.9));
 `;

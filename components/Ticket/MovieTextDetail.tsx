@@ -21,7 +21,9 @@ const MovieTextDetail = ({
         <h1>
           {title} ({releaseYear})
         </h1>
-        <p>*{voteAverage} /10</p>
+        <MovieRating>
+          *<p>{voteAverage}</p> /10
+        </MovieRating>
       </MovieTitle>
 
       {janre && (
@@ -49,23 +51,26 @@ const TextWrapper = styled.div<{ reviewState: string }>`
 
 const MovieTitle = styled.div`
   width: auto;
-  height: 3.5rem;
-  font-size: 0.5rem;
+  height: 4rem;
+  font-size: 1rem;
   color: ${({ theme }) => theme.colors.black};
-  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.black};
   overflow-y: scroll;
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
   h1 {
-    font-size: 1rem;
     font-weight: 700;
-    padding: 0;
   }
+`;
+
+const MovieRating = styled.div`
+  display: flex;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
 
   p {
-    font-size: 1rem;
-    padding: 0.3rem 0;
+    font-weight: 700;
   }
 `;
 
@@ -75,7 +80,6 @@ const MovieJanreWrapper = styled.ul`
   width: 100%;
   height: 2rem;
   overflow-y: scroll;
-  margin-top: 0.4rem;
   font-size: 1rem;
   color: ${({ theme }) => theme.colors.black};
 
@@ -96,6 +100,7 @@ const MovieJanreWrapper = styled.ul`
 
 const StyledReviewText = styled.p`
   width: 100%;
+  margin: 1rem 0;
   margin-top: 0.5rem;
   overflow-y: scroll;
 

@@ -39,12 +39,12 @@ const ImgBox = styled.div`
     border-radius: 1.5rem;
   }
 
-  &:hover {
+  /* &:hover {
     Img {
       scale: 105%;
       transition: scale ease-in 150ms;
     }
-  }
+  } */
 `;
 
 const NoneImg = styled.div`
