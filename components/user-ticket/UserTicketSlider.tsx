@@ -7,16 +7,13 @@ import {
   MdOutlineArrowForwardIos,
 } from 'react-icons/md';
 
-import { popMovie } from '../../pages';
-import MovieTicket from './MovieTicket';
+import UserTicket from './UserTicket';
+import { UserTicketProps } from '../../pages/ticket-list';
 import { StyledArrow } from '../styles/StyledArrow';
 
-const TopMovieSlider = ({ movies }: { movies: popMovie[] }) => {
+const UserTicketSlider = ({ movies }: { movies: UserTicketProps[] }) => {
   const settings = {
-    infinite: true,
     speed: 500,
-    autoplay: false,
-    autoplaySpeed: 2000,
     slidesToShow: 4,
     slidesToScroll: 1,
     nextArrow: (
@@ -49,17 +46,16 @@ const TopMovieSlider = ({ movies }: { movies: popMovie[] }) => {
 
   return (
     <StyledSlider {...settings}>
-      {movies.map((item: popMovie, index: number) => {
+      {movies.map((item: UserTicketProps) => {
         return (
-          <MovieTicket
-            key={index}
-            movieId={item.id}
-            movieIndex={index + 1}
+          <UserTicket
+            key={item.id}
             title={item.title}
-            voteAverage={item.vote_average}
-            releaseDate={item.release_date}
-            posterPath={item.poster_path}
-            overview={item.overview}
+            releaseYear={item.releaseYear}
+            rating={item.rating}
+            createdAt={item.createdAt}
+            reviewText={item.reviewText}
+            posterImage={item.posterImage}
           />
         );
       })}
@@ -67,10 +63,17 @@ const TopMovieSlider = ({ movies }: { movies: popMovie[] }) => {
   );
 };
 
+export default UserTicketSlider;
+
 const StyledSlider = styled(Slider)`
   .slick-list {
     width: 100%;
+    height: 100%;
     padding: 0 1rem;
+
+    ${({ theme }) => theme.device.desktop} {
+      height: 100vh;
+    }
   }
 
   .slick-arrow {
@@ -78,7 +81,6 @@ const StyledSlider = styled(Slider)`
     padding: 0;
   }
 `;
-
 // ⬅️ ➡️ ARROW BUTTON STYLE
 const StyledArrowNext = styled(StyledArrow)`
   right: 2rem;
@@ -86,5 +88,3 @@ const StyledArrowNext = styled(StyledArrow)`
 const StyledArrowPrev = styled(StyledArrow)`
   left: 2rem;
 `;
-
-export default TopMovieSlider;
