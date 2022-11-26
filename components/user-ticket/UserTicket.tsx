@@ -1,11 +1,14 @@
 import styled from 'styled-components';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { db } from '../../firebase/firebase';
 import { UserTicketProps } from '../../pages/ticket-list';
 import { BiPencil, BiTrash } from 'react-icons/bi';
 
 import InfoButton from '../ticket/InfoButton';
 import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import PosterImage from '../ticket/PosterImage';
-import Link from 'next/link';
 
 const UserTicket = ({
   id: ticketId,
@@ -16,22 +19,33 @@ const UserTicket = ({
   reviewText,
   createdAt,
 }: UserTicketProps) => {
+  const router = useRouter();
   const writeDate = new Date(createdAt).toLocaleDateString();
+
+  const deleteContent = async () => {
+    const userTicketRef = doc(db, 'users-tickets', `${ticketId}`);
+
+    try {
+      await deleteDoc(userTicketRef);
+
+      console.log('Delete Complete!');
+      router.push('/ticket-list');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <TicketWrapper>
       <MovieIndex>
         <WriteDate>{writeDate}</WriteDate>
 
-        {/* [TEST] 🎈 DELETE BUTTON */}
         <ButtonWrapper>
-          <StyledBtn>
+          <StyledBtn onClick={deleteContent}>
             <button>
               <BiTrash />
             </button>
           </StyledBtn>
-
-          {/* [TEST] 🎈 GO TO "/write" PAGE BUTTON */}
           <Link
             href={{
               pathname: '/write',
@@ -105,18 +119,18 @@ const StyledBtn = styled.div`
   }
 `;
 
-// const UpdateBtn = styled(StyledBtn)``;
-
-// const DeleteBtn = styled(StyledBtn)``;
-
 const TicketWrapper = styled.div`
   width: 360px;
-  margin-top: 4rem;
+  margin-top: 2rem;
   filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 0.2));
 
-  &:hover {
-    transform: translateY(-2rem);
-    transition: transform ease-in-out 250ms;
+  ${({ theme }) => theme.device.desktop} {
+    margin-top: 4rem;
+
+    &:hover {
+      transform: translateY(-2rem);
+      transition: transform ease-in-out 250ms;
+    }
   }
 `;
 

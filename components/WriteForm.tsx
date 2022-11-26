@@ -51,7 +51,7 @@ const WriteForm = ({
         reviewText,
       });
 
-      console.log('Update omplete!');
+      console.log('Update Complete!');
       router.push('/ticket-list');
     } catch (error) {
       console.log(error);
@@ -70,6 +70,7 @@ const WriteForm = ({
       });
 
       console.log('Add contents complete!');
+      router.push('/ticket-list');
     } catch (error) {
       console.log(error);
     }
@@ -87,7 +88,6 @@ const WriteForm = ({
     }
 
     addContents(ratingText, reviewText);
-    router.push('/ticket-list');
   };
 
   return (

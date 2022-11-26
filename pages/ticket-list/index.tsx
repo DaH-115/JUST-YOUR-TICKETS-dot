@@ -5,6 +5,7 @@ import { db } from '../../firebase/firebase';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
 import SlideList from '../../components/SlideList';
+import { NoneResults } from '../search';
 
 export interface UserTicketProps {
   id: string;
@@ -19,10 +20,16 @@ export interface UserTicketProps {
 const TicketListPage: NextPage<{ usersTicket: UserTicketProps[] }> = ({
   usersTicket,
 }) => {
+  const ticketLength = usersTicket.length;
+
   return (
     <BackgroundStyle customMessage='your🍿' backgroundColor='black'>
-      <SlideList title='나의 티켓'>
-        <UserTicketSlider movies={usersTicket} />
+      <SlideList title='나의 티켓' ticketLength={ticketLength}>
+        {ticketLength === 0 ? (
+          <NoneResults>아직 나의 티켓이 없습니다.</NoneResults>
+        ) : (
+          <UserTicketSlider movies={usersTicket} />
+        )}
       </SlideList>
     </BackgroundStyle>
   );

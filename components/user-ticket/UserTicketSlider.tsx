@@ -70,6 +70,7 @@ const StyledSlider = styled(Slider)`
   .slick-list {
     width: 100%;
     height: 100%;
+    background-color: ${({ theme }) => theme.colors.black};
     padding: 0 1rem;
 
     ${({ theme }) => theme.device.desktop} {

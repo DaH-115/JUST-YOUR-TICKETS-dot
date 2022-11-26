@@ -74,23 +74,32 @@ const SearchPage: NextPage = () => {
   );
 };
 
-const NoneResults = styled.p`
-  padding: 0 1rem;
+export const NoneResults = styled.p`
+  width: 100%;
+  height: 100vh;
+  color: #fff;
+  background-color: ${({ theme }) => theme.colors.black};
+  padding-top: 1rem;
+  padding-left: 1rem;
   font-size: 1.2rem;
   font-weight: 400;
-`;
 
-const SearchTitle = styled.p`
-  padding: 1rem;
-  font-size: 1.5rem;
-  font-weight: 700;
+  ${({ theme }) => theme.device.desktop} {
+    padding-left: 2rem;
+  }
 `;
 
 const SearchWrapper = styled.div`
   width: 100%;
-  height: 100vh;
   background-color: ${({ theme }) => theme.colors.black};
+`;
+
+const SearchTitle = styled.p`
   color: #fff;
+  padding-top: 1rem;
+  padding-left: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
 `;
 
 const FormWrapper = styled.div`

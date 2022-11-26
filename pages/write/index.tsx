@@ -20,8 +20,6 @@ const WritePage: NextPage = () => {
   const { title, releaseYear, posterImage, rating, reviewText, ticketId } =
     route.query as unknown as WriteFormProps;
 
-  console.log(route.query);
-
   return (
     <WriteForm
       title={title}

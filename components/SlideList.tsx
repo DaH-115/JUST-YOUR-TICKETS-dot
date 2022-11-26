@@ -3,14 +3,19 @@ import { SlideTitle } from './styles/StyledTitle';
 
 const SlideList = ({
   title,
+  ticketLength,
   children,
 }: {
   title: string;
+  ticketLength: number;
   children: React.ReactNode;
 }) => {
   return (
     <Container>
-      <SlideTitle>{title}</SlideTitle>
+      <TextWrapper>
+        <SlideTitle>{title}</SlideTitle>
+        {ticketLength && <TicketLength>{ticketLength} 장</TicketLength>}
+      </TextWrapper>
       {children}
     </Container>
   );
@@ -19,6 +24,18 @@ const SlideList = ({
 export default SlideList;
 
 const Container = styled.div`
-  width: auto;
-  background-color: ${({ theme }) => theme.colors.black};
+  width: 100%;
+  height: 100%;
+`;
+
+const TextWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const TicketLength = styled.p`
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-left: 1rem;
 `;
