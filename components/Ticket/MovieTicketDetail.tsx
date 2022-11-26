@@ -6,6 +6,7 @@ interface TicketDetailProps {
   title: string;
   voteAverage: number | string;
   releaseYear: string;
+  ticketId?: string;
   posterPath?: string;
   reviewText?: string;
   janre?: string[];

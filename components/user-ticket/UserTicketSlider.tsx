@@ -50,6 +50,7 @@ const UserTicketSlider = ({ movies }: { movies: UserTicketProps[] }) => {
         return (
           <UserTicket
             key={item.id}
+            id={item.id}
             title={item.title}
             releaseYear={item.releaseYear}
             rating={item.rating}
@@ -81,6 +82,7 @@ const StyledSlider = styled(Slider)`
     padding: 0;
   }
 `;
+
 // ⬅️ ➡️ ARROW BUTTON STYLE
 const StyledArrowNext = styled(StyledArrow)`
   right: 2rem;

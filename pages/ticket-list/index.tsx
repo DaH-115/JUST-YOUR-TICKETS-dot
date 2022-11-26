@@ -7,7 +7,7 @@ import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
 import SlideList from '../../components/SlideList';
 
 export interface UserTicketProps {
-  id?: string;
+  id: string;
   title: string;
   releaseYear: string;
   rating: number | string;

@@ -16,8 +16,8 @@ const AdmitBtn = ({
       href={{
         pathname: '/write',
         query: {
-          title: title,
-          releaseYear: releaseYear,
+          title,
+          releaseYear,
           posterImage: `https://image.tmdb.org/t/p/w500/${posterPath}`,
         },
       }}
