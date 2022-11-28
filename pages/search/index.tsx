@@ -6,7 +6,6 @@ import { BiSearch } from 'react-icons/bi';
 import { popMovie } from '..';
 
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
-import { SearchIcon } from '../../components/layout/Header';
 import SearchTicketList from '../../components/search/SearchTicketList';
 
 const SearchPage: NextPage = () => {
@@ -37,9 +36,6 @@ const SearchPage: NextPage = () => {
       <FormWrapper>
         <StyledForm onSubmit={searchInputHandler} action='get'>
           <StyledLabel htmlFor='search-input'>영화 검색</StyledLabel>
-          <InputSearchIcon>
-            <BiSearch />
-          </InputSearchIcon>
           <StyledInput
             type='text'
             id='search-input'
@@ -47,6 +43,9 @@ const SearchPage: NextPage = () => {
             onChange={inputChangeHandler}
             placeholder='Search Your Ticket.'
           />
+          <InputSearchBtn>
+            <BiSearch />
+          </InputSearchBtn>
         </StyledForm>
       </FormWrapper>
 
@@ -96,9 +95,13 @@ const SearchWrapper = styled.div`
 const SearchTitle = styled.p`
   color: #fff;
   padding-top: 1rem;
-  padding-left: 2rem;
+  padding-left: 1rem;
   font-size: 1.5rem;
   font-weight: 700;
+
+  ${({ theme }) => theme.device.desktop} {
+    padding-left: 2rem;
+  }
 `;
 
 const FormWrapper = styled.div`
@@ -117,7 +120,6 @@ const StyledLabel = styled.label`
 
 const StyledForm = styled.form`
   display: flex;
-  width: 70%;
   margin-bottom: 1rem;
 
   ${({ theme }) => theme.device.desktop} {
@@ -127,13 +129,16 @@ const StyledForm = styled.form`
 
 const StyledInput = styled.input`
   width: 100%;
-  height: 1.3rem;
-  padding: 1rem;
-  padding-left: 2.4rem;
+  padding: 0.1rem 1rem;
   border: none;
-  border-radius: 1rem;
-  font-size: 0.7rem;
+  border-radius: 2rem;
+  font-size: 0.8rem;
   font-weight: 600;
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.orange};
+    box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
+  }
 
   &::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -151,32 +156,26 @@ const StyledInput = styled.input`
     color: ${({ theme }) => theme.colors.gray};
   }
 
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.orange};
-    box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
-  }
-
   ${({ theme }) => theme.device.desktop} {
-    font-size: 1.2rem;
-    padding: 1.4rem 2rem;
-    padding-left: 3.5rem;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
     border-radius: 2rem;
   }
 `;
 
-const InputSearchIcon = styled(SearchIcon)`
-  position: absolute;
-  top: 11.8rem;
-  left: 3.2rem;
+const InputSearchBtn = styled.div`
+  width: 2.5rem;
+  height: 2.5rem;
   font-size: 1.5rem;
-  background-color: inherit;
-  color: ${({ theme }) => theme.colors.gray};
-  filter: none;
+  padding: 0.6rem;
+  color: ${({ theme }) => theme.colors.black};
+  background-color: #fff;
+  border-radius: 50%;
+  margin-left: 0.5rem;
 
-  ${({ theme }) => theme.device.desktop} {
-    top: 15rem;
-    left: 14rem;
-    font-size: 2rem;
+  &:hover,
+  &:active {
+    background-color: ${({ theme }) => theme.colors.orange};
   }
 `;
 

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { ReactNode } from 'react';
 import styled from 'styled-components';
 
@@ -15,13 +14,12 @@ const BackgroundStyle = ({
 }: BackgroundStyleProps) => {
   return (
     <Wrapper backgroundColor={backgroundColor}>
-      <Link href='/'>
-        <PageTitle backgroundColor={backgroundColor}>
-          <p>JUST</p>
-          <CustomMessage>{customMessage}</CustomMessage>
-          <p>TICKTES.</p>
-        </PageTitle>
-      </Link>
+      <PageTitle backgroundColor={backgroundColor}>
+        <p>JUST</p>
+        <CustomMessage>{customMessage}</CustomMessage>
+        <p>TICKTES.</p>
+      </PageTitle>
+
       {children}
     </Wrapper>
   );

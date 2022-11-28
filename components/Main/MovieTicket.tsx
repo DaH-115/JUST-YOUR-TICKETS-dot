@@ -56,6 +56,8 @@ const MovieTicket = (props: TicketProps) => {
 const TicketWrapper = styled.div`
   width: 360px;
   margin-top: 2rem;
+  margin-left: 0.5rem;
+  margin-right: 1rem;
   filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 0.2));
 
   ${({ theme }) => theme.device.desktop} {
@@ -80,7 +82,7 @@ const MovieIndex = styled.div<{ routePath: string }>`
   font-weight: 700;
   background: linear-gradient(
     180deg,
-    ${({ theme }) => theme.colors.black} 40%,
+    ${({ theme }) => theme.colors.black} 30%,
     transparent
   );
   border-top-left-radius: 1.5rem;

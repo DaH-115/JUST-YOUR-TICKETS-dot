@@ -67,11 +67,13 @@ const UserTicketSlider = ({ movies }: { movies: UserTicketProps[] }) => {
 export default UserTicketSlider;
 
 const StyledSlider = styled(Slider)`
+  /* position: absolute;
+  top: 5rem;
+  left: 1rem; */
+  width: 100%;
+
   .slick-list {
-    width: 100%;
-    height: 100%;
-    background-color: ${({ theme }) => theme.colors.black};
-    padding: 0 1rem;
+    /* padding: 0 1rem; */
 
     ${({ theme }) => theme.device.desktop} {
       height: 100vh;

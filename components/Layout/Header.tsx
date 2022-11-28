@@ -51,10 +51,10 @@ export const SearchIcon = styled.div<{ path?: string }>`
   top: 3rem;
   right: 1rem;
   z-index: 999;
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
   padding: 0.5rem;
-  font-size: 2rem;
   color: ${({ theme }) => theme.colors.black};
   background-color: ${({ path, theme }) =>
     path === '/search' ? theme.colors.orange : theme.colors.yellow};
