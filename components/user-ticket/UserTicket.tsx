@@ -1,14 +1,17 @@
-import styled from 'styled-components';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase';
+import styled from 'styled-components';
 import { UserTicketProps } from '../../pages/ticket-list';
 import { BiPencil, BiTrash } from 'react-icons/bi';
 
 import InfoButton from '../ticket/InfoButton';
 import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import PosterImage from '../ticket/PosterImage';
+import AlertPopup from '../../components/layout/AlertPopup';
+import PortalAlertPopup from '../../components/PortalAlert';
 
 const UserTicket = ({
   id: ticketId,
@@ -19,6 +22,7 @@ const UserTicket = ({
   reviewText,
   createdAt,
 }: UserTicketProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const writeDate = new Date(createdAt).toLocaleDateString();
 
@@ -35,17 +39,30 @@ const UserTicket = ({
     }
   };
 
+  const onToggleHandler = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   return (
     <TicketWrapper>
+      {isOpen && (
+        <PortalAlertPopup>
+          <AlertPopup
+            onCancelHandler={onToggleHandler}
+            onConfirmHandler={deleteContent}
+          />
+        </PortalAlertPopup>
+      )}
+
       <MovieIndex>
         <WriteDate>{writeDate}</WriteDate>
 
         <ButtonWrapper>
-          <StyledBtn onClick={deleteContent}>
+          <CancelBtn onClick={onToggleHandler}>
             <button>
               <BiTrash />
             </button>
-          </StyledBtn>
+          </CancelBtn>
           <Link
             href={{
               pathname: '/write',
@@ -99,6 +116,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 1rem;
+  padding-right: 0.4rem;
 `;
 
 const StyledBtn = styled.div`
@@ -116,6 +134,15 @@ const StyledBtn = styled.div`
     font-size: 1rem;
     line-height: 1rem;
     margin-right: 1rem;
+  }
+`;
+
+const CancelBtn = styled(StyledBtn)`
+  button {
+    &:hover,
+    &:active {
+      color: ${({ theme }) => theme.colors.orange};
+    }
   }
 `;
 

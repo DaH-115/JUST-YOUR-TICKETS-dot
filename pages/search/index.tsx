@@ -50,7 +50,6 @@ const SearchPage: NextPage = () => {
         </StyledForm>
       </FormWrapper>
 
-      {/* ✔️ Test Part */}
       <SearchWrapper>
         <SearchTitle>검색 결과</SearchTitle>
         {!searchResults ? (

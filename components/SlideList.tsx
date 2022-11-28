@@ -7,7 +7,7 @@ const SlideList = ({
   children,
 }: {
   title: string;
-  ticketLength: number;
+  ticketLength?: number;
   children: React.ReactNode;
 }) => {
   return (
