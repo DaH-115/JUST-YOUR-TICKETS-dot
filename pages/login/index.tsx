@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
 
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 
 const LoginPage: NextPage = () => {
-  const [userId, setUserId] = useState('');
-  const [signUp, setSignUp] = useState(false);
-  const [userPassword, setUserPassword] = useState('');
+  const [signUp, setSignUp] = useState<boolean>(false);
+  // User EMAIL-PASSWORD Text
+  const [userEmail, setUserEmail] = useState<string>('');
+  const [userPassword, setUserPassword] = useState<string>('');
+  // Validation State
+  const [isEmail, setIsEmail] = useState<boolean>(false);
+  const [isPassword, setIsPassword] = useState<boolean>(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current!.focus();
+  }, []);
 
   const onSignUpToggleHandler = () => {
     setSignUp((prev) => !prev);
@@ -15,19 +25,43 @@ const LoginPage: NextPage = () => {
 
   const onSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(userId, userPassword);
+    console.log(userEmail, userPassword);
   };
 
-  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.id === 'user-id') {
-      setUserId(event.target.value);
-      return;
+  const onEmailChangeHandler = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setUserEmail(target.value);
+
+    const emailCheckRegex =
+      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    const emailValue = target.value;
+
+    if (!emailCheckRegex.test(emailValue)) {
+      setIsEmail(false);
+    } else {
+      setIsEmail(true);
     }
 
-    if (event.target.id === 'user-password') {
-      setUserPassword(event.target.value);
-      return;
+    return;
+  };
+
+  const onPasswordChangeHandler = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setUserPassword(target.value);
+
+    const passwordCheckRegex =
+      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+    const passwordValue = target.value;
+
+    if (!passwordCheckRegex.test(passwordValue)) {
+      setIsPassword(false);
+    } else {
+      setIsPassword(true);
     }
+
+    return;
   };
 
   return (
@@ -37,22 +71,55 @@ const LoginPage: NextPage = () => {
           {!signUp ? '*Sign In /로그인' : '*Sign Up /회원가입'}
         </LoginForTitle>
         <LoginForm onSubmit={onSubmitHandler}>
-          <label htmlFor='user-id'>*ID /아이디</label>
+          {/* ID */}
+          <label htmlFor='user-id'>*EMAIL /이메일</label>
           <StyledInput
             type='text'
             id='user-id'
-            value={userId}
-            onChange={onChangeHandler}
+            value={userEmail}
+            onChange={onEmailChangeHandler}
+            ref={inputRef}
           />
+          {!userEmail ? (
+            <ValidationMsg isState={isEmail}>
+              이메일을 입력해 주세요.
+            </ValidationMsg>
+          ) : !isEmail ? (
+            <ValidationMsg isState={isEmail}>
+              이메일은 " @ " , " . " 을 포함해야합니다.
+            </ValidationMsg>
+          ) : (
+            <ValidationMsg isState={isEmail}>
+              올바른 이메일 형식이에요!
+            </ValidationMsg>
+          )}
+
+          {/* PASSWORD */}
           <label htmlFor='user-password'>*PASSWORD /비밀번호</label>
           <StyledInput
             type='password'
             id='user-password'
             value={userPassword}
-            onChange={onChangeHandler}
+            onChange={onPasswordChangeHandler}
           />
-          <LoginBtn>입력</LoginBtn>
+          {!userPassword ? (
+            <ValidationMsg isState={isPassword}>
+              비밀번호를 입력해 주세요.
+            </ValidationMsg>
+          ) : !isPassword ? (
+            <ValidationMsg isState={isPassword}>
+              비밀번호는 숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력
+              해주세요.
+            </ValidationMsg>
+          ) : (
+            <ValidationMsg isState={isPassword}>
+              안전한 비밀번호에요!
+            </ValidationMsg>
+          )}
+
+          <LoginBtn type='submit'>입력</LoginBtn>
         </LoginForm>
+
         <ToggleText onClick={onSignUpToggleHandler}>
           {!signUp ? '회원가입' : '로그인'}
         </ToggleText>
@@ -87,7 +154,6 @@ const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   width: 90%;
 
   label {
@@ -106,7 +172,7 @@ const StyledInput = styled.input`
   width: 100%;
   padding: 0.8rem 1rem;
   border-radius: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   font-weight: 700;
 
   &[type='password'] {
@@ -115,9 +181,17 @@ const StyledInput = styled.input`
   }
 
   &:focus {
+    border: none;
     border-color: ${({ theme }) => theme.colors.orange};
     box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
   }
+`;
+
+const ValidationMsg = styled.p<{ isState: boolean }>`
+  font-size: 0.7rem;
+  color: ${({ theme, isState }) => (isState ? '#fff' : theme.colors.orange)};
+  margin-bottom: 1rem;
+  padding-left: 0.2rem;
 `;
 
 const LoginBtn = styled.button`
