@@ -1,23 +1,60 @@
 import { useState, useRef, useEffect } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
+import { auth } from '../../firebase/firebase';
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
+import { useRouter } from 'next/router';
 
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 
 const LoginPage: NextPage = () => {
+  const route = useRouter();
   const [signUp, setSignUp] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   // User EMAIL-PASSWORD Text
   const [userEmail, setUserEmail] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
   // Validation State
   const [isEmail, setIsEmail] = useState<boolean>(false);
   const [isPassword, setIsPassword] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const isDisabled = isEmail && isPassword ? false : true;
 
   useEffect(() => {
     inputRef.current!.focus();
   }, []);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        route.push('/');
+        return;
+      }
+    });
+  }, []);
+
+  const getUser = async () => {
+    if (signUp) {
+      // Sign Up
+      try {
+        await createUserWithEmailAndPassword(auth, userEmail, userPassword);
+      } catch (error) {
+        setError(true);
+      }
+    } else {
+      // Sign In
+      try {
+        await signInWithEmailAndPassword(auth, userEmail, userPassword);
+      } catch (error) {
+        setError(true);
+      }
+    }
+  };
 
   const onSignUpToggleHandler = () => {
     setSignUp((prev) => !prev);
@@ -25,7 +62,9 @@ const LoginPage: NextPage = () => {
 
   const onSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(userEmail, userPassword);
+
+    setUserEmail('');
+    setUserPassword('');
   };
 
   const onEmailChangeHandler = ({
@@ -68,8 +107,9 @@ const LoginPage: NextPage = () => {
     <BackgroundStyle customMessage='create📝' backgroundColor='black'>
       <LoginFormWrapper>
         <LoginForTitle>
-          {!signUp ? '*Sign In /로그인' : '*Sign Up /회원가입'}
+          {signUp ? '*Sign Up /회원가입' : '*Sign In /로그인'}
         </LoginForTitle>
+        {error && <ErrorMsg>아이디 또는 비밀번호를 확인해 주세요.</ErrorMsg>}
         <LoginForm onSubmit={onSubmitHandler}>
           {/* ID */}
           <label htmlFor='user-id'>*EMAIL /이메일</label>
@@ -88,11 +128,7 @@ const LoginPage: NextPage = () => {
             <ValidationMsg isState={isEmail}>
               이메일은 " @ " , " . " 을 포함해야합니다.
             </ValidationMsg>
-          ) : (
-            <ValidationMsg isState={isEmail}>
-              올바른 이메일 형식이에요!
-            </ValidationMsg>
-          )}
+          ) : null}
 
           {/* PASSWORD */}
           <label htmlFor='user-password'>*PASSWORD /비밀번호</label>
@@ -111,17 +147,14 @@ const LoginPage: NextPage = () => {
               비밀번호는 숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력
               해주세요.
             </ValidationMsg>
-          ) : (
-            <ValidationMsg isState={isPassword}>
-              안전한 비밀번호에요!
-            </ValidationMsg>
-          )}
-
-          <LoginBtn type='submit'>입력</LoginBtn>
+          ) : null}
+          <LoginBtn type='submit' disabled={isDisabled} onClick={getUser}>
+            입력
+          </LoginBtn>
         </LoginForm>
 
         <ToggleText onClick={onSignUpToggleHandler}>
-          {!signUp ? '회원가입' : '로그인'}
+          {signUp ? '로그인' : '회원가입'}
         </ToggleText>
       </LoginFormWrapper>
     </BackgroundStyle>
@@ -160,7 +193,7 @@ const LoginForm = styled.form`
     font-size: 0.8rem;
     color: ${({ theme }) => theme.colors.gray};
     margin-left: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
   }
 
   ${({ theme }) => theme.device.desktop} {
@@ -172,7 +205,7 @@ const StyledInput = styled.input`
   width: 100%;
   padding: 0.8rem 1rem;
   border-radius: 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
   font-weight: 700;
 
   &[type='password'] {
@@ -194,6 +227,12 @@ const ValidationMsg = styled.p<{ isState: boolean }>`
   padding-left: 0.2rem;
 `;
 
+const ErrorMsg = styled.p`
+  font-size: 0.7rem;
+  color: red;
+  margin-bottom: 1rem;
+`;
+
 const LoginBtn = styled.button`
   font-size: 1rem;
   font-weight: 700;
@@ -206,6 +245,10 @@ const LoginBtn = styled.button`
   &:hover,
   &:active {
     color: ${({ theme }) => theme.colors.yellow};
+  }
+
+  &:disabled {
+    background-color: ${({ theme }) => theme.colors.gray};
   }
 `;
 

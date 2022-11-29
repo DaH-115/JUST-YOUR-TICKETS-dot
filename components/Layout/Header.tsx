@@ -1,13 +1,37 @@
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { BiSearch } from 'react-icons/bi';
+import { auth } from '../../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const Header = () => {
-  const router = useRouter();
+  const route = useRouter();
+  const [userId, setUserId] = useState<string>('');
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        console.log('user is signed out');
+      }
+    });
+  }, []);
+
+  const onSignOutHandler = async () => {
+    try {
+      await auth.signOut();
+      setUserId('');
+      route.push('/login');
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
 
   return (
-    <HeaderIcons>
+    <HeaderMenu>
       <Link href='/'>
         <HeaderLi className='home'>HOME</HeaderLi>
       </Link>
@@ -15,15 +39,18 @@ const Header = () => {
         <HeaderLi>MY TICKETS</HeaderLi>
       </Link>
       <Link href='/search'>
-        <SearchIcon path={router.pathname}>
+        <SearchIcon path={route.pathname}>
           <BiSearch id='search-icon' />
         </SearchIcon>
       </Link>
-    </HeaderIcons>
+      {userId && <HeaderLi onClick={onSignOutHandler}>LOGOUT</HeaderLi>}
+    </HeaderMenu>
   );
 };
 
-const HeaderIcons = styled.ul`
+export default Header;
+
+const HeaderMenu = styled.ul`
   display: flex;
   justify-content: center;
   font-weight: 700;
@@ -73,5 +100,3 @@ export const SearchIcon = styled.div<{ path?: string }>`
     right: 2rem;
   }
 `;
-
-export default Header;
