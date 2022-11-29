@@ -26,12 +26,12 @@ const UserTicket = ({
   const router = useRouter();
   const writeDate = new Date(createdAt).toLocaleDateString();
 
-  const deleteContent = async () => {
+  const onDeleteHandler = async () => {
     const userTicketRef = doc(db, 'users-tickets', `${ticketId}`);
+    setIsOpen((prev) => !prev);
 
     try {
       await deleteDoc(userTicketRef);
-
       console.log('Delete Complete!');
       router.push('/ticket-list');
     } catch (error) {
@@ -49,7 +49,7 @@ const UserTicket = ({
         <PortalAlertPopup>
           <AlertPopup
             onCancelHandler={onToggleHandler}
-            onConfirmHandler={deleteContent}
+            onConfirmHandler={onDeleteHandler}
           />
         </PortalAlertPopup>
       )}
