@@ -7,24 +7,32 @@ import { popMovie } from '..';
 
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import SearchTicketList from '../../components/search/SearchTicketList';
+import { SystemError } from 'errorType';
 
 const SearchPage: NextPage = () => {
   const [movieName, setMovieName] = useState('');
   const [searchResults, setSearchResults] = useState<popMovie[]>();
 
   const getSearchResults = async (movieName: string) => {
-    const res = await axios.get(
-      `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_API_KEY}&query=${movieName}`
-    );
+    try {
+      const res = await axios.get(
+        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}`
+      );
 
-    const { results }: { results: popMovie[] } = await res.data;
+      const { results }: { results: popMovie[] } = await res.data;
 
-    setSearchResults(results);
+      setSearchResults(results);
+    } catch (error) {
+      const err = error as SystemError;
+      console.log(err.message);
+    }
   };
 
   const searchInputHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    getSearchResults(movieName);
+    if (movieName) {
+      getSearchResults(movieName);
+    }
   };
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +52,9 @@ const SearchPage: NextPage = () => {
             placeholder='Search Your Ticket.'
           />
           <InputSearchBtn>
-            <BiSearch />
+            <button type='submit'>
+              <BiSearch />
+            </button>
           </InputSearchBtn>
         </StyledForm>
       </FormWrapper>
@@ -96,8 +106,8 @@ const SearchWrapper = styled.div`
 
 const SearchTitle = styled.p`
   color: #fff;
-  padding-top: 1rem;
-  padding-left: 1rem;
+  padding: 1rem 1rem;
+  padding-right: 0;
   font-size: 1.5rem;
   font-weight: 700;
 
@@ -168,12 +178,16 @@ const StyledInput = styled.input`
 const InputSearchBtn = styled.div`
   width: 2.5rem;
   height: 2.5rem;
-  font-size: 1.5rem;
   padding: 0.6rem;
   color: ${({ theme }) => theme.colors.black};
   background-color: #fff;
   border-radius: 50%;
   margin-left: 0.5rem;
+
+  button {
+    font-size: 1.5rem;
+    background-color: transparent;
+  }
 
   &:hover,
   &:active {

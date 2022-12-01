@@ -4,6 +4,7 @@ import axios from 'axios';
 import BackgroundStyle from '../components/layout/BackgroundStyle';
 import SlideList from '../components/SlideList';
 import TopMovieSlider from '../components/main/TopMovieSlider';
+import { SystemError } from 'errorType';
 
 export interface popMovie {
   id: number;
@@ -36,8 +37,9 @@ export const getStaticProps: GetStaticProps<{
     const { results }: { results: popMovie[] } = await res.data;
 
     topTenMovies = results.splice(0, 10);
-  } catch (error: any) {
-    console.log(error.message);
+  } catch (error) {
+    const err = error as SystemError;
+    console.log(err.message);
   }
 
   return {

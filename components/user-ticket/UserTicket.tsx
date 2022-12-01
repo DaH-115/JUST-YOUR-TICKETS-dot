@@ -12,6 +12,7 @@ import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import PosterImage from '../ticket/PosterImage';
 import AlertPopup from '../../components/layout/AlertPopup';
 import PortalAlertPopup from '../../components/PortalAlert';
+import { SystemError } from 'errorType';
 
 const UserTicket = ({
   id: ticketId,
@@ -35,7 +36,8 @@ const UserTicket = ({
       console.log('Delete Complete!');
       router.push('/ticket-list');
     } catch (error) {
-      console.log(error);
+      const err = error as SystemError;
+      console.log(err.message);
     }
   };
 

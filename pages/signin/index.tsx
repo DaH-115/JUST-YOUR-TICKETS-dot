@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { useRouter } from 'next/router';
+import { SystemError } from 'errorType';
 
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 
@@ -30,12 +31,17 @@ const LoginPage: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        route.push('/');
-        return;
-      }
-    });
+    try {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          route.push('/');
+          return;
+        }
+      });
+    } catch (error) {
+      const err = error as SystemError;
+      console.log(err.message);
+    }
   }, []);
 
   const getUser = async () => {
@@ -44,6 +50,8 @@ const LoginPage: NextPage = () => {
       try {
         await createUserWithEmailAndPassword(auth, userEmail, userPassword);
       } catch (error) {
+        const err = error as SystemError;
+        console.log(err.message);
         setError(true);
       }
     } else {
@@ -51,6 +59,8 @@ const LoginPage: NextPage = () => {
       try {
         await signInWithEmailAndPassword(auth, userEmail, userPassword);
       } catch (error) {
+        const err = error as SystemError;
+        console.log(err.message);
         setError(true);
       }
     }

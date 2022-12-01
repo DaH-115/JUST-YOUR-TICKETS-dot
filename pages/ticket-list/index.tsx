@@ -9,6 +9,7 @@ import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
 import SlideList from '../../components/SlideList';
 import LoadingMsg from '../../components/LoadingMsg';
 import { NoneResults } from '../search';
+import { SystemError } from 'errorType';
 
 export interface UserTicketProps {
   id: string;
@@ -27,37 +28,45 @@ const TicketListPage: NextPage = () => {
   const ticketLength = usersTicket.length;
 
   useEffect(() => {
-    const getTicket = async () => {
-      setIsLoading(true);
+    try {
+      (async () => {
+        setIsLoading(true);
 
-      const ticketRef = collection(db, 'users-tickets');
-      const contentQuery = query(
-        ticketRef,
-        where('creatorId', '==', `${userId}`),
-        orderBy('createdAt', 'asc')
-      );
-      const dbContents = await getDocs(contentQuery);
+        const ticketRef = collection(db, 'users-tickets');
+        const contentQuery = query(
+          ticketRef,
+          where('creatorId', '==', `${userId}`),
+          orderBy('createdAt', 'asc')
+        );
+        const dbContents = await getDocs(contentQuery);
 
-      const newData = dbContents.docs.map((item: any) => ({
-        id: item.id,
-        ...item.data(),
-      }));
+        const newData = dbContents.docs.map((item: any) => ({
+          id: item.id,
+          ...item.data(),
+        }));
 
-      setUsersTicket(newData);
-      setIsLoading(false);
-    };
-
-    getTicket();
+        setUsersTicket(newData);
+        setIsLoading(false);
+      })();
+    } catch (error) {
+      const err = error as SystemError;
+      console.log(err.message);
+    }
   }, [userId]);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserId(user.uid);
-      } else {
-        console.log('user is signed out');
-      }
-    });
+    try {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUserId(user.uid);
+        } else {
+          console.log('user is signed out');
+        }
+      });
+    } catch (error) {
+      const err = error as SystemError;
+      console.log(err.message);
+    }
   }, []);
 
   return (

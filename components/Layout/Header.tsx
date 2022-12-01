@@ -5,20 +5,26 @@ import { useRouter } from 'next/router';
 import { BiSearch } from 'react-icons/bi';
 import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { SystemError } from 'errorType';
 
 const Header = () => {
   const route = useRouter();
   const [userId, setUserId] = useState<string>('');
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserId(user.uid);
-      } else {
-        route.push('/signin');
-        console.log('user is signed out');
-      }
-    });
+    try {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUserId(user.uid);
+        } else {
+          route.push('/signin');
+          console.log('user is signed out');
+        }
+      });
+    } catch (error) {
+      const err = error as SystemError;
+      console.log(err.message);
+    }
   }, []);
 
   const onSignOutHandler = async () => {
@@ -26,8 +32,9 @@ const Header = () => {
       await auth.signOut();
       setUserId('');
       route.push('/signin');
-    } catch (error: any) {
-      console.log(error.message);
+    } catch (error) {
+      const err = error as SystemError;
+      console.log(err.message);
     }
   };
 

@@ -6,6 +6,7 @@ import { auth, db } from '../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 import BackgroundStyle from './layout/BackgroundStyle';
+import { SystemError } from 'errorType';
 
 interface WriteFormProps {
   ticketId: string;
@@ -41,11 +42,16 @@ const WriteForm = ({
   }, []);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCreatorId(user.uid);
-      }
-    });
+    try {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setCreatorId(user.uid);
+        }
+      });
+    } catch (error) {
+      const err = error as SystemError;
+      console.log(err.message);
+    }
   }, []);
 
   const updateContents = async (
@@ -64,7 +70,8 @@ const WriteForm = ({
       console.log('Update Complete!');
       router.push('/ticket-list');
     } catch (error) {
-      console.log(error);
+      const err = error as SystemError;
+      console.log(err.message);
     }
   };
 
@@ -83,7 +90,8 @@ const WriteForm = ({
       console.log('Add contents complete!');
       router.push('/ticket-list');
     } catch (error) {
-      console.log(error);
+      const err = error as SystemError;
+      console.log(err.message);
     }
   };
 
