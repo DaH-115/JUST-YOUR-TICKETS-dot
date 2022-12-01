@@ -24,7 +24,7 @@ const InfoButton = (props: InfoProps) => {
             : `${router.pathname}/${props.title}`,
         query: {
           title: props.title,
-          releaseDate: props.releaseYear,
+          releaseYear: props.releaseYear,
           posterImage: `https://image.tmdb.org/t/p/w500/${props.posterPath}`,
           voteAverage: props.voteAverage,
           janre: props.janre,
