@@ -8,7 +8,7 @@ const useGetJanres = (movieId: number) => {
     if (movieId) {
       (async () => {
         const res = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
+          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}`
         );
         const data = await res.data;
 

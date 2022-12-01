@@ -27,11 +27,18 @@ const Home: NextPage<{ topTenMovies: popMovie[] }> = ({ topTenMovies }) => {
 export const getStaticProps: GetStaticProps<{
   topTenMovies: popMovie[];
 }> = async () => {
-  const res = await axios.get(
-    `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
-  );
-  const { results }: { results: popMovie[] } = await res.data;
-  const topTenMovies = results.splice(0, 10);
+  let topTenMovies: popMovie[] = [];
+
+  try {
+    const res = await axios.get(
+      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko`
+    );
+    const { results }: { results: popMovie[] } = await res.data;
+
+    topTenMovies = results.splice(0, 10);
+  } catch (error: any) {
+    console.log(error.message);
+  }
 
   return {
     props: { topTenMovies },
