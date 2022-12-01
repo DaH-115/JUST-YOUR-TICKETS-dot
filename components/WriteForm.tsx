@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase';
+import { auth, db } from '../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 import BackgroundStyle from './layout/BackgroundStyle';
 
@@ -15,7 +16,7 @@ interface WriteFormProps {
   posterImage?: string;
 }
 
-// 💫 title, releaseYear, posterImage <- Main/Search에서 받는 값
+// 💫 title, releaseYear, posterImage <- Main/Search/MovieDetailPage에서 받는 값
 // 💫 rating, reviewText, ticketId <- UserTicket에서 받는 값
 const WriteForm = ({
   ticketId,
@@ -26,16 +27,25 @@ const WriteForm = ({
   posterImage,
 }: WriteFormProps) => {
   const router = useRouter();
+  const [creatorId, setCreatorId] = useState<string>('');
   const ratingRef = useRef<HTMLInputElement>(null);
   const reviewRef = useRef<HTMLTextAreaElement>(null);
   const today = new Date().toLocaleDateString();
 
   useEffect(() => {
-    // ✔️ props로 받아온 값(reviewText && rating)이 있으면 ref에 넣어주기
+    // ✔️ props로 받아온 값(reviewText && rating)이 있으면 ref에 넣어준다
     if (rating && reviewText) {
       ratingRef.current!.value = rating;
       reviewRef.current!.value = reviewText;
     }
+  }, []);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCreatorId(user.uid);
+      }
+    });
   }, []);
 
   const updateContents = async (
@@ -61,6 +71,7 @@ const WriteForm = ({
   const addContents = async (rating: string, reviewText: string) => {
     try {
       await addDoc(collection(db, 'users-tickets'), {
+        creatorId,
         createdAt: Date.now(),
         title,
         releaseYear,
