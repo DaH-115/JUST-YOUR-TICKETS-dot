@@ -53,6 +53,8 @@ const MovieTicket = (props: TicketProps) => {
   );
 };
 
+export default MovieTicket;
+
 const TicketWrapper = styled.div`
   width: 360px;
   margin-top: 2rem;
@@ -64,7 +66,7 @@ const TicketWrapper = styled.div`
     margin-top: 4rem;
 
     &:hover {
-      transform: translateY(-2rem);
+      transform: translateY(-3rem);
       transition: transform ease-in-out 250ms;
     }
   }
@@ -93,5 +95,3 @@ const MovieIndex = styled.div<{ routePath: string }>`
 const MovieRank = styled.p`
   font-size: 3rem;
 `;
-
-export default MovieTicket;

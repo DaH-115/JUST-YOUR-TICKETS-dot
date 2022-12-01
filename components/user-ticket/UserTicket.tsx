@@ -157,7 +157,7 @@ const TicketWrapper = styled.div`
     margin-top: 4rem;
 
     &:hover {
-      transform: translateY(-2rem);
+      transform: translateY(-3rem);
       transition: transform ease-in-out 250ms;
     }
   }

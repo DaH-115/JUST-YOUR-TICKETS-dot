@@ -72,6 +72,8 @@ const SearchPage: NextPage = () => {
   );
 };
 
+export default SearchPage;
+
 export const NoneResults = styled.p`
   width: 100%;
   height: 100vh;
@@ -178,5 +180,3 @@ const InputSearchBtn = styled.div`
     background-color: ${({ theme }) => theme.colors.orange};
   }
 `;
-
-export default SearchPage;
