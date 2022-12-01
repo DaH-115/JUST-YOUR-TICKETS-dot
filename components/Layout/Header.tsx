@@ -15,6 +15,7 @@ const Header = () => {
       if (user) {
         setUserId(user.uid);
       } else {
+        route.push('/signin');
         console.log('user is signed out');
       }
     });
@@ -24,7 +25,7 @@ const Header = () => {
     try {
       await auth.signOut();
       setUserId('');
-      route.push('/login');
+      route.push('/signin');
     } catch (error: any) {
       console.log(error.message);
     }
@@ -35,9 +36,11 @@ const Header = () => {
       <Link href='/'>
         <HeaderLi className='home'>HOME</HeaderLi>
       </Link>
-      <Link href='/ticket-list'>
-        <HeaderLi>MY TICKETS</HeaderLi>
-      </Link>
+      {userId && (
+        <Link href='/ticket-list'>
+          <HeaderLi>MY TICKETS</HeaderLi>
+        </Link>
+      )}
       <Link href='/search'>
         <SearchIcon path={route.pathname}>
           <BiSearch id='search-icon' />
