@@ -1,10 +1,13 @@
-import { GetStaticProps, NextPage } from 'next';
-import { collection, DocumentData, getDocs, query } from 'firebase/firestore';
-import { db } from '../../firebase/firebase';
+import { useEffect, useState } from 'react';
+import { NextPage } from 'next';
+import { auth, db } from '../../firebase/firebase';
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
 import SlideList from '../../components/SlideList';
+import LoadingMsg from '../../components/LoadingMsg';
 import { NoneResults } from '../search';
 
 export interface UserTicketProps {
@@ -17,34 +20,61 @@ export interface UserTicketProps {
   posterImage?: string;
 }
 
-const TicketListPage: NextPage<{ usersTicket: UserTicketProps[] }> = ({
-  usersTicket,
-}) => {
+const TicketListPage: NextPage = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string>('');
+  const [usersTicket, setUsersTicket] = useState<UserTicketProps[]>([]);
   const ticketLength = usersTicket.length;
+
+  useEffect(() => {
+    const getTicket = async () => {
+      setIsLoading(true);
+
+      const ticketRef = collection(db, 'users-tickets');
+      const contentQuery = query(
+        ticketRef,
+        where('creatorId', '==', `${userId}`),
+        orderBy('createdAt', 'asc')
+      );
+      const dbContents = await getDocs(contentQuery);
+
+      const newData = dbContents.docs.map((item: any) => ({
+        id: item.id,
+        ...item.data(),
+      }));
+
+      setUsersTicket(newData);
+      setIsLoading(false);
+    };
+
+    getTicket();
+  }, [userId]);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        console.log('user is signed out');
+      }
+    });
+  }, []);
 
   return (
     <BackgroundStyle customMessage='your🍿' backgroundColor='black'>
-      <SlideList title='나의 티켓' ticketLength={ticketLength}>
-        {ticketLength === 0 ? (
-          <NoneResults>아직 나의 티켓이 없습니다.</NoneResults>
-        ) : (
-          <UserTicketSlider movies={usersTicket} />
-        )}
-      </SlideList>
+      {isLoading ? (
+        <LoadingMsg />
+      ) : (
+        <SlideList title='나의 티켓' ticketLength={ticketLength}>
+          {ticketLength === 0 ? (
+            <NoneResults>아직 나의 티켓이 없습니다.</NoneResults>
+          ) : (
+            <UserTicketSlider movies={usersTicket} />
+          )}
+        </SlideList>
+      )}
     </BackgroundStyle>
   );
-};
-
-export const getStaticProps: GetStaticProps = async () => {
-  const contentQuery = query(collection(db, 'users-tickets'));
-  const dbContents = await getDocs(contentQuery);
-  const dataArr: DocumentData[] = [];
-
-  dbContents.forEach((item) => dataArr.push({ id: item.id, ...item.data() }));
-
-  return {
-    props: { usersTicket: dataArr },
-  };
 };
 
 export default TicketListPage;

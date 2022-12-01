@@ -1,84 +1,115 @@
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 
 import BackgroundStyle from './layout/BackgroundStyle';
+import LoadingMsg from '../components/LoadingMsg';
 import { SlideTitle } from './styles/StyledTitle';
 
 const MovieDetailPage = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { title, releaseDate, posterImage, voteAverage, overview } =
+  const { title, releaseYear, posterImage, voteAverage, overview } =
     router.query;
   const janreArr = router.query.janre as string[];
   const fromTicketList = router.pathname.includes('ticket-list');
 
+  useEffect(() => {
+    setIsLoading(true);
+    if (router.query.title === undefined) {
+      router.push('/');
+      return;
+    }
+    setIsLoading(false);
+  }, []);
+
   return (
     <BackgroundStyle backgroundColor='black' customMessage='info✔️'>
       <SlideTitle>영화 상세 정보</SlideTitle>
-      <DetailWrapper>
-        <MovieDetails>
-          {!posterImage ? (
-            <ImgBox>
-              <NoneImg>IMAGE IS NONE</NoneImg>
-            </ImgBox>
-          ) : (
-            <ImgBox>
-              <Image
-                src={`https://image.tmdb.org/t/p/w500/${posterImage}`}
-                alt={`${title} Image Poster`}
-                width={360}
-                height={560}
-              />
-            </ImgBox>
-          )}
-          <TextWrapper>
-            <StyledLabeling>* Movie Title /제목</StyledLabeling>
-            <ContentText>
-              <h1>
-                {title}({releaseDate})
-              </h1>
-            </ContentText>
-            <StyledLabeling>
-              {fromTicketList ? `* Rating /나의 점수` : '* Rating /점수'}
-            </StyledLabeling>
-            <ContentText>
-              <p>{voteAverage} /10</p>
-            </ContentText>
-            {janreArr && (
-              <>
-                <StyledLabeling>* Janres /장르</StyledLabeling>
-                <ContentText>
-                  <MovieJanreWrapper>
-                    {janreArr.map((item, index) => (
-                      <li key={index}>/ {item}</li>
-                    ))}
-                  </MovieJanreWrapper>
-                </ContentText>
-              </>
+      {isLoading ? (
+        <LoadingMsg />
+      ) : (
+        <DetailWrapper>
+          <MovieDetails>
+            {!posterImage ? (
+              <ImgBox>
+                <NoneImg>IMAGE IS NONE</NoneImg>
+              </ImgBox>
+            ) : (
+              <ImgBox>
+                <Image
+                  src={`https://image.tmdb.org/t/p/w500/${posterImage}`}
+                  alt={`${title} Image Poster`}
+                  width={360}
+                  height={560}
+                />
+              </ImgBox>
             )}
+            <TextWrapper>
+              <StyledLabeling>* Movie Title /제목</StyledLabeling>
+              <ContentText>
+                <h1>
+                  {title}({releaseYear})
+                </h1>
+              </ContentText>
+              <StyledLabeling>
+                {fromTicketList ? `* Rating /나의 점수` : '* Rating /점수'}
+              </StyledLabeling>
+              <ContentText>
+                <p>{voteAverage} /10</p>
+              </ContentText>
+              {janreArr && (
+                <>
+                  <StyledLabeling>* Janres /장르</StyledLabeling>
+                  <ContentText>
+                    <MovieJanreWrapper>
+                      {janreArr.map((item, index) => (
+                        <li key={index}>/ {item}</li>
+                      ))}
+                    </MovieJanreWrapper>
+                  </ContentText>
+                </>
+              )}
 
-            <StyledLabeling>
-              {fromTicketList ? `* Review /나의 감상` : '* Overview /줄거리'}
-            </StyledLabeling>
-            <ContentText>
-              <OverviweText>{overview}</OverviweText>
-            </ContentText>
+              <StyledLabeling>
+                {fromTicketList ? `* Review /나의 감상` : '* Overview /줄거리'}
+              </StyledLabeling>
+              <ContentText>
+                <OverviweText>{overview}</OverviweText>
+              </ContentText>
 
-            {fromTicketList ? undefined : (
-              <AdmitButtonWrapper>
-                <button>ADMIT ONE</button>
-                <ArrowBtn>
-                  <AiOutlineArrowRight />
-                </ArrowBtn>
-              </AdmitButtonWrapper>
-            )}
-          </TextWrapper>
-        </MovieDetails>
-      </DetailWrapper>
+              {fromTicketList ? null : (
+                <Link
+                  href={{
+                    pathname: '/write',
+                    query: {
+                      title,
+                      releaseYear,
+                      posterImage: `https://image.tmdb.org/t/p/w500/${posterImage}`,
+                    },
+                  }}
+                  as={`/write`}
+                >
+                  <AdmitButtonWrapper>
+                    <button>ADMIT ONE</button>
+                    <ArrowBtn>
+                      <AiOutlineArrowRight />
+                    </ArrowBtn>
+                  </AdmitButtonWrapper>
+                </Link>
+              )}
+            </TextWrapper>
+          </MovieDetails>
+        </DetailWrapper>
+      )}
     </BackgroundStyle>
   );
 };
+
+export default MovieDetailPage;
 
 const DetailWrapper = styled.div`
   display: flex;
@@ -131,7 +162,7 @@ const TextWrapper = styled.div`
 
   ${({ theme }) => theme.device.desktop} {
     max-width: 600px;
-    padding: 1.5rem 1rem;
+    padding: 1.2rem 1rem;
     margin-left: 2rem;
   }
 `;
@@ -219,6 +250,16 @@ const AdmitButtonWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.orange};
   border-radius: 1rem;
 
+  &:active {
+    button {
+      color: ${({ theme }) => theme.colors.yellow};
+    }
+
+    div {
+      color: ${({ theme }) => theme.colors.yellow};
+    }
+  }
+
   button {
     color: ${({ theme }) => theme.colors.black};
     font-size: 1rem;
@@ -228,7 +269,5 @@ const AdmitButtonWrapper = styled.div`
 
 const ArrowBtn = styled.div`
   margin-left: 0.5rem;
-  color: ${({ theme }) => theme.colors.yellow};
+  color: ${({ theme }) => theme.colors.black};
 `;
-
-export default MovieDetailPage;
