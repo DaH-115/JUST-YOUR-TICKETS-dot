@@ -6,24 +6,28 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { SystemError } from 'errorType';
+import { FcGoogle } from 'react-icons/fc';
+import { BsGithub } from 'react-icons/bs';
 
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 
 const LoginPage: NextPage = () => {
-  const route = useRouter();
+  const router = useRouter();
   const [signUp, setSignUp] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  // User EMAIL-PASSWORD Text
+  const [error, setError] = useState<boolean>(false);
+  // 🤓 User EMAIL-PASSWORD Text
   const [userEmail, setUserEmail] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
-  // Validation State
+  // 🤓 Validation State
   const [isEmail, setIsEmail] = useState<boolean>(false);
   const [isPassword, setIsPassword] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
-
   const isDisabled = isEmail && isPassword ? false : true;
 
   useEffect(() => {
@@ -34,7 +38,7 @@ const LoginPage: NextPage = () => {
     try {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          route.push('/');
+          router.push('/');
           return;
         }
       });
@@ -113,6 +117,24 @@ const LoginPage: NextPage = () => {
     return;
   };
 
+  const onSocialSignInHandler = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const target = event.target as HTMLButtonElement;
+
+    if (target.name === 'google-signin') {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      return;
+    }
+
+    if (target.name === 'github-signin') {
+      const provider = new GithubAuthProvider();
+      await signInWithPopup(auth, provider);
+      return;
+    }
+  };
+
   return (
     <BackgroundStyle customMessage='create📝' backgroundColor='black'>
       <LoginFormWrapper>
@@ -162,11 +184,22 @@ const LoginPage: NextPage = () => {
             입력
           </LoginBtn>
         </LoginForm>
-
-        <ToggleText onClick={onSignUpToggleHandler}>
-          {signUp ? '로그인' : '회원가입'}
-        </ToggleText>
       </LoginFormWrapper>
+      <SocialSignInWrapper>
+        <SocialSignInIcon>
+          <button name='github-signin' onClick={onSocialSignInHandler}>
+            <BsGithub />
+          </button>
+        </SocialSignInIcon>
+        <SocialSignInIcon>
+          <button name='google-signin' onClick={onSocialSignInHandler}>
+            <FcGoogle />
+          </button>
+        </SocialSignInIcon>
+      </SocialSignInWrapper>
+      <ToggleText onClick={onSignUpToggleHandler}>
+        {signUp ? '로그인' : '회원가입'}
+      </ToggleText>
     </BackgroundStyle>
   );
 };
@@ -188,7 +221,7 @@ const LoginForTitle = styled.h1`
 
   ${({ theme }) => theme.device.desktop} {
     font-size: 1.5rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     padding-left: 0;
   }
 `;
@@ -198,6 +231,7 @@ const LoginForm = styled.form`
   flex-direction: column;
   justify-content: center;
   width: 90%;
+  margin-bottom: 1.5rem;
 
   label {
     font-size: 0.8rem;
@@ -250,27 +284,52 @@ const LoginBtn = styled.button`
   background-color: ${({ theme }) => theme.colors.orange};
   border-radius: 1.4rem;
   margin-top: 0.5rem;
-  margin-bottom: 2rem;
 
-  &:hover,
   &:active {
     color: ${({ theme }) => theme.colors.yellow};
   }
 
   &:disabled {
     background-color: ${({ theme }) => theme.colors.gray};
+    color: ${({ theme }) => theme.colors.black};
   }
 `;
 
 const ToggleText = styled.p`
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #fff;
   text-align: center;
+  margin-top: 1.2rem;
+  margin-bottom: 2rem;
 
   cursor: pointer;
+`;
 
-  &:hover,
-  &:active {
-    border-bottom: 0.1rem solid #fff;
+const SocialSignInWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SocialSignInIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    font-size: 0.8rem;
+    color: ${({ theme }) => theme.colors.gray};
+
+    &:hover,
+    &:active {
+      color: #fff;
+      transition: color ease-in-out 100ms;
+    }
+
+    svg {
+      color: #fff;
+      font-size: 1.5rem;
+      margin: 0 0.5rem;
+    }
   }
 `;
