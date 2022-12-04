@@ -1,20 +1,28 @@
 import styled from 'styled-components';
 
-const AlertPopup = ({
-  onCancelHandler,
-  onConfirmHandler,
-}: {
+interface AlertPopupProps {
+  popupType: string;
+  popupMessage: string;
   onCancelHandler: () => void;
   onConfirmHandler: () => void;
-}) => {
+}
+
+const AlertPopup = ({
+  popupType,
+  popupMessage,
+  onCancelHandler,
+  onConfirmHandler,
+}: AlertPopupProps) => {
   return (
     <>
       <BackDrop />
       <PopupBox>
         <PopupTitle>*알림</PopupTitle>
-        <PopupDesc>정말 티켓을 삭제할까요?</PopupDesc>
+        <PopupDesc>{popupMessage}</PopupDesc>
         <PopupBtnWrapper>
-          <PopupBtnCancel onClick={onCancelHandler}>아니요</PopupBtnCancel>
+          {popupType === 'alert' ? null : (
+            <PopupBtnCancel onClick={onCancelHandler}>아니요</PopupBtnCancel>
+          )}
           <PopupBtnConfirm onClick={onConfirmHandler}>네</PopupBtnConfirm>
         </PopupBtnWrapper>
       </PopupBox>
@@ -66,8 +74,13 @@ const PopupTitle = styled.p`
 `;
 
 const PopupDesc = styled.p`
-  font-size: 0.8rem;
+  font-size: 1.1rem;
+  line-height: 1.2;
   margin-bottom: 1rem;
+
+  ${({ theme }) => theme.device.desktop} {
+    font-size: 1rem;
+  }
 `;
 
 const PopupBtnWrapper = styled.div`

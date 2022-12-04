@@ -52,6 +52,8 @@ const UserTicket = ({
       {isOpen && (
         <PortalAlertPopup>
           <AlertPopup
+            popupType='modal'
+            popupMessage='정말 티켓을 삭제할까요?'
             onCancelHandler={onToggleHandler}
             onConfirmHandler={onDeleteHandler}
           />

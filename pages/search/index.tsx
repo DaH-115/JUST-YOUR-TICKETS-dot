@@ -1,17 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import axios from 'axios';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../firebase/firebase';
 import { BiSearch } from 'react-icons/bi';
 import { popMovie } from '..';
 
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import SearchTicketList from '../../components/search/SearchTicketList';
+import AlertPopup from '../../components/layout/AlertPopup';
+import PortalAlertPopup from '../../components/PortalAlert';
 import { SystemError } from 'errorType';
 
 const SearchPage: NextPage = () => {
   const [movieName, setMovieName] = useState('');
   const [searchResults, setSearchResults] = useState<popMovie[]>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    try {
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          setIsOpen(true);
+        }
+      });
+    } catch (error) {
+      const err = error as SystemError;
+      console.log(err.message);
+    }
+  }, []);
 
   const getSearchResults = async (movieName: string) => {
     try {
@@ -39,8 +59,26 @@ const SearchPage: NextPage = () => {
     setMovieName(event.target.value);
   };
 
+  const onToggleHandler = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  const onMoveSignInHandler = () => {
+    router.push('/signin');
+  };
+
   return (
     <BackgroundStyle customMessage='search🎞️' backgroundColor='yellow'>
+      {isOpen && (
+        <PortalAlertPopup>
+          <AlertPopup
+            popupType='alert'
+            popupMessage='로그인이 필요한 페이지 입니다.&nbsp; 로그인 페이지로 이동 합니다.'
+            onCancelHandler={onToggleHandler}
+            onConfirmHandler={onMoveSignInHandler}
+          />
+        </PortalAlertPopup>
+      )}
       <FormWrapper>
         <StyledForm onSubmit={searchInputHandler} action='get'>
           <StyledLabel htmlFor='search-input'>영화 검색</StyledLabel>

@@ -53,7 +53,13 @@ const Header = () => {
           <BiSearch id='search-icon' />
         </SearchIcon>
       </Link>
-      {userId && <HeaderLi onClick={onSignOutHandler}>LOGOUT</HeaderLi>}
+      {userId ? (
+        <HeaderLi onClick={onSignOutHandler}>LOGOUT</HeaderLi>
+      ) : (
+        <Link href='/signin'>
+          <HeaderLi className='home'>SIGN IN</HeaderLi>
+        </Link>
+      )}
     </HeaderMenu>
   );
 };
