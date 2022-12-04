@@ -5,6 +5,8 @@ import useGetJanres from '../hooks/useGetJanres';
 import InfoButton from '../ticket/InfoButton';
 import PosterImage from '../ticket/PosterImage';
 import MovieTicketDetail from '../ticket/MovieTicketDetail';
+import { TicketWrapper } from '../styles/TicketWrapper';
+import { MovieIndexBar } from '../styles/MovieIndexBar';
 
 export interface TicketProps {
   title: string;
@@ -24,7 +26,7 @@ const MovieTicket = (props: TicketProps) => {
   return (
     <TicketWrapper>
       {/* 🎈 TICKET INDEX HEADER */}
-      <MovieIndex routePath={router.pathname}>
+      <MovieIndexBar routePath={router.pathname}>
         <MovieRank>{props.movieIndex}</MovieRank>
 
         {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
@@ -36,12 +38,12 @@ const MovieTicket = (props: TicketProps) => {
           janre={janres}
           overview={props.overview}
         />
-      </MovieIndex>
+      </MovieIndexBar>
 
-      {/* 🎈 POSTER IMAGE Section */}
+      {/* 🎈 POSTER IMAGE */}
       <PosterImage title={props.title} posterPath={props.posterPath} />
 
-      {/* 🎈 TICKET MOVIE DETAIL Section */}
+      {/* 🎈 TICKET DETAIL */}
       <MovieTicketDetail
         title={props.title}
         releaseYear={releaseYear}
@@ -54,43 +56,6 @@ const MovieTicket = (props: TicketProps) => {
 };
 
 export default MovieTicket;
-
-const TicketWrapper = styled.div`
-  width: 360px;
-  margin-top: 2rem;
-  margin-left: 0.5rem;
-  margin-right: 1rem;
-  filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 0.2));
-
-  ${({ theme }) => theme.device.desktop} {
-    margin-top: 4rem;
-
-    &:hover {
-      transform: translateY(-3rem);
-      transition: transform ease-in-out 250ms;
-    }
-  }
-`;
-
-const MovieIndex = styled.div<{ routePath: string }>`
-  position: absolute;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 4rem;
-  color: #fff;
-  font-size: ${({ routePath }) => (routePath === '/' ? '2.5rem' : '1rem')};
-  font-weight: 700;
-  background: linear-gradient(
-    180deg,
-    ${({ theme }) => theme.colors.black} 30%,
-    transparent
-  );
-  border-top-left-radius: 1.5rem;
-  border-top-right-radius: 1.5rem;
-  padding: 0.5rem 0.8rem 0 1.4rem;
-`;
 
 const MovieRank = styled.p`
   font-size: 3rem;

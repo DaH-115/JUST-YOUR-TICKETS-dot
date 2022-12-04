@@ -13,12 +13,12 @@ interface WriteFormProps {
 }
 
 const WritePage: NextPage = () => {
-  const route = useRouter();
+  const router = useRouter();
 
   // 💫 title, releaseYear, posterImage <- Main/Search에서 받는 값
   // 💫 rating, reviewText, ticketId <- User Ticket에서 받는 값
   const { title, releaseYear, posterImage, rating, reviewText, ticketId } =
-    route.query as unknown as WriteFormProps;
+    router.query as unknown as WriteFormProps;
 
   return (
     <WriteForm

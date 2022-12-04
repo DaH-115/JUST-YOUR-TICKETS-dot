@@ -7,9 +7,9 @@ import {
   MdOutlineArrowForwardIos,
 } from 'react-icons/md';
 
-import { popMovie } from '../../pages';
 import MovieTicket from './MovieTicket';
-import { StyledArrow } from '../styles/StyledArrow';
+import { popMovie } from '../../pages';
+import { StyledArrowNext, StyledArrowPrev } from '../styles/StyledArrow';
 
 const TopMovieSlider = ({ movies }: { movies: popMovie[] }) => {
   const settings = {
@@ -67,6 +67,8 @@ const TopMovieSlider = ({ movies }: { movies: popMovie[] }) => {
   );
 };
 
+export default TopMovieSlider;
+
 const StyledSlider = styled(Slider)`
   .slick-list {
     width: 100%;
@@ -78,13 +80,3 @@ const StyledSlider = styled(Slider)`
     padding: 0;
   }
 `;
-
-// ⬅️ ➡️ ARROW BUTTON STYLE
-const StyledArrowNext = styled(StyledArrow)`
-  right: 2rem;
-`;
-const StyledArrowPrev = styled(StyledArrow)`
-  left: 2rem;
-`;
-
-export default TopMovieSlider;

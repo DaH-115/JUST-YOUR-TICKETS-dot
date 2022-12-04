@@ -8,7 +8,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { SystemError } from 'errorType';
 
 const Header = () => {
-  const route = useRouter();
+  const router = useRouter();
   const [userId, setUserId] = useState<string>('');
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const Header = () => {
         if (user) {
           setUserId(user.uid);
         } else {
-          route.push('/signin');
+          router.push('/signin');
           console.log('user is signed out');
         }
       });
@@ -31,7 +31,7 @@ const Header = () => {
     try {
       await auth.signOut();
       setUserId('');
-      route.push('/signin');
+      router.push('/signin');
     } catch (error) {
       const err = error as SystemError;
       console.log(err.message);
@@ -49,7 +49,7 @@ const Header = () => {
         </Link>
       )}
       <Link href='/search'>
-        <SearchIcon path={route.pathname}>
+        <SearchIcon path={router.pathname}>
           <BiSearch id='search-icon' />
         </SearchIcon>
       </Link>

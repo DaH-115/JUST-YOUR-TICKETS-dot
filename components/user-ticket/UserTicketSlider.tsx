@@ -9,7 +9,7 @@ import {
 
 import UserTicket from './UserTicket';
 import { UserTicketProps } from '../../pages/ticket-list';
-import { StyledArrow } from '../styles/StyledArrow';
+import { StyledArrowNext, StyledArrowPrev } from '../styles/StyledArrow';
 
 const UserTicketSlider = ({ movies }: { movies: UserTicketProps[] }) => {
   const settings = {
@@ -67,13 +67,9 @@ const UserTicketSlider = ({ movies }: { movies: UserTicketProps[] }) => {
 export default UserTicketSlider;
 
 const StyledSlider = styled(Slider)`
-  /* position: absolute;
-  top: 5rem;
-  left: 1rem; */
-  width: 100%;
-
   .slick-list {
-    /* padding: 0 1rem; */
+    width: 100%;
+    padding: 0 1rem;
 
     ${({ theme }) => theme.device.desktop} {
       height: 100vh;
@@ -84,12 +80,4 @@ const StyledSlider = styled(Slider)`
     margin: 0;
     padding: 0;
   }
-`;
-
-// ⬅️ ➡️ ARROW BUTTON STYLE
-const StyledArrowNext = styled(StyledArrow)`
-  right: 2rem;
-`;
-const StyledArrowPrev = styled(StyledArrow)`
-  left: 2rem;
 `;

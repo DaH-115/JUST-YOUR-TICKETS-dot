@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StyledArrow = styled.div`
+const StyledArrow = styled.div`
   width: 2.5rem;
   height: 2.5rem;
   font-size: 1rem;
@@ -30,4 +30,12 @@ export const StyledArrow = styled.div`
   }
 
   z-index: 999;
+`;
+
+// ⬅️ ➡️ ARROW BUTTON STYLE
+export const StyledArrowNext = styled(StyledArrow)`
+  right: 2rem;
+`;
+export const StyledArrowPrev = styled(StyledArrow)`
+  left: 2rem;
 `;
