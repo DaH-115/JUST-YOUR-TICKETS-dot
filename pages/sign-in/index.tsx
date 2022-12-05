@@ -120,18 +120,25 @@ const LoginPage: NextPage = () => {
   const onSocialSignInHandler = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    const target = event.target as HTMLButtonElement;
+    const target = event.currentTarget as HTMLButtonElement;
 
-    if (target.name === 'google-signin') {
-      const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      return;
-    }
+    try {
+      if (target.name === 'google-signin') {
+        console.log('google-signin click');
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+        return;
+      }
 
-    if (target.name === 'github-signin') {
-      const provider = new GithubAuthProvider();
-      await signInWithPopup(auth, provider);
-      return;
+      if (target.name === 'github-signin') {
+        console.log('github-signin click');
+        const provider = new GithubAuthProvider();
+        await signInWithPopup(auth, provider);
+        return;
+      }
+    } catch (error) {
+      const err = error as SystemError;
+      console.log(err.message);
     }
   };
 
@@ -230,7 +237,7 @@ const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 90%;
+  width: 18rem;
   margin-bottom: 1.5rem;
 
   label {
@@ -238,10 +245,6 @@ const LoginForm = styled.form`
     color: ${({ theme }) => theme.colors.gray};
     margin-left: 0.5rem;
     margin-bottom: 0.4rem;
-  }
-
-  ${({ theme }) => theme.device.desktop} {
-    width: 30%;
   }
 `;
 

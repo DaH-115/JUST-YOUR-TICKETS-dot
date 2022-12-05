@@ -1,6 +1,7 @@
+import { NextPage } from 'next';
 import MovieDetailPage from '../components/movie-detail/MovieDetailPage';
 
-const TicketListDetailPage = () => {
+const TicketListDetailPage: NextPage = () => {
   return <MovieDetailPage />;
 };
 
