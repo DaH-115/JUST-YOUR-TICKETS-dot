@@ -42,11 +42,10 @@ const PageTitle = styled.div<{ backgroundColor: string }>`
   padding: 1rem;
   margin-bottom: 2rem;
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     font-size: 3rem;
     line-height: 3rem;
     padding: 2rem;
-    /* margin-bottom: 5rem; */
   }
 `;
 

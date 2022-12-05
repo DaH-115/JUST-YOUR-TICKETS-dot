@@ -55,30 +55,26 @@ const PopupBox = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: 90%;
+  width: 18rem;
   padding: 1rem;
   background-color: #fff;
   border-radius: 1rem;
   background: linear-gradient(white 50%, ${({ theme }) => theme.colors.yellow});
   filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 0.2));
-
-  ${({ theme }) => theme.device.desktop} {
-    width: 30%;
-  }
 `;
 
 const PopupTitle = styled.p`
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.6rem;
 `;
 
 const PopupDesc = styled.p`
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1.2;
   margin-bottom: 1rem;
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     font-size: 1rem;
   }
 `;
@@ -97,7 +93,6 @@ const PopupBtn = styled.div`
   text-align: center;
   border-radius: 1rem;
 
-  &:hover,
   &:active {
     color: ${({ theme }) => theme.colors.yellow};
   }

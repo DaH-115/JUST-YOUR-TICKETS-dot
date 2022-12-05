@@ -155,7 +155,7 @@ const WriteFormWrapper = styled.div`
   border-top-right-radius: 1.5rem;
   filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.4));
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     position: relative;
     bottom: 0;
     right: -50%;

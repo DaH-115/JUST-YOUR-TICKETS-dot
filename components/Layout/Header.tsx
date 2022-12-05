@@ -69,19 +69,21 @@ const HeaderMenu = styled.ul`
   font-weight: 700;
   background-color: ${({ theme }) => theme.colors.black};
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     position: absolute;
     top: 2rem;
     right: 6rem;
     padding-left: 0;
+    font-size: 1.2rem;
   }
 `;
 
 const HeaderLi = styled.li`
   color: #fff;
   padding: 0.5rem;
+  cursor: pointer;
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     color: ${({ theme }) => theme.colors.yellow};
   }
 `;
@@ -108,7 +110,7 @@ export const SearchIcon = styled.div<{ path?: string }>`
     margin-left: 2px;
   }
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     top: 2rem;
     right: 2rem;
   }
