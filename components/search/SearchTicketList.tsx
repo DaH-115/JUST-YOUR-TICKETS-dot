@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import useGetJanres from '../hooks/useGetJanres';
+import useGetJanres from '../../hooks/useGetJanres';
 
-import { TicketProps } from '../main/MovieTicket';
+import { TicketProps } from '../home/TopMovieTicket';
 import AdmitBtn from '../ticket/AdmitBtn';
 import InfoButton from '../ticket/InfoButton';
 import MovieTextDetail from '../ticket/MovieTextDetail';
@@ -21,7 +21,8 @@ const SearchTicketList = ({
   return (
     <SearchResultWrapper>
       <SearchResult>
-        <TestStyled>
+        <StyledInfo>
+          <TicketIndex>{movieIndex + 1}.</TicketIndex>
           <InfoButton
             title={title}
             releaseYear={releaseYear}
@@ -30,7 +31,7 @@ const SearchTicketList = ({
             overview={overview}
             posterPath={posterPath}
           />
-        </TestStyled>
+        </StyledInfo>
         <MovieTextDetail
           title={title}
           releaseYear={releaseYear}
@@ -69,10 +70,17 @@ const SearchResult = styled.div`
   margin-bottom: 1rem;
 `;
 
-const TestStyled = styled.div`
+const StyledInfo = styled.div`
   margin-right: 0.5rem;
   div {
     font-size: 1.2rem;
     color: #fff;
   }
+`;
+
+const TicketIndex = styled.p`
+  font-size: 0.8rem;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 0.4rem;
 `;
