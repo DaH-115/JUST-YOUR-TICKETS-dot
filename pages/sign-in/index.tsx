@@ -15,6 +15,7 @@ import { SystemError } from 'errorType';
 import { FcGoogle } from 'react-icons/fc';
 import { BsGithub } from 'react-icons/bs';
 
+import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 
 const LoginPage: NextPage = () => {
@@ -211,7 +212,7 @@ const LoginPage: NextPage = () => {
   );
 };
 
-export default LoginPage;
+export default withHeadMeta(LoginPage, '로그인');
 
 const LoginFormWrapper = styled.div`
   display: flex;

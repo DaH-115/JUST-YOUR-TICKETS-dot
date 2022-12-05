@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../firebase';
 
+import withHeadMeta from '../../components/common/withHeadMeta';
 import SignInAlert from '../../components/popup/SignInAlert';
 import WriteForm from '../../components/write-form/WriteForm';
 import { SystemError } from 'errorType';
@@ -58,4 +59,4 @@ const WritePage: NextPage = () => {
   );
 };
 
-export default WritePage;
+export default withHeadMeta(WritePage, '리뷰 쓰기');

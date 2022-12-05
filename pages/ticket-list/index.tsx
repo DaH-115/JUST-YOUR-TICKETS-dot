@@ -4,6 +4,7 @@ import { auth, db } from '../../firebase';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
+import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
 import SlideList from '../../components/slider/SlideList';
@@ -86,4 +87,4 @@ const TicketListPage: NextPage = () => {
   );
 };
 
-export default TicketListPage;
+export default withHeadMeta(TicketListPage, '나의 티켓');

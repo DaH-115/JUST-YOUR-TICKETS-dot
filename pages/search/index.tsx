@@ -7,6 +7,7 @@ import { auth } from '../../firebase';
 import { BiSearch } from 'react-icons/bi';
 import { popMovie } from '..';
 
+import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import SearchTicketList from '../../components/search/SearchTicketList';
 import SignInAlert from '../../components/popup/SignInAlert';
@@ -104,7 +105,7 @@ const SearchPage: NextPage = () => {
   );
 };
 
-export default SearchPage;
+export default withHeadMeta(SearchPage, '검색');
 
 export const NoneResults = styled.p`
   width: 100%;

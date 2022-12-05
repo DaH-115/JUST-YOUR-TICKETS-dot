@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 
+import Head from 'next/head';
 import BackgroundStyle from '../layout/BackgroundStyle';
 import LoadingMsg from '../common/LoadingMsg';
 import { SlideTitle } from '../styles/StyledTitle';
@@ -27,85 +28,92 @@ const MovieDetailPage = () => {
   }, []);
 
   return (
-    <BackgroundStyle backgroundColor='black' customMessage='info✔️'>
-      <SlideTitle>영화 상세 정보</SlideTitle>
-      {isLoading ? (
-        <LoadingMsg />
-      ) : (
-        <DetailWrapper>
-          <MovieDetails>
-            {!posterImage ? (
-              <ImgBox>
-                <NoneImg>IMAGE IS NONE</NoneImg>
-              </ImgBox>
-            ) : (
-              <ImgBox>
-                <Image
-                  src={`https://image.tmdb.org/t/p/w500/${posterImage}`}
-                  alt={`${title} Image Poster`}
-                  width={360}
-                  height={560}
-                />
-              </ImgBox>
-            )}
-            <TextWrapper>
-              <StyledLabeling>* Movie Title /제목</StyledLabeling>
-              <ContentText>
-                <h1>
-                  {title}({releaseYear})
-                </h1>
-              </ContentText>
-              <StyledLabeling>
-                {fromTicketList ? `* Rating /나의 점수` : '* Rating /점수'}
-              </StyledLabeling>
-              <ContentText>
-                <p>{voteAverage} /10</p>
-              </ContentText>
-              {janreArr && (
-                <>
-                  <StyledLabeling>* Janres /장르</StyledLabeling>
-                  <ContentText>
-                    <MovieJanreWrapper>
-                      {janreArr.map((item, index) => (
-                        <li key={index}>/ {item}</li>
-                      ))}
-                    </MovieJanreWrapper>
-                  </ContentText>
-                </>
+    <>
+      <Head>
+        <title>JUST MY TICKETS. | {title}</title>
+      </Head>
+      <BackgroundStyle backgroundColor='black' customMessage='info✔️'>
+        <SlideTitle>영화 상세 정보</SlideTitle>
+        {isLoading ? (
+          <LoadingMsg />
+        ) : (
+          <DetailWrapper>
+            <MovieDetails>
+              {!posterImage ? (
+                <ImgBox>
+                  <NoneImg>IMAGE IS NONE</NoneImg>
+                </ImgBox>
+              ) : (
+                <ImgBox>
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w500/${posterImage}`}
+                    alt={`${title} Image Poster`}
+                    width={360}
+                    height={560}
+                  />
+                </ImgBox>
               )}
+              <TextWrapper>
+                <StyledLabeling>* Movie Title /제목</StyledLabeling>
+                <ContentText>
+                  <h1>
+                    {title}({releaseYear})
+                  </h1>
+                </ContentText>
+                <StyledLabeling>
+                  {fromTicketList ? `* Rating /나의 점수` : '* Rating /점수'}
+                </StyledLabeling>
+                <ContentText>
+                  <p>{voteAverage} /10</p>
+                </ContentText>
+                {janreArr && (
+                  <>
+                    <StyledLabeling>* Janres /장르</StyledLabeling>
+                    <ContentText>
+                      <MovieJanreWrapper>
+                        {janreArr.map((item, index) => (
+                          <li key={index}>/ {item}</li>
+                        ))}
+                      </MovieJanreWrapper>
+                    </ContentText>
+                  </>
+                )}
 
-              <StyledLabeling>
-                {fromTicketList ? `* Review /나의 감상` : '* Overview /줄거리'}
-              </StyledLabeling>
-              <ContentText>
-                <OverviweText>{overview}</OverviweText>
-              </ContentText>
+                <StyledLabeling>
+                  {fromTicketList
+                    ? `* Review /나의 감상`
+                    : '* Overview /줄거리'}
+                </StyledLabeling>
+                <ContentText>
+                  <OverviweText>{overview}</OverviweText>
+                </ContentText>
 
-              {fromTicketList ? null : (
-                <Link
-                  href={{
-                    pathname: '/write',
-                    query: {
-                      title,
-                      releaseYear,
-                      posterImage: `https://image.tmdb.org/t/p/w500/${posterImage}`,
-                    },
-                  }}
-                  as={`/write`}
-                >
-                  <AdmitButtonWrapper>
-                    <button>ADMIT ONE</button>
-                    <ArrowBtn>
-                      <AiOutlineArrowRight />
-                    </ArrowBtn>
-                  </AdmitButtonWrapper>
-                </Link>
-              )}
-            </TextWrapper>
-          </MovieDetails>
-        </DetailWrapper>
-      )}
-    </BackgroundStyle>
+                {fromTicketList ? null : (
+                  <Link
+                    href={{
+                      pathname: '/write',
+                      query: {
+                        title,
+                        releaseYear,
+                        posterImage: `https://image.tmdb.org/t/p/w500/${posterImage}`,
+                      },
+                    }}
+                    as={`/write`}
+                  >
+                    <AdmitButtonWrapper>
+                      <button>ADMIT ONE</button>
+                      <ArrowBtn>
+                        <AiOutlineArrowRight />
+                      </ArrowBtn>
+                    </AdmitButtonWrapper>
+                  </Link>
+                )}
+              </TextWrapper>
+            </MovieDetails>
+          </DetailWrapper>
+        )}
+      </BackgroundStyle>
+    </>
   );
 };
 
