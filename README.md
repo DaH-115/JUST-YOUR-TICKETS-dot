@@ -1,34 +1,27 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Just Movie Tickets.
 
-## Getting Started
+### ✨ 나의 감상. Just My Ticket!
 
-First, run the development server:
+<Just Movie Tickets.> 앱은 영화를 검색하고 감상을 기록하는, 리뷰 앱 입니다. 하지만 "글”이 아닌 영화를 본 사람이 라면 당연히 가진 “티켓” 그 자체에 초점을 두었으며, 이는 거대한 감상이 아니라 부담없는 한줄평(물론 글자수 제한을 없습니다. 원한다면 장문도 가능해요!)으로 보기 쉽게 나열하여 감상문이 아니라 일종의 영화 감상 티켓을 컬렉션 하는 느낌을 주었으면 해서 만들었습니다. 😎🍿
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+# 📝 사용한 기술
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+✔️ TypeScript
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+✔️ React
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+✔️ Next.js
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+✔️ Styled-components
 
-## Learn More
+✔️ Firebase
 
-To learn more about Next.js, take a look at the following resources:
+# 🗺️ 사용 방법
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 메인 화면에 진입하면 <인기 영화 10>을 볼 수 있습니다. 캐러셀을 이용하여 1위부터 10위까지 볼 수 있으며 포스터 하단에 있는 티켓을 클릭하여 감상을 쓸 수 있는 페이지로 이동합니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- 돋보기 아이콘 <검색>을 사용하여 영화를 검색할 수 있습니다. 검색 결과는 티켓으로 출력되며, 좌측 상단의 <info> 버튼을 클릭하여 포스터, 줄거리 등 상세 정보를 확인할 수 있습니다.
 
-## Deploy on Vercel
+- 헤더 메뉴의 <My Tickets>를 클릭하면 현재 내가 가진 감상 티켓들을 확인할 수 있습니다. 수정과 삭제가 가능하며, 우측 상단의 <info> 버튼을 클릭하여 상세하게 확인할 수 있습니다.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- 이메일과 비밀번호, 구글과 깃허브로 소셜 로그인이 가능합니다. 로그인 하지 않으면 접근 불가능한 페이지가 존재합니다. 그럴 경우 팝업으로 로그인 페이지로 안내합니다.
