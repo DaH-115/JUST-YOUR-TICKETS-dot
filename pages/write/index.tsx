@@ -8,15 +8,7 @@ import withHeadMeta from '../../components/common/withHeadMeta';
 import SignInAlert from '../../components/popup/SignInAlert';
 import WriteForm from '../../components/write-form/WriteForm';
 import { SystemError } from 'errorType';
-
-interface WriteFormProps {
-  ticketId: string;
-  releaseYear: string;
-  title: string;
-  rating: string;
-  reviewText: string;
-  posterImage: string;
-}
+import { WriteFormProps } from 'ticketType';
 
 const WritePage: NextPage = () => {
   const router = useRouter();

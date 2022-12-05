@@ -9,12 +9,13 @@ import Head from 'next/head';
 import BackgroundStyle from '../layout/BackgroundStyle';
 import LoadingMsg from '../common/LoadingMsg';
 import { SlideTitle } from '../styles/StyledTitle';
+import { MovieInfoProps } from 'ticketType';
 
 const MovieDetailPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { title, releaseYear, posterImage, voteAverage, overview } =
-    router.query;
+  const { title, releaseYear, voteAverage, posterImage, overview } =
+    router.query as unknown as MovieInfoProps;
   const janreArr = router.query.janre as string[];
   const fromTicketList = router.pathname.includes('ticket-list');
 
@@ -46,7 +47,7 @@ const MovieDetailPage = () => {
               ) : (
                 <ImgBox>
                   <Image
-                    src={`https://image.tmdb.org/t/p/w500/${posterImage}`}
+                    src={posterImage}
                     alt={`${title} Image Poster`}
                     width={360}
                     height={560}
@@ -95,7 +96,7 @@ const MovieDetailPage = () => {
                       query: {
                         title,
                         releaseYear,
-                        posterImage: `https://image.tmdb.org/t/p/w500/${posterImage}`,
+                        posterImage,
                       },
                     }}
                     as={`/write`}

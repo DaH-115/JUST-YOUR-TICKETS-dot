@@ -11,16 +11,7 @@ import SlideList from '../../components/slider/SlideList';
 import LoadingMsg from '../../components/common/LoadingMsg';
 import { NoneResults } from '../search';
 import { SystemError } from 'errorType';
-
-export interface UserTicketProps {
-  id: string;
-  title: string;
-  releaseYear: string;
-  rating: number | string;
-  createdAt: number;
-  reviewText: string;
-  posterImage?: string;
-}
+import { UserTicketProps } from 'ticketType';
 
 const TicketListPage: NextPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

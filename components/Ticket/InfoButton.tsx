@@ -2,17 +2,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { AiFillInfoCircle } from 'react-icons/ai';
+import { MovieInfoProps } from 'ticketType';
 
-interface InfoProps {
-  title: string;
-  releaseYear: string;
-  voteAverage: number | string;
-  janre?: string[];
-  posterPath?: string;
-  overview?: string;
-}
-
-const InfoButton = (props: InfoProps) => {
+const InfoButton = (props: MovieInfoProps) => {
   const router = useRouter();
 
   return (

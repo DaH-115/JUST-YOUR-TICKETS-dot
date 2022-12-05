@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import useGetJanres from '../../hooks/useGetJanres';
 
-import { TicketProps } from '../home/TopMovieTicket';
 import AdmitBtn from '../ticket/AdmitBtn';
 import InfoButton from '../ticket/InfoButton';
 import MovieTextDetail from '../ticket/MovieTextDetail';
+import { MovieDataProps } from 'ticketType';
 
 const SearchTicketList = ({
   title,
@@ -14,7 +14,7 @@ const SearchTicketList = ({
   voteAverage,
   posterPath,
   overview,
-}: TicketProps) => {
+}: MovieDataProps) => {
   const janres = useGetJanres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
 

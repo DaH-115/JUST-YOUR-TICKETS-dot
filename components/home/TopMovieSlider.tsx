@@ -1,13 +1,13 @@
-import MovieTicket from './TopMovieTicket';
-import { popMovie } from '../../pages';
+import TopMovieTicket from './TopMovieTicket';
 import TicketSlider from '../slider/TicketSlider';
+import { TopMovieDataProps } from 'ticketType';
 
-const TopMovieSlider = ({ movies }: { movies: popMovie[] }) => {
+const TopMovieSlider = ({ movies }: { movies: TopMovieDataProps[] }) => {
   return (
     <TicketSlider>
-      {movies.map((item: popMovie, index: number) => {
+      {movies.map((item: TopMovieDataProps, index) => {
         return (
-          <MovieTicket
+          <TopMovieTicket
             key={index}
             movieId={item.id}
             movieIndex={index + 1}

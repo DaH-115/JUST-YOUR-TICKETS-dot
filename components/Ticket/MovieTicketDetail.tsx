@@ -1,25 +1,16 @@
 import styled from 'styled-components';
 import MovieTextDetail from './MovieTextDetail';
 import AdmitBtn from './AdmitBtn';
-
-interface TicketDetailProps {
-  title: string;
-  voteAverage: number | string;
-  releaseYear: string;
-  ticketId?: string;
-  posterPath?: string;
-  reviewText?: string;
-  janre?: string[];
-}
+import { MovieInfoProps } from 'ticketType';
 
 const MovieTicketDetail = ({
   title,
   voteAverage,
   releaseYear,
-  posterPath,
   reviewText,
   janre,
-}: TicketDetailProps) => {
+  posterPath,
+}: MovieInfoProps) => {
   return (
     <MovieDetailWrapper>
       <MovieTextDetail

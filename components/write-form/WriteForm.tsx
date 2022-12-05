@@ -7,15 +7,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 import BackgroundStyle from '../layout/BackgroundStyle';
 import { SystemError } from 'errorType';
-
-interface WriteFormProps {
-  ticketId: string;
-  title: string;
-  releaseYear: string;
-  rating?: string;
-  reviewText?: string;
-  posterImage?: string;
-}
+import { WriteFormProps } from 'ticketType';
 
 // 💫 title, releaseYear, posterImage <- Main/Search/MovieDetailPage에서 받는 값
 // 💫 rating, reviewText, ticketId <- UserTicket에서 받는 값

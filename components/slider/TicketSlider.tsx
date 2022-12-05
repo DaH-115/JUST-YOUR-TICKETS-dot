@@ -62,7 +62,7 @@ const StyledSlider = styled(Slider)`
     width: 100%;
     padding: 0 1rem;
 
-    ${({ theme }) => theme.device.desktop} {
+    ${({ theme }) => theme.device.tablet} {
       height: 100vh;
     }
   }

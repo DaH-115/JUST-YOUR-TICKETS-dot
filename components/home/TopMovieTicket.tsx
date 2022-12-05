@@ -7,18 +7,9 @@ import PosterImage from '../ticket/PosterImage';
 import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import { TicketWrapper } from '../styles/TicketWrapper';
 import { MovieIndexBar } from '../styles/MovieIndexBar';
+import { MovieDataProps } from 'ticketType';
 
-export interface TicketProps {
-  title: string;
-  releaseDate: string;
-  movieId: number;
-  movieIndex: number;
-  voteAverage: number | string;
-  posterPath?: string;
-  overview?: string;
-}
-
-const MovieTicket = (props: TicketProps) => {
+const TopMovieTicket = (props: MovieDataProps) => {
   const router = useRouter();
   const janres = useGetJanres(props.movieId);
   const releaseYear = props.releaseDate.slice(0, 4);
@@ -55,7 +46,7 @@ const MovieTicket = (props: TicketProps) => {
   );
 };
 
-export default MovieTicket;
+export default TopMovieTicket;
 
 const MovieRank = styled.p`
   font-size: 3rem;

@@ -5,45 +5,37 @@ import BackgroundStyle from '../components/layout/BackgroundStyle';
 import SlideList from '../components/slider/SlideList';
 import TopMovieSlider from '../components/home/TopMovieSlider';
 import { SystemError } from 'errorType';
+import { TopMovieDataProps } from 'ticketType';
 
-export interface popMovie {
-  id: number;
-  vote_average: number;
-  title: string;
-  overview: string;
-  release_date: string;
-  poster_path?: string;
-}
-
-const Home: NextPage<{ topTenMovies: popMovie[] }> = ({ topTenMovies }) => {
+const Home: NextPage<{ topMovies: TopMovieDataProps[] }> = ({ topMovies }) => {
   return (
     <BackgroundStyle customMessage='your💭' backgroundColor='black'>
       <SlideList title='인기 영화 10'>
-        <TopMovieSlider movies={topTenMovies} />
+        <TopMovieSlider movies={topMovies} />
       </SlideList>
     </BackgroundStyle>
   );
 };
 
 export const getStaticProps: GetStaticProps<{
-  topTenMovies: popMovie[];
+  topMovies: TopMovieDataProps[];
 }> = async () => {
-  let topTenMovies: popMovie[] = [];
+  let topMovies: TopMovieDataProps[] = [];
 
   try {
     const res = await axios.get(
       `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko`
     );
-    const { results }: { results: popMovie[] } = await res.data;
+    const { results }: { results: TopMovieDataProps[] } = await res.data;
 
-    topTenMovies = results.splice(0, 10);
+    topMovies = results.splice(0, 10);
   } catch (error) {
     const err = error as SystemError;
     console.log(err.message);
   }
 
   return {
-    props: { topTenMovies },
+    props: { topMovies },
   };
 };
 

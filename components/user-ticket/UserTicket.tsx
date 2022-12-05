@@ -11,10 +11,10 @@ import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import PosterImage from '../ticket/PosterImage';
 import AlertPopup from '../../components/layout/AlertPopup';
 import PortalAlertPopup from '../popup/PortalAlert';
-import { UserTicketProps } from '../../pages/ticket-list';
-import { SystemError } from 'errorType';
 import { TicketWrapper } from '../styles/TicketWrapper';
 import { MovieIndexBar } from '../styles/MovieIndexBar';
+import { SystemError } from 'errorType';
+import { UserTicketProps } from 'ticketType';
 
 const UserTicket = ({
   id: ticketId,
@@ -79,7 +79,7 @@ const UserTicket = ({
                 releaseYear,
                 rating,
                 reviewText,
-                posterImage: `https://image.tmdb.org/t/p/w500/${posterImage}`,
+                posterImage,
               },
             }}
             as={`/write`}

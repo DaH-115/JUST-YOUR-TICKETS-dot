@@ -5,17 +5,17 @@ import axios from 'axios';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { BiSearch } from 'react-icons/bi';
-import { popMovie } from '..';
 
 import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import SearchTicketList from '../../components/search/SearchTicketList';
 import SignInAlert from '../../components/popup/SignInAlert';
 import { SystemError } from 'errorType';
+import { TopMovieDataProps } from 'ticketType';
 
 const SearchPage: NextPage = () => {
   const [movieName, setMovieName] = useState('');
-  const [searchResults, setSearchResults] = useState<popMovie[]>();
+  const [searchResults, setSearchResults] = useState<TopMovieDataProps[]>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const SearchPage: NextPage = () => {
         `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}`
       );
 
-      const { results }: { results: popMovie[] } = await res.data;
+      const { results }: { results: TopMovieDataProps[] } = await res.data;
 
       setSearchResults(results);
     } catch (error) {
@@ -117,7 +117,7 @@ export const NoneResults = styled.p`
   font-size: 1.2rem;
   font-weight: 400;
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     padding-left: 2rem;
   }
 `;
@@ -134,7 +134,7 @@ const SearchTitle = styled.p`
   font-size: 1.5rem;
   font-weight: 700;
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     padding-left: 2rem;
   }
 `;
