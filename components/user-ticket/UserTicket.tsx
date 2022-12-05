@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../../firebase/firebase';
+import { db } from '../../firebase';
 import styled from 'styled-components';
 import { BiPencil, BiTrash } from 'react-icons/bi';
 
@@ -10,7 +10,7 @@ import InfoButton from '../ticket/InfoButton';
 import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import PosterImage from '../ticket/PosterImage';
 import AlertPopup from '../../components/layout/AlertPopup';
-import PortalAlertPopup from '../../components/PortalAlert';
+import PortalAlertPopup from '../popup/PortalAlert';
 import { UserTicketProps } from '../../pages/ticket-list';
 import { SystemError } from 'errorType';
 import { TicketWrapper } from '../styles/TicketWrapper';
