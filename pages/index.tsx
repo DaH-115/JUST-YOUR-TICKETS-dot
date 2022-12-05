@@ -2,8 +2,8 @@ import { GetStaticProps, NextPage } from 'next';
 import axios from 'axios';
 
 import BackgroundStyle from '../components/layout/BackgroundStyle';
-import SlideList from '../components/SlideList';
-import TopMovieSlider from '../components/main/TopMovieSlider';
+import SlideList from '../components/slider/SlideList';
+import TopMovieSlider from '../components/home/TopMovieSlider';
 import { SystemError } from 'errorType';
 
 export interface popMovie {

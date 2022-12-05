@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
-import { auth } from '../../firebase/firebase';
+import { auth } from '../../firebase';
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,

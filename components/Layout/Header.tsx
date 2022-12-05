@@ -3,7 +3,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { BiSearch } from 'react-icons/bi';
-import { auth } from '../../firebase/firebase';
+import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { SystemError } from 'errorType';
 
@@ -16,9 +16,6 @@ const Header = () => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           setUserId(user.uid);
-        } else {
-          router.push('/signin');
-          console.log('user is signed out');
         }
       });
     } catch (error) {
@@ -56,7 +53,7 @@ const Header = () => {
       {userId ? (
         <HeaderLi onClick={onSignOutHandler}>LOGOUT</HeaderLi>
       ) : (
-        <Link href='/signin'>
+        <Link href='/sign-in'>
           <HeaderLi className='home'>SIGN IN</HeaderLi>
         </Link>
       )}

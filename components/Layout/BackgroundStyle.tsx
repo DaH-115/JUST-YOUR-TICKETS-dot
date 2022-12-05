@@ -19,7 +19,6 @@ const BackgroundStyle = ({
         <CustomMessage>{customMessage}</CustomMessage>
         <p>TICKTES.</p>
       </PageTitle>
-
       {children}
     </Wrapper>
   );

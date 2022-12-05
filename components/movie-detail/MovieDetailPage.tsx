@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 
-import BackgroundStyle from './layout/BackgroundStyle';
-import LoadingMsg from '../components/LoadingMsg';
-import { SlideTitle } from './styles/StyledTitle';
+import BackgroundStyle from '../layout/BackgroundStyle';
+import LoadingMsg from '../common/LoadingMsg';
+import { SlideTitle } from '../styles/StyledTitle';
 
 const MovieDetailPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase/firebase';
+import { auth, db } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
-import BackgroundStyle from './layout/BackgroundStyle';
+import BackgroundStyle from '../layout/BackgroundStyle';
 import { SystemError } from 'errorType';
 
 interface WriteFormProps {

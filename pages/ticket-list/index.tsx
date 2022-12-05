@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import { auth, db } from '../../firebase/firebase';
+import { auth, db } from '../../firebase';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
-import SlideList from '../../components/SlideList';
-import LoadingMsg from '../../components/LoadingMsg';
+import SlideList from '../../components/slider/SlideList';
+import LoadingMsg from '../../components/common/LoadingMsg';
 import { NoneResults } from '../search';
 import { SystemError } from 'errorType';
 

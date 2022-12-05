@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import useGetJanres from '../hooks/useGetJanres';
+import useGetJanres from '../../hooks/useGetJanres';
 
 import InfoButton from '../ticket/InfoButton';
 import PosterImage from '../ticket/PosterImage';
