@@ -16,7 +16,7 @@ const TopMovieTicket = (props: MovieDataProps) => {
 
   return (
     <TicketWrapper>
-      {/* 🎈 TICKET INDEX HEADER */}
+      {/* TICKET INDEX HEADER */}
       <MovieIndexBar routePath={router.pathname}>
         <MovieRank>{props.movieIndex}</MovieRank>
 
@@ -31,10 +31,10 @@ const TopMovieTicket = (props: MovieDataProps) => {
         />
       </MovieIndexBar>
 
-      {/* 🎈 POSTER IMAGE */}
+      {/* POSTER IMAGE */}
       <PosterImage title={props.title} posterPath={props.posterPath} />
 
-      {/* 🎈 TICKET DETAIL */}
+      {/* TICKET DETAIL */}
       <MovieTicketDetail
         title={props.title}
         releaseYear={releaseYear}

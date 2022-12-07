@@ -23,6 +23,8 @@ const SearchTicketList = ({
       <SearchResult>
         <StyledInfo>
           <TicketIndex>{movieIndex + 1}.</TicketIndex>
+
+          {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
           <InfoButton
             title={title}
             releaseYear={releaseYear}

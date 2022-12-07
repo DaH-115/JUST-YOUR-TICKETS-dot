@@ -102,10 +102,10 @@ const UserTicket = ({
         </ButtonWrapper>
       </MovieIndexBar>
 
-      {/* 🎈 POSTER IMAGE Section */}
+      {/* POSTER IMAGE Section */}
       <PosterImage title={title} posterPath={posterImage} />
 
-      {/* 🎈 TICKET DETAIL Section */}
+      {/* TICKET DETAIL Section */}
       <MovieTicketDetail
         title={title}
         releaseYear={releaseYear}
