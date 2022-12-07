@@ -4,7 +4,6 @@ import axios from 'axios';
 import BackgroundStyle from '../components/layout/BackgroundStyle';
 import SlideList from '../components/slider/SlideList';
 import TopMovieSlider from '../components/home/TopMovieSlider';
-import { SystemError } from 'errorType';
 import { TopMovieDataProps } from 'ticketType';
 
 const Home: NextPage<{ topMovies: TopMovieDataProps[] }> = ({ topMovies }) => {
@@ -30,12 +29,14 @@ export const getStaticProps: GetStaticProps<{
 
     topMovies = results.splice(0, 10);
   } catch (error) {
-    const err = error as SystemError;
-    console.log(err.message);
+    return {
+      notFound: true,
+    };
   }
 
   return {
     props: { topMovies },
+    revalidate: 86400,
   };
 };
 
