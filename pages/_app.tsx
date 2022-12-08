@@ -7,10 +7,12 @@ import { theme } from '../styles/theme';
 import Header from '../components/layout/Header';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const titleText = 'JUST MY TICKETS. | 홈';
+
   return (
     <ThemeProvider theme={theme}>
       <Head>
-        <title>{`JUST MY TICKETS. | 홈`}</title>
+        <title>{titleText}</title>
       </Head>
       <GlobalStyle />
       <Header />
