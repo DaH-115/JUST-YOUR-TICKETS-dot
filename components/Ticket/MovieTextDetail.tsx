@@ -1,13 +1,13 @@
 import styled from 'styled-components';
-import { MovieInfoProps } from 'ticketType';
+import { MovieTextDetailProps } from 'ticketType';
 
 const MovieTextDetail = ({
   title,
   voteAverage,
   releaseYear,
   reviewText,
-  janre,
-}: MovieInfoProps) => {
+  janres,
+}: MovieTextDetailProps) => {
   return (
     <TextWrapper>
       <MovieTitle>
@@ -19,9 +19,9 @@ const MovieTextDetail = ({
         </MovieRating>
       </MovieTitle>
 
-      {janre && (
+      {janres && (
         <MovieJanreWrapper>
-          {janre.map((item: string, index) => (
+          {janres.map((item: string, index) => (
             <li key={index}>{item === 'Science Fiction' ? 'SF' : item}</li>
           ))}
         </MovieJanreWrapper>

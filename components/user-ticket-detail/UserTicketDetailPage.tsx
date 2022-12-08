@@ -7,14 +7,13 @@ import Head from 'next/head';
 import BackgroundStyle from '../layout/BackgroundStyle';
 import LoadingMsg from '../common/LoadingMsg';
 import { SlideTitle } from '../styles/StyledTitle';
-import { MovieInfoProps } from 'ticketType';
+import { QueryData } from 'ticketType';
 
 const UserTicketDetailPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { title, releaseYear, voteAverage, posterImage, overview } =
-    router.query as unknown as MovieInfoProps;
-  const janreArr = router.query.janre as string[];
+  const { title, releaseYear, voteAverage, posterImage, overview, janreArr } =
+    router.query as unknown as QueryData;
 
   useEffect(() => {
     setIsLoading(true);

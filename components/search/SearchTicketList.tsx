@@ -28,7 +28,7 @@ const SearchTicketList = ({
           <InfoButton
             title={title}
             releaseYear={releaseYear}
-            janre={janres}
+            janres={janres}
             voteAverage={voteAverage}
             overview={overview}
             posterPath={posterPath}
@@ -37,7 +37,7 @@ const SearchTicketList = ({
         <MovieTextDetail
           title={title}
           releaseYear={releaseYear}
-          janre={janres}
+          janres={janres}
           voteAverage={voteAverage}
         />
         <AdmitBtn

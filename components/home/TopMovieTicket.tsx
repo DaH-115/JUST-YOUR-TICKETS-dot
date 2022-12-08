@@ -9,38 +9,47 @@ import { TicketWrapper } from '../styles/TicketWrapper';
 import { MovieIndexBar } from '../styles/MovieIndexBar';
 import { MovieDataProps } from 'ticketType';
 
-const TopMovieTicket = (props: MovieDataProps) => {
+const TopMovieTicket = ({
+  movieId,
+  releaseDate,
+  movieIndex,
+  title,
+  posterPath,
+  voteAverage,
+  overview,
+}: MovieDataProps) => {
   const router = useRouter();
-  const janres = useGetJanres(props.movieId);
-  const releaseYear = props.releaseDate.slice(0, 4);
+  const janres = useGetJanres(movieId);
+  const releaseYear = releaseDate.slice(0, 4);
 
   return (
     <TicketWrapper>
       {/* TICKET INDEX HEADER */}
       <MovieIndexBar routePath={router.pathname}>
-        <MovieRank>{props.movieIndex}</MovieRank>
+        <MovieRank>{movieIndex}</MovieRank>
 
         {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
         <InfoButton
-          title={props.title}
+          movieId={movieId}
+          title={title}
           releaseYear={releaseYear}
-          posterPath={props.posterPath}
-          voteAverage={props.voteAverage}
-          janre={janres}
-          overview={props.overview}
+          posterPath={posterPath}
+          voteAverage={voteAverage}
+          janres={janres}
+          overview={overview}
         />
       </MovieIndexBar>
 
       {/* POSTER IMAGE */}
-      <PosterImage title={props.title} posterPath={props.posterPath} />
+      <PosterImage title={title} posterPath={posterPath} />
 
       {/* TICKET DETAIL */}
       <MovieTicketDetail
-        title={props.title}
+        title={title}
         releaseYear={releaseYear}
-        voteAverage={props.voteAverage}
-        janre={janres}
-        posterPath={props.posterPath}
+        janres={janres}
+        voteAverage={voteAverage}
+        posterPath={posterPath}
       />
     </TicketWrapper>
   );

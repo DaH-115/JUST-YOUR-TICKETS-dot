@@ -4,7 +4,15 @@ import styled from 'styled-components';
 import { AiFillInfoCircle } from 'react-icons/ai';
 import { MovieInfoProps } from 'ticketType';
 
-const InfoButton = (props: MovieInfoProps) => {
+const InfoButton = ({
+  movieId,
+  title,
+  releaseYear,
+  posterPath,
+  voteAverage,
+  janres,
+  overview,
+}: MovieInfoProps) => {
   const router = useRouter();
 
   return (
@@ -12,22 +20,18 @@ const InfoButton = (props: MovieInfoProps) => {
       href={{
         pathname:
           router.pathname === '/'
-            ? `/${props.title}`
-            : `${router.pathname}/${props.title}`,
+            ? `/${movieId}`
+            : `${router.pathname}/${movieId}`,
         query: {
-          title: props.title,
-          releaseYear: props.releaseYear,
-          posterImage: `https://image.tmdb.org/t/p/w500/${props.posterPath}`,
-          voteAverage: props.voteAverage,
-          janre: props.janre,
-          overview: props.overview,
+          title,
+          releaseYear,
+          posterImage: `https://image.tmdb.org/t/p/w500/${posterPath}`,
+          voteAverage,
+          janres,
+          overview,
         },
       }}
-      as={
-        router.pathname === '/'
-          ? `/${props.title}`
-          : `${router.pathname}/${props.title}`
-      }
+      as={router.pathname === '/' ? `/${title}` : `${router.pathname}/${title}`}
     >
       <StyeldInfo>
         <AiFillInfoCircle />

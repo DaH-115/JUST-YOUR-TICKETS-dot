@@ -1,24 +1,24 @@
 import styled from 'styled-components';
 import MovieTextDetail from './MovieTextDetail';
 import AdmitBtn from './AdmitBtn';
-import { MovieInfoProps } from 'ticketType';
+import { MovieTicketDetailProps } from 'ticketType';
 
 const MovieTicketDetail = ({
   title,
-  voteAverage,
   releaseYear,
-  reviewText,
-  janre,
+  janres,
+  voteAverage,
   posterPath,
-}: MovieInfoProps) => {
+  reviewText,
+}: MovieTicketDetailProps) => {
   return (
     <MovieDetailWrapper>
       <MovieTextDetail
         title={title}
         releaseYear={releaseYear}
         voteAverage={voteAverage}
+        janres={janres}
         reviewText={reviewText}
-        janre={janre}
       />
 
       {/* 🎈 GO TO "/write" PAGE BUTTON */}

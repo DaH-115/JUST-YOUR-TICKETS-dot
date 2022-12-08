@@ -1,19 +1,19 @@
 declare module 'ticketType' {
   export interface TopMovieDataProps {
+    id: number;
     title: string;
     release_date: string;
-    id: number;
+    vote_average: number | string;
     overview?: string;
-    vote_average?: number;
     poster_path?: string;
   }
 
   export interface MovieDataProps {
-    title: string;
-    releaseDate: string;
     movieId: number;
     movieIndex: number;
-    voteAverage?: number | string;
+    title: string;
+    releaseDate: string;
+    voteAverage: number | string;
     posterPath?: string;
     overview?: string;
   }
@@ -29,14 +29,30 @@ declare module 'ticketType' {
   }
 
   export interface MovieInfoProps {
+    movieId?: number;
     title: string;
     releaseYear: string;
-    voteAverage?: number | string;
+    voteAverage: string | number;
+    janres?: string[];
     posterPath?: string;
-    posterImage?: string;
-    reviewText?: string;
     overview?: string;
-    janre?: string[];
+  }
+
+  export interface MovieTicketDetailProps {
+    title: string;
+    releaseYear: string;
+    voteAverage: string | number;
+    janres?: string[];
+    posterPath?: string;
+    reviewText?: string;
+  }
+
+  export interface MovieTextDetailProps {
+    title: string;
+    releaseYear: string;
+    voteAverage: string | number;
+    janres?: string[];
+    reviewText?: string;
   }
 
   export interface WriteFormProps {
@@ -46,5 +62,14 @@ declare module 'ticketType' {
     rating: string;
     reviewText: string;
     posterImage?: string;
+  }
+
+  export interface QueryData {
+    title: string;
+    releaseYear: string;
+    voteAverage: string | number;
+    posterImage: string;
+    overview: string;
+    janreArr: string[];
   }
 }
