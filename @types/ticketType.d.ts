@@ -3,19 +3,22 @@ declare module 'ticketType' {
     id: number;
     title: string;
     release_date: string;
-    vote_average: number | string;
+    vote_average: number;
     overview?: string;
     poster_path?: string;
   }
 
   export interface MovieDataProps {
     movieId: number;
-    movieIndex: number;
     title: string;
     releaseDate: string;
-    voteAverage: number | string;
-    posterPath?: string;
+    voteAverage: number;
     overview?: string;
+    posterPath?: string;
+  }
+
+  export interface MovieTicketProps extends MovieDataProps {
+    movieIndex: number;
   }
 
   export interface UserTicketProps {
@@ -28,29 +31,26 @@ declare module 'ticketType' {
     posterImage?: string;
   }
 
-  export interface MovieInfoProps {
-    movieId?: number;
+  export interface requiredText {
     title: string;
     releaseYear: string;
-    voteAverage: string | number;
+    voteAverage: number;
+  }
+
+  export interface MovieInfoProps extends requiredText {
+    movieId?: number;
     janres?: string[];
     posterPath?: string;
     overview?: string;
   }
 
-  export interface MovieTicketDetailProps {
-    title: string;
-    releaseYear: string;
-    voteAverage: string | number;
+  export interface MovieTicketDetailProps extends requiredText {
     janres?: string[];
     posterPath?: string;
     reviewText?: string;
   }
 
-  export interface MovieTextDetailProps {
-    title: string;
-    releaseYear: string;
-    voteAverage: string | number;
+  export interface MovieTextDetailProps extends requiredText {
     janres?: string[];
     reviewText?: string;
   }
@@ -64,10 +64,7 @@ declare module 'ticketType' {
     posterImage?: string;
   }
 
-  export interface QueryData {
-    title: string;
-    releaseYear: string;
-    voteAverage: string | number;
+  export interface QueryData extends requiredText {
     posterImage: string;
     overview: string;
     janreArr: string[];

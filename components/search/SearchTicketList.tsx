@@ -4,7 +4,7 @@ import useGetJanres from '../../hooks/useGetJanres';
 import AdmitBtn from '../ticket/AdmitBtn';
 import InfoButton from '../ticket/InfoButton';
 import MovieTextDetail from '../ticket/MovieTextDetail';
-import { MovieDataProps } from 'ticketType';
+import { MovieTicketProps } from 'ticketType';
 
 const SearchTicketList = ({
   title,
@@ -14,7 +14,7 @@ const SearchTicketList = ({
   voteAverage,
   posterPath,
   overview,
-}: MovieDataProps) => {
+}: MovieTicketProps) => {
   const janres = useGetJanres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
 
@@ -26,6 +26,7 @@ const SearchTicketList = ({
 
           {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
           <InfoButton
+            movieId={movieId}
             title={title}
             releaseYear={releaseYear}
             janres={janres}

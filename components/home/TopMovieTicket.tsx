@@ -7,7 +7,7 @@ import PosterImage from '../ticket/PosterImage';
 import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import { TicketWrapper } from '../styles/TicketWrapper';
 import { MovieIndexBar } from '../styles/MovieIndexBar';
-import { MovieDataProps } from 'ticketType';
+import { MovieTicketProps } from 'ticketType';
 
 const TopMovieTicket = ({
   movieId,
@@ -17,7 +17,7 @@ const TopMovieTicket = ({
   posterPath,
   voteAverage,
   overview,
-}: MovieDataProps) => {
+}: MovieTicketProps) => {
   const router = useRouter();
   const janres = useGetJanres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
