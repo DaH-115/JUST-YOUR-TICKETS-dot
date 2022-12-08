@@ -3,7 +3,7 @@ import axios from 'axios';
 import { SystemError } from 'errorType';
 
 const useGetJanres = (movieId: number) => {
-  const [janre, setJanre] = useState<string[]>([]);
+  const [janres, setJanres] = useState<string[]>([]);
 
   useEffect(() => {
     if (movieId) {
@@ -18,7 +18,7 @@ const useGetJanres = (movieId: number) => {
             (item: { id: number; name: string }) => item.name
           );
 
-          setJanre(result);
+          setJanres(result);
         })();
       } catch (error) {
         const err = error as SystemError;
@@ -27,7 +27,7 @@ const useGetJanres = (movieId: number) => {
     }
   }, [movieId]);
 
-  return janre;
+  return janres;
 };
 
 export default useGetJanres;
