@@ -24,7 +24,6 @@ export default class MyDocument extends Document {
             rel='stylesheet'
           />
 
-          <title>JUST MY TICKETS. | 홈</title>
           <meta
             name='description'
             content='나의 영화 감상 티켓을 모아보세요.'

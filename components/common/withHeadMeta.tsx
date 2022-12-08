@@ -6,7 +6,7 @@ const withHeadMeta = (Component: ComponentType, title: string) => {
     return (
       <>
         <Head>
-          <title>JUST MY TICKETS. | {title}</title>
+          <title>{`JUST MY TICKETS. | ${title}`}</title>
         </Head>
         <Component {...props} />
       </>
