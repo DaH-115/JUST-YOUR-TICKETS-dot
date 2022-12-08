@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import styled from 'styled-components';
-import { BiPencil, BiTrash } from 'react-icons/bi';
 
 import InfoButton from '../ticket/InfoButton';
 import MovieTicketDetail from '../ticket/MovieTicketDetail';
@@ -15,6 +13,8 @@ import { TicketWrapper } from '../styles/TicketWrapper';
 import { MovieIndexBar } from '../styles/MovieIndexBar';
 import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
+import UpdateButton from '../common/UpdateButton';
+import DeleteButton from '../common/DeleteButton';
 
 const UserTicket = ({
   id: ticketId,
@@ -64,39 +64,24 @@ const UserTicket = ({
         <WriteDate>{writeDate}</WriteDate>
         <ButtonWrapper>
           {/* DELETE BUTTON */}
-          <CancelBtn onClick={onToggleHandler}>
-            <button>
-              <BiTrash />
-            </button>
-          </CancelBtn>
+          <DeleteButton onToggle={onToggleHandler} />
+
           {/* UPDATE BUTTON */}
-          <Link
-            href={{
-              pathname: '/write',
-              query: {
-                ticketId,
-                title,
-                releaseYear,
-                rating,
-                reviewText,
-                posterImage,
-              },
-            }}
-            as={`/write`}
-          >
-            <StyledBtn>
-              <button>
-                <BiPencil />
-              </button>
-            </StyledBtn>
-          </Link>
+          <UpdateButton
+            title={title}
+            ticketId={ticketId}
+            releaseYear={releaseYear}
+            rating={rating}
+            reviewText={reviewText}
+            posterImage={posterImage}
+          />
 
           {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
           <InfoButton
             title={title}
             releaseYear={releaseYear}
             posterPath={posterImage}
-            voteAverage={rating}
+            voteAverage={+rating}
             overview={reviewText}
           />
         </ButtonWrapper>
@@ -109,7 +94,7 @@ const UserTicket = ({
       <MovieTicketDetail
         title={title}
         releaseYear={releaseYear}
-        voteAverage={rating}
+        voteAverage={+rating}
         posterPath={posterImage}
         reviewText={reviewText}
       />
@@ -146,14 +131,5 @@ const StyledBtn = styled.div`
     font-size: 1rem;
     line-height: 1rem;
     margin-right: 1rem;
-  }
-`;
-
-const CancelBtn = styled(StyledBtn)`
-  button {
-    &:hover,
-    &:active {
-      color: ${({ theme }) => theme.colors.orange};
-    }
   }
 `;

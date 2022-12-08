@@ -21,6 +21,8 @@ const InfoButton = ({
         pathname:
           router.pathname === '/'
             ? `/${movieId}`
+            : router.pathname === '/ticket-list'
+            ? `${router.pathname}/${title}`
             : `${router.pathname}/${movieId}`,
         query: {
           title,
@@ -31,7 +33,13 @@ const InfoButton = ({
           overview,
         },
       }}
-      as={router.pathname === '/' ? `/${title}` : `${router.pathname}/${title}`}
+      as={
+        router.pathname === '/'
+          ? `/${movieId}`
+          : router.pathname === '/ticket-list'
+          ? `${router.pathname}/${title}`
+          : `${router.pathname}/${movieId}`
+      }
     >
       <StyeldInfo>
         <AiFillInfoCircle />

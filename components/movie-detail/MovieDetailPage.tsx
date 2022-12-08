@@ -1,124 +1,108 @@
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 
 import Head from 'next/head';
 import BackgroundStyle from '../layout/BackgroundStyle';
-import LoadingMsg from '../common/LoadingMsg';
 import { SlideTitle } from '../styles/StyledTitle';
-import { MovieInfoProps } from 'ticketType';
+import useGetJanres from '../hooks/useGetJanres';
+import { MovieDataProps } from 'ticketType';
 
-const MovieDetailPage = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter();
-  const { title, releaseYear, voteAverage, posterImage, overview } =
-    router.query as unknown as MovieInfoProps;
-  const janreArr = router.query.janre as string[];
-  const fromTicketList = router.pathname.includes('ticket-list');
-
-  useEffect(() => {
-    setIsLoading(true);
-    if (router.query.title === undefined) {
-      router.push('/');
-      return;
-    }
-    setIsLoading(false);
-  }, []);
+const MovieDetail = ({
+  movieId,
+  title,
+  releaseDate,
+  voteAverage,
+  overview,
+  posterPath,
+}: MovieDataProps) => {
+  const janreArr = useGetJanres(movieId);
+  const releaseYear = releaseDate.slice(0, 4);
+  const posterImage = `https://image.tmdb.org/t/p/w500/${posterPath}`;
+  const titleText = `JUST MY TICKETS. | ${title}`;
 
   return (
     <>
       <Head>
-        <title>JUST MY TICKETS. | {title}</title>
+        <title>{titleText}</title>
       </Head>
       <BackgroundStyle backgroundColor='black' customMessage='info✔️'>
-        <SlideTitle>영화 상세 정보</SlideTitle>
-        {isLoading ? (
-          <LoadingMsg />
-        ) : (
-          <DetailWrapper>
-            <MovieDetails>
-              {!posterImage ? (
-                <ImgBox>
-                  <NoneImg>IMAGE IS NONE</NoneImg>
-                </ImgBox>
-              ) : (
-                <ImgBox>
-                  <Image
-                    src={posterImage}
-                    alt={`${title} Image Poster`}
-                    width={360}
-                    height={560}
-                  />
-                </ImgBox>
+        <SlideTitle>{'영화 상세 정보'}</SlideTitle>
+        <DetailWrapper>
+          <MovieDetails>
+            {!posterImage ? (
+              <ImgBox>
+                <NoneImg>{'IMAGE IS NONE'}</NoneImg>
+              </ImgBox>
+            ) : (
+              <ImgBox>
+                <Image
+                  src={posterImage}
+                  alt={`${title} Image Poster`}
+                  width={360}
+                  height={560}
+                />
+              </ImgBox>
+            )}
+            <TextWrapper>
+              <StyledLabeling>{'* Movie Title /제목'}</StyledLabeling>
+              <ContentText>
+                <h1>
+                  {title}({releaseYear})
+                </h1>
+              </ContentText>
+              <StyledLabeling>{'* Rating /점수'}</StyledLabeling>
+              <ContentText>
+                <p>{Math.round(voteAverage)} /10</p>
+              </ContentText>
+              {janreArr && (
+                <>
+                  <StyledLabeling>{'* Janres /장르'}</StyledLabeling>
+                  <ContentText>
+                    <MovieJanreWrapper>
+                      {janreArr.map((item, index) => (
+                        <li key={index}>/ {item}</li>
+                      ))}
+                    </MovieJanreWrapper>
+                  </ContentText>
+                </>
               )}
-              <TextWrapper>
-                <StyledLabeling>* Movie Title /제목</StyledLabeling>
-                <ContentText>
-                  <h1>
-                    {title}({releaseYear})
-                  </h1>
-                </ContentText>
-                <StyledLabeling>
-                  {fromTicketList ? `* Rating /나의 점수` : '* Rating /점수'}
-                </StyledLabeling>
-                <ContentText>
-                  <p>{voteAverage} /10</p>
-                </ContentText>
-                {janreArr && (
-                  <>
-                    <StyledLabeling>* Janres /장르</StyledLabeling>
-                    <ContentText>
-                      <MovieJanreWrapper>
-                        {janreArr.map((item, index) => (
-                          <li key={index}>/ {item}</li>
-                        ))}
-                      </MovieJanreWrapper>
-                    </ContentText>
-                  </>
-                )}
 
-                <StyledLabeling>
-                  {fromTicketList
-                    ? `* Review /나의 감상`
-                    : '* Overview /줄거리'}
-                </StyledLabeling>
-                <ContentText>
-                  <OverviweText>{overview}</OverviweText>
-                </ContentText>
+              <StyledLabeling>{'* Overview /줄거리'}</StyledLabeling>
+              <ContentText>
+                <OverviweText>
+                  {!overview ? '등록된 줄거리가 없습니다.' : overview}
+                </OverviweText>
+              </ContentText>
 
-                {fromTicketList ? null : (
-                  <Link
-                    href={{
-                      pathname: '/write',
-                      query: {
-                        title,
-                        releaseYear,
-                        posterImage,
-                      },
-                    }}
-                    as={`/write`}
-                  >
-                    <AdmitButtonWrapper>
-                      <button>ADMIT ONE</button>
-                      <ArrowBtn>
-                        <AiOutlineArrowRight />
-                      </ArrowBtn>
-                    </AdmitButtonWrapper>
-                  </Link>
-                )}
-              </TextWrapper>
-            </MovieDetails>
-          </DetailWrapper>
-        )}
+              <Link
+                href={{
+                  pathname: '/write',
+                  query: {
+                    title,
+                    releaseYear,
+                    posterImage,
+                  },
+                }}
+                as={`/write`}
+              >
+                <AdmitButtonWrapper>
+                  <button>{'ADMIT ONE'}</button>
+                  <ArrowBtn>
+                    <AiOutlineArrowRight />
+                  </ArrowBtn>
+                </AdmitButtonWrapper>
+              </Link>
+            </TextWrapper>
+          </MovieDetails>
+        </DetailWrapper>
       </BackgroundStyle>
     </>
   );
 };
 
-export default MovieDetailPage;
+export default MovieDetail;
 
 const DetailWrapper = styled.div`
   display: flex;
