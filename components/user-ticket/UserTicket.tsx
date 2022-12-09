@@ -36,7 +36,7 @@ const UserTicket = ({
     try {
       await deleteDoc(userTicketRef);
       console.log('Delete Complete!');
-      router.push('/ticket-list');
+      router.reload();
     } catch (error) {
       const err = error as SystemError;
       console.log(err.message);

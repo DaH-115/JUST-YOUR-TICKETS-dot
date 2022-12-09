@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { auth, db } from '../../firebase';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -18,6 +19,7 @@ const TicketListPage: NextPage = () => {
   const [userId, setUserId] = useState<string>('');
   const [usersTicket, setUsersTicket] = useState<UserTicketProps[]>([]);
   const ticketLength = usersTicket.length;
+  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -52,7 +54,7 @@ const TicketListPage: NextPage = () => {
         if (user) {
           setUserId(user.uid);
         } else {
-          console.log('user is signed out');
+          router.push('/');
         }
       });
     } catch (error) {

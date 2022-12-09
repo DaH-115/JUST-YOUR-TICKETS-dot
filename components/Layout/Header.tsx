@@ -16,6 +16,8 @@ const Header = () => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           setUserId(user.uid);
+        } else {
+          router.push('/sign-in');
         }
       });
     } catch (error) {
@@ -28,7 +30,7 @@ const Header = () => {
     try {
       await auth.signOut();
       setUserId('');
-      router.push('/signin');
+      router.push('/sign-in');
     } catch (error) {
       const err = error as SystemError;
       console.log(err.message);

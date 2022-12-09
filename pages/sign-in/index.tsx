@@ -40,7 +40,6 @@ const LoginPage: NextPage = () => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           router.push('/');
-          return;
         }
       });
     } catch (error) {
