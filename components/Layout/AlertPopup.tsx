@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 interface AlertPopupProps {
   popupType: string;
@@ -32,6 +32,16 @@ const AlertPopup = ({
 
 export default AlertPopup;
 
+// Animation Setting
+const FadeIn = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`;
+
 const BackDrop = styled.div`
   position: fixed;
   top: 50%;
@@ -47,6 +57,9 @@ const BackDrop = styled.div`
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(1px);
   background-color: rgba(0, 0, 0, 0.3);
+
+  animation: ${FadeIn} 0.5s ease-in-out;
+  z-index: 999;
 `;
 
 const PopupBox = styled.div`
@@ -61,6 +74,9 @@ const PopupBox = styled.div`
   border-radius: 1rem;
   background: linear-gradient(white 50%, ${({ theme }) => theme.colors.yellow});
   filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 0.2));
+
+  animation: ${FadeIn} 0.5s ease-in-out;
+  z-index: 999;
 `;
 
 const PopupTitle = styled.p`
@@ -93,8 +109,10 @@ const PopupBtn = styled.div`
   text-align: center;
   border-radius: 1rem;
 
+  &:hover,
   &:active {
-    color: ${({ theme }) => theme.colors.yellow};
+    color: #fff;
+    transition: color 0.1s ease-in-out;
   }
 
   &:last-child {
@@ -109,4 +127,10 @@ const PopupBtnConfirm = styled(PopupBtn)`
 
 const PopupBtnCancel = styled(PopupBtn)`
   border: 0.1rem solid ${({ theme }) => theme.colors.orange};
+
+  &:hover,
+  &:active {
+    color: ${({ theme }) => theme.colors.orange};
+    transition: color 0.1s ease-in-out;
+  }
 `;
