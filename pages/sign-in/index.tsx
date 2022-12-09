@@ -17,6 +17,7 @@ import { BsGithub } from 'react-icons/bs';
 
 import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
+import LoadingMsg from '../../components/common/LoadingMsg';
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
@@ -31,6 +32,8 @@ const LoginPage: NextPage = () => {
   const [isPassword, setIsPassword] = useState<boolean>(false);
   const isDisabled = isEmail && isPassword ? false : true;
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   useEffect(() => {
     inputRef.current!.focus();
   }, []);
@@ -42,6 +45,7 @@ const LoginPage: NextPage = () => {
           router.push('/');
         }
       });
+      setIsLoading(false);
     } catch (error) {
       const err = error as SystemError;
       console.log(err.message);
@@ -124,17 +128,17 @@ const LoginPage: NextPage = () => {
 
     try {
       if (target.name === 'google-signin') {
+        setIsLoading(true);
         console.log('google-signin click');
         const provider = new GoogleAuthProvider();
         await signInWithPopup(auth, provider);
-        return;
       }
 
       if (target.name === 'github-signin') {
+        setIsLoading(true);
         console.log('github-signin click');
         const provider = new GithubAuthProvider();
         await signInWithPopup(auth, provider);
-        return;
       }
     } catch (error) {
       const err = error as SystemError;
@@ -144,69 +148,77 @@ const LoginPage: NextPage = () => {
 
   return (
     <BackgroundStyle customMessage='create📝' backgroundColor='black'>
-      <LoginFormWrapper>
-        <LoginForTitle>
-          {signUp ? '*Sign Up /회원가입' : '*Sign In /로그인'}
-        </LoginForTitle>
-        {error && <ErrorMsg>아이디 또는 비밀번호를 확인해 주세요.</ErrorMsg>}
-        <LoginForm onSubmit={onSubmitHandler}>
-          {/* ID */}
-          <label htmlFor='user-id'>*EMAIL /이메일</label>
-          <StyledInput
-            type='text'
-            id='user-id'
-            value={userEmail}
-            onChange={onEmailChangeHandler}
-            ref={inputRef}
-          />
-          {!userEmail ? (
-            <ValidationMsg isState={isEmail}>
-              이메일을 입력해 주세요.
-            </ValidationMsg>
-          ) : !isEmail ? (
-            <ValidationMsg isState={isEmail}>
-              이메일은 " @ " , " . " 을 포함해야합니다.
-            </ValidationMsg>
-          ) : null}
+      {isLoading ? (
+        <LoadingMsg />
+      ) : (
+        <>
+          <LoginFormWrapper>
+            <LoginForTitle>
+              {signUp ? '*Sign Up /회원가입' : '*Sign In /로그인'}
+            </LoginForTitle>
+            {error && (
+              <ErrorMsg>아이디 또는 비밀번호를 확인해 주세요.</ErrorMsg>
+            )}
+            <LoginForm onSubmit={onSubmitHandler}>
+              {/* ID */}
+              <label htmlFor='user-id'>*EMAIL /이메일</label>
+              <StyledInput
+                type='text'
+                id='user-id'
+                value={userEmail}
+                onChange={onEmailChangeHandler}
+                ref={inputRef}
+              />
+              {!userEmail ? (
+                <ValidationMsg isState={isEmail}>
+                  이메일을 입력해 주세요.
+                </ValidationMsg>
+              ) : !isEmail ? (
+                <ValidationMsg isState={isEmail}>
+                  이메일은 " @ " , " . " 을 포함해야합니다.
+                </ValidationMsg>
+              ) : null}
 
-          {/* PASSWORD */}
-          <label htmlFor='user-password'>*PASSWORD /비밀번호</label>
-          <StyledInput
-            type='password'
-            id='user-password'
-            value={userPassword}
-            onChange={onPasswordChangeHandler}
-          />
-          {!userPassword ? (
-            <ValidationMsg isState={isPassword}>
-              비밀번호를 입력해 주세요.
-            </ValidationMsg>
-          ) : !isPassword ? (
-            <ValidationMsg isState={isPassword}>
-              비밀번호는 숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력
-              해주세요.
-            </ValidationMsg>
-          ) : null}
-          <LoginBtn type='submit' disabled={isDisabled} onClick={getUser}>
-            입력
-          </LoginBtn>
-        </LoginForm>
-      </LoginFormWrapper>
-      <SocialSignInWrapper>
-        <SocialSignInIcon>
-          <button name='github-signin' onClick={onSocialSignInHandler}>
-            <BsGithub />
-          </button>
-        </SocialSignInIcon>
-        <SocialSignInIcon>
-          <button name='google-signin' onClick={onSocialSignInHandler}>
-            <FcGoogle />
-          </button>
-        </SocialSignInIcon>
-      </SocialSignInWrapper>
-      <ToggleText onClick={onSignUpToggleHandler}>
-        {signUp ? '로그인' : '회원가입'}
-      </ToggleText>
+              {/* PASSWORD */}
+              <label htmlFor='user-password'>*PASSWORD /비밀번호</label>
+              <StyledInput
+                type='password'
+                id='user-password'
+                value={userPassword}
+                onChange={onPasswordChangeHandler}
+              />
+              {!userPassword ? (
+                <ValidationMsg isState={isPassword}>
+                  비밀번호를 입력해 주세요.
+                </ValidationMsg>
+              ) : !isPassword ? (
+                <ValidationMsg isState={isPassword}>
+                  비밀번호는 숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력
+                  해주세요.
+                </ValidationMsg>
+              ) : null}
+              <LoginBtn type='submit' disabled={isDisabled} onClick={getUser}>
+                입력
+              </LoginBtn>
+            </LoginForm>
+          </LoginFormWrapper>
+          <SocialSignInWrapper>
+            <SocialSignInIcon>
+              <button name='github-signin' onClick={onSocialSignInHandler}>
+                <BsGithub />
+              </button>
+            </SocialSignInIcon>
+            <SocialSignInIcon>
+              <button name='google-signin' onClick={onSocialSignInHandler}>
+                <FcGoogle />
+              </button>
+            </SocialSignInIcon>
+          </SocialSignInWrapper>
+          <ToggleText onClick={onSignUpToggleHandler}>
+            {signUp ? '로그인' : '회원가입'}
+          </ToggleText>
+        </>
+      )}
     </BackgroundStyle>
   );
 };
