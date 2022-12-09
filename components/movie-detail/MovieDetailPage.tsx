@@ -8,6 +8,7 @@ import BackgroundStyle from '../layout/BackgroundStyle';
 import { SlideTitle } from '../styles/StyledTitle';
 import useGetJanres from '../hooks/useGetJanres';
 import { MovieDataProps } from 'ticketType';
+import PosterImage from '../ticket/PosterImage';
 
 const MovieDetail = ({
   movieId,
@@ -31,20 +32,7 @@ const MovieDetail = ({
         <SlideTitle>{'영화 상세 정보'}</SlideTitle>
         <DetailWrapper>
           <MovieDetails>
-            {!posterImage ? (
-              <ImgBox>
-                <NoneImg>{'IMAGE IS NONE'}</NoneImg>
-              </ImgBox>
-            ) : (
-              <ImgBox>
-                <Image
-                  src={posterImage}
-                  alt={`${title} Image Poster`}
-                  width={360}
-                  height={560}
-                />
-              </ImgBox>
-            )}
+            <PosterImage title={title} posterPath={posterPath} />
             <TextWrapper>
               <StyledLabeling>{'* Movie Title /제목'}</StyledLabeling>
               <ContentText>
@@ -136,20 +124,19 @@ const MovieDetails = styled.div`
     justify-content: center;
     align-items: center;
     max-width: 100%;
-
     background-color: ${({ theme }) => theme.colors.black};
   }
 `;
 
 const TextWrapper = styled.div`
   position: relative;
-  bottom: 0.8rem;
+  bottom: 1.2rem;
   left: 0;
 
   width: 100%;
   height: 100%;
   overflow: hidden;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 2rem;
   border-radius: 1rem;
   background: linear-gradient(white 70%, ${({ theme }) => theme.colors.yellow});
 
@@ -160,30 +147,8 @@ const TextWrapper = styled.div`
   }
 `;
 
-const ImgBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  filter: drop-shadow(0px 0px 50px rgba(255, 255, 255, 0.4));
-
-  Img {
-    width: 100%;
-    max-width: 400px;
-  }
-`;
-
-const NoneImg = styled.div`
-  width: 360px;
-  height: 560px;
-  font-weight: 700;
-  color: black;
-  background-color: ${({ theme }) => theme.colors.orange};
-  text-align: center;
-  padding-top: 2rem;
-`;
-
 const StyledLabeling = styled.p`
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.3rem;
 
@@ -229,7 +194,6 @@ const MovieJanreWrapper = styled.ul`
 const OverviweText = styled.p`
   width: 100%;
   font-size: 1rem;
-  line-height: 1.2rem;
   padding-bottom: 2rem;
 `;
 

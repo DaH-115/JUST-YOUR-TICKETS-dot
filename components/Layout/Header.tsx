@@ -17,8 +17,6 @@ const Header = () => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           setUserId(user.uid);
-        } else {
-          router.push('/sign-in');
         }
       });
     } catch (error) {
@@ -30,8 +28,7 @@ const Header = () => {
   const onSignOutHandler = async () => {
     try {
       await auth.signOut();
-      setUserId('');
-      router.push('/sign-in');
+      router.push('/');
     } catch (error) {
       const err = error as SystemError;
       <Error statusCode={err.statusCode} />;
