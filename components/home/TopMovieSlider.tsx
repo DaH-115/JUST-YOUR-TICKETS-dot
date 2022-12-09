@@ -8,7 +8,7 @@ const TopMovieSlider = ({ movies }: { movies: TopMovieDataProps[] }) => {
       {movies.map((item: TopMovieDataProps, index) => {
         return (
           <TopMovieTicket
-            key={index}
+            key={item.id}
             movieId={item.id}
             movieIndex={index + 1}
             title={item.title}
