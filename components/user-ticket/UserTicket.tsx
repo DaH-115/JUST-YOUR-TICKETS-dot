@@ -15,6 +15,7 @@ import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
 import UpdateButton from '../common/UpdateButton';
 import DeleteButton from '../common/DeleteButton';
+import Error from 'next/error';
 
 const UserTicket = ({
   id: ticketId,
@@ -35,11 +36,10 @@ const UserTicket = ({
 
     try {
       await deleteDoc(userTicketRef);
-      console.log('Delete Complete!');
       router.reload();
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   };
 

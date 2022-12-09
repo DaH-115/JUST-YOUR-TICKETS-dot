@@ -9,6 +9,7 @@ import SignInAlert from '../../components/popup/SignInAlert';
 import WriteForm from '../../components/write-form/WriteForm';
 import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
+import Error from 'next/error';
 
 const WritePage: NextPage = () => {
   const router = useRouter();
@@ -32,7 +33,7 @@ const WritePage: NextPage = () => {
       });
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   }, []);
 

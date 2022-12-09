@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { SystemError } from 'errorType';
+import Error from 'next/error';
 
 const useGetJanres = (movieId: number) => {
   const [janres, setJanres] = useState<string[]>([]);
@@ -22,7 +23,7 @@ const useGetJanres = (movieId: number) => {
         })();
       } catch (error) {
         const err = error as SystemError;
-        console.log(err.message);
+        <Error statusCode={err.statusCode} />;
       }
     }
   }, [movieId]);

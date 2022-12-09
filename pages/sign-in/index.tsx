@@ -18,6 +18,7 @@ import { BsGithub } from 'react-icons/bs';
 import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import LoadingMsg from '../../components/common/LoadingMsg';
+import Error from 'next/error';
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
@@ -48,7 +49,7 @@ const LoginPage: NextPage = () => {
       setIsLoading(false);
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   }, []);
 
@@ -59,7 +60,7 @@ const LoginPage: NextPage = () => {
         await createUserWithEmailAndPassword(auth, userEmail, userPassword);
       } catch (error) {
         const err = error as SystemError;
-        console.log(err.message);
+        <Error statusCode={err.statusCode} />;
         setError(true);
       }
     } else {
@@ -68,7 +69,7 @@ const LoginPage: NextPage = () => {
         await signInWithEmailAndPassword(auth, userEmail, userPassword);
       } catch (error) {
         const err = error as SystemError;
-        console.log(err.message);
+        <Error statusCode={err.statusCode} />;
         setError(true);
       }
     }
@@ -129,20 +130,18 @@ const LoginPage: NextPage = () => {
     try {
       if (target.name === 'google-signin') {
         setIsLoading(true);
-        console.log('google-signin click');
         const provider = new GoogleAuthProvider();
         await signInWithPopup(auth, provider);
       }
 
       if (target.name === 'github-signin') {
         setIsLoading(true);
-        console.log('github-signin click');
         const provider = new GithubAuthProvider();
         await signInWithPopup(auth, provider);
       }
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   };
 

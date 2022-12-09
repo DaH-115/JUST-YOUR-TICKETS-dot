@@ -8,6 +8,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import BackgroundStyle from '../layout/BackgroundStyle';
 import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
+import Error from 'next/error';
 
 // 💫 title, releaseYear, posterImage <- Main/Search/MovieDetailPage에서 받는 값
 // 💫 rating, reviewText, ticketId <- UserTicket에서 받는 값
@@ -42,7 +43,7 @@ const WriteForm = ({
       });
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   }, []);
 
@@ -59,11 +60,10 @@ const WriteForm = ({
         reviewText,
       });
 
-      console.log('Update Complete!');
       router.push('/ticket-list');
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   };
 
@@ -79,11 +79,10 @@ const WriteForm = ({
         posterImage,
       });
 
-      console.log('Add contents complete!');
       router.push('/ticket-list');
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   };
 

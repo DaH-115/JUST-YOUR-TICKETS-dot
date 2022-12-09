@@ -12,6 +12,7 @@ import SearchTicketList from '../../components/search/SearchTicketList';
 import SignInAlert from '../../components/popup/SignInAlert';
 import { SystemError } from 'errorType';
 import { TopMovieDataProps } from 'ticketType';
+import Error from 'next/error';
 
 const SearchPage: NextPage = () => {
   const [movieName, setMovieName] = useState('');
@@ -27,7 +28,7 @@ const SearchPage: NextPage = () => {
       });
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   }, []);
 
@@ -42,7 +43,7 @@ const SearchPage: NextPage = () => {
       setSearchResults(results);
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   };
 

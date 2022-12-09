@@ -13,6 +13,7 @@ import LoadingMsg from '../../components/common/LoadingMsg';
 import { NoneResults } from '../search';
 import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
+import Error from 'next/error';
 
 const TicketListPage: NextPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -44,7 +45,7 @@ const TicketListPage: NextPage = () => {
       })();
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   }, [userId]);
 
@@ -59,7 +60,7 @@ const TicketListPage: NextPage = () => {
       });
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   }, []);
 

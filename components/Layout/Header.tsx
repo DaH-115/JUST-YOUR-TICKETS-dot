@@ -6,6 +6,7 @@ import { BiSearch } from 'react-icons/bi';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { SystemError } from 'errorType';
+import Error from 'next/error';
 
 const Header = () => {
   const router = useRouter();
@@ -22,7 +23,7 @@ const Header = () => {
       });
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   }, []);
 
@@ -33,7 +34,7 @@ const Header = () => {
       router.push('/sign-in');
     } catch (error) {
       const err = error as SystemError;
-      console.log(err.message);
+      <Error statusCode={err.statusCode} />;
     }
   };
 

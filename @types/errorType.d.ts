@@ -1,6 +1,6 @@
 declare module 'errorType' {
   export interface SystemError {
-    code: string;
+    statusCode: number;
     message: string;
   }
 }
