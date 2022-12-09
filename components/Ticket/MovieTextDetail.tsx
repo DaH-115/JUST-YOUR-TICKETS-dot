@@ -58,12 +58,12 @@ const MovieTitle = styled.div`
 
 const MovieRating = styled.div`
   display: flex;
-  font-size: 1rem;
   margin-top: 0.5rem;
   border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
 
   p {
     font-weight: 700;
+    line-height: 1rem;
   }
 `;
 

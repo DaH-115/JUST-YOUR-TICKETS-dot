@@ -87,7 +87,6 @@ const PopupTitle = styled.p`
 
 const PopupDesc = styled.p`
   font-size: 1rem;
-  line-height: 1.2;
   margin-bottom: 1rem;
 
   ${({ theme }) => theme.device.tablet} {

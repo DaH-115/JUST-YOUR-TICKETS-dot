@@ -4,6 +4,7 @@ const StyledArrow = styled.div`
   width: 2.5rem;
   height: 2.5rem;
   font-size: 1rem;
+  line-height: 2.5rem;
 
   color: ${({ theme }) => theme.colors.yellow};
   border: 0.1rem solid white;
@@ -11,7 +12,6 @@ const StyledArrow = styled.div`
   filter: drop-shadow(10px 10px 20px rgba(0, 0, 0, 1));
 
   text-align: center;
-  line-height: 2.5rem;
 
   &:hover {
     color: #000;

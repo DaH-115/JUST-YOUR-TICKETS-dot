@@ -11,15 +11,17 @@ export const GlobalStyle = createGlobalStyle`
   html {
       font-family: 'Montserrat', 'Nanum Gothic', sans-serif;
       font-size: 20px;
-      letter-spacing: -0.06em;
       color: #141414;
       background-color: #141414;
-      font-weight: 400;
       min-width: 350px;
     }
 
   h1, p {
-    margin: 0
+    margin: 0;
+  }
+
+  p {
+    line-height: 1.4;
   }
 
   a {

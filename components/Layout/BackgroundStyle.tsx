@@ -36,7 +36,6 @@ const Wrapper = styled.div<{ backgroundColor: string }>`
 const PageTitle = styled.div<{ backgroundColor: string }>`
   font-size: 2rem;
   font-weight: 700;
-  line-height: 2rem;
   color: ${(props) =>
     props.backgroundColor === 'black' ? '#fff' : props.theme.colors.black};
   padding: 1rem;
@@ -44,7 +43,6 @@ const PageTitle = styled.div<{ backgroundColor: string }>`
 
   ${({ theme }) => theme.device.tablet} {
     font-size: 3rem;
-    line-height: 3rem;
     padding: 2rem;
   }
 `;

@@ -13,7 +13,6 @@ export const StyledBtn = styled.div`
   button {
     color: #fff;
     font-size: 1rem;
-    line-height: 1rem;
     margin-right: 1rem;
   }
 `;
