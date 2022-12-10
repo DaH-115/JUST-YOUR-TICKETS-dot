@@ -28,7 +28,7 @@ const Header = () => {
   const onSignOutHandler = async () => {
     try {
       await auth.signOut();
-      router.push('/');
+      router.reload();
     } catch (error) {
       const err = error as SystemError;
       <Error statusCode={err.statusCode} />;
