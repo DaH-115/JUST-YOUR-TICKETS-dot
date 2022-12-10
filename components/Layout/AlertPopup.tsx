@@ -55,7 +55,7 @@ const BackDrop = styled.div`
   pointer-events: none;
 
   -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(1px);
+  backdrop-filter: blur(10px);
   background-color: rgba(0, 0, 0, 0.3);
 
   animation: ${FadeIn} 0.5s ease-in-out;
