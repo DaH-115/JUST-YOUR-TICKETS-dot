@@ -13,14 +13,22 @@ const PosterImage = ({
   return (
     <ImgBox>
       {!posterImage && !posterPath && <NoneImg>IMAGE IS NONE</NoneImg>}
-      {posterImage ? (
-        <Image src={posterImage} alt={title} width={360} height={560} />
-      ) : (
+      {posterImage && (
+        <Image
+          src={posterImage}
+          alt={title}
+          width={360}
+          height={560}
+          priority={false}
+        />
+      )}
+      {posterPath && (
         <Image
           src={`https://image.tmdb.org/t/p/w500/${posterPath}`}
           alt={title}
           width={360}
           height={560}
+          priority={false}
         />
       )}
     </ImgBox>
