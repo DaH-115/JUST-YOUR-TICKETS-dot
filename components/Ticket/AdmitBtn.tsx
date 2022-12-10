@@ -44,10 +44,11 @@ const AdmitButtonWrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.colors.orange};
+  background-color: ${({ theme }) => theme.colors.black};
 
   button {
-    color: ${({ theme }) => theme.colors.black};
+    color: #fff;
+    font-size: 1rem;
     font-weight: 700;
     padding: 2rem 0;
   }
@@ -60,6 +61,6 @@ const ArrowBtn = styled.div`
   width: 100%;
   height: 100%;
   color: ${({ theme }) => theme.colors.yellow};
-  background-color: ${({ theme }) => theme.colors.black};
+  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
   padding: 0.5rem 0;
 `;
