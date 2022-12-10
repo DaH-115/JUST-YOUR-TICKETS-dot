@@ -27,7 +27,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   let paths = [];
 
   const res = await axios.get(
-    `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko`
+    `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko-KR`
   );
   const { results } = await res.data;
 
@@ -49,7 +49,7 @@ export const getStaticProps: GetStaticProps<{
 
   try {
     const res = await axios.get(
-      `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko`
+      `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko-KR`
     );
     movie = res.data;
   } catch (error) {

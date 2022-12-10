@@ -35,7 +35,7 @@ const SearchPage: NextPage = () => {
   const getSearchResults = async (movieName: string) => {
     try {
       const res = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}`
+        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}&language=ko-KR`
       );
 
       const { results }: { results: TopMovieDataProps[] } = await res.data;
