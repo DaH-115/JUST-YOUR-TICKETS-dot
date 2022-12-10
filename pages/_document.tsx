@@ -23,39 +23,6 @@ export default class MyDocument extends Document {
             href='https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Nanum+Gothic:wght@400;700&display=swap'
             rel='stylesheet'
           />
-
-          <meta
-            name='description'
-            content='나의 영화 감상 티켓을 모아보세요.'
-          />
-          <meta
-            name='keywords'
-            content='movie,review,moviereview,ticket,영화,감상,영화감상,리뷰,티켓'
-          />
-
-          <meta property='og:type' content='website' />
-          <meta property='og:locale' content='ko_KR' />
-          <meta property='og:image:width' content='1200' />
-          <meta property='og:image:height' content='630' />
-          <meta property='og:url' content='' />
-          <meta property='og:title' content='JUST MY TICKETS.' />
-          <meta property='og:image' content='' />
-          <meta
-            property='og:description'
-            content='나의 영화 감상 티켓을 모아보세요.'
-          />
-          <meta property='og:site_name' content='JUST MY TICKETS.' />
-
-          {/* Twitter Card */}
-          <meta name='twitter:card' content='summary' />
-          <meta name='twitter:title' content='JUST MY TICKETS.' />
-          <meta
-            name='twitter:description'
-            content='나의 영화 감상 티켓을 모아보세요.'
-          />
-          <meta name='twitter:image' content='' />
-
-          <link rel='canonical' href='' />
         </Head>
         <body>
           <Main />

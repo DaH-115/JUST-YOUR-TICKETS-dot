@@ -8,9 +8,11 @@ import { theme } from '../styles/theme';
 
 import Header from '../components/layout/Header';
 import LoadingMsg from '../components/common/LoadingMsg';
+import FaviconTags from '../components/common/FaviconTags';
+import MetaTags from '../components/common/MetaTags';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const titleText = 'JUST MY TICKETS. | 홈';
+  const titleText = 'JUST MY TICKETS.';
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -28,6 +30,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ThemeProvider theme={theme}>
       <Head>
         <title>{titleText}</title>
+        <FaviconTags />
+        <MetaTags />
       </Head>
       <GlobalStyle />
       <Header />
