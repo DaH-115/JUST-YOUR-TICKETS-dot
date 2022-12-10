@@ -5,7 +5,7 @@ export const TicketWrapper = styled.div`
   margin-top: 2rem;
   margin-left: 0.5rem;
   margin-right: 1rem;
-  filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 0.2));
+  filter: drop-shadow(0px 0px 30px rgba(115, 115, 115, 0.2));
 
   ${({ theme }) => theme.device.desktop} {
     margin-top: 4rem;

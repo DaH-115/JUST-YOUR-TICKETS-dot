@@ -44,10 +44,10 @@ const TextWrapper = styled.div`
 
 const MovieTitle = styled.div`
   width: auto;
-  height: 4rem;
   font-size: 1rem;
   color: ${({ theme }) => theme.colors.black};
   overflow-y: scroll;
+  margin-bottom: 1rem;
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
@@ -71,7 +71,7 @@ const MovieJanreWrapper = styled.ul`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  height: 2rem;
+  height: auto;
   overflow-y: scroll;
   font-size: 1rem;
   color: ${({ theme }) => theme.colors.black};
@@ -82,7 +82,7 @@ const MovieJanreWrapper = styled.ul`
     margin-right: 0.4rem;
 
     &::before {
-      content: '/ ';
+      content: '/';
     }
 
     &:last-child {

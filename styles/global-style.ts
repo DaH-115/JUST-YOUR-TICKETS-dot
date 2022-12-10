@@ -18,6 +18,7 @@ export const GlobalStyle = createGlobalStyle`
 
   h1, p {
     margin: 0;
+    letter-spacing: -0.06rem;
   }
 
   p {

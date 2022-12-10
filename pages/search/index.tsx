@@ -8,7 +8,7 @@ import { BiSearch } from 'react-icons/bi';
 
 import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
-import SearchTicketList from '../../components/search/SearchTicketList';
+import SearchTicket from '../../components/search/SearchTicket';
 import SignInAlert from '../../components/popup/SignInAlert';
 import { SystemError } from 'errorType';
 import { TopMovieDataProps } from 'ticketType';
@@ -89,7 +89,7 @@ const SearchPage: NextPage = () => {
           <NoneResults>검색 결과가 없습니다.</NoneResults>
         ) : (
           searchResults.map((item, index) => (
-            <SearchTicketList
+            <SearchTicket
               key={index}
               movieId={item.id}
               movieIndex={index}
@@ -136,6 +136,7 @@ const SearchTitle = styled.p`
   font-weight: 700;
 
   ${({ theme }) => theme.device.tablet} {
+    font-size: 2rem;
     padding-left: 2rem;
   }
 `;

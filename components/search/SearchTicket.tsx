@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 import useGetJanres from '../../hooks/useGetJanres';
 
-import AdmitBtn from '../ticket/AdmitBtn';
 import InfoButton from '../ticket/InfoButton';
 import MovieTextDetail from '../ticket/MovieTextDetail';
 import { MovieTicketProps } from 'ticketType';
+import Image from 'next/image';
+import { MdOutlineArrowForwardIos } from 'react-icons/md';
+import Link from 'next/link';
 
-const SearchTicketList = ({
+const SearchTicket = ({
   title,
   releaseDate,
   movieId,
@@ -17,6 +19,7 @@ const SearchTicketList = ({
 }: MovieTicketProps) => {
   const janres = useGetJanres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
+  const posterImage = `https://image.tmdb.org/t/p/w500/${posterPath}`;
 
   return (
     <SearchResultWrapper>
@@ -41,17 +44,49 @@ const SearchTicketList = ({
           janres={janres}
           voteAverage={voteAverage}
         />
-        <AdmitBtn
-          title={title}
-          releaseYear={releaseYear}
-          posterPath={posterPath}
-        />
+
+        {/* POSTER BTN */}
+        <Link
+          href={{
+            pathname: '/write',
+            query: {
+              title,
+              releaseYear,
+              posterImage,
+            },
+          }}
+          as={`/write`}
+        >
+          <PosterBtn>
+            <Image src={posterImage} alt={title} width={170} height={270} />
+            <PosterBtnText>
+              {'ADMIT ONE'}
+              <MdOutlineArrowForwardIos />
+            </PosterBtnText>
+          </PosterBtn>
+        </Link>
       </SearchResult>
     </SearchResultWrapper>
   );
 };
 
-export default SearchTicketList;
+export default SearchTicket;
+
+const PosterBtn = styled.div`
+  width: auto;
+  background-color: ${({ theme }) => theme.colors.black};
+  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
+`;
+
+const PosterBtnText = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  padding: 0.5rem;
+`;
 
 const SearchResultWrapper = styled.div`
   display: flex;
@@ -68,9 +103,10 @@ const SearchResult = styled.div`
   width: 100%;
   height: 100%;
   max-width: 600px;
-  padding: 0rem 1rem;
+  padding: 2rem 1rem;
   padding-left: 0.5rem;
-  margin-bottom: 1rem;
+
+  filter: drop-shadow(60px 50px 50px rgba(0, 0, 0, 0.9));
 `;
 
 const StyledInfo = styled.div`
@@ -82,7 +118,6 @@ const StyledInfo = styled.div`
 `;
 
 const TicketIndex = styled.p`
-  font-size: 0.8rem;
   color: #fff;
   text-align: center;
   margin-bottom: 0.4rem;
