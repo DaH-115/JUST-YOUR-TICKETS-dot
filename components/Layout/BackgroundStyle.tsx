@@ -37,7 +37,9 @@ const PageTitle = styled.div<{ backgroundColor: string }>`
   font-size: 2rem;
   font-weight: 700;
   color: ${(props) =>
-    props.backgroundColor === 'black' ? '#fff' : props.theme.colors.black};
+    props.backgroundColor === 'black'
+      ? props.theme.colors.yellow
+      : props.theme.colors.black};
   padding: 1rem;
   margin-bottom: 2rem;
 

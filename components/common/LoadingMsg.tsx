@@ -31,6 +31,8 @@ const Background = styled.div`
 `;
 
 const LoadingText = styled.p`
+  font-size: 1.2rem;
+  font-weight: 700;
   color: #fff;
   text-align: center;
 `;
