@@ -23,12 +23,17 @@ export const getStaticProps: GetStaticProps<{
 
   try {
     const res = await axios.get(
-      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko-KR`
+      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko-KR`,
+      {
+        headers: { 'Accept-Encoding': 'gzip,deflate,compress' },
+      }
     );
     const { results }: { results: TopMovieDataProps[] } = await res.data;
 
     topMovies = results.splice(0, 10);
   } catch (error) {
+    console.log(error);
+
     return {
       notFound: true,
     };
