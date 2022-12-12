@@ -24,8 +24,8 @@ const PosterImage = ({
         <Image
           src={posterSrc}
           alt={title}
-          width={384}
-          height={568}
+          width={360}
+          height={540}
           priority={false}
         />
       )}
@@ -42,7 +42,6 @@ const ImgBox = styled.div`
   border-radius: 1.5rem;
 
   Img {
-    width: 100%;
     border-radius: 1.5rem;
   }
 `;

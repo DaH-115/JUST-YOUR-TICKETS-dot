@@ -36,14 +36,14 @@ const TicketSlider = ({ children }: { children: React.ReactNode }) => {
         },
       },
       {
-        breakpoint: 1000,
+        breakpoint: 1100,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
         },
       },
       {
-        breakpoint: 750,
+        breakpoint: 760,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -59,10 +59,8 @@ export default TicketSlider;
 
 const StyledSlider = styled(Slider)`
   .slick-list {
-    width: auto;
-
     ${({ theme }) => theme.device.tablet} {
-      height: 100vh;
+      height: 95vh;
     }
   }
 

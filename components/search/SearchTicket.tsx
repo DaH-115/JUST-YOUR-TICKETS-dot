@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import styled from 'styled-components';
+import Image from 'next/image';
 import useGetJanres from '../../hooks/useGetJanres';
 
 import MovieInfoBtn from '../ticket/MovieInfoBtn';
 import MovieTextDetail from '../ticket/MovieTextDetail';
 import { MovieTicketProps } from 'ticketType';
-import Image from 'next/image';
 import { MdOutlineArrowForwardIos } from 'react-icons/md';
 
 const SearchTicket = ({
@@ -51,7 +51,7 @@ const SearchTicket = ({
         >
           <PosterBtn>
             {posterImage ? (
-              <Image src={posterImage} alt={title} width={180} height={234} />
+              <Image src={posterImage} alt={title} width={180} height={270} />
             ) : (
               <NoneImg>IMAGE IS NONE</NoneImg>
             )}
