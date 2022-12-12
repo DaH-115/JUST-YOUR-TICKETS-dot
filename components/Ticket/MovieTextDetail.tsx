@@ -15,7 +15,7 @@ const MovieTextDetail = ({
           {title} ({releaseYear})
         </h1>
         <MovieRating>
-          *<p>{voteAverage}</p> /10
+          <p>{`${Math.round(voteAverage)} /10`}</p>
         </MovieRating>
       </MovieTitle>
 
@@ -36,6 +36,7 @@ export default MovieTextDetail;
 
 const TextWrapper = styled.div`
   width: 100%;
+  height: 8rem;
   padding: 0.5rem;
   box-sizing: border-box;
   background: linear-gradient(white 80%, ${({ theme }) => theme.colors.yellow});
@@ -71,7 +72,6 @@ const MovieJanreWrapper = styled.ul`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  height: auto;
   overflow-y: scroll;
   font-size: 1rem;
   color: ${({ theme }) => theme.colors.black};
@@ -92,10 +92,9 @@ const MovieJanreWrapper = styled.ul`
 `;
 
 const StyledReviewText = styled.p`
-  width: 100%;
   margin: 1rem 0;
   margin-top: 0.5rem;
-  overflow-y: scroll;
+  overflow: scroll;
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 `;

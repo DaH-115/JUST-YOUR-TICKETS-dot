@@ -37,7 +37,7 @@ export default MovieTicketDetail;
 
 const MovieDetailWrapper = styled.div`
   position: relative;
-  bottom: 3rem;
+  bottom: 1.5rem;
   left: 0;
   display: flex;
   width: 100%;

@@ -47,7 +47,7 @@ const UserTicketDetailPage = () => {
                 </ContentText>
                 <StyledLabeling>{'* Rating /나의 점수'}</StyledLabeling>
                 <ContentText>
-                  <p>{`${rating} /10`}</p>
+                  <p>{`${Math.round(+rating)} /10`}</p>
                 </ContentText>
 
                 <StyledLabeling>{'* Review /나의 감상'}</StyledLabeling>
