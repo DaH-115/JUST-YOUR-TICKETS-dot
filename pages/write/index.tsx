@@ -1,34 +1,33 @@
 import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../firebase';
 
 import withHeadMeta from '../../components/common/withHeadMeta';
-import SignInAlert from '../../components/popup/SignInAlert';
 import WriteForm from '../../components/write-form/WriteForm';
-import { SystemError } from 'errorType';
+import SignInAlert from '../../components/popup/SignInAlert';
 import { WriteFormProps } from 'ticketType';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../firebase';
+import { SystemError } from 'errorType';
 import Error from 'next/error';
 
 const WritePage: NextPage = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isUser, setIsUser] = useState<boolean>(false);
 
   // 💫 title, releaseYear, posterImage <- Main/Search에서 받는 값
   // 💫 rating, reviewText, ticketId <- User Ticket에서 받는 값
   const { title, releaseYear, posterImage, rating, reviewText, ticketId } =
     router.query as unknown as WriteFormProps;
 
-  const onToggleHandler = () => {
-    setIsOpen((prev) => !prev);
-  };
-
   useEffect(() => {
     try {
       onAuthStateChanged(auth, (user) => {
         if (!user) {
           setIsOpen(true);
+        } else {
+          setIsUser(true);
         }
       });
     } catch (error) {
@@ -36,6 +35,24 @@ const WritePage: NextPage = () => {
       <Error statusCode={err.statusCode} />;
     }
   }, []);
+
+  useEffect(() => {
+    const routeChangeStart = (url: string) => {
+      if (url !== '/ticket-list' && isUser) {
+        alert('작성하던 내용이 사라지게 됩니다. 페이지를 나가시겠습니까?');
+      }
+    };
+
+    router.events.on('routeChangeStart', routeChangeStart);
+
+    return () => {
+      router.events.off('routeChangeStart', routeChangeStart);
+    };
+  }, [isUser]);
+
+  const onToggleHandler = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <>
