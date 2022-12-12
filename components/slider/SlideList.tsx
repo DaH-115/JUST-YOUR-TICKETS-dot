@@ -12,10 +12,10 @@ const SlideList = ({
 }) => {
   return (
     <Container>
-      <TextWrapper>
+      <SlideTextWrapper>
         <SlideTitle>{title}</SlideTitle>
         {ticketLength && <TicketLength>{ticketLength} 장</TicketLength>}
-      </TextWrapper>
+      </SlideTextWrapper>
       {children}
     </Container>
   );
@@ -28,7 +28,7 @@ const Container = styled.div`
   height: 100%;
 `;
 
-const TextWrapper = styled.div`
+const SlideTextWrapper = styled.div`
   display: flex;
   align-items: center;
 `;

@@ -59,8 +59,7 @@ export default TicketSlider;
 
 const StyledSlider = styled(Slider)`
   .slick-list {
-    width: 100%;
-    padding: 0 1rem;
+    width: auto;
 
     ${({ theme }) => theme.device.tablet} {
       height: 100vh;
