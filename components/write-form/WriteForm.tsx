@@ -88,8 +88,16 @@ const WriteForm = ({
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const ratingText = ratingRef.current!.value;
-    const reviewText = reviewRef.current!.value;
+    let ratingText: string = '';
+    let reviewText: string = '';
+
+    if (ratingRef.current!.value && reviewRef.current!.value) {
+      ratingText = ratingRef.current!.value;
+      reviewText = reviewRef.current!.value;
+    } else {
+      alert('내용을 채워주세요.');
+      return;
+    }
 
     // ✔️ UPDATE
     if (ticketId) {
@@ -106,27 +114,29 @@ const WriteForm = ({
         <MovieDetailWrapper>
           <p>{today}</p>
           <MovieTitle>
-            <p>* Movie Title /제목</p>"{title}"(
-            {releaseYear})
+            <p>{'* Movie Title /제목'}</p>
+            {`"${title}"(${releaseYear})`}
           </MovieTitle>
         </MovieDetailWrapper>
 
         <FormWrapper>
           <StyledForm onSubmit={onSubmitHandler}>
             <InputWrapper>
-              <StyledLabel htmlFor='rating'>* Rating /점수</StyledLabel>
-              <StyledDesc>얼마나 좋았나요?</StyledDesc>
+              <StyledLabel htmlFor='rating'>{'* Rating /점수'}</StyledLabel>
+              <StyledDesc>{'얼마나 좋았나요?'}</StyledDesc>
               <RatingInputWrapper>
                 <StyledInput name='rating' id='rating' ref={ratingRef} />
-                <p> /10</p>
+                <p>{' /10'}</p>
               </RatingInputWrapper>
             </InputWrapper>
             <InputWrapper>
-              <StyledLabel htmlFor='review'>* Review /나의 감상</StyledLabel>
-              <StyledDesc>당신의 생각과 느낌을 적어보세요.</StyledDesc>
+              <StyledLabel htmlFor='review'>
+                {'* Review /나의 감상'}
+              </StyledLabel>
+              <StyledDesc>{'나의 생각과 느낌을 적어보세요.'}</StyledDesc>
               <StyledTextarea name='reviewText' id='review' ref={reviewRef} />
             </InputWrapper>
-            <StyledButton>Submit</StyledButton>
+            <StyledButton>{'입력'}</StyledButton>
           </StyledForm>
         </FormWrapper>
       </WriteFormWrapper>
