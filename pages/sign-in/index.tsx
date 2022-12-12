@@ -24,7 +24,7 @@ const LoginPage: NextPage = () => {
   const router = useRouter();
   const [signUp, setSignUp] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [error, setError] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
   // 🤓 User EMAIL-PASSWORD Text
   const [userEmail, setUserEmail] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
@@ -43,7 +43,7 @@ const LoginPage: NextPage = () => {
     try {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          router.push('/');
+          router.replace('/');
         }
       });
       setIsLoading(false);
@@ -54,6 +54,8 @@ const LoginPage: NextPage = () => {
   }, []);
 
   const getUser = async () => {
+    setIsLoading(true);
+
     if (signUp) {
       // Sign Up
       try {
@@ -61,7 +63,7 @@ const LoginPage: NextPage = () => {
       } catch (error) {
         const err = error as SystemError;
         <Error statusCode={err.statusCode} />;
-        setError(true);
+        setIsError(true);
       }
     } else {
       // Sign In
@@ -70,7 +72,7 @@ const LoginPage: NextPage = () => {
       } catch (error) {
         const err = error as SystemError;
         <Error statusCode={err.statusCode} />;
-        setError(true);
+        setIsError(true);
       }
     }
   };
@@ -126,16 +128,15 @@ const LoginPage: NextPage = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     const target = event.currentTarget as HTMLButtonElement;
+    setIsLoading(true);
 
     try {
       if (target.name === 'google-signin') {
-        setIsLoading(true);
         const provider = new GoogleAuthProvider();
         await signInWithPopup(auth, provider);
       }
 
       if (target.name === 'github-signin') {
-        setIsLoading(true);
         const provider = new GithubAuthProvider();
         await signInWithPopup(auth, provider);
       }
@@ -155,8 +156,8 @@ const LoginPage: NextPage = () => {
             <LoginForTitle>
               {signUp ? '*Sign Up /회원가입' : '*Sign In /로그인'}
             </LoginForTitle>
-            {error && (
-              <ErrorMsg>아이디 또는 비밀번호를 확인해 주세요.</ErrorMsg>
+            {isError && (
+              <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요'}.</ErrorMsg>
             )}
             <LoginForm onSubmit={onSubmitHandler}>
               {/* ID */}
@@ -168,15 +169,13 @@ const LoginPage: NextPage = () => {
                 onChange={onEmailChangeHandler}
                 ref={inputRef}
               />
-              {!userEmail ? (
-                <ValidationMsg isState={isEmail}>
-                  이메일을 입력해 주세요.
-                </ValidationMsg>
-              ) : !isEmail ? (
-                <ValidationMsg isState={isEmail}>
-                  이메일은 " @ " , " . " 을 포함해야합니다.
-                </ValidationMsg>
-              ) : null}
+              <ValidationMsg isState={isEmail}>
+                {!userEmail
+                  ? '이메일을 입력해 주세요.'
+                  : !isEmail
+                  ? '이메일은 " @ " , " . " 을 포함해야합니다.'
+                  : null}
+              </ValidationMsg>
 
               {/* PASSWORD */}
               <label htmlFor='user-password'>*PASSWORD /비밀번호</label>
@@ -186,18 +185,16 @@ const LoginPage: NextPage = () => {
                 value={userPassword}
                 onChange={onPasswordChangeHandler}
               />
-              {!userPassword ? (
-                <ValidationMsg isState={isPassword}>
-                  비밀번호를 입력해 주세요.
-                </ValidationMsg>
-              ) : !isPassword ? (
-                <ValidationMsg isState={isPassword}>
-                  비밀번호는 숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력
-                  해주세요.
-                </ValidationMsg>
-              ) : null}
+
+              <ValidationMsg isState={isPassword}>
+                {!userPassword
+                  ? '비밀번호를 입력해 주세요.'
+                  : !isPassword
+                  ? '비밀번호는 숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
+                  : null}
+              </ValidationMsg>
               <LoginBtn type='submit' disabled={isDisabled} onClick={getUser}>
-                입력
+                {'입력'}
               </LoginBtn>
             </LoginForm>
           </LoginFormWrapper>
@@ -279,6 +276,7 @@ const StyledInput = styled.input`
 `;
 
 const ValidationMsg = styled.p<{ isState: boolean }>`
+  display: ${({ isState }) => (isState ? 'none' : 'block')};
   font-size: 0.7rem;
   color: ${({ theme, isState }) => (isState ? '#fff' : theme.colors.orange)};
   margin-bottom: 1rem;
