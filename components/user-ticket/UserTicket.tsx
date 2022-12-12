@@ -4,18 +4,18 @@ import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import styled from 'styled-components';
 
-import InfoButton from '../ticket/InfoButton';
+import TicketInfoBtn from '../ticket/TicketInfoBtn';
 import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import PosterImage from '../ticket/PosterImage';
 import AlertPopup from '../../components/layout/AlertPopup';
 import PortalAlertPopup from '../popup/PortalAlert';
+import UpdateButton from '../common/UpdateButton';
+import DeleteButton from '../common/DeleteButton';
+import Error from 'next/error';
 import { TicketWrapper } from '../styles/TicketWrapper';
 import { MovieIndexBar } from '../styles/MovieIndexBar';
 import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
-import UpdateButton from '../common/UpdateButton';
-import DeleteButton from '../common/DeleteButton';
-import Error from 'next/error';
 
 const UserTicket = ({
   id: ticketId,
@@ -77,18 +77,18 @@ const UserTicket = ({
           />
 
           {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
-          <InfoButton
+          <TicketInfoBtn
             title={title}
             releaseYear={releaseYear}
-            posterPath={posterImage}
-            voteAverage={+rating}
-            overview={reviewText}
+            posterImage={posterImage}
+            rating={rating}
+            reviewText={reviewText}
           />
         </ButtonWrapper>
       </MovieIndexBar>
 
       {/* POSTER IMAGE Section */}
-      <PosterImage title={title} posterPath={posterImage} />
+      <PosterImage title={title} posterImage={posterImage} />
 
       {/* TICKET DETAIL Section */}
       <MovieTicketDetail

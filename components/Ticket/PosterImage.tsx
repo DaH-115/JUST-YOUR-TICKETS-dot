@@ -2,32 +2,30 @@ import Image from 'next/image';
 import styled from 'styled-components';
 
 const PosterImage = ({
+  title,
   posterImage,
   posterPath,
-  title,
 }: {
+  title: string;
   posterImage?: string;
   posterPath?: string;
-  title: string;
 }) => {
+  const posterSrc = posterImage
+    ? posterImage
+    : posterPath
+    ? `https://image.tmdb.org/t/p/w500/${posterPath}`
+    : '';
+
   return (
     <ImgBox>
-      {!posterImage && !posterPath && <NoneImg>IMAGE IS NONE</NoneImg>}
-      {posterImage && (
+      {!posterImage && !posterPath ? (
+        <NoneImg>IMAGE IS NONE</NoneImg>
+      ) : (
         <Image
-          src={posterImage}
+          src={posterSrc}
           alt={title}
-          width={360}
-          height={560}
-          priority={false}
-        />
-      )}
-      {posterPath && (
-        <Image
-          src={`https://image.tmdb.org/t/p/w500/${posterPath}`}
-          alt={title}
-          width={360}
-          height={560}
+          width={384}
+          height={568}
           priority={false}
         />
       )}
@@ -41,17 +39,17 @@ const ImgBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
   border-radius: 1.5rem;
 
   Img {
+    width: 100%;
     border-radius: 1.5rem;
   }
 `;
 
 const NoneImg = styled.div`
-  width: 360px;
-  height: 560px;
+  width: 384px;
+  height: 568px;
   font-weight: 700;
   color: black;
   border-radius: 1rem;

@@ -2,9 +2,9 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import useGetJanres from '../../hooks/useGetJanres';
 
-import InfoButton from '../ticket/InfoButton';
 import PosterImage from '../ticket/PosterImage';
 import MovieTicketDetail from '../ticket/MovieTicketDetail';
+import MovieInfoBtn from '../ticket/MovieInfoBtn';
 import { TicketWrapper } from '../styles/TicketWrapper';
 import { MovieIndexBar } from '../styles/MovieIndexBar';
 import { MovieTicketProps } from 'ticketType';
@@ -16,7 +16,6 @@ const TopMovieTicket = ({
   title,
   posterPath,
   voteAverage,
-  overview,
 }: MovieTicketProps) => {
   const router = useRouter();
   const janres = useGetJanres(movieId);
@@ -29,15 +28,7 @@ const TopMovieTicket = ({
         <MovieRank>{movieIndex}</MovieRank>
 
         {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
-        <InfoButton
-          movieId={movieId}
-          title={title}
-          releaseYear={releaseYear}
-          posterPath={posterPath}
-          voteAverage={voteAverage}
-          janres={janres}
-          overview={overview}
-        />
+        <MovieInfoBtn movieId={movieId} />
       </MovieIndexBar>
 
       {/* POSTER IMAGE */}

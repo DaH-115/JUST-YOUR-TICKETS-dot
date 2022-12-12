@@ -31,17 +31,18 @@ declare module 'ticketType' {
     posterImage?: string;
   }
 
+  export interface TicketInfoProps {
+    title: string;
+    releaseYear: string;
+    rating: string;
+    reviewText: string;
+    posterImage?: string;
+  }
+
   export interface requiredText {
     title: string;
     releaseYear: string;
     voteAverage: number;
-  }
-
-  export interface MovieInfoProps extends requiredText {
-    movieId?: number;
-    janres?: string[];
-    posterPath?: string;
-    overview?: string;
   }
 
   export interface MovieTicketDetailProps extends requiredText {
@@ -55,6 +56,12 @@ declare module 'ticketType' {
     reviewText?: string;
   }
 
+  export interface QueryData extends requiredText {
+    posterImage: string;
+    reviewText: string;
+    rating: string;
+  }
+
   export interface WriteFormProps {
     ticketId: string;
     title: string;
@@ -62,11 +69,5 @@ declare module 'ticketType' {
     rating: string;
     reviewText: string;
     posterImage?: string;
-  }
-
-  export interface QueryData extends requiredText {
-    posterImage: string;
-    overview: string;
-    janreArr: string[];
   }
 }

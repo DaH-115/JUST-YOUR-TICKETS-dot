@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 
@@ -13,7 +12,7 @@ import PosterImage from '../../components/ticket/PosterImage';
 const UserTicketDetailPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { title, releaseYear, voteAverage, posterImage, overview, janreArr } =
+  const { title, releaseYear, rating, posterImage, reviewText } =
     router.query as unknown as QueryData;
   const titleText = `JUST MY TICKETS. | ${title}`;
 
@@ -32,42 +31,30 @@ const UserTicketDetailPage = () => {
         <title>{titleText}</title>
       </Head>
       <BackgroundStyle backgroundColor='black' customMessage='info✔️'>
-        <SlideTitle>영화 상세 정보</SlideTitle>
+        <SlideTitle>{'영화 상세 정보'}</SlideTitle>
         {isLoading ? (
           <LoadingMsg />
         ) : (
           <DetailWrapper>
             <MovieDetails>
               <PosterImage title={title} posterImage={posterImage} />
-              <TextWrapper>
-                <StyledLabeling>* Movie Title /제목</StyledLabeling>
+              <DetailTextWrapper>
+                <StyledLabeling>{'* Movie Title /제목'}</StyledLabeling>
                 <ContentText>
                   <h1>
                     {title}({releaseYear})
                   </h1>
                 </ContentText>
-                <StyledLabeling>* Rating /나의 점수</StyledLabeling>
+                <StyledLabeling>{'* Rating /나의 점수'}</StyledLabeling>
                 <ContentText>
-                  <p>{voteAverage} /10</p>
+                  <p>{`${rating} /10`}</p>
                 </ContentText>
-                {janreArr && (
-                  <>
-                    <StyledLabeling>* Janres /장르</StyledLabeling>
-                    <ContentText>
-                      <MovieJanreWrapper>
-                        {janreArr.map((item, index) => (
-                          <li key={index}>/ {item}</li>
-                        ))}
-                      </MovieJanreWrapper>
-                    </ContentText>
-                  </>
-                )}
 
-                <StyledLabeling>* Review /나의 감상</StyledLabeling>
+                <StyledLabeling>{'* Review /나의 감상'}</StyledLabeling>
                 <ContentText>
-                  <OverviweText>{overview}</OverviweText>
+                  <OverviweText>{reviewText}</OverviweText>
                 </ContentText>
-              </TextWrapper>
+              </DetailTextWrapper>
             </MovieDetails>
           </DetailWrapper>
         )}
@@ -115,7 +102,7 @@ const MovieDetails = styled.div`
   }
 `;
 
-const TextWrapper = styled.div`
+const DetailTextWrapper = styled.div`
   position: relative;
   bottom: 1.2rem;
   left: 0;
@@ -157,24 +144,6 @@ const ContentText = styled.div`
     font-weight: 700;
     border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
     padding-bottom: 0.5rem;
-  }
-`;
-
-const MovieJanreWrapper = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  font-size: 1rem;
-  overflow-y: scroll;
-
-  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
-
-  li {
-    margin-right: 0.4rem;
-
-    &:last-child {
-      margin-right: 0;
-    }
   }
 `;
 

@@ -1,12 +1,12 @@
+import Link from 'next/link';
 import styled from 'styled-components';
 import useGetJanres from '../../hooks/useGetJanres';
 
-import InfoButton from '../ticket/InfoButton';
+import MovieInfoBtn from '../ticket/MovieInfoBtn';
 import MovieTextDetail from '../ticket/MovieTextDetail';
 import { MovieTicketProps } from 'ticketType';
 import Image from 'next/image';
 import { MdOutlineArrowForwardIos } from 'react-icons/md';
-import Link from 'next/link';
 
 const SearchTicket = ({
   title,
@@ -15,7 +15,6 @@ const SearchTicket = ({
   movieIndex,
   voteAverage,
   posterPath,
-  overview,
 }: MovieTicketProps) => {
   const janres = useGetJanres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
@@ -29,15 +28,7 @@ const SearchTicket = ({
           <TicketIndex>{movieIndex + 1}.</TicketIndex>
 
           {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
-          <InfoButton
-            movieId={movieId}
-            title={title}
-            releaseYear={releaseYear}
-            janres={janres}
-            voteAverage={voteAverage}
-            overview={overview}
-            posterPath={posterPath}
-          />
+          <MovieInfoBtn movieId={movieId} />
         </StyledInfo>
         <MovieTextDetail
           title={title}
@@ -60,7 +51,7 @@ const SearchTicket = ({
         >
           <PosterBtn>
             {posterImage ? (
-              <Image src={posterImage} alt={title} width={170} height={270} />
+              <Image src={posterImage} alt={title} width={180} height={234} />
             ) : (
               <NoneImg>IMAGE IS NONE</NoneImg>
             )}
@@ -88,7 +79,6 @@ const NoneImg = styled.div`
 `;
 
 const PosterBtn = styled.div`
-  width: auto;
   background-color: ${({ theme }) => theme.colors.black};
   border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
 `;

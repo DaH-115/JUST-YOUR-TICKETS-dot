@@ -1,14 +1,13 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import Head from 'next/head';
 import styled from 'styled-components';
+import useGetJanres from '../hooks/useGetJanres';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 
-import Head from 'next/head';
 import BackgroundStyle from '../layout/BackgroundStyle';
-import { SlideTitle } from '../styles/StyledTitle';
-import useGetJanres from '../hooks/useGetJanres';
-import { MovieDataProps } from 'ticketType';
 import PosterImage from '../ticket/PosterImage';
+import { SlideTitle } from '../styles/StyledTitle';
+import { MovieDataProps } from 'ticketType';
 
 const MovieDetail = ({
   movieId,
@@ -20,7 +19,9 @@ const MovieDetail = ({
 }: MovieDataProps) => {
   const janreArr = useGetJanres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
-  const posterImage = `https://image.tmdb.org/t/p/w500/${posterPath}`;
+  const posterImage = posterPath
+    ? `https://image.tmdb.org/t/p/w500/${posterPath}`
+    : '';
   const titleText = `JUST MY TICKETS. | ${title}`;
 
   return (
@@ -32,8 +33,8 @@ const MovieDetail = ({
         <SlideTitle>{'영화 상세 정보'}</SlideTitle>
         <DetailWrapper>
           <MovieDetails>
-            <PosterImage title={title} posterPath={posterPath} />
-            <TextWrapper>
+            <PosterImage title={title} posterImage={posterImage} />
+            <DetailTextWrapper>
               <StyledLabeling>{'* Movie Title /제목'}</StyledLabeling>
               <ContentText>
                 <h1>
@@ -42,7 +43,7 @@ const MovieDetail = ({
               </ContentText>
               <StyledLabeling>{'* Rating /점수'}</StyledLabeling>
               <ContentText>
-                <p>{Math.round(voteAverage)} /10</p>
+                <p>{`${Math.round(voteAverage)} /10`}</p>
               </ContentText>
               {janreArr && (
                 <>
@@ -50,7 +51,7 @@ const MovieDetail = ({
                   <ContentText>
                     <MovieJanreWrapper>
                       {janreArr.map((item, index) => (
-                        <li key={index}>/ {item}</li>
+                        <li key={index}>{item}</li>
                       ))}
                     </MovieJanreWrapper>
                   </ContentText>
@@ -82,7 +83,7 @@ const MovieDetail = ({
                   </ArrowBtn>
                 </AdmitButtonWrapper>
               </Link>
-            </TextWrapper>
+            </DetailTextWrapper>
           </MovieDetails>
         </DetailWrapper>
       </BackgroundStyle>
@@ -128,7 +129,7 @@ const MovieDetails = styled.div`
   }
 `;
 
-const TextWrapper = styled.div`
+const DetailTextWrapper = styled.div`
   position: relative;
   bottom: 1.2rem;
   left: 0;
@@ -184,6 +185,10 @@ const MovieJanreWrapper = styled.ul`
 
   li {
     margin-right: 0.4rem;
+
+    &::before {
+      content: '/';
+    }
 
     &:last-child {
       margin-right: 0;
