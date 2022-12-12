@@ -42,15 +42,16 @@ const AdmitButtonWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.black};
+  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
 
   button {
     color: #fff;
     font-size: 1rem;
     font-weight: 700;
-    padding: 2rem 0;
   }
 `;
 
@@ -58,9 +59,10 @@ const ArrowBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
   width: 100%;
-  height: 100%;
+  height: auto;
+
   color: ${({ theme }) => theme.colors.yellow};
-  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
   padding: 0.5rem 0;
 `;

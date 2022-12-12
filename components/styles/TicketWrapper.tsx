@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export const TicketWrapper = styled.div`
-  width: 360px;
-  margin: 2rem 1rem 0 0.5rem;
+  width: auto;
+  margin: 2rem 1rem;
   filter: drop-shadow(0px 0px 30px rgba(115, 115, 115, 0.2));
 
   ${({ theme }) => theme.device.desktop} {
