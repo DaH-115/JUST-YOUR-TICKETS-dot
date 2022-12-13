@@ -14,7 +14,6 @@ import Error from 'next/error';
 const WritePage: NextPage = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isUser, setIsUser] = useState<boolean>(false);
 
   // 💫 title, releaseYear, posterImage <- Main/Search에서 받는 값
   // 💫 rating, reviewText, ticketId <- User Ticket에서 받는 값
@@ -26,8 +25,6 @@ const WritePage: NextPage = () => {
       onAuthStateChanged(auth, (user) => {
         if (!user) {
           setIsOpen(true);
-        } else {
-          setIsUser(true);
         }
       });
     } catch (error) {
@@ -35,20 +32,6 @@ const WritePage: NextPage = () => {
       <Error statusCode={err.statusCode} />;
     }
   }, []);
-
-  useEffect(() => {
-    const routeChangeStart = (url: string) => {
-      if (url !== '/ticket-list' && isUser) {
-        alert('작성하던 내용이 사라지게 됩니다. 페이지를 나가시겠습니까?');
-      }
-    };
-
-    router.events.on('routeChangeStart', routeChangeStart);
-
-    return () => {
-      router.events.off('routeChangeStart', routeChangeStart);
-    };
-  }, [isUser]);
 
   const onToggleHandler = useCallback(() => {
     setIsOpen((prev) => !prev);
@@ -69,4 +52,4 @@ const WritePage: NextPage = () => {
   );
 };
 
-export default withHeadMeta(WritePage, '리뷰 쓰기');
+export default withHeadMeta(WritePage, '리뷰 작성');

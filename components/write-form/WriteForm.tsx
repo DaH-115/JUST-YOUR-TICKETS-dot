@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
@@ -22,9 +22,27 @@ const WriteForm = ({
 }: WriteFormProps) => {
   const router = useRouter();
   const [creatorId, setCreatorId] = useState<string>('');
+  const [ratingVal, setRatingVal] = useState<boolean>(true);
+  const [isUser, setIsUser] = useState<boolean>(false);
+  const [isConfirm, setIsConfirm] = useState<boolean>(false);
+
   const ratingRef = useRef<HTMLInputElement>(null);
   const reviewRef = useRef<HTMLTextAreaElement>(null);
   const today = new Date().toLocaleDateString();
+
+  useEffect(() => {
+    const routeChangeStart = (url: string) => {
+      if (url !== router.asPath && isUser && !isConfirm) {
+        alert('작성하던 내용이 사라지게 됩니다. 페이지를 나가시겠습니까?');
+      }
+    };
+
+    router.events.on('routeChangeStart', routeChangeStart);
+
+    return () => {
+      router.events.off('routeChangeStart', routeChangeStart);
+    };
+  }, [isUser, isConfirm]);
 
   useEffect(() => {
     // ✔️ props로 받아온 값(reviewText && rating)이 있으면 ref에 넣어준다
@@ -39,6 +57,9 @@ const WriteForm = ({
       onAuthStateChanged(auth, (user) => {
         if (user) {
           setCreatorId(user.uid);
+          setIsUser(true);
+        } else {
+          setIsUser(false);
         }
       });
     } catch (error) {
@@ -90,6 +111,7 @@ const WriteForm = ({
     event.preventDefault();
     let ratingText: string = '';
     let reviewText: string = '';
+    setIsConfirm(true);
 
     if (ratingRef.current!.value && reviewRef.current!.value) {
       ratingText = ratingRef.current!.value;
@@ -108,6 +130,13 @@ const WriteForm = ({
     addContents(ratingText, reviewText);
   };
 
+  const onRatingChangeHandler = useCallback(
+    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+      Number(target.value) > 10 ? setRatingVal(false) : setRatingVal(true);
+    },
+    []
+  );
+
   return (
     <BackgroundStyle customMessage='write✒️' backgroundColor='black'>
       <WriteFormWrapper>
@@ -125,9 +154,17 @@ const WriteForm = ({
               <StyledLabel htmlFor='rating'>{'* Rating /점수'}</StyledLabel>
               <StyledDesc>{'얼마나 좋았나요?'}</StyledDesc>
               <RatingInputWrapper>
-                <StyledInput name='rating' id='rating' ref={ratingRef} />
+                <StyledInput
+                  name='rating'
+                  id='rating'
+                  ref={ratingRef}
+                  onChange={onRatingChangeHandler}
+                />
                 <p>{' /10'}</p>
               </RatingInputWrapper>
+              <ValidationMsg isState={ratingVal}>
+                {'최대 10점까지 줄 수 있어요.'}
+              </ValidationMsg>
             </InputWrapper>
             <InputWrapper>
               <StyledLabel htmlFor='review'>
@@ -145,6 +182,12 @@ const WriteForm = ({
 };
 
 export default WriteForm;
+
+const ValidationMsg = styled.p<{ isState: boolean }>`
+  visibility: ${({ isState }) => (isState ? 'hidden' : 'visible')};
+  font-size: 0.7rem;
+  color: ${({ theme }) => theme.colors.orange};
+`;
 
 const WriteFormWrapper = styled.div`
   width: 100%;
@@ -174,7 +217,7 @@ const InputWrapper = styled.div`
 const RatingInputWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 1.6rem;
+  margin-bottom: 0.5rem;
 
   p {
     margin-top: 0.5rem;
