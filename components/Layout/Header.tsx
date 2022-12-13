@@ -1,29 +1,14 @@
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
+import Error from 'next/error';
 import { useRouter } from 'next/router';
 import { BiSearch } from 'react-icons/bi';
 import { auth } from '../../firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+
 import { SystemError } from 'errorType';
-import Error from 'next/error';
 
-const Header = () => {
+const Header = ({ isUser }: { isUser: boolean }) => {
   const router = useRouter();
-  const [userId, setUserId] = useState<string>('');
-
-  useEffect(() => {
-    try {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setUserId(user.uid);
-        }
-      });
-    } catch (error) {
-      const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
-    }
-  }, []);
 
   const onSignOutHandler = async () => {
     try {
@@ -40,7 +25,7 @@ const Header = () => {
       <Link href='/'>
         <HeaderLi className='home'>HOME</HeaderLi>
       </Link>
-      {userId && (
+      {isUser && (
         <Link href='/ticket-list'>
           <HeaderLi>MY TICKETS</HeaderLi>
         </Link>
@@ -50,7 +35,7 @@ const Header = () => {
           <BiSearch id='search-icon' />
         </SearchIcon>
       </Link>
-      {userId ? (
+      {isUser ? (
         <HeaderLi onClick={onSignOutHandler}>LOGOUT</HeaderLi>
       ) : (
         <Link href='/sign-in'>
