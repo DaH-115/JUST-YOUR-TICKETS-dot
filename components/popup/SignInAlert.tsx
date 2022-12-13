@@ -1,3 +1,5 @@
+import React from 'react';
+import { useCallback } from 'react';
 import { useRouter } from 'next/router';
 import PortalAlertPopup from './PortalAlert';
 import AlertPopup from '../layout/AlertPopup';
@@ -5,9 +7,9 @@ import AlertPopup from '../layout/AlertPopup';
 const SignInAlert = ({ onToggleHandler }: { onToggleHandler: () => void }) => {
   const router = useRouter();
 
-  const onMoveSignInHandler = () => {
+  const onMoveSignInHandler = useCallback(() => {
     router.push('/sign-in');
-  };
+  }, []);
 
   return (
     <PortalAlertPopup>
@@ -21,4 +23,4 @@ const SignInAlert = ({ onToggleHandler }: { onToggleHandler: () => void }) => {
   );
 };
 
-export default SignInAlert;
+export default React.memo(SignInAlert);

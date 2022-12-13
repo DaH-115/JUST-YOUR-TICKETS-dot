@@ -1,3 +1,4 @@
+import React from 'react';
 import { ReactNode } from 'react';
 import styled from 'styled-components';
 
@@ -23,6 +24,8 @@ const BackgroundStyle = ({
     </Wrapper>
   );
 };
+
+export default BackgroundStyle;
 
 const Wrapper = styled.div<{ backgroundColor: string }>`
   width: 100%;
@@ -52,5 +55,3 @@ const PageTitle = styled.div<{ backgroundColor: string }>`
 const CustomMessage = styled.div`
   color: ${({ theme }) => theme.colors.orange};
 `;
-
-export default BackgroundStyle;

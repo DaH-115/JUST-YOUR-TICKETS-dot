@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import MovieTextDetail from './MovieTextDetail';
 import AdmitBtn from './AdmitBtn';
 import { MovieTicketDetailProps } from 'ticketType';
+import React from 'react';
 
 const MovieTicketDetail = ({
   title,
@@ -33,7 +34,7 @@ const MovieTicketDetail = ({
   );
 };
 
-export default MovieTicketDetail;
+export default React.memo(MovieTicketDetail);
 
 const MovieDetailWrapper = styled.div`
   position: relative;

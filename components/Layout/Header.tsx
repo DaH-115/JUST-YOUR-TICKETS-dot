@@ -1,3 +1,4 @@
+import React, { useCallback } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import Error from 'next/error';
@@ -10,7 +11,7 @@ import { SystemError } from 'errorType';
 const Header = ({ isUser }: { isUser: boolean }) => {
   const router = useRouter();
 
-  const onSignOutHandler = async () => {
+  const onSignOutHandler = useCallback(async () => {
     try {
       await auth.signOut();
       router.reload();
@@ -18,7 +19,7 @@ const Header = ({ isUser }: { isUser: boolean }) => {
       const err = error as SystemError;
       <Error statusCode={err.statusCode} />;
     }
-  };
+  }, []);
 
   return (
     <HeaderMenu>
@@ -46,7 +47,7 @@ const Header = ({ isUser }: { isUser: boolean }) => {
   );
 };
 
-export default Header;
+export default React.memo(Header);
 
 const HeaderMenu = styled.ul`
   display: flex;

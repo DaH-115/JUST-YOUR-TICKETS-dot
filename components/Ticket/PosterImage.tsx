@@ -1,3 +1,4 @@
+import React from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 
@@ -21,19 +22,13 @@ const PosterImage = ({
       {!posterImage && !posterPath ? (
         <NoneImg>IMAGE IS NONE</NoneImg>
       ) : (
-        <Image
-          src={posterSrc}
-          alt={title}
-          width={360}
-          height={540}
-          priority={false}
-        />
+        <Image src={posterSrc} alt={title} width={360} height={540} priority />
       )}
     </ImgBox>
   );
 };
 
-export default PosterImage;
+export default React.memo(PosterImage);
 
 const ImgBox = styled.div`
   display: flex;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
@@ -30,7 +30,7 @@ const UserTicket = ({
   const router = useRouter();
   const writeDate = new Date(createdAt).toLocaleDateString();
 
-  const onDeleteHandler = async () => {
+  const onDeleteHandler = useCallback(async () => {
     const userTicketRef = doc(db, 'users-tickets', `${ticketId}`);
     setIsOpen((prev) => !prev);
 
@@ -41,11 +41,11 @@ const UserTicket = ({
       const err = error as SystemError;
       <Error statusCode={err.statusCode} />;
     }
-  };
+  }, [ticketId]);
 
-  const onToggleHandler = () => {
+  const onToggleHandler = useCallback(() => {
     setIsOpen((prev) => !prev);
-  };
+  }, []);
 
   return (
     <TicketWrapper>

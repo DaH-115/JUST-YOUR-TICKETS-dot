@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -32,35 +32,44 @@ const SearchPage: NextPage = () => {
     }
   }, []);
 
-  const getSearchResults = async (movieName: string) => {
-    try {
-      const res = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}&language=ko-KR`
-      );
+  const getSearchResults = useCallback(
+    async (movieName: string) => {
+      try {
+        const res = await axios.get(
+          `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}&language=ko-KR`
+        );
 
-      const { results }: { results: TopMovieDataProps[] } = await res.data;
+        const { results }: { results: TopMovieDataProps[] } = await res.data;
 
-      setSearchResults(results);
-    } catch (error) {
-      const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
-    }
-  };
+        setSearchResults(results);
+      } catch (error) {
+        const err = error as SystemError;
+        <Error statusCode={err.statusCode} />;
+      }
+    },
+    [movieName]
+  );
 
-  const searchInputHandler = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (movieName) {
-      getSearchResults(movieName);
-    }
-  };
+  const searchInputHandler = useCallback(
+    (event: React.FormEvent) => {
+      event.preventDefault();
+      if (movieName) {
+        getSearchResults(movieName);
+      }
+    },
+    [movieName]
+  );
 
-  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMovieName(event.target.value);
-  };
+  const inputChangeHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setMovieName(event.target.value);
+    },
+    []
+  );
 
-  const onToggleHandler = () => {
+  const onToggleHandler = useCallback(() => {
     setIsOpen((prev) => !prev);
-  };
+  }, []);
 
   return (
     <BackgroundStyle customMessage='search🎞️' backgroundColor='yellow'>

@@ -1,3 +1,4 @@
+import React from 'react';
 import TicketSlider from '../slider/TicketSlider';
 import UserTicket from './UserTicket';
 import { UserTicketProps } from 'ticketType';
@@ -23,4 +24,4 @@ const UserTicketSlider = ({ movies }: { movies: UserTicketProps[] }) => {
   );
 };
 
-export default UserTicketSlider;
+export default React.memo(UserTicketSlider);

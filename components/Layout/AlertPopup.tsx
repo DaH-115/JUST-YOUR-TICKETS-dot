@@ -1,3 +1,4 @@
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 interface AlertPopupProps {
@@ -30,7 +31,7 @@ const AlertPopup = ({
   );
 };
 
-export default AlertPopup;
+export default React.memo(AlertPopup);
 
 // Animation Setting
 const FadeIn = keyframes`

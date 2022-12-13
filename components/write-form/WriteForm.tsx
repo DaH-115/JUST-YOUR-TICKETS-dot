@@ -32,7 +32,7 @@ const WriteForm = ({
       ratingRef.current!.value = rating;
       reviewRef.current!.value = reviewText;
     }
-  }, []);
+  }, [rating, reviewText]);
 
   useEffect(() => {
     try {

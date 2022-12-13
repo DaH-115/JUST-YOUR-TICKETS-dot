@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { AiFillInfoCircle } from 'react-icons/ai';
 import { StyeldInfo } from '../styles/StyeldInfo';
 
-const MovieInfoButton = ({ movieId }: { movieId: number }) => {
+const MovieInfoBtn = ({ movieId }: { movieId: number }) => {
   const router = useRouter();
 
   return (
@@ -23,4 +23,4 @@ const MovieInfoButton = ({ movieId }: { movieId: number }) => {
   );
 };
 
-export default MovieInfoButton;
+export default MovieInfoBtn;

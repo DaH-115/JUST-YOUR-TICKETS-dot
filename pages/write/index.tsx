@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
@@ -50,9 +50,9 @@ const WritePage: NextPage = () => {
     };
   }, [isUser]);
 
-  const onToggleHandler = () => {
+  const onToggleHandler = useCallback(() => {
     setIsOpen((prev) => !prev);
-  };
+  }, []);
 
   return (
     <>

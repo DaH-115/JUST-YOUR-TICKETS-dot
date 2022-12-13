@@ -92,6 +92,8 @@ const MovieJanreWrapper = styled.ul`
 `;
 
 const StyledReviewText = styled.p`
+  width: 100%;
+  height: 3rem;
   margin: 1rem 0;
   margin-top: 0.5rem;
   overflow: scroll;

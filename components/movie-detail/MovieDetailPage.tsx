@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import styled from 'styled-components';
@@ -91,7 +92,7 @@ const MovieDetail = ({
   );
 };
 
-export default MovieDetail;
+export default React.memo(MovieDetail);
 
 const DetailWrapper = styled.div`
   display: flex;
@@ -100,18 +101,10 @@ const DetailWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   height: 100%;
-  margin-top: 2rem;
+  margin-top: 4rem;
 
-  ${({ theme }) => theme.device.desktop} {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-
-    padding: 0 2rem;
-    padding-bottom: 4rem;
+  ${({ theme }) => theme.device.tablet} {
+    margin-bottom: 4rem;
   }
 `;
 
@@ -120,7 +113,7 @@ const MovieDetails = styled.div`
   height: 100%;
   max-width: 600px;
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -141,7 +134,9 @@ const DetailTextWrapper = styled.div`
   border-radius: 1rem;
   background: linear-gradient(white 70%, ${({ theme }) => theme.colors.yellow});
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
+    bottom: 0;
+
     max-width: 600px;
     padding: 1.2rem 1rem;
     margin-left: 2rem;

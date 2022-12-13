@@ -1,3 +1,4 @@
+import React from 'react';
 import TopMovieTicket from './TopMovieTicket';
 import TicketSlider from '../slider/TicketSlider';
 import { TopMovieDataProps } from 'ticketType';
@@ -23,4 +24,4 @@ const TopMovieSlider = ({ movies }: { movies: TopMovieDataProps[] }) => {
   );
 };
 
-export default TopMovieSlider;
+export default React.memo(TopMovieSlider);

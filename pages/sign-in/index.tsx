@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
 import { auth } from '../../firebase';
@@ -44,9 +44,10 @@ const LoginPage: NextPage = () => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           router.replace('/');
+        } else {
+          router.replace('/sign-in');
         }
       });
-      setIsLoading(false);
     } catch (error) {
       const err = error as SystemError;
       <Error statusCode={err.statusCode} />;
@@ -79,10 +80,6 @@ const LoginPage: NextPage = () => {
     setIsLoading(false);
   };
 
-  const onSignUpToggleHandler = () => {
-    setSignUp((prev) => !prev);
-  };
-
   const onSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
     getUser();
@@ -90,63 +87,68 @@ const LoginPage: NextPage = () => {
     setUserPassword('');
   };
 
-  const onEmailChangeHandler = ({
-    target,
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    setUserEmail(target.value);
+  const onSignUpToggleHandler = useCallback(() => {
+    setSignUp((prev) => !prev);
+  }, []);
 
-    const emailCheckRegex =
-      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    const emailValue = target.value;
+  const onEmailChangeHandler = useCallback(
+    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+      setUserEmail(target.value);
 
-    if (!emailCheckRegex.test(emailValue)) {
-      setIsEmail(false);
-    } else {
-      setIsEmail(true);
-    }
+      const emailCheckRegex =
+        /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+      const emailValue = target.value;
 
-    return;
-  };
+      if (!emailCheckRegex.test(emailValue)) {
+        setIsEmail(false);
+      } else {
+        setIsEmail(true);
+      }
+    },
+    []
+  );
 
-  const onPasswordChangeHandler = ({
-    target,
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    setUserPassword(target.value);
+  const onPasswordChangeHandler = useCallback(
+    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+      setUserPassword(target.value);
 
-    const passwordCheckRegex =
-      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
-    const passwordValue = target.value;
+      const passwordCheckRegex =
+        /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+      const passwordValue = target.value;
 
-    if (!passwordCheckRegex.test(passwordValue)) {
-      setIsPassword(false);
-    } else {
-      setIsPassword(true);
-    }
+      if (!passwordCheckRegex.test(passwordValue)) {
+        setIsPassword(false);
+      } else {
+        setIsPassword(true);
+      }
+    },
+    []
+  );
 
-    return;
-  };
+  const onSocialSignInHandler = useCallback(
+    async (event: React.MouseEvent<HTMLButtonElement>) => {
+      const target = event.currentTarget as HTMLButtonElement;
+      setIsLoading(true);
 
-  const onSocialSignInHandler = async (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    const target = event.currentTarget as HTMLButtonElement;
-    setIsLoading(true);
+      try {
+        if (target.name === 'google-signin') {
+          const provider = new GoogleAuthProvider();
+          await signInWithPopup(auth, provider);
+        }
 
-    try {
-      if (target.name === 'google-signin') {
-        const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
+        if (target.name === 'github-signin') {
+          const provider = new GithubAuthProvider();
+          await signInWithPopup(auth, provider);
+        }
+      } catch (error) {
+        const err = error as SystemError;
+        <Error statusCode={err.statusCode} />;
       }
 
-      if (target.name === 'github-signin') {
-        const provider = new GithubAuthProvider();
-        await signInWithPopup(auth, provider);
-      }
-    } catch (error) {
-      const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
-    }
-  };
+      setIsLoading(false);
+    },
+    []
+  );
 
   return (
     <BackgroundStyle customMessage='create📝' backgroundColor='black'>
