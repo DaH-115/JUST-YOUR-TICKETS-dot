@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
 import axios from 'axios';
+import Error from 'next/error';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { BiSearch } from 'react-icons/bi';
@@ -12,12 +13,53 @@ import SearchTicket from '../../components/search/SearchTicket';
 import SignInAlert from '../../components/popup/SignInAlert';
 import { SystemError } from 'errorType';
 import { TopMovieDataProps } from 'ticketType';
-import Error from 'next/error';
 
 const SearchPage: NextPage = () => {
-  const [movieName, setMovieName] = useState('');
-  const [searchResults, setSearchResults] = useState<TopMovieDataProps[]>();
+  const [movieName, setMovieName] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<TopMovieDataProps[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const getSearchResults = async (movieName: string) => {
+    try {
+      const res = await axios.get(
+        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}&language=ko-KR`
+      );
+
+      const { results }: { results: TopMovieDataProps[] } = await res.data;
+
+      setSearchResults(results);
+    } catch (error) {
+      const err = error as SystemError;
+      <Error statusCode={err.statusCode} />;
+    }
+  };
+
+  const searchInputHandler = (event: React.FormEvent) => {
+    event.preventDefault();
+    movieName && getSearchResults(movieName);
+  };
+
+  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMovieName(event.target.value);
+  };
+
+  const onToggleHandler = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (movieName) {
+      timer = setTimeout(() => {
+        getSearchResults(movieName);
+      }, 500);
+    } else {
+      setSearchResults([]);
+    }
+
+    return () => clearTimeout(timer);
+  }, [movieName]);
 
   useEffect(() => {
     try {
@@ -32,51 +74,12 @@ const SearchPage: NextPage = () => {
     }
   }, []);
 
-  const getSearchResults = useCallback(
-    async (movieName: string) => {
-      try {
-        const res = await axios.get(
-          `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}&language=ko-KR`
-        );
-
-        const { results }: { results: TopMovieDataProps[] } = await res.data;
-
-        setSearchResults(results);
-      } catch (error) {
-        const err = error as SystemError;
-        <Error statusCode={err.statusCode} />;
-      }
-    },
-    [movieName]
-  );
-
-  const searchInputHandler = useCallback(
-    (event: React.FormEvent) => {
-      event.preventDefault();
-      if (movieName) {
-        getSearchResults(movieName);
-      }
-    },
-    [movieName]
-  );
-
-  const inputChangeHandler = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setMovieName(event.target.value);
-    },
-    []
-  );
-
-  const onToggleHandler = useCallback(() => {
-    setIsOpen((prev) => !prev);
-  }, []);
-
   return (
     <BackgroundStyle customMessage='search🎞️' backgroundColor='yellow'>
       {isOpen && <SignInAlert onToggleHandler={onToggleHandler} />}
       <FormWrapper>
         <StyledForm onSubmit={searchInputHandler} action='get'>
-          <StyledLabel htmlFor='search-input'>영화 검색</StyledLabel>
+          <StyledLabel htmlFor='search-input'>{'영화 검색'}</StyledLabel>
           <StyledInput
             type='text'
             id='search-input'
@@ -93,13 +96,13 @@ const SearchPage: NextPage = () => {
       </FormWrapper>
 
       <SearchWrapper>
-        <SearchTitle>검색 결과</SearchTitle>
-        {!searchResults ? (
-          <NoneResults>검색 결과가 없습니다.</NoneResults>
+        <SearchTitle>{'검색 결과'}</SearchTitle>
+        {!searchResults?.length ? (
+          <NoneResults>{'검색 결과가 없습니다.'}</NoneResults>
         ) : (
           searchResults.map((item, index) => (
             <SearchTicket
-              key={index}
+              key={item.id}
               movieId={item.id}
               movieIndex={index}
               title={item.title}

@@ -17,7 +17,7 @@ const SearchTicket = ({
   posterPath,
 }: MovieTicketProps) => {
   const janres = useGetJanres(movieId);
-  const releaseYear = releaseDate.slice(0, 4);
+  const releaseYear = releaseDate && releaseDate.slice(0, 4);
   const posterImage =
     posterPath && `https://image.tmdb.org/t/p/w500/${posterPath}`;
 
