@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 const Loading = () => {
   return (
@@ -9,6 +9,11 @@ const Loading = () => {
 };
 
 export default Loading;
+
+const FadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
 
 const Background = styled.div`
   position: fixed;
@@ -35,4 +40,5 @@ const LoadingText = styled.p`
   font-weight: 700;
   color: #fff;
   text-align: center;
+  animation: ${FadeIn} 3s ease-in-out;
 `;
