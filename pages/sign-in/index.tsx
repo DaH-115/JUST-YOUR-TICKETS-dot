@@ -75,6 +75,8 @@ const LoginPage: NextPage = () => {
         setIsError(true);
       }
     }
+
+    setIsLoading(false);
   };
 
   const onSignUpToggleHandler = () => {
@@ -83,7 +85,7 @@ const LoginPage: NextPage = () => {
 
   const onSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
-
+    getUser();
     setUserEmail('');
     setUserPassword('');
   };
@@ -193,7 +195,7 @@ const LoginPage: NextPage = () => {
                   ? '비밀번호는 숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
                   : null}
               </ValidationMsg>
-              <LoginBtn type='submit' disabled={isDisabled} onClick={getUser}>
+              <LoginBtn type='submit' disabled={isDisabled}>
                 {'입력'}
               </LoginBtn>
             </LoginForm>
