@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import { SlideTitle } from '../styles/StyledTitle';
 
@@ -21,7 +22,7 @@ const SlideList = ({
   );
 };
 
-export default SlideList;
+export default React.memo(SlideList);
 
 const Container = styled.div`
   width: 100%;
@@ -30,7 +31,6 @@ const Container = styled.div`
 
 const SlideTextWrapper = styled.div`
   display: flex;
-  align-items: center;
 `;
 
 const TicketLength = styled.p`

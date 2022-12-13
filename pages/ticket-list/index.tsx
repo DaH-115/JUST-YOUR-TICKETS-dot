@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { auth, db } from '../../firebase';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import styled from 'styled-components';
 
 import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
@@ -14,6 +15,7 @@ import { NoneResults } from '../search';
 import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
 import Error from 'next/error';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 const TicketListPage: NextPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,6 +23,12 @@ const TicketListPage: NextPage = () => {
   const [usersTicket, setUsersTicket] = useState<UserTicketProps[]>([]);
   const ticketLength = usersTicket.length;
   const router = useRouter();
+  // false -> desc / true -> asc
+  const [isSorted, setIsSorted] = useState<boolean>(false);
+
+  const onSortedHandler = useCallback(() => {
+    setIsSorted((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     try {
@@ -31,7 +39,7 @@ const TicketListPage: NextPage = () => {
         const contentQuery = query(
           ticketRef,
           where('creatorId', '==', `${userId}`),
-          orderBy('createdAt', 'asc')
+          orderBy('createdAt', `${!isSorted ? 'desc' : 'asc'}`)
         );
         const dbContents = await getDocs(contentQuery);
 
@@ -47,7 +55,7 @@ const TicketListPage: NextPage = () => {
       const err = error as SystemError;
       <Error statusCode={err.statusCode} />;
     }
-  }, [userId]);
+  }, [userId, isSorted]);
 
   useEffect(() => {
     try {
@@ -70,6 +78,10 @@ const TicketListPage: NextPage = () => {
         <LoadingMsg />
       ) : (
         <SlideList title='나의 티켓' ticketLength={ticketLength}>
+          <SortList onClick={onSortedHandler}>
+            <p>{'정렬'}</p>
+            {!isSorted ? <IoIosArrowUp /> : <IoIosArrowDown />}
+          </SortList>
           {ticketLength === 0 ? (
             <NoneResults>아직 나의 티켓이 없습니다.</NoneResults>
           ) : (
@@ -82,3 +94,28 @@ const TicketListPage: NextPage = () => {
 };
 
 export default withHeadMeta(TicketListPage, '나의 티켓');
+
+const SortList = styled.div`
+  position: absolute;
+  top: 13.5rem;
+  right: 1rem;
+
+  display: flex;
+  align-items: center;
+
+  font-weight: 700;
+  color: #fff;
+  margin-left: 2rem;
+  padding: 0.3rem 0.8rem;
+  border: 0.1rem solid ${({ theme }) => theme.colors.orange};
+  border-radius: 2rem;
+
+  p {
+    margin-right: 0.5rem;
+  }
+
+  ${({ theme }) => theme.device.tablet} {
+    top: 17.5rem;
+    right: 4rem;
+  }
+`;
