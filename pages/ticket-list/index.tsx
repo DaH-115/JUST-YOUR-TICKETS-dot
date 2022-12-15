@@ -16,6 +16,7 @@ import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
 import Error from 'next/error';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import { Description } from '../../components/styles/Description';
 
 const TicketListPage: NextPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -73,17 +74,26 @@ const TicketListPage: NextPage = () => {
   }, []);
 
   return (
-    <BackgroundStyle customMessage='your🍿' backgroundColor='black'>
+    <BackgroundStyle customMessage='your🍿'>
       {isLoading ? (
         <LoadingMsg />
       ) : (
-        <SlideList title='나의 티켓' ticketLength={ticketLength}>
+        <SlideList
+          title='나의 티켓'
+          ticketLength={ticketLength}
+          description='나만의 감상티켓을 모아 보세요'
+        >
           <SortList onClick={onSortedHandler}>
             <p>{'정렬'}</p>
             {!isSorted ? <IoIosArrowUp /> : <IoIosArrowDown />}
           </SortList>
           {ticketLength === 0 ? (
-            <NoneResults>아직 나의 티켓이 없습니다.</NoneResults>
+            <>
+              <NoneResults>{'아직 나의 티켓이 없습니다.'}</NoneResults>
+              <Description>
+                {'영화를 검색해서 나만의 감상 티켓을 만들어 보세요.'}
+              </Description>
+            </>
           ) : (
             <UserTicketSlider movies={usersTicket} />
           )}
@@ -97,11 +107,14 @@ export default withHeadMeta(TicketListPage, '나의 티켓');
 
 const SortList = styled.div`
   position: absolute;
-  top: 13.5rem;
-  right: 1rem;
+  top: 10.5rem;
+  left: 12rem;
 
   display: flex;
+  justify-content: center;
   align-items: center;
+
+  width: 5.2rem;
 
   font-weight: 700;
   color: #fff;
@@ -110,12 +123,29 @@ const SortList = styled.div`
   border: 0.1rem solid ${({ theme }) => theme.colors.orange};
   border-radius: 2rem;
 
+  cursor: pointer;
+
+  &:hover,
+  &:active {
+    background: linear-gradient(
+      transparent 60%,
+      ${({ theme }) => theme.colors.orange}
+    );
+  }
+
   p {
-    margin-right: 0.5rem;
+    margin-right: 0.3rem;
   }
 
   ${({ theme }) => theme.device.tablet} {
-    top: 17.5rem;
-    right: 4rem;
+    top: 12rem;
+    left: 17rem;
+    width: 5rem;
+    font-size: 0.8rem;
+  }
+
+  ${({ theme }) => theme.device.desktop} {
+    top: 14rem;
+    left: 19rem;
   }
 `;

@@ -30,7 +30,7 @@ const UserTicketDetailPage = () => {
       <Head>
         <title>{titleText}</title>
       </Head>
-      <BackgroundStyle backgroundColor='black' customMessage='info✔️'>
+      <BackgroundStyle customMessage='info✔️'>
         <SlideTitle>{'영화 상세 정보'}</SlideTitle>
         {isLoading ? (
           <LoadingMsg />

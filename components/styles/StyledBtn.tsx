@@ -5,14 +5,20 @@ export const StyledBtn = styled.div`
   justify-content: center;
   align-items: center;
 
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 1rem;
+  height: 1rem;
   padding: 1rem 0.8rem;
   border-radius: 50%;
 
   button {
     color: #fff;
-    font-size: 1rem;
+    font-size: 1.4rem;
     margin-right: 1rem;
+
+    &:hover,
+    &:active {
+      color: ${({ theme }) => theme.colors.orange};
+      transition: color ease-in-out 150ms;
+    }
   }
 `;

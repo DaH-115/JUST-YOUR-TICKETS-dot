@@ -138,7 +138,7 @@ const WriteForm = ({
   );
 
   return (
-    <BackgroundStyle customMessage='write✒️' backgroundColor='black'>
+    <BackgroundStyle customMessage='write✒️'>
       <WriteFormWrapper>
         <MovieDetailWrapper>
           <p>{today}</p>

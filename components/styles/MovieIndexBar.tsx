@@ -7,18 +7,13 @@ export const MovieIndexBar = styled.div<{ routePath?: string }>`
   align-items: center;
 
   width: 100%;
-  height: 4rem;
+  padding: 0.3rem 1rem;
 
   color: #fff;
   font-size: ${({ routePath }) => (routePath === '/' ? '2.5rem' : '1rem')};
   font-weight: 700;
-  background: linear-gradient(
-    180deg,
-    ${({ theme }) => theme.colors.black} 30%,
-    transparent
-  );
+  background: linear-gradient(180deg, #000000f1, transparent);
 
   border-top-left-radius: 1.5rem;
   border-top-right-radius: 1.5rem;
-  padding: 0.5rem 0.8rem 0 1.4rem;
 `;

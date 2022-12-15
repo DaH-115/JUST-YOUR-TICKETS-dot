@@ -1,15 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Description } from '../styles/Description';
 import { SlideTitle } from '../styles/StyledTitle';
 
 const SlideList = ({
   title,
-  ticketLength,
+  description,
   children,
+  ticketLength,
 }: {
   title: string;
-  ticketLength?: number;
+  description: string;
   children: React.ReactNode;
+  ticketLength?: number;
 }) => {
   return (
     <Container>
@@ -17,6 +20,7 @@ const SlideList = ({
         <SlideTitle>{title}</SlideTitle>
         {ticketLength && <TicketLength>{ticketLength} 장</TicketLength>}
       </SlideTextWrapper>
+      <Description>{description}</Description>
       {children}
     </Container>
   );

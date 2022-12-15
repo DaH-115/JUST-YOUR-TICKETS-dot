@@ -13,8 +13,6 @@ const TicketSlider = ({ children }: { children: React.ReactNode }) => {
   const settings = {
     infinite: true,
     speed: 500,
-    autoplay: false,
-    autoplaySpeed: 2000,
     slidesToShow: 4,
     slidesToScroll: 2,
     nextArrow: (
@@ -29,17 +27,10 @@ const TicketSlider = ({ children }: { children: React.ReactNode }) => {
     ),
     responsive: [
       {
-        breakpoint: 1299,
+        breakpoint: 1200,
         settings: {
           slidesToShow: 3,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 1100,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
+          slidesToScroll: 2,
         },
       },
       {
@@ -60,7 +51,11 @@ export default TicketSlider;
 const StyledSlider = styled(Slider)`
   .slick-list {
     ${({ theme }) => theme.device.tablet} {
-      height: 95vh;
+      padding: 0 2rem;
+    }
+
+    ${({ theme }) => theme.device.desktop} {
+      height: 85vh;
     }
   }
 

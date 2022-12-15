@@ -17,8 +17,9 @@ export const GlobalStyle = createGlobalStyle`
     }
 
   h1, p {
-    margin: 0;
     letter-spacing: -0.06rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   p {

@@ -151,7 +151,7 @@ const LoginPage: NextPage = () => {
   );
 
   return (
-    <BackgroundStyle customMessage='create📝' backgroundColor='black'>
+    <BackgroundStyle customMessage='create📝'>
       {isLoading ? (
         <LoadingMsg />
       ) : (
@@ -194,7 +194,7 @@ const LoginPage: NextPage = () => {
                 {!userPassword
                   ? '비밀번호를 입력해 주세요.'
                   : !isPassword
-                  ? '비밀번호는 숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
+                  ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
                   : null}
               </ValidationMsg>
               <LoginBtn type='submit' disabled={isDisabled}>
@@ -264,8 +264,9 @@ const StyledInput = styled.input`
   width: 100%;
   padding: 0.8rem 1rem;
   border-radius: 1rem;
-  margin-bottom: 0.8rem;
   font-weight: 700;
+  border: none;
+  margin-top: 0.2rem;
 
   &[type='password'] {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -273,18 +274,20 @@ const StyledInput = styled.input`
   }
 
   &:focus {
-    border: none;
     border-color: ${({ theme }) => theme.colors.orange};
     box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
   }
 `;
 
 const ValidationMsg = styled.p<{ isState: boolean }>`
-  display: ${({ isState }) => (isState ? 'none' : 'block')};
+  visibility: ${({ isState }) => (isState ? 'hidden' : 'visible')};
   font-size: 0.7rem;
   color: ${({ theme, isState }) => (isState ? '#fff' : theme.colors.orange)};
-  margin-bottom: 1rem;
+  width: 100%;
+  height: 1rem;
   padding-left: 0.2rem;
+  margin-top: 0.4rem;
+  margin-bottom: 1rem;
 `;
 
 const ErrorMsg = styled.p`
@@ -299,7 +302,6 @@ const LoginBtn = styled.button`
   padding: 1rem 2rem;
   background-color: ${({ theme }) => theme.colors.orange};
   border-radius: 1.4rem;
-  margin-top: 0.5rem;
 
   &:active {
     color: ${({ theme }) => theme.colors.yellow};

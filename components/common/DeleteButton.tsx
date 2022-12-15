@@ -16,9 +16,6 @@ export default DeleteButton;
 
 const DeleteBtn = styled(StyledBtn)`
   button {
-    &:hover,
-    &:active {
-      color: ${({ theme }) => theme.colors.orange};
-    }
+    margin-bottom: 0.05rem;
   }
 `;

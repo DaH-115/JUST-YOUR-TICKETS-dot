@@ -28,4 +28,9 @@ export const theme: DefaultTheme = {
     }`,
   },
   device,
+  space: {
+    mobile: '1rem',
+    tablet: '4rem',
+    desktop: '6rem',
+  },
 };

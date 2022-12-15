@@ -48,7 +48,7 @@ const MovieTitle = styled.div`
   font-size: 1rem;
   color: ${({ theme }) => theme.colors.black};
   overflow-y: scroll;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
@@ -72,6 +72,7 @@ const MovieJanreWrapper = styled.ul`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  height: 2rem;
   overflow-y: scroll;
   font-size: 1rem;
   color: ${({ theme }) => theme.colors.black};
