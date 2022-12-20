@@ -22,7 +22,7 @@ const PosterImage = ({
       {!posterImage && !posterPath ? (
         <NoneImg>IMAGE IS NONE</NoneImg>
       ) : (
-        <Image src={posterSrc} alt={title} width={320} height={480} priority />
+        <Image src={posterSrc} alt={title} width={320} height={480} />
       )}
     </ImgBox>
   );

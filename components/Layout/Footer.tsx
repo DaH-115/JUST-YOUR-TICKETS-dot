@@ -24,11 +24,10 @@ const FooterWrapper = styled.div`
   align-items: center;
 
   width: 100%;
-  height: 100%;
   padding: 2rem;
   color: ${({ theme }) => theme.colors.gray};
   background-color: #0b0b0b;
-  margin-top: 1rem;
+  margin-top: 2rem;
 
   font-size: 0.8rem;
   font-weight: 700;
@@ -48,6 +47,6 @@ const FooterWrapper = styled.div`
 
   ${({ theme }) => theme.device.tablet} {
     padding: 1.5rem;
-    margin-top: 6.1rem;
+    margin-top: 2rem;
   }
 `;

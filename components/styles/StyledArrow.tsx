@@ -17,11 +17,11 @@ const StyledArrow = styled.div`
   &:active {
     color: ${({ theme }) => theme.colors.yellow};
     transition: color ease-in-out 150ms;
-
     background: linear-gradient(
-      transparent 30%,
+      ${({ theme }) => theme.colors.black} 30%,
       ${({ theme }) => theme.colors.orange}
     );
+    border-color: ${({ theme }) => theme.colors.orange};
   }
 
   &::before {

@@ -99,18 +99,7 @@ const DetailWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  margin-top: 4rem;
-
-  background: linear-gradient(
-    #0b0b0b 10%,
-    ${({ theme }) => theme.colors.black}
-  );
-
-  ${({ theme }) => theme.device.tablet} {
-    padding-bottom: 4rem;
-  }
+  margin-top: 2rem;
 `;
 
 const MovieDetails = styled.div`
@@ -127,23 +116,19 @@ const MovieDetails = styled.div`
 `;
 
 const DetailTextWrapper = styled.div`
-  position: relative;
-  bottom: 1.2rem;
-  left: 0;
-
   width: 100%;
   height: 100%;
-  overflow: hidden;
   padding: 1.5rem 2rem;
-  border-radius: 1rem;
   background: linear-gradient(white 70%, ${({ theme }) => theme.colors.yellow});
+  margin-top: 1rem;
+  margin-bottom: -2rem;
 
   ${({ theme }) => theme.device.tablet} {
-    bottom: 0;
-
     max-width: 600px;
     padding: 1.2rem 1rem;
+    margin-top: 0;
     margin-left: 2rem;
+    border-radius: 1rem;
   }
 `;
 
@@ -162,9 +147,6 @@ const ContentText = styled.div`
   height: 100%;
   font-size: 1.2rem;
   margin-bottom: 1rem;
-  overflow-y: scroll;
-
-  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
   h1 {
     font-weight: 700;
@@ -198,7 +180,6 @@ const MovieJanreWrapper = styled.ul`
 const OverviweText = styled.p`
   width: 100%;
   font-size: 1rem;
-  padding-bottom: 2rem;
 `;
 
 const AdmitButtonWrapper = styled.div`
@@ -206,18 +187,21 @@ const AdmitButtonWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #fff;
-  margin-top: 1rem;
+  margin-top: 2rem;
   padding: 1rem;
   background-color: ${({ theme }) => theme.colors.orange};
   border-radius: 1rem;
 
+  &:hover,
   &:active {
     button {
       color: ${({ theme }) => theme.colors.yellow};
+      transition: color 200ms ease-in-out;
     }
 
     div {
       color: ${({ theme }) => theme.colors.yellow};
+      transition: color 200ms ease-in-out;
     }
   }
 

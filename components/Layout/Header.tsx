@@ -95,8 +95,10 @@ export const SearchIcon = styled.div<{ path?: string }>`
 
   &:hover,
   &:active {
+    color: ${({ theme }) => theme.colors.yellow};
+    transition: color 150ms ease-in-out;
     background: linear-gradient(
-      transparent 60%,
+      ${({ theme }) => theme.colors.black} 60%,
       ${({ theme }) => theme.colors.orange}
     );
   }

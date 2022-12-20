@@ -320,6 +320,7 @@ const ToggleText = styled.p`
   color: #fff;
   text-align: center;
   margin-top: 1.2rem;
+  margin-bottom: 3.5rem;
 
   cursor: pointer;
 `;

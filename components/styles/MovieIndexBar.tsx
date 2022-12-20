@@ -12,7 +12,7 @@ export const MovieIndexBar = styled.div<{ routePath?: string }>`
   color: #fff;
   font-size: ${({ routePath }) => (routePath === '/' ? '2.5rem' : '1rem')};
   font-weight: 700;
-  background: linear-gradient(180deg, #000000f1, transparent);
+  background: linear-gradient(180deg, #0e0e0eef, transparent);
 
   border-top-left-radius: 1.5rem;
   border-top-right-radius: 1.5rem;

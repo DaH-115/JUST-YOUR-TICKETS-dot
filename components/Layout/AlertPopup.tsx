@@ -102,16 +102,17 @@ const PopupBtnWrapper = styled.div`
   width: 100%;
 `;
 
-const PopupBtn = styled.div`
+const PopupBtn = styled.button`
   width: 50%;
   padding: 0.5rem 1rem;
   margin-right: 1rem;
   text-align: center;
   border-radius: 1rem;
+  font-size: 1rem;
 
   &:hover,
   &:active {
-    color: #fff;
+    color: ${({ theme }) => theme.colors.yellow};
     transition: color 0.1s ease-in-out;
   }
 

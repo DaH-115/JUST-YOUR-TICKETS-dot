@@ -24,7 +24,7 @@ export default BackgroundStyle;
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100vh;
+  height: auto;
 
   background: linear-gradient(#000 10%, ${({ theme }) => theme.colors.black});
 `;

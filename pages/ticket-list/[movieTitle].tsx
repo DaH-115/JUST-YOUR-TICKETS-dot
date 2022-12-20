@@ -70,21 +70,7 @@ const DetailWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
   margin-top: 2rem;
-
-  ${({ theme }) => theme.device.desktop} {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-
-    padding: 0 2rem;
-    padding-bottom: 4rem;
-  }
 `;
 
 const MovieDetails = styled.div`
@@ -92,32 +78,28 @@ const MovieDetails = styled.div`
   height: 100%;
   max-width: 600px;
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     display: flex;
     justify-content: center;
     align-items: center;
     max-width: 100%;
-
-    background-color: ${({ theme }) => theme.colors.black};
   }
 `;
 
 const DetailTextWrapper = styled.div`
-  position: relative;
-  bottom: 1.2rem;
-  left: 0;
-
   width: 100%;
   height: 100%;
-  overflow: hidden;
   padding: 1.5rem 2rem;
-  border-radius: 1rem;
   background: linear-gradient(white 70%, ${({ theme }) => theme.colors.yellow});
+  margin-top: 1rem;
+  margin-bottom: -2rem;
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     max-width: 600px;
     padding: 1.2rem 1rem;
+    margin-top: 0;
     margin-left: 2rem;
+    border-radius: 1rem;
   }
 `;
 
@@ -136,9 +118,6 @@ const ContentText = styled.div`
   height: 100%;
   font-size: 1.2rem;
   margin-bottom: 1rem;
-  overflow-y: scroll;
-
-  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
   h1 {
     font-weight: 700;
@@ -150,5 +129,4 @@ const ContentText = styled.div`
 const OverviweText = styled.p`
   width: 100%;
   font-size: 1rem;
-  padding-bottom: 2rem;
 `;

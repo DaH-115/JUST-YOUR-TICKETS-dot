@@ -25,7 +25,7 @@ const TopMovieTicket = ({
     <TicketWrapper>
       {/* TICKET INDEX HEADER */}
       <MovieIndexBar routePath={router.pathname}>
-        <MovieRank>{`* ${movieIndex}`}</MovieRank>
+        <MovieRank>{`*${movieIndex}`}</MovieRank>
 
         {/* GO TO MOVIE INFO PAGE BUTTON */}
         <MovieInfoBtn movieId={movieId} />
