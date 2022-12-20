@@ -4,8 +4,10 @@ import TicketSlider from '../slider/TicketSlider';
 import { TopMovieDataProps } from 'ticketType';
 
 const TopMovieSlider = ({ movies }: { movies: TopMovieDataProps[] }) => {
+  const movieLength = movies.length;
+
   return (
-    <TicketSlider>
+    <TicketSlider movieLength={movieLength}>
       {movies.map((item: TopMovieDataProps, index) => {
         return (
           <TopMovieTicket

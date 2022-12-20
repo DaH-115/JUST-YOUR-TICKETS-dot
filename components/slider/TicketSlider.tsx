@@ -9,9 +9,17 @@ import {
 
 import { StyledArrowNext, StyledArrowPrev } from '../styles/StyledArrow';
 
-const TicketSlider = ({ children }: { children: React.ReactNode }) => {
+const TicketSlider = ({
+  children,
+  movieLength,
+}: {
+  children: React.ReactNode;
+  movieLength: number;
+}) => {
+  const breakLength = 4;
+
   const settings = {
-    infinite: true,
+    infinite: movieLength > breakLength,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 2,
@@ -62,7 +70,7 @@ const StyledSlider = styled(Slider)`
     }
 
     ${({ theme }) => theme.device.desktop} {
-      height: 80vh;
+      /* height: 80vh; */
     }
   }
 

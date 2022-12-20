@@ -4,8 +4,10 @@ import UserTicket from './UserTicket';
 import { UserTicketProps } from 'ticketType';
 
 const UserTicketSlider = ({ movies }: { movies: UserTicketProps[] }) => {
+  const movieLength = movies.length;
+
   return (
-    <TicketSlider>
+    <TicketSlider movieLength={movieLength}>
       {movies.map((item: UserTicketProps) => {
         return (
           <UserTicket
