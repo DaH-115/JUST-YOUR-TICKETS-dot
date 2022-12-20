@@ -13,18 +13,6 @@ const StyledArrow = styled.div`
 
   text-align: center;
 
-  /* &:hover {
-    color: #000;
-    border: 0.1rem solid #fff;
-    background-color: #fff;
-  }
-
-  &:active {
-    color: #000;
-    border: 0.1rem solid ${({ theme }) => theme.colors.yellow};
-    background-color: ${({ theme }) => theme.colors.yellow};
-  } */
-
   &:hover,
   &:active {
     color: ${({ theme }) => theme.colors.yellow};
@@ -43,7 +31,7 @@ const StyledArrow = styled.div`
   z-index: 999;
 `;
 
-// ⬅️ ➡️ ARROW BUTTON STYLE
+// ARROW BUTTON STYLE
 export const StyledArrowNext = styled(StyledArrow)`
   right: 2rem;
 `;

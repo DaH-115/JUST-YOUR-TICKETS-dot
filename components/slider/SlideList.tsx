@@ -41,5 +41,6 @@ const TicketLength = styled.p`
   font-size: 1.4rem;
   font-weight: 700;
   color: #fff;
+  margin-top: 1rem;
   margin-left: 1rem;
 `;

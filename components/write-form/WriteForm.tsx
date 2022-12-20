@@ -10,8 +10,8 @@ import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
 import Error from 'next/error';
 
-// 💫 title, releaseYear, posterImage <- Main/Search/MovieDetailPage에서 받는 값
-// 💫 rating, reviewText, ticketId <- UserTicket에서 받는 값
+// title, releaseYear, posterImage <- Main/Search/MovieDetailPage에서 받는 값
+// rating, reviewText, ticketId <- UserTicket에서 받는 값
 const WriteForm = ({
   ticketId,
   title,
@@ -45,7 +45,7 @@ const WriteForm = ({
   }, [isUser, isConfirm]);
 
   useEffect(() => {
-    // ✔️ props로 받아온 값(reviewText && rating)이 있으면 ref에 넣어준다
+    // props로 받아온 값(reviewText && rating)이 있으면 ref에 넣어준다
     if (rating && reviewText) {
       ratingRef.current!.value = rating;
       reviewRef.current!.value = reviewText;
@@ -121,7 +121,7 @@ const WriteForm = ({
       return;
     }
 
-    // ✔️ UPDATE
+    // UPDATE
     if (ticketId) {
       updateContents(ratingText, reviewText, ticketId);
       return;

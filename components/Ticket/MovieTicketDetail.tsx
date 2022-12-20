@@ -22,7 +22,7 @@ const MovieTicketDetail = ({
         reviewText={reviewText}
       />
 
-      {/* 🎈 GO TO "/write" PAGE BUTTON */}
+      {/* GO TO "/write" PAGE BUTTON */}
       {!reviewText && (
         <AdmitBtn
           title={title}

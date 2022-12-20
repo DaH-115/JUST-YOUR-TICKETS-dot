@@ -24,32 +24,28 @@ export default BackgroundStyle;
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    #0b0b0b 10%,
-    ${({ theme }) => theme.colors.black}
-  );
+  height: 100vh;
+
+  background: linear-gradient(#000 10%, ${({ theme }) => theme.colors.black});
 `;
 
 const PageTitle = styled.div`
-  font-size: 2rem;
+  font-size: 1.2rem;
   font-weight: 700;
   line-height: 1rem;
   color: ${({ theme }) => theme.colors.yellow};
 
   padding-top: 1rem;
-  margin-bottom: 2rem;
-  margin-left: ${({ theme }) => theme.space.mobile};
+  padding-left: ${({ theme }) => theme.space.mobile};
 
   ${({ theme }) => theme.device.tablet} {
-    font-size: 2.5rem;
     padding-top: 2rem;
-    margin-left: ${({ theme }) => theme.space.tablet};
+    padding-left: ${({ theme }) => theme.space.tablet};
   }
 
   ${({ theme }) => theme.device.desktop} {
-    margin-bottom: 4rem;
-    margin-left: ${({ theme }) => theme.space.desktop};
+    padding-bottom: 4rem;
+    padding-left: ${({ theme }) => theme.space.tablet};
   }
 `;
 

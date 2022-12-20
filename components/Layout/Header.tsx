@@ -60,10 +60,6 @@ const HeaderMenu = styled.ul`
     right: 8rem;
     font-size: 1.2rem;
   }
-
-  ${({ theme }) => theme.device.desktop} {
-    right: 10rem;
-  }
 `;
 
 const HeaderLi = styled.li`
@@ -117,6 +113,6 @@ export const SearchIcon = styled.div<{ path?: string }>`
 
   ${({ theme }) => theme.device.desktop} {
     top: 1.5rem;
-    right: ${({ theme }) => theme.space.desktop};
+    right: ${({ theme }) => theme.space.tablet};
   }
 `;

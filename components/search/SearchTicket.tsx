@@ -27,7 +27,7 @@ const SearchTicket = ({
         <StyledInfo>
           <TicketIndex>{movieIndex + 1}.</TicketIndex>
 
-          {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
+          {/* GO TO MOVIE INFO PAGE BUTTON */}
           <MovieInfoBtn movieId={movieId} />
         </StyledInfo>
         <MovieTextDetail

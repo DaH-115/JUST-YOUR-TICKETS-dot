@@ -27,14 +27,21 @@ const TicketSlider = ({ children }: { children: React.ReactNode }) => {
     ),
     responsive: [
       {
-        breakpoint: 1200,
+        breakpoint: 1250,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 2,
         },
       },
       {
-        breakpoint: 760,
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 650,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -51,11 +58,11 @@ export default TicketSlider;
 const StyledSlider = styled(Slider)`
   .slick-list {
     ${({ theme }) => theme.device.tablet} {
-      padding: 0 2rem;
+      padding: 0 1.4rem;
     }
 
     ${({ theme }) => theme.device.desktop} {
-      height: 85vh;
+      height: 80vh;
     }
   }
 

@@ -138,7 +138,7 @@ const SortList = styled.div`
   }
 
   ${({ theme }) => theme.device.tablet} {
-    top: 12rem;
+    top: 10.1rem;
     left: 17rem;
     width: 5rem;
     font-size: 0.8rem;
@@ -146,6 +146,6 @@ const SortList = styled.div`
 
   ${({ theme }) => theme.device.desktop} {
     top: 14rem;
-    left: 19rem;
+    left: 16rem;
   }
 `;

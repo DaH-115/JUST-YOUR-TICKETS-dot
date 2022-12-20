@@ -76,7 +76,7 @@ const UserTicket = ({
             posterImage={posterImage}
           />
 
-          {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
+          {/* GO TO MOVIE INFO PAGE BUTTON */}
           <TicketInfoBtn
             title={title}
             releaseYear={releaseYear}

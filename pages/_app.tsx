@@ -10,6 +10,7 @@ import { auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 import LoadingMsg from '../components/common/LoadingMsg';
 import FaviconTags from '../components/common/FaviconTags';
 import MetaTags from '../components/common/MetaTags';
@@ -55,6 +56,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Header isUser={isUser} />
       {isLoading && <LoadingMsg />}
       <Component {...pageProps} />
+      <Footer />
     </ThemeProvider>
   );
 }

@@ -27,7 +27,7 @@ const TopMovieTicket = ({
       <MovieIndexBar routePath={router.pathname}>
         <MovieRank>{`* ${movieIndex}`}</MovieRank>
 
-        {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
+        {/* GO TO MOVIE INFO PAGE BUTTON */}
         <MovieInfoBtn movieId={movieId} />
       </MovieIndexBar>
 

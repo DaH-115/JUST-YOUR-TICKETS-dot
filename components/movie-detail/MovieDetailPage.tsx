@@ -103,8 +103,13 @@ const DetailWrapper = styled.div`
   height: 100%;
   margin-top: 4rem;
 
+  background: linear-gradient(
+    #0b0b0b 10%,
+    ${({ theme }) => theme.colors.black}
+  );
+
   ${({ theme }) => theme.device.tablet} {
-    margin-bottom: 4rem;
+    padding-bottom: 4rem;
   }
 `;
 
@@ -118,7 +123,6 @@ const MovieDetails = styled.div`
     justify-content: center;
     align-items: center;
     max-width: 100%;
-    background-color: ${({ theme }) => theme.colors.black};
   }
 `;
 
