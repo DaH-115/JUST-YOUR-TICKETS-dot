@@ -25,10 +25,10 @@ const LoginPage: NextPage = () => {
   const [signUp, setSignUp] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isError, setIsError] = useState<boolean>(false);
-  // 🤓 User EMAIL-PASSWORD Text
+  // User EMAIL-PASSWORD Text
   const [userEmail, setUserEmail] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
-  // 🤓 Validation State
+  // Validation State
   const [isEmail, setIsEmail] = useState<boolean>(false);
   const [isPassword, setIsPassword] = useState<boolean>(false);
   const isDisabled = isEmail && isPassword ? false : true;
@@ -236,7 +236,8 @@ const LoginForTitle = styled.h1`
   font-size: 1.2rem;
   font-weight: 700;
   color: #fff;
-  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 3rem;
 
   ${({ theme }) => theme.device.desktop} {
     font-size: 1.5rem;
@@ -302,6 +303,7 @@ const LoginBtn = styled.button`
   padding: 1rem 2rem;
   background-color: ${({ theme }) => theme.colors.orange};
   border-radius: 1.4rem;
+  margin-top: 1.5rem;
 
   &:active {
     color: ${({ theme }) => theme.colors.yellow};
@@ -318,7 +320,7 @@ const ToggleText = styled.p`
   color: #fff;
   text-align: center;
   margin-top: 1.2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 3.5rem;
 
   cursor: pointer;
 `;

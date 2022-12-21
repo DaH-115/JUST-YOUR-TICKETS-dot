@@ -9,8 +9,8 @@ import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import PosterImage from '../ticket/PosterImage';
 import AlertPopup from '../../components/layout/AlertPopup';
 import PortalAlertPopup from '../popup/PortalAlert';
-import UpdateButton from '../common/UpdateButton';
-import DeleteButton from '../common/DeleteButton';
+import UpdateButton from '../ticket/UpdateButton';
+import DeleteButton from '../ticket/DeleteButton';
 import Error from 'next/error';
 import { TicketWrapper } from '../styles/TicketWrapper';
 import { MovieIndexBar } from '../styles/MovieIndexBar';
@@ -76,7 +76,7 @@ const UserTicket = ({
             posterImage={posterImage}
           />
 
-          {/* 🎈 GO TO MOVIE INFO PAGE BUTTON */}
+          {/* GO TO MOVIE INFO PAGE BUTTON */}
           <TicketInfoBtn
             title={title}
             releaseYear={releaseYear}

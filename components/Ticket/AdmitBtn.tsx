@@ -46,7 +46,7 @@ const AdmitButtonWrapper = styled.div`
   width: 100%;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.black};
-  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
+  border-left: 0.2rem dashed ${({ theme }) => theme.colors.orange};
 
   button {
     color: #fff;

@@ -18,13 +18,15 @@ const AlertPopup = ({
     <>
       <BackDrop />
       <PopupBox>
-        <PopupTitle>*알림</PopupTitle>
+        <PopupTitle>{'*알림'}</PopupTitle>
         <PopupDesc>{popupMessage}</PopupDesc>
         <PopupBtnWrapper>
           {popupType === 'alert' ? null : (
-            <PopupBtnCancel onClick={onCancelHandler}>아니요</PopupBtnCancel>
+            <PopupBtnCancel onClick={onCancelHandler}>
+              {'아니요'}
+            </PopupBtnCancel>
           )}
-          <PopupBtnConfirm onClick={onConfirmHandler}>네</PopupBtnConfirm>
+          <PopupBtnConfirm onClick={onConfirmHandler}>{'네'}</PopupBtnConfirm>
         </PopupBtnWrapper>
       </PopupBox>
     </>
@@ -53,13 +55,12 @@ const BackDrop = styled.div`
   height: 100vh;
   padding: 1rem;
 
-  pointer-events: none;
-
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   background-color: rgba(0, 0, 0, 0.3);
 
   animation: ${FadeIn} 0.5s ease-in-out;
+  pointer-events: none;
   z-index: 999;
 `;
 
@@ -102,16 +103,17 @@ const PopupBtnWrapper = styled.div`
   width: 100%;
 `;
 
-const PopupBtn = styled.div`
+const PopupBtn = styled.button`
   width: 50%;
   padding: 0.5rem 1rem;
   margin-right: 1rem;
   text-align: center;
   border-radius: 1rem;
+  font-size: 1rem;
 
   &:hover,
   &:active {
-    color: #fff;
+    color: ${({ theme }) => theme.colors.yellow};
     transition: color 0.1s ease-in-out;
   }
 

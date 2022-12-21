@@ -9,9 +9,17 @@ import {
 
 import { StyledArrowNext, StyledArrowPrev } from '../styles/StyledArrow';
 
-const TicketSlider = ({ children }: { children: React.ReactNode }) => {
+const TicketSlider = ({
+  children,
+  movieLength,
+}: {
+  children: React.ReactNode;
+  movieLength: number;
+}) => {
+  const breakLength = 4;
+
   const settings = {
-    infinite: true,
+    infinite: movieLength > breakLength,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 2,
@@ -27,14 +35,21 @@ const TicketSlider = ({ children }: { children: React.ReactNode }) => {
     ),
     responsive: [
       {
-        breakpoint: 1200,
+        breakpoint: 1250,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 2,
         },
       },
       {
-        breakpoint: 760,
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 650,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -51,11 +66,7 @@ export default TicketSlider;
 const StyledSlider = styled(Slider)`
   .slick-list {
     ${({ theme }) => theme.device.tablet} {
-      padding: 0 2rem;
-    }
-
-    ${({ theme }) => theme.device.desktop} {
-      height: 85vh;
+      padding: 0 1.4rem;
     }
   }
 

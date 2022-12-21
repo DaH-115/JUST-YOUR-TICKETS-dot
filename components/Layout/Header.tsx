@@ -24,11 +24,11 @@ const Header = ({ isUser }: { isUser: boolean }) => {
   return (
     <HeaderMenu>
       <Link href='/'>
-        <HeaderLi className='home'>HOME</HeaderLi>
+        <HeaderLi className='home'>{'HOME'}</HeaderLi>
       </Link>
       {isUser && (
         <Link href='/ticket-list'>
-          <HeaderLi>MY TICKETS</HeaderLi>
+          <HeaderLi>{'MY TICKETS'}</HeaderLi>
         </Link>
       )}
       <Link href='/search'>
@@ -37,10 +37,10 @@ const Header = ({ isUser }: { isUser: boolean }) => {
         </SearchIcon>
       </Link>
       {isUser ? (
-        <HeaderLi onClick={onSignOutHandler}>LOGOUT</HeaderLi>
+        <HeaderLi onClick={onSignOutHandler}>{'LOGOUT'}</HeaderLi>
       ) : (
         <Link href='/sign-in'>
-          <HeaderLi className='home'>SIGN IN</HeaderLi>
+          <HeaderLi className='home'>{'SIGN IN'}</HeaderLi>
         </Link>
       )}
     </HeaderMenu>
@@ -99,8 +99,10 @@ export const SearchIcon = styled.div<{ path?: string }>`
 
   &:hover,
   &:active {
+    color: ${({ theme }) => theme.colors.yellow};
+    transition: color 150ms ease-in-out;
     background: linear-gradient(
-      transparent 60%,
+      ${({ theme }) => theme.colors.black} 60%,
       ${({ theme }) => theme.colors.orange}
     );
   }
@@ -117,6 +119,6 @@ export const SearchIcon = styled.div<{ path?: string }>`
 
   ${({ theme }) => theme.device.desktop} {
     top: 1.5rem;
-    right: ${({ theme }) => theme.space.desktop};
+    right: ${({ theme }) => theme.space.tablet};
   }
 `;

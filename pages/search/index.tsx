@@ -13,6 +13,7 @@ import SearchTicket from '../../components/search/SearchTicket';
 import SignInAlert from '../../components/popup/SignInAlert';
 import { SystemError } from 'errorType';
 import { TopMovieDataProps } from 'ticketType';
+import { NoneResults } from '../../components/styles/NoneReults';
 
 const SearchPage: NextPage = () => {
   const [movieName, setMovieName] = useState<string>('');
@@ -120,28 +121,8 @@ const SearchPage: NextPage = () => {
 
 export default withHeadMeta(SearchPage, '검색');
 
-export const NoneResults = styled.p`
-  width: 100%;
-  height: 100vh;
-  color: #fff;
-  background-color: ${({ theme }) => theme.colors.black};
-  padding-top: 1rem;
-  padding-left: ${({ theme }) => theme.space.mobile};
-  font-size: 1.2rem;
-  font-weight: 400;
-
-  ${({ theme }) => theme.device.tablet} {
-    padding-left: ${({ theme }) => theme.space.tablet};
-  }
-
-  ${({ theme }) => theme.device.desktop} {
-    padding-left: ${({ theme }) => theme.space.desktop};
-  }
-`;
-
 const SearchWrapper = styled.div`
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.black};
 `;
 
 const SearchTitle = styled.p`

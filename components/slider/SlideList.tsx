@@ -18,7 +18,7 @@ const SlideList = ({
     <Container>
       <SlideTextWrapper>
         <SlideTitle>{title}</SlideTitle>
-        {ticketLength && <TicketLength>{ticketLength} 장</TicketLength>}
+        {ticketLength && <TicketLength>{`${ticketLength} 장`}</TicketLength>}
       </SlideTextWrapper>
       <Description>{description}</Description>
       {children}
@@ -41,5 +41,6 @@ const TicketLength = styled.p`
   font-size: 1.4rem;
   font-weight: 700;
   color: #fff;
+  margin-top: 1rem;
   margin-left: 1rem;
 `;

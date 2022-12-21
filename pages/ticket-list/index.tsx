@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
+import Error from 'next/error';
 import { auth, db } from '../../firebase';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -10,13 +11,11 @@ import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
 import SlideList from '../../components/slider/SlideList';
-import LoadingMsg from '../../components/common/LoadingMsg';
-import { NoneResults } from '../search';
 import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
-import Error from 'next/error';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { Description } from '../../components/styles/Description';
+import { LoadingSpinner } from '../../components/common/LoadingSpinner';
+import { NoneResults } from '../../components/styles/NoneReults';
 
 const TicketListPage: NextPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -33,9 +32,8 @@ const TicketListPage: NextPage = () => {
 
   useEffect(() => {
     try {
+      setIsLoading(true);
       (async () => {
-        setIsLoading(true);
-
         const ticketRef = collection(db, 'users-tickets');
         const contentQuery = query(
           ticketRef,
@@ -75,30 +73,31 @@ const TicketListPage: NextPage = () => {
 
   return (
     <BackgroundStyle customMessage='your🍿'>
-      {isLoading ? (
-        <LoadingMsg />
-      ) : (
-        <SlideList
-          title='나의 티켓'
-          ticketLength={ticketLength}
-          description='나만의 감상티켓을 모아 보세요'
-        >
-          <SortList onClick={onSortedHandler}>
-            <p>{'정렬'}</p>
-            {!isSorted ? <IoIosArrowUp /> : <IoIosArrowDown />}
-          </SortList>
-          {ticketLength === 0 ? (
-            <>
-              <NoneResults>{'아직 나의 티켓이 없습니다.'}</NoneResults>
-              <Description>
-                {'영화를 검색해서 나만의 감상 티켓을 만들어 보세요.'}
-              </Description>
-            </>
-          ) : (
-            <UserTicketSlider movies={usersTicket} />
-          )}
-        </SlideList>
-      )}
+      <SlideList
+        title='나의 티켓'
+        ticketLength={ticketLength}
+        description='나만의 감상티켓을 모아 보세요'
+      >
+        <SortList onClick={onSortedHandler}>
+          <p>{'정렬'}</p>
+          {!isSorted ? <IoIosArrowUp /> : <IoIosArrowDown />}
+        </SortList>
+        {isLoading ? (
+          <Wrapper>
+            <LoadingSpinner />
+          </Wrapper>
+        ) : (
+          <TicketListWrapper>
+            {!ticketLength ? (
+              <Wrapper>
+                <NoneResults>{'아직 나의 티켓이 없습니다.'}</NoneResults>
+              </Wrapper>
+            ) : (
+              <UserTicketSlider movies={usersTicket} />
+            )}
+          </TicketListWrapper>
+        )}
+      </SlideList>
     </BackgroundStyle>
   );
 };
@@ -128,7 +127,7 @@ const SortList = styled.div`
   &:hover,
   &:active {
     background: linear-gradient(
-      transparent 60%,
+      ${({ theme }) => theme.colors.black} 60%,
       ${({ theme }) => theme.colors.orange}
     );
   }
@@ -138,7 +137,7 @@ const SortList = styled.div`
   }
 
   ${({ theme }) => theme.device.tablet} {
-    top: 12rem;
+    top: 10.1rem;
     left: 17rem;
     width: 5rem;
     font-size: 0.8rem;
@@ -146,6 +145,19 @@ const SortList = styled.div`
 
   ${({ theme }) => theme.device.desktop} {
     top: 14rem;
-    left: 19rem;
+    left: 16rem;
   }
+`;
+
+const TicketListWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  margin-top: 1rem;
 `;

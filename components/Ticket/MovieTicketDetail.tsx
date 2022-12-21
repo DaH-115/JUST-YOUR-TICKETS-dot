@@ -22,7 +22,7 @@ const MovieTicketDetail = ({
         reviewText={reviewText}
       />
 
-      {/* 🎈 GO TO "/write" PAGE BUTTON */}
+      {/* GO TO "/write" PAGE BUTTON */}
       {!reviewText && (
         <AdmitBtn
           title={title}
@@ -40,9 +40,10 @@ const MovieDetailWrapper = styled.div`
   position: relative;
   bottom: 1.5rem;
   left: 0;
+
   display: flex;
   width: 100%;
   height: 100%;
   color: ${({ theme }) => theme.colors.black};
-  filter: drop-shadow(0px 0px 40px rgba(50, 50, 50, 0.9));
+  filter: drop-shadow(0px 0px 25px rgba(50, 50, 50, 0.9));
 `;
