@@ -7,5 +7,6 @@ export const StyeldInfo = styled.div`
   &:active,
   &:hover {
     color: ${({ theme }) => theme.colors.orange};
+    transition: color ease-in-out 150ms;
   }
 `;

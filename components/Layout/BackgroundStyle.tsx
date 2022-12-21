@@ -5,17 +5,12 @@ import styled from 'styled-components';
 interface BackgroundStyleProps {
   children: ReactNode;
   customMessage: string;
-  backgroundColor: string;
 }
 
-const BackgroundStyle = ({
-  children,
-  customMessage,
-  backgroundColor,
-}: BackgroundStyleProps) => {
+const BackgroundStyle = ({ children, customMessage }: BackgroundStyleProps) => {
   return (
-    <Wrapper backgroundColor={backgroundColor}>
-      <PageTitle backgroundColor={backgroundColor}>
+    <Wrapper>
+      <PageTitle>
         <p>JUST</p>
         <CustomMessage>{customMessage}</CustomMessage>
         <p>TICKTES.</p>
@@ -27,28 +22,34 @@ const BackgroundStyle = ({
 
 export default BackgroundStyle;
 
-const Wrapper = styled.div<{ backgroundColor: string }>`
+const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  background-color: ${(props) =>
-    props.backgroundColor === 'black'
-      ? props.theme.colors.black
-      : props.theme.colors.yellow};
+  background: linear-gradient(
+    #0b0b0b 10%,
+    ${({ theme }) => theme.colors.black}
+  );
 `;
 
-const PageTitle = styled.div<{ backgroundColor: string }>`
+const PageTitle = styled.div`
   font-size: 2rem;
   font-weight: 700;
-  color: ${(props) =>
-    props.backgroundColor === 'black'
-      ? props.theme.colors.yellow
-      : props.theme.colors.black};
-  padding: 1rem;
+  line-height: 1rem;
+  color: ${({ theme }) => theme.colors.yellow};
+
+  padding-top: 1rem;
   margin-bottom: 2rem;
+  margin-left: ${({ theme }) => theme.space.mobile};
 
   ${({ theme }) => theme.device.tablet} {
-    font-size: 3rem;
-    padding: 2rem;
+    font-size: 2.5rem;
+    padding-top: 2rem;
+    margin-left: ${({ theme }) => theme.space.tablet};
+  }
+
+  ${({ theme }) => theme.device.desktop} {
+    margin-bottom: 4rem;
+    margin-left: ${({ theme }) => theme.space.desktop};
   }
 `;
 

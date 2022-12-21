@@ -75,7 +75,7 @@ const SearchPage: NextPage = () => {
   }, []);
 
   return (
-    <BackgroundStyle customMessage='search🎞️' backgroundColor='yellow'>
+    <BackgroundStyle customMessage='search🎞️'>
       {isOpen && <SignInAlert onToggleHandler={onToggleHandler} />}
       <FormWrapper>
         <StyledForm onSubmit={searchInputHandler} action='get'>
@@ -126,12 +126,16 @@ export const NoneResults = styled.p`
   color: #fff;
   background-color: ${({ theme }) => theme.colors.black};
   padding-top: 1rem;
-  padding-left: 1rem;
+  padding-left: ${({ theme }) => theme.space.mobile};
   font-size: 1.2rem;
   font-weight: 400;
 
   ${({ theme }) => theme.device.tablet} {
-    padding-left: 2rem;
+    padding-left: ${({ theme }) => theme.space.tablet};
+  }
+
+  ${({ theme }) => theme.device.desktop} {
+    padding-left: ${({ theme }) => theme.space.desktop};
   }
 `;
 
@@ -142,14 +146,19 @@ const SearchWrapper = styled.div`
 
 const SearchTitle = styled.p`
   color: #fff;
-  padding: 1rem 1rem;
-  padding-right: 0;
+  padding-top: 1rem;
+  padding-left: ${({ theme }) => theme.space.mobile};
+
   font-size: 1.5rem;
   font-weight: 700;
 
   ${({ theme }) => theme.device.tablet} {
     font-size: 2rem;
-    padding-left: 2rem;
+    padding-left: ${({ theme }) => theme.space.tablet};
+  }
+
+  ${({ theme }) => theme.device.desktop} {
+    padding-left: ${({ theme }) => theme.space.desktop};
   }
 `;
 
@@ -171,8 +180,12 @@ const StyledForm = styled.form`
   display: flex;
   margin-bottom: 1rem;
 
+  ${({ theme }) => theme.device.tablet} {
+    width: 40%;
+  }
+
   ${({ theme }) => theme.device.desktop} {
-    width: 50%;
+    width: 30%;
   }
 `;
 
@@ -229,5 +242,6 @@ const InputSearchBtn = styled.div`
   &:hover,
   &:active {
     background-color: ${({ theme }) => theme.colors.orange};
+    transition: all ease-in-out 150ms;
   }
 `;

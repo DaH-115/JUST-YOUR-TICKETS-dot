@@ -112,6 +112,5 @@ const WriteDate = styled.p`
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
-  padding-right: 0.4rem;
+  margin-top: 0.5rem;
 `;

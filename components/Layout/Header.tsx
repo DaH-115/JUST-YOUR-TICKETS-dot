@@ -53,14 +53,16 @@ const HeaderMenu = styled.ul`
   display: flex;
   justify-content: center;
   font-weight: 700;
-  background-color: ${({ theme }) => theme.colors.black};
 
   ${({ theme }) => theme.device.tablet} {
     position: absolute;
     top: 2rem;
-    right: 6rem;
-    padding-left: 0;
+    right: 8rem;
     font-size: 1.2rem;
+  }
+
+  ${({ theme }) => theme.device.desktop} {
+    right: 10rem;
   }
 `;
 
@@ -68,6 +70,12 @@ const HeaderLi = styled.li`
   color: #fff;
   padding: 0.5rem;
   cursor: pointer;
+
+  &:hover,
+  &:active {
+    color: ${({ theme }) => theme.colors.orange};
+    transition: color ease-in-out 150ms;
+  }
 
   ${({ theme }) => theme.device.tablet} {
     color: ${({ theme }) => theme.colors.yellow};
@@ -77,27 +85,38 @@ const HeaderLi = styled.li`
 export const SearchIcon = styled.div<{ path?: string }>`
   position: fixed;
   top: 3rem;
-  right: 1rem;
+  right: ${({ theme }) => theme.space.mobile};
   z-index: 999;
-  width: 2.5rem;
-  height: 2.5rem;
-  font-size: 1.5rem;
+
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.8rem;
+  color: #fff;
   padding: 0.5rem;
-  color: ${({ theme }) => theme.colors.black};
-  background-color: ${({ path, theme }) =>
-    path === '/search' ? theme.colors.orange : theme.colors.yellow};
+  border: 0.1rem solid ${({ theme }) => theme.colors.orange};
   border-radius: 50%;
   filter: drop-shadow(10px 10px 10px #0000004e);
 
+  &:hover,
+  &:active {
+    background: linear-gradient(
+      transparent 60%,
+      ${({ theme }) => theme.colors.orange}
+    );
+  }
+
   #search-icon {
-    color: ${({ path, theme }) =>
-      path === '/search' ? '#fff' : theme.colors.black};
-    margin-top: 1px;
-    margin-left: 2px;
+    margin-top: 2px;
+    margin-left: 1px;
   }
 
   ${({ theme }) => theme.device.tablet} {
     top: 2rem;
-    right: 2rem;
+    right: ${({ theme }) => theme.space.tablet};
+  }
+
+  ${({ theme }) => theme.device.desktop} {
+    top: 1.5rem;
+    right: ${({ theme }) => theme.space.desktop};
   }
 `;

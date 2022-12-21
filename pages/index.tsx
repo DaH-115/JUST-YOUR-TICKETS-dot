@@ -8,8 +8,11 @@ import { TopMovieDataProps } from 'ticketType';
 
 const Home: NextPage<{ topMovies: TopMovieDataProps[] }> = ({ topMovies }) => {
   return (
-    <BackgroundStyle customMessage='your💭' backgroundColor='black'>
-      <SlideList title='인기 영화 10'>
+    <BackgroundStyle customMessage='your💭'>
+      <SlideList
+        title='인기 영화 10'
+        description='지금 인기 있는 영화를 확인해 보세요!'
+      >
         <TopMovieSlider movies={topMovies} />
       </SlideList>
     </BackgroundStyle>

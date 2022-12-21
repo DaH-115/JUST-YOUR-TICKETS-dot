@@ -16,5 +16,10 @@ declare module 'styled-components' {
       tablet: string;
       desktop: string;
     };
+    space: {
+      mobile: string;
+      tablet: string;
+      desktop: string;
+    };
   }
 }

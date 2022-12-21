@@ -6,14 +6,14 @@ const StyledArrow = styled.div`
   font-size: 1rem;
   line-height: 2.5rem;
 
-  color: ${({ theme }) => theme.colors.yellow};
-  border: 0.1rem solid white;
+  color: #fff;
+  border: 0.1rem solid #fff;
   border-radius: 50%;
   filter: drop-shadow(10px 10px 20px rgba(0, 0, 0, 1));
 
   text-align: center;
 
-  &:hover {
+  /* &:hover {
     color: #000;
     border: 0.1rem solid #fff;
     background-color: #fff;
@@ -23,6 +23,17 @@ const StyledArrow = styled.div`
     color: #000;
     border: 0.1rem solid ${({ theme }) => theme.colors.yellow};
     background-color: ${({ theme }) => theme.colors.yellow};
+  } */
+
+  &:hover,
+  &:active {
+    color: ${({ theme }) => theme.colors.yellow};
+    transition: color ease-in-out 150ms;
+
+    background: linear-gradient(
+      transparent 30%,
+      ${({ theme }) => theme.colors.orange}
+    );
   }
 
   &::before {
