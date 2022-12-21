@@ -21,5 +21,7 @@ declare module 'styled-components' {
       tablet: string;
       desktop: string;
     };
+    posterWidth: string;
+    posterHeight: string;
   }
 }

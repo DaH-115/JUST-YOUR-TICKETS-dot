@@ -68,10 +68,6 @@ const StyledSlider = styled(Slider)`
     ${({ theme }) => theme.device.tablet} {
       padding: 0 1.4rem;
     }
-
-    ${({ theme }) => theme.device.desktop} {
-      /* height: 80vh; */
-    }
   }
 
   .slick-arrow {

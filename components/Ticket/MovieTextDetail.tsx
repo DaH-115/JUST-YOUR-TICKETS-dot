@@ -97,7 +97,7 @@ const StyledReviewText = styled.p`
   height: 3rem;
   margin: 1rem 0;
   margin-top: 0.5rem;
-  overflow: scroll;
+  overflow-y: scroll;
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 `;

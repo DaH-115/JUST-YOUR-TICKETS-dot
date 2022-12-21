@@ -24,11 +24,11 @@ const Header = ({ isUser }: { isUser: boolean }) => {
   return (
     <HeaderMenu>
       <Link href='/'>
-        <HeaderLi className='home'>HOME</HeaderLi>
+        <HeaderLi className='home'>{'HOME'}</HeaderLi>
       </Link>
       {isUser && (
         <Link href='/ticket-list'>
-          <HeaderLi>MY TICKETS</HeaderLi>
+          <HeaderLi>{'MY TICKETS'}</HeaderLi>
         </Link>
       )}
       <Link href='/search'>
@@ -37,10 +37,10 @@ const Header = ({ isUser }: { isUser: boolean }) => {
         </SearchIcon>
       </Link>
       {isUser ? (
-        <HeaderLi onClick={onSignOutHandler}>LOGOUT</HeaderLi>
+        <HeaderLi onClick={onSignOutHandler}>{'LOGOUT'}</HeaderLi>
       ) : (
         <Link href='/sign-in'>
-          <HeaderLi className='home'>SIGN IN</HeaderLi>
+          <HeaderLi className='home'>{'SIGN IN'}</HeaderLi>
         </Link>
       )}
     </HeaderMenu>

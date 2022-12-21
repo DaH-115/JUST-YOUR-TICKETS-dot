@@ -25,7 +25,7 @@ const SearchTicket = ({
     <SearchResultWrapper>
       <SearchResult>
         <StyledInfo>
-          <TicketIndex>{movieIndex + 1}.</TicketIndex>
+          <TicketIndex>{`${movieIndex + 1}.`}</TicketIndex>
 
           {/* GO TO MOVIE INFO PAGE BUTTON */}
           <MovieInfoBtn movieId={movieId} />
@@ -70,7 +70,7 @@ const SearchTicket = ({
 export default SearchTicket;
 
 const NoneImg = styled.div`
-  width: 170px;
+  width: 180px;
   height: 270px;
   font-weight: 700;
   color: black;

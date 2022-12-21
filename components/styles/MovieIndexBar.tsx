@@ -6,7 +6,7 @@ export const MovieIndexBar = styled.div<{ routePath?: string }>`
   justify-content: space-between;
   align-items: center;
 
-  width: 320px;
+  width: ${({ theme }) => theme.posterWidth};
   padding: 0.3rem 1rem;
 
   color: #fff;

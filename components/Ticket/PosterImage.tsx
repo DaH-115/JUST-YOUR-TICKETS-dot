@@ -36,14 +36,14 @@ const ImgBox = styled.div`
   align-items: center;
   border-radius: 1.5rem;
 
-  Img {
+  img {
     border-radius: 1.5rem;
   }
 `;
 
 const NoneImg = styled.div`
-  width: 384px;
-  height: 568px;
+  width: ${({ theme }) => theme.posterWidth};
+  height: ${({ theme }) => theme.posterHeight};
   font-weight: 700;
   color: black;
   border-radius: 1rem;

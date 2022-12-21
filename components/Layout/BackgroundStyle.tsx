@@ -11,9 +11,9 @@ const BackgroundStyle = ({ children, customMessage }: BackgroundStyleProps) => {
   return (
     <Wrapper>
       <PageTitle>
-        <p>JUST</p>
+        <p>{'JUST'}</p>
         <CustomMessage>{customMessage}</CustomMessage>
-        <p>TICKTES.</p>
+        <p>{'TICKTES.'}</p>
       </PageTitle>
       {children}
     </Wrapper>
@@ -24,8 +24,6 @@ export default BackgroundStyle;
 
 const Wrapper = styled.div`
   width: 100%;
-  height: auto;
-
   background: linear-gradient(#000 10%, ${({ theme }) => theme.colors.black});
 `;
 
@@ -34,7 +32,6 @@ const PageTitle = styled.div`
   font-weight: 700;
   line-height: 1rem;
   color: ${({ theme }) => theme.colors.yellow};
-
   padding-top: 1rem;
   padding-left: ${({ theme }) => theme.space.mobile};
 

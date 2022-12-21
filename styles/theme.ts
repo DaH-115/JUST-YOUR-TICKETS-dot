@@ -33,4 +33,6 @@ export const theme: DefaultTheme = {
     tablet: '4rem',
     desktop: '6rem',
   },
+  posterWidth: '320px',
+  posterHeight: '480px',
 };
