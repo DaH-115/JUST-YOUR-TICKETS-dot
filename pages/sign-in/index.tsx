@@ -8,7 +8,7 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   GithubAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
 } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { SystemError } from 'errorType';
@@ -40,18 +40,16 @@ const LoginPage: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    try {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          router.replace('/');
-        } else {
-          router.replace('/sign-in');
-        }
-      });
-    } catch (error) {
-      const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
-    }
+    setIsLoading(true);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.replace('/');
+      } else {
+        setIsLoading(false);
+      }
+    });
+
+    setIsLoading(false);
   }, []);
 
   const getUser = async () => {
@@ -63,8 +61,8 @@ const LoginPage: NextPage = () => {
         await createUserWithEmailAndPassword(auth, userEmail, userPassword);
       } catch (error) {
         const err = error as SystemError;
-        <Error statusCode={err.statusCode} />;
         setIsError(true);
+        return <Error statusCode={err.statusCode} title={err.message} />;
       }
     } else {
       // Sign In
@@ -72,8 +70,8 @@ const LoginPage: NextPage = () => {
         await signInWithEmailAndPassword(auth, userEmail, userPassword);
       } catch (error) {
         const err = error as SystemError;
-        <Error statusCode={err.statusCode} />;
         setIsError(true);
+        return <Error statusCode={err.statusCode} title={err.message} />;
       }
     }
 
@@ -133,16 +131,16 @@ const LoginPage: NextPage = () => {
       try {
         if (target.name === 'google-signin') {
           const provider = new GoogleAuthProvider();
-          await signInWithPopup(auth, provider);
+          await signInWithRedirect(auth, provider);
         }
 
         if (target.name === 'github-signin') {
           const provider = new GithubAuthProvider();
-          await signInWithPopup(auth, provider);
+          await signInWithRedirect(auth, provider);
         }
       } catch (error) {
         const err = error as SystemError;
-        <Error statusCode={err.statusCode} />;
+        return <Error statusCode={err.statusCode} title={err.message} />;
       }
 
       setIsLoading(false);
@@ -152,73 +150,70 @@ const LoginPage: NextPage = () => {
 
   return (
     <BackgroundStyle customMessage='create📝'>
-      {isLoading ? (
-        <LoadingMsg />
-      ) : (
-        <>
-          <LoginFormWrapper>
-            <LoginForTitle>
-              {signUp ? '*Sign Up /회원가입' : '*Sign In /로그인'}
-            </LoginForTitle>
-            {isError && (
-              <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요'}.</ErrorMsg>
-            )}
-            <LoginForm onSubmit={onSubmitHandler}>
-              {/* ID */}
-              <label htmlFor='user-id'>*EMAIL /이메일</label>
-              <StyledInput
-                type='text'
-                id='user-id'
-                value={userEmail}
-                onChange={onEmailChangeHandler}
-                ref={inputRef}
-              />
-              <ValidationMsg isState={isEmail}>
-                {!userEmail
-                  ? '이메일을 입력해 주세요.'
-                  : !isEmail
-                  ? '이메일은 " @ " , " . " 을 포함해야합니다.'
-                  : null}
-              </ValidationMsg>
+      {isLoading && <LoadingMsg />}
+      <>
+        <LoginFormWrapper>
+          <LoginForTitle>
+            {signUp ? '*Sign Up /회원가입' : '*Sign In /로그인'}
+          </LoginForTitle>
+          {isError && (
+            <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요'}.</ErrorMsg>
+          )}
+          <LoginForm onSubmit={onSubmitHandler}>
+            {/* ID */}
+            <label htmlFor='user-id'>*EMAIL /이메일</label>
+            <StyledInput
+              type='text'
+              id='user-id'
+              value={userEmail}
+              onChange={onEmailChangeHandler}
+              ref={inputRef}
+            />
+            <ValidationMsg isState={isEmail}>
+              {!userEmail
+                ? '이메일을 입력해 주세요.'
+                : !isEmail
+                ? '이메일은 " @ " , " . " 을 포함해야합니다.'
+                : null}
+            </ValidationMsg>
 
-              {/* PASSWORD */}
-              <label htmlFor='user-password'>*PASSWORD /비밀번호</label>
-              <StyledInput
-                type='password'
-                id='user-password'
-                value={userPassword}
-                onChange={onPasswordChangeHandler}
-              />
+            {/* PASSWORD */}
+            <label htmlFor='user-password'>*PASSWORD /비밀번호</label>
+            <StyledInput
+              type='password'
+              id='user-password'
+              value={userPassword}
+              onChange={onPasswordChangeHandler}
+            />
 
-              <ValidationMsg isState={isPassword}>
-                {!userPassword
-                  ? '비밀번호를 입력해 주세요.'
-                  : !isPassword
-                  ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
-                  : null}
-              </ValidationMsg>
-              <LoginBtn type='submit' disabled={isDisabled}>
-                {'입력'}
-              </LoginBtn>
-            </LoginForm>
-          </LoginFormWrapper>
-          <SocialSignInWrapper>
-            <SocialSignInIcon>
-              <button name='github-signin' onClick={onSocialSignInHandler}>
-                <BsGithub />
-              </button>
-            </SocialSignInIcon>
-            <SocialSignInIcon>
-              <button name='google-signin' onClick={onSocialSignInHandler}>
-                <FcGoogle />
-              </button>
-            </SocialSignInIcon>
-          </SocialSignInWrapper>
-          <ToggleText onClick={onSignUpToggleHandler}>
-            {signUp ? '로그인' : '회원가입'}
-          </ToggleText>
-        </>
-      )}
+            <ValidationMsg isState={isPassword}>
+              {!userPassword
+                ? '비밀번호를 입력해 주세요.'
+                : !isPassword
+                ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
+                : null}
+            </ValidationMsg>
+            <LoginBtn type='submit' disabled={isDisabled}>
+              {'입력'}
+            </LoginBtn>
+          </LoginForm>
+        </LoginFormWrapper>
+        <SocialSignInWrapper>
+          <SocialSignInIcon>
+            <button name='github-signin' onClick={onSocialSignInHandler}>
+              <BsGithub />
+            </button>
+          </SocialSignInIcon>
+          <SocialSignInIcon>
+            <button name='google-signin' onClick={onSocialSignInHandler}>
+              <FcGoogle />
+            </button>
+          </SocialSignInIcon>
+        </SocialSignInWrapper>
+        <ToggleText onClick={onSignUpToggleHandler}>
+          {signUp ? '로그인' : '회원가입'}
+        </ToggleText>
+      </>
     </BackgroundStyle>
   );
 };

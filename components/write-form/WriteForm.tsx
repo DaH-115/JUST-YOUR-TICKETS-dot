@@ -53,19 +53,14 @@ const WriteForm = ({
   }, [rating, reviewText]);
 
   useEffect(() => {
-    try {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setCreatorId(user.uid);
-          setIsUser(true);
-        } else {
-          setIsUser(false);
-        }
-      });
-    } catch (error) {
-      const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
-    }
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCreatorId(user.uid);
+        setIsUser(true);
+      } else {
+        setIsUser(false);
+      }
+    });
   }, []);
 
   const updateContents = async (
@@ -84,7 +79,7 @@ const WriteForm = ({
       router.push('/ticket-list');
     } catch (error) {
       const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
+      return <Error statusCode={err.statusCode} title={err.message} />;
     }
   };
 
@@ -103,7 +98,7 @@ const WriteForm = ({
       router.push('/ticket-list');
     } catch (error) {
       const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
+      return <Error statusCode={err.statusCode} title={err.message} />;
     }
   };
 

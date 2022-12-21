@@ -5,7 +5,6 @@ import Error from 'next/error';
 import { useRouter } from 'next/router';
 import { BiSearch } from 'react-icons/bi';
 import { auth } from '../../firebase';
-
 import { SystemError } from 'errorType';
 
 const Header = ({ isUser }: { isUser: boolean }) => {
@@ -17,7 +16,7 @@ const Header = ({ isUser }: { isUser: boolean }) => {
       router.reload();
     } catch (error) {
       const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
+      return <Error statusCode={err.statusCode} title={err.message} />;
     }
   }, []);
 

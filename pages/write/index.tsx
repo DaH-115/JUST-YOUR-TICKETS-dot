@@ -8,8 +8,6 @@ import SignInAlert from '../../components/popup/SignInAlert';
 import { WriteFormProps } from 'ticketType';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../firebase';
-import { SystemError } from 'errorType';
-import Error from 'next/error';
 
 const WritePage: NextPage = () => {
   const router = useRouter();
@@ -21,16 +19,11 @@ const WritePage: NextPage = () => {
     router.query as unknown as WriteFormProps;
 
   useEffect(() => {
-    try {
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          setIsOpen(true);
-        }
-      });
-    } catch (error) {
-      const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
-    }
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        setIsOpen(true);
+      }
+    });
   }, []);
 
   const onToggleHandler = useCallback(() => {

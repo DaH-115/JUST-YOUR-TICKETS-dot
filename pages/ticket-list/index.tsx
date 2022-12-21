@@ -1,9 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import Error from 'next/error';
 import { auth, db } from '../../firebase';
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
+import {
+  collection,
+  DocumentData,
+  getDocs,
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import styled from 'styled-components';
 
@@ -11,7 +17,6 @@ import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
 import SlideList from '../../components/slider/SlideList';
-import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
@@ -31,44 +36,34 @@ const TicketListPage: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    try {
-      setIsLoading(true);
-      (async () => {
-        const ticketRef = collection(db, 'users-tickets');
-        const contentQuery = query(
-          ticketRef,
-          where('creatorId', '==', `${userId}`),
-          orderBy('createdAt', `${!isSorted ? 'desc' : 'asc'}`)
-        );
-        const dbContents = await getDocs(contentQuery);
+    setIsLoading(true);
+    (async () => {
+      const ticketRef = collection(db, 'users-tickets');
+      const contentQuery = query(
+        ticketRef,
+        where('creatorId', '==', `${userId}`),
+        orderBy('createdAt', `${!isSorted ? 'desc' : 'asc'}`)
+      );
+      const dbContents = await getDocs(contentQuery);
 
-        const newData = dbContents.docs.map((item: any) => ({
-          id: item.id,
-          ...item.data(),
-        }));
+      const newData = dbContents.docs.map((item: DocumentData) => ({
+        id: item.id,
+        ...item.data(),
+      }));
 
-        setUsersTicket(newData);
-        setIsLoading(false);
-      })();
-    } catch (error) {
-      const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
-    }
+      setUsersTicket(newData);
+      setIsLoading(false);
+    })();
   }, [userId, isSorted]);
 
   useEffect(() => {
-    try {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setUserId(user.uid);
-        } else {
-          router.push('/');
-        }
-      });
-    } catch (error) {
-      const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
-    }
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        router.push('/');
+      }
+    });
   }, []);
 
   return (

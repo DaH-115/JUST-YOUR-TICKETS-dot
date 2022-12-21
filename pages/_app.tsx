@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
+import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import type { AppProps } from 'next/app';
-import Error from 'next/error';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '../styles/global-style';
 import { theme } from '../styles/theme';
@@ -14,7 +13,6 @@ import Footer from '../components/layout/Footer';
 import LoadingMsg from '../components/common/LoadingMsg';
 import FaviconTags from '../components/common/FaviconTags';
 import MetaTags from '../components/common/MetaTags';
-import { SystemError } from 'errorType';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const titleText = 'JUST MY TICKETS.';
@@ -23,16 +21,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [isUser, setIsUser] = useState<boolean>(false);
 
   useEffect(() => {
-    try {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setIsUser(true);
-        }
-      });
-    } catch (error) {
-      const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
-    }
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsUser(true);
+      }
+    });
   }, []);
 
   useEffect(() => {

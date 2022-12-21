@@ -39,7 +39,7 @@ const UserTicket = ({
       router.reload();
     } catch (error) {
       const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
+      return <Error statusCode={err.statusCode} title={err.message} />;
     }
   }, [ticketId]);
 

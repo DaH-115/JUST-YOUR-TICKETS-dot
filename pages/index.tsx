@@ -35,8 +35,6 @@ export const getStaticProps: GetStaticProps<{
 
     topMovies = results.splice(0, 10);
   } catch (error) {
-    console.log(error);
-
     return {
       notFound: true,
     };

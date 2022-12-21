@@ -31,7 +31,7 @@ const SearchPage: NextPage = () => {
       setSearchResults(results);
     } catch (error) {
       const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
+      return <Error statusCode={err.statusCode} title={err.message} />;
     }
   };
 
@@ -63,16 +63,11 @@ const SearchPage: NextPage = () => {
   }, [movieName]);
 
   useEffect(() => {
-    try {
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          setIsOpen(true);
-        }
-      });
-    } catch (error) {
-      const err = error as SystemError;
-      <Error statusCode={err.statusCode} />;
-    }
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        setIsOpen(true);
+      }
+    });
   }, []);
 
   return (
