@@ -3,7 +3,7 @@ import { BiPencil } from 'react-icons/bi';
 import { WriteFormProps } from 'ticketType';
 import { StyledBtn } from '../styles/StyledBtn';
 
-const UpdateButton = ({
+const UpdateBtn = ({
   ticketId,
   title,
   releaseYear,
@@ -35,4 +35,4 @@ const UpdateButton = ({
   );
 };
 
-export default UpdateButton;
+export default UpdateBtn;

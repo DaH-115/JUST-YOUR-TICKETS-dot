@@ -3,10 +3,9 @@ import { NextPage } from 'next';
 import styled from 'styled-components';
 import axios from 'axios';
 import Error from 'next/error';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../firebase';
 import { BiSearch } from 'react-icons/bi';
 
+import { useAuthState } from '../../components/store/auth-context';
 import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import SearchTicket from '../../components/search/SearchTicket';
@@ -16,37 +15,10 @@ import { TopMovieDataProps } from 'ticketType';
 import { NoneResults } from '../../components/styles/NoneReults';
 
 const SearchPage: NextPage = () => {
+  const { isSigned } = useAuthState();
   const [movieName, setMovieName] = useState<string>('');
   const [searchResults, setSearchResults] = useState<TopMovieDataProps[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const getSearchResults = async (movieName: string) => {
-    try {
-      const res = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}&language=ko-KR`
-      );
-
-      const { results }: { results: TopMovieDataProps[] } = await res.data;
-
-      setSearchResults(results);
-    } catch (error) {
-      const err = error as SystemError;
-      return <Error statusCode={err.statusCode} title={err.message} />;
-    }
-  };
-
-  const searchInputHandler = (event: React.FormEvent) => {
-    event.preventDefault();
-    movieName && getSearchResults(movieName);
-  };
-
-  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMovieName(event.target.value);
-  };
-
-  const onToggleHandler = useCallback(() => {
-    setIsOpen((prev) => !prev);
-  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -63,11 +35,43 @@ const SearchPage: NextPage = () => {
   }, [movieName]);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        setIsOpen(true);
-      }
-    });
+    if (!isSigned) {
+      setIsOpen(true);
+    }
+  }, [isSigned]);
+
+  const getSearchResults = async (movieName: string) => {
+    try {
+      const res = await axios.get(
+        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}&language=ko-KR`
+      );
+
+      const { results }: { results: TopMovieDataProps[] } = await res.data;
+
+      setSearchResults(results);
+    } catch (error) {
+      const err = error as SystemError;
+      return <Error statusCode={err.statusCode} title={err.message} />;
+    }
+  };
+
+  const searchInputHandler = useCallback(
+    (event: React.FormEvent) => {
+      event.preventDefault();
+      movieName && getSearchResults(movieName);
+    },
+    [movieName]
+  );
+
+  const inputChangeHandler = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setMovieName(event.target.value);
+    },
+    []
+  );
+
+  const onToggleHandler = useCallback(() => {
+    setIsOpen((prev) => !prev);
   }, []);
 
   return (

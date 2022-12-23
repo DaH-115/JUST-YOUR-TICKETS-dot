@@ -83,12 +83,12 @@ const MovieDetail = ({
               }}
               as={`/write`}
             >
-              <AdmitButtonWrapper>
+              <AdmitBtnWrapper>
                 <button>{'ADMIT ONE'}</button>
                 <ArrowBtn>
                   <AiOutlineArrowRight />
                 </ArrowBtn>
-              </AdmitButtonWrapper>
+              </AdmitBtnWrapper>
             </Link>
           </DetailTextWrapper>
         </MovieDetailWrapper>
@@ -121,7 +121,7 @@ const MovieJanreWrapper = styled.ul`
   }
 `;
 
-const AdmitButtonWrapper = styled.div`
+const AdmitBtnWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

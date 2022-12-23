@@ -6,9 +6,11 @@ import { useRouter } from 'next/router';
 import { BiSearch } from 'react-icons/bi';
 import { auth } from '../../firebase';
 import { SystemError } from 'errorType';
+import { useAuthState } from '../store/auth-context';
 
-const Header = ({ isUser }: { isUser: boolean }) => {
+const Header = () => {
   const router = useRouter();
+  const { isSigned } = useAuthState();
 
   const onSignOutHandler = useCallback(async () => {
     try {
@@ -25,23 +27,23 @@ const Header = ({ isUser }: { isUser: boolean }) => {
       <Link href='/'>
         <HeaderLi className='home'>{'HOME'}</HeaderLi>
       </Link>
-      {isUser && (
+      {isSigned && (
         <Link href='/ticket-list'>
           <HeaderLi>{'MY TICKETS'}</HeaderLi>
         </Link>
       )}
-      <Link href='/search'>
-        <SearchIcon path={router.pathname}>
-          <BiSearch id='search-icon' />
-        </SearchIcon>
-      </Link>
-      {isUser ? (
+      {isSigned ? (
         <HeaderLi onClick={onSignOutHandler}>{'LOGOUT'}</HeaderLi>
       ) : (
         <Link href='/sign-in'>
           <HeaderLi className='home'>{'SIGN IN'}</HeaderLi>
         </Link>
       )}
+      <Link href='/search'>
+        <SearchIcon>
+          <BiSearch id='search-icon' />
+        </SearchIcon>
+      </Link>
     </HeaderMenu>
   );
 };
@@ -81,7 +83,7 @@ const HeaderLi = styled.li`
   }
 `;
 
-export const SearchIcon = styled.div<{ path?: string }>`
+export const SearchIcon = styled.div`
   position: fixed;
   top: 3rem;
   right: ${({ theme }) => theme.space.mobile};

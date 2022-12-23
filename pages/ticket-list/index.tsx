@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { auth, db } from '../../firebase';
+import { db } from '../../firebase';
 import {
   collection,
   DocumentData,
@@ -10,21 +10,21 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
 import styled from 'styled-components';
 
 import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
 import SlideList from '../../components/slider/SlideList';
+import { useAuthState } from '../../components/store/auth-context';
 import { UserTicketProps } from 'ticketType';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { LoadingSpinner } from '../../components/common/LoadingSpinner';
 import { NoneResults } from '../../components/styles/NoneReults';
 
 const TicketListPage: NextPage = () => {
+  const { userId, isSigned } = useAuthState();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [userId, setUserId] = useState<string>('');
   const [usersTicket, setUsersTicket] = useState<UserTicketProps[]>([]);
   const ticketLength = usersTicket.length;
   const router = useRouter();
@@ -57,14 +57,10 @@ const TicketListPage: NextPage = () => {
   }, [userId, isSorted]);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserId(user.uid);
-      } else {
-        router.push('/');
-      }
-    });
-  }, []);
+    if (!isSigned) {
+      router.push('/');
+    }
+  }, [isSigned]);
 
   return (
     <BackgroundStyle customMessage='your🍿'>

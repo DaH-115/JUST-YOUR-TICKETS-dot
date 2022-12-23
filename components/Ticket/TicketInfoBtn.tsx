@@ -6,7 +6,7 @@ import { AiFillInfoCircle } from 'react-icons/ai';
 import { TicketInfoProps } from 'ticketType';
 import { StyeldInfo } from '../styles/StyeldInfo';
 
-const TicketInfoButton = ({
+const TicketInfoBtn = ({
   title,
   releaseYear,
   posterImage,
@@ -36,4 +36,4 @@ const TicketInfoButton = ({
   );
 };
 
-export default TicketInfoButton;
+export default TicketInfoBtn;

@@ -9,8 +9,8 @@ import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import PosterImage from '../ticket/PosterImage';
 import AlertPopup from '../../components/layout/AlertPopup';
 import PortalAlertPopup from '../popup/PortalAlert';
-import UpdateButton from '../ticket/UpdateButton';
-import DeleteButton from '../ticket/DeleteButton';
+import UpdateBtn from '../ticket/UpdateBtn';
+import DeleteBtn from '../ticket/DeleteBtn';
 import Error from 'next/error';
 import { TicketWrapper } from '../styles/TicketWrapper';
 import { MovieIndexBar } from '../styles/MovieIndexBar';
@@ -62,12 +62,12 @@ const UserTicket = ({
 
       <MovieIndexBar>
         <WriteDate>{writeDate}</WriteDate>
-        <ButtonWrapper>
+        <BtnWrapper>
           {/* DELETE BUTTON */}
-          <DeleteButton onToggle={onToggleHandler} />
+          <DeleteBtn onToggle={onToggleHandler} />
 
           {/* UPDATE BUTTON */}
-          <UpdateButton
+          <UpdateBtn
             title={title}
             ticketId={ticketId}
             releaseYear={releaseYear}
@@ -84,7 +84,7 @@ const UserTicket = ({
             rating={rating}
             reviewText={reviewText}
           />
-        </ButtonWrapper>
+        </BtnWrapper>
       </MovieIndexBar>
 
       {/* POSTER IMAGE Section */}
@@ -109,7 +109,7 @@ const WriteDate = styled.p`
   font-weight: 700;
 `;
 
-const ButtonWrapper = styled.div`
+const BtnWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 0.5rem;

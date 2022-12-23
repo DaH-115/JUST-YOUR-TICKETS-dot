@@ -5,28 +5,18 @@ import Head from 'next/head';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '../styles/global-style';
 import { theme } from '../styles/theme';
-import { auth } from '../firebase';
-import { onAuthStateChanged } from 'firebase/auth';
 
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import LoadingMsg from '../components/common/LoadingMsg';
 import FaviconTags from '../components/common/FaviconTags';
 import MetaTags from '../components/common/MetaTags';
+import AuthStateProvider from '../components/store/auth-context';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const titleText = 'JUST MY TICKETS.';
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isUser, setIsUser] = useState<boolean>(false);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsUser(true);
-      }
-    });
-  }, []);
 
   useEffect(() => {
     router.events.on('routeChangeStart', () => setIsLoading(true));
@@ -39,18 +29,21 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Head>
-        <title>{titleText}</title>
-        <FaviconTags />
-        <MetaTags />
-      </Head>
-      <GlobalStyle />
-      <Header isUser={isUser} />
-      {isLoading && <LoadingMsg />}
-      <Component {...pageProps} />
-      <Footer />
-    </ThemeProvider>
+    <AuthStateProvider>
+      <ThemeProvider theme={theme}>
+        <Head>
+          <title>{titleText}</title>
+          <FaviconTags />
+          <MetaTags />
+        </Head>
+        <GlobalStyle />
+        <Header />
+        {/* <Header isUser={isUser} /> */}
+        {isLoading && <LoadingMsg />}
+        <Component {...pageProps} />
+        <Footer />
+      </ThemeProvider>
+    </AuthStateProvider>
   );
 }
 

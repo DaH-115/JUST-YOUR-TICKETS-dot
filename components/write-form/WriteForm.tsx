@@ -2,9 +2,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../../firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { db } from '../../firebase';
 
+import { useAuthState } from '../store/auth-context';
 import BackgroundStyle from '../layout/BackgroundStyle';
 import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
@@ -21,9 +21,8 @@ const WriteForm = ({
   posterImage,
 }: WriteFormProps) => {
   const router = useRouter();
-  const [creatorId, setCreatorId] = useState<string>('');
+  const { userId, isSigned } = useAuthState();
   const [ratingVal, setRatingVal] = useState<boolean>(true);
-  const [isUser, setIsUser] = useState<boolean>(false);
   const [isConfirm, setIsConfirm] = useState<boolean>(false);
 
   const ratingRef = useRef<HTMLInputElement>(null);
@@ -32,7 +31,7 @@ const WriteForm = ({
 
   useEffect(() => {
     const routeChangeStart = (url: string) => {
-      if (url !== router.asPath && isUser && !isConfirm) {
+      if (url !== router.asPath && isSigned && !isConfirm) {
         alert('작성하던 내용이 사라지게 됩니다. 페이지를 나가시겠습니까?');
       }
     };
@@ -42,7 +41,7 @@ const WriteForm = ({
     return () => {
       router.events.off('routeChangeStart', routeChangeStart);
     };
-  }, [isUser, isConfirm]);
+  }, [isSigned, isConfirm]);
 
   useEffect(() => {
     // props로 받아온 값(reviewText && rating)이 있으면 ref에 넣어준다
@@ -51,17 +50,6 @@ const WriteForm = ({
       reviewRef.current!.value = reviewText;
     }
   }, [rating, reviewText]);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setCreatorId(user.uid);
-        setIsUser(true);
-      } else {
-        setIsUser(false);
-      }
-    });
-  }, []);
 
   const updateContents = async (
     rating: string,
@@ -86,7 +74,7 @@ const WriteForm = ({
   const addContents = async (rating: string, reviewText: string) => {
     try {
       await addDoc(collection(db, 'users-tickets'), {
-        creatorId,
+        creatorId: userId,
         createdAt: Date.now(),
         title,
         releaseYear,
@@ -113,13 +101,11 @@ const WriteForm = ({
       reviewText = reviewRef.current!.value;
     } else {
       alert('내용을 채워주세요.');
-      return;
     }
 
     // UPDATE
     if (ticketId) {
       updateContents(ratingText, reviewText, ticketId);
-      return;
     }
 
     addContents(ratingText, reviewText);
@@ -168,7 +154,7 @@ const WriteForm = ({
               <StyledDesc>{'나의 생각과 느낌을 적어보세요.'}</StyledDesc>
               <StyledTextarea name='reviewText' id='review' ref={reviewRef} />
             </InputWrapper>
-            <StyledButton>{'입력'}</StyledButton>
+            <StyledBtn>{'입력'}</StyledBtn>
           </StyledForm>
         </FormWrapper>
       </WriteFormWrapper>
@@ -310,7 +296,7 @@ const StyledInput = styled.input`
   }
 `;
 
-const StyledButton = styled.button`
+const StyledBtn = styled.button`
   width: 100%;
   height: auto;
   font-size: 0.8rem;

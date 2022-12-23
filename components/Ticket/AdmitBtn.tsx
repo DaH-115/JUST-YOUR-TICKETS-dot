@@ -23,21 +23,21 @@ const AdmitBtn = ({
       }}
       as={`/write`}
     >
-      <AdmitButtonWrapper>
+      <AdmitBtnWrapper>
         <button>
           <p>ADMIT ONE</p>
         </button>
         <ArrowBtn>
           <MdOutlineArrowForwardIos />
         </ArrowBtn>
-      </AdmitButtonWrapper>
+      </AdmitBtnWrapper>
     </Link>
   );
 };
 
 export default AdmitBtn;
 
-const AdmitButtonWrapper = styled.div`
+const AdmitBtnWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;

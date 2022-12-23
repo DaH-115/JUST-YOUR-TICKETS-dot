@@ -5,12 +5,12 @@ import { useRouter } from 'next/router';
 import withHeadMeta from '../../components/common/withHeadMeta';
 import WriteForm from '../../components/write-form/WriteForm';
 import SignInAlert from '../../components/popup/SignInAlert';
+import { useAuthState } from '../../components/store/auth-context';
 import { WriteFormProps } from 'ticketType';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../firebase';
 
 const WritePage: NextPage = () => {
   const router = useRouter();
+  const { isSigned } = useAuthState();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   // title, releaseYear, posterImage <- Main/Search에서 받는 값
@@ -19,12 +19,10 @@ const WritePage: NextPage = () => {
     router.query as unknown as WriteFormProps;
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        setIsOpen(true);
-      }
-    });
-  }, []);
+    if (!isSigned) {
+      setIsOpen(true);
+    }
+  }, [isSigned]);
 
   const onToggleHandler = useCallback(() => {
     setIsOpen((prev) => !prev);

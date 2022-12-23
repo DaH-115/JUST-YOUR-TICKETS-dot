@@ -3,7 +3,6 @@ import { NextPage } from 'next';
 import styled from 'styled-components';
 import { auth } from '../../firebase';
 import {
-  onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -19,11 +18,13 @@ import withHeadMeta from '../../components/common/withHeadMeta';
 import BackgroundStyle from '../../components/layout/BackgroundStyle';
 import LoadingMsg from '../../components/common/LoadingMsg';
 import Error from 'next/error';
+import { useAuthState } from '../../components/store/auth-context';
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
-  const [signUp, setSignUp] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { isSigned } = useAuthState();
+  const [signUp, setSignUp] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   // User EMAIL-PASSWORD Text
   const [userEmail, setUserEmail] = useState<string>('');
@@ -40,19 +41,12 @@ const LoginPage: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.replace('/');
-      } else {
-        setIsLoading(false);
-      }
-    });
+    if (isSigned) {
+      router.replace('/');
+    }
+  }, [isSigned]);
 
-    setIsLoading(false);
-  }, []);
-
-  const getUser = async () => {
+  const getUser = useCallback(async () => {
     setIsLoading(true);
 
     if (signUp) {
@@ -76,14 +70,14 @@ const LoginPage: NextPage = () => {
     }
 
     setIsLoading(false);
-  };
+  }, []);
 
-  const onSubmitHandler = (event: React.FormEvent) => {
+  const onSubmitHandler = useCallback((event: React.FormEvent) => {
     event.preventDefault();
     getUser();
     setUserEmail('');
     setUserPassword('');
-  };
+  }, []);
 
   const onSignUpToggleHandler = useCallback(() => {
     setSignUp((prev) => !prev);
@@ -132,6 +126,7 @@ const LoginPage: NextPage = () => {
         if (target.name === 'google-signin') {
           const provider = new GoogleAuthProvider();
           await signInWithRedirect(auth, provider);
+          return;
         }
 
         if (target.name === 'github-signin') {

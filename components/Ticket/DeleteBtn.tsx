@@ -2,19 +2,19 @@ import styled from 'styled-components';
 import { StyledBtn } from '../styles/StyledBtn';
 import { BiTrash } from 'react-icons/bi';
 
-const DeleteButton = ({ onToggle }: { onToggle: () => void }) => {
+const DeleteBtn = ({ onToggle }: { onToggle: () => void }) => {
   return (
-    <DeleteBtn onClick={onToggle}>
+    <DeleteBtnWrapper onClick={onToggle}>
       <button>
         <BiTrash />
       </button>
-    </DeleteBtn>
+    </DeleteBtnWrapper>
   );
 };
 
-export default DeleteButton;
+export default DeleteBtn;
 
-const DeleteBtn = styled(StyledBtn)`
+const DeleteBtnWrapper = styled(StyledBtn)`
   button {
     margin-bottom: 0.05rem;
   }
