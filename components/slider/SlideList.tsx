@@ -18,7 +18,9 @@ const SlideList = ({
     <Container>
       <SlideTextWrapper>
         <SlideTitle>{title}</SlideTitle>
-        {ticketLength && <TicketLength>{`${ticketLength} 장`}</TicketLength>}
+        {ticketLength ? (
+          <TicketLength>{`${ticketLength} 장`}</TicketLength>
+        ) : null}
       </SlideTextWrapper>
       <Description>{description}</Description>
       {children}

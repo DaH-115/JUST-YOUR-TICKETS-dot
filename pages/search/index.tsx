@@ -136,10 +136,6 @@ const SearchTitle = styled.p`
     font-size: 2rem;
     padding-left: ${({ theme }) => theme.space.tablet};
   }
-
-  ${({ theme }) => theme.device.desktop} {
-    padding-left: ${({ theme }) => theme.space.desktop};
-  }
 `;
 
 const FormWrapper = styled.div`
@@ -158,10 +154,11 @@ const StyledLabel = styled.label`
 
 const StyledForm = styled.form`
   display: flex;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 
   ${({ theme }) => theme.device.tablet} {
     width: 40%;
+    margin-top: 0;
   }
 
   ${({ theme }) => theme.device.desktop} {

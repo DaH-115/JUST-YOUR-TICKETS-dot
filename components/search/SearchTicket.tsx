@@ -30,13 +30,14 @@ const SearchTicket = ({
           {/* GO TO MOVIE INFO PAGE BUTTON */}
           <MovieInfoBtn movieId={movieId} />
         </StyledInfo>
-        <MovieTextDetail
-          title={title}
-          releaseYear={releaseYear}
-          janres={janres}
-          voteAverage={voteAverage}
-        />
-
+        <MovieTextWrapper>
+          <MovieTextDetail
+            title={title}
+            releaseYear={releaseYear}
+            janres={janres}
+            voteAverage={voteAverage}
+          />
+        </MovieTextWrapper>
         {/* POSTER BTN */}
         <Link
           href={{
@@ -80,7 +81,7 @@ const NoneImg = styled.div`
 
 const PosterBtn = styled.div`
   background-color: ${({ theme }) => theme.colors.black};
-  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
+  filter: drop-shadow(10px 10px 20px rgba(0, 0, 0, 0.9));
 `;
 
 const PosterBtnText = styled.p`
@@ -90,13 +91,28 @@ const PosterBtnText = styled.p`
   font-size: 0.8rem;
   font-weight: 700;
   color: #fff;
-  padding: 0.5rem;
+  padding: 1rem;
+  padding-top: 0.8rem;
+  background-color: ${({ theme }) => theme.colors.black};
+  border-left: 0.2rem dashed ${({ theme }) => theme.colors.orange};
+
+  svg {
+    font-size: 1rem;
+    margin-left: 0.3rem;
+  }
+
+  &:hover,
+  &:active {
+    svg {
+      color: ${({ theme }) => theme.colors.orange};
+      transition: color 150ms ease-in-out;
+    }
+  }
 `;
 
 const SearchResultWrapper = styled.div`
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.black};
   overflow-y: scroll;
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
@@ -107,11 +123,9 @@ const SearchResult = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  max-width: 600px;
+  max-width: 650px;
   padding: 2rem 1rem;
   padding-left: 0.5rem;
-
-  filter: drop-shadow(60px 50px 50px rgba(0, 0, 0, 0.9));
 `;
 
 const StyledInfo = styled.div`
@@ -123,7 +137,15 @@ const StyledInfo = styled.div`
 `;
 
 const TicketIndex = styled.p`
+  font-weight: 700;
+  font-size: 2rem;
   color: #fff;
   text-align: center;
   margin-bottom: 0.4rem;
+`;
+
+const MovieTextWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  margin-top: 1rem;
 `;

@@ -40,7 +40,7 @@ const TextWrapper = styled.div`
   padding: 0.5rem;
   box-sizing: border-box;
   background: linear-gradient(white 80%, ${({ theme }) => theme.colors.yellow});
-  border-left: 0.5rem solid ${({ theme }) => theme.colors.orange};
+  border-left: 0.2rem solid ${({ theme }) => theme.colors.orange};
 `;
 
 const MovieTitle = styled.div`
@@ -72,7 +72,7 @@ const MovieJanreWrapper = styled.ul`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  height: 2rem;
+  height: 2.5rem;
   overflow-y: scroll;
   font-size: 1rem;
   color: ${({ theme }) => theme.colors.black};

@@ -12,8 +12,4 @@ export const NoneResults = styled.p`
   ${({ theme }) => theme.device.tablet} {
     padding-left: ${({ theme }) => theme.space.tablet};
   }
-
-  ${({ theme }) => theme.device.desktop} {
-    padding-left: ${({ theme }) => theme.space.desktop};
-  }
 `;
