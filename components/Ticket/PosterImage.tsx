@@ -2,15 +2,13 @@ import React from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 
-const PosterImage = ({
-  title,
-  posterImage,
-  posterPath,
-}: {
+interface PosterImageProps {
   title: string;
   posterImage?: string;
   posterPath?: string;
-}) => {
+}
+
+const PosterImage = ({ title, posterImage, posterPath }: PosterImageProps) => {
   const posterSrc = posterImage
     ? posterImage
     : posterPath
@@ -28,7 +26,7 @@ const PosterImage = ({
   );
 };
 
-export default React.memo(PosterImage);
+export default PosterImage;
 
 const ImgBox = styled.div`
   display: flex;
