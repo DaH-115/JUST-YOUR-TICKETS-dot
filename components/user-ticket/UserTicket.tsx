@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db } from '../../firebase-config';
 import styled from 'styled-components';
 
 import TicketInfoBtn from '../ticket/TicketInfoBtn';

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
-import { auth } from '../../firebase';
+import { isAuth } from '../../firebase-config';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -52,7 +52,7 @@ const LoginPage: NextPage = () => {
     if (signUp) {
       // Sign Up
       try {
-        await createUserWithEmailAndPassword(auth, userEmail, userPassword);
+        await createUserWithEmailAndPassword(isAuth, userEmail, userPassword);
       } catch (error) {
         const err = error as SystemError;
         setIsError(true);
@@ -61,7 +61,7 @@ const LoginPage: NextPage = () => {
     } else {
       // Sign In
       try {
-        await signInWithEmailAndPassword(auth, userEmail, userPassword);
+        await signInWithEmailAndPassword(isAuth, userEmail, userPassword);
       } catch (error) {
         const err = error as SystemError;
         setIsError(true);
@@ -125,13 +125,13 @@ const LoginPage: NextPage = () => {
       try {
         if (target.name === 'google-signin') {
           const provider = new GoogleAuthProvider();
-          await signInWithRedirect(auth, provider);
+          await signInWithRedirect(isAuth, provider);
           return;
         }
 
         if (target.name === 'github-signin') {
           const provider = new GithubAuthProvider();
-          await signInWithRedirect(auth, provider);
+          await signInWithRedirect(isAuth, provider);
         }
       } catch (error) {
         const err = error as SystemError;

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Error from 'next/error';
 import { useRouter } from 'next/router';
 import { BiSearch } from 'react-icons/bi';
-import { auth } from '../../firebase';
+import { isAuth } from '../../firebase-config';
 import { SystemError } from 'errorType';
 import { useAuthState } from '../store/auth-context';
 
@@ -14,7 +14,7 @@ const Header = () => {
 
   const onSignOutHandler = useCallback(async () => {
     try {
-      await auth.signOut();
+      await isAuth.signOut();
       router.reload();
     } catch (error) {
       const err = error as SystemError;

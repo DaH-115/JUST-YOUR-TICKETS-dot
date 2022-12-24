@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { db } from '../../firebase';
+import { db } from '../../firebase-config';
 import {
   collection,
   DocumentData,

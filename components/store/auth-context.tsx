@@ -5,7 +5,7 @@ import {
   useState,
   useEffect,
 } from 'react';
-import { auth } from '../../firebase';
+import { isAuth } from '../../firebase-config';
 import { onAuthStateChanged } from 'firebase/auth';
 
 interface authState {
@@ -24,7 +24,7 @@ const AuthStateProvider = ({ children }: { children: ReactNode }) => {
   const [authState, setAuthState] = useState(defaultState);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(isAuth, (user) => {
       if (user) {
         setAuthState((prev) => ({
           ...prev,

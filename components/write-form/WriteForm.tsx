@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db } from '../../firebase-config';
 
 import { useAuthState } from '../store/auth-context';
 import BackgroundStyle from '../layout/BackgroundStyle';
