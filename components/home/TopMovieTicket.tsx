@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import useGetJanres from '../../hooks/useGetJanres';
 
-import PosterImage from '../ticket/PosterImage';
+import PosterImage from '../ticket/PosterImage.js';
 import MovieTicketDetail from '../ticket/MovieTicketDetail';
 import MovieInfoBtn from '../ticket/MovieInfoBtn';
 import { TicketWrapper } from '../styles/TicketWrapper';
