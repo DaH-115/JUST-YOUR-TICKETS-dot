@@ -26,7 +26,7 @@ const PosterImage = ({ title, posterImage, posterPath }: PosterImageProps) => {
   );
 };
 
-export default PosterImage;
+export default React.memo(PosterImage);
 
 const ImgBox = styled.div`
   display: flex;
