@@ -82,7 +82,7 @@ const MovieJanreWrapper = styled.ul`
   li {
     margin-right: 0.4rem;
 
-    &::before {
+    &:not(:first-child)::before {
       content: '/';
     }
 

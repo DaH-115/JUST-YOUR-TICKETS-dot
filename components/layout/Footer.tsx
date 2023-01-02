@@ -7,7 +7,7 @@ const Footer = () => {
     <footer>
       <FooterWrapper>
         <p>{'JUST YOUR TICKETS.'}</p>
-        <p>{'ⓒkwak_dahyeon 2022'}</p>
+        <p>{'ⓒkwak_dahyeon 2023'}</p>
         <Link href='/'>
           <BsGithub />
         </Link>

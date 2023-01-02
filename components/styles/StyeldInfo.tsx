@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const StyeldInfo = styled.div`
   font-size: 1.8rem;
-  color: #fff;
+  color: #ffffffbe;
 
   &:active,
   &:hover {
