@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
-import { isAuth } from '../../firebase-config';
+import { isAuth } from 'firebase-config';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -14,11 +14,11 @@ import { SystemError } from 'errorType';
 import { FcGoogle } from 'react-icons/fc';
 import { BsGithub } from 'react-icons/bs';
 
-import withHeadMeta from '../../components/common/withHeadMeta';
-import BackgroundStyle from '../../components/layout/BackgroundStyle';
-import LoadingMsg from '../../components/common/LoadingMsg';
+import withHeadMeta from 'components/common/withHeadMeta';
+import BackgroundStyle from 'components/layout/BackgroundStyle';
+import LoadingMsg from 'components/common/LoadingMsg';
 import Error from 'next/error';
-import { useAuthState } from '../../components/store/auth-context';
+import { useAuthState } from 'components/store/auth-context';
 
 const LoginPage: NextPage = () => {
   const router = useRouter();

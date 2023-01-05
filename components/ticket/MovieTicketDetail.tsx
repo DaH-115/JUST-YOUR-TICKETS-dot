@@ -1,8 +1,9 @@
-import styled from 'styled-components';
-import MovieTextDetail from './MovieTextDetail';
-import AdmitBtn from './AdmitBtn';
-import { MovieTicketDetailProps } from 'ticketType';
 import React from 'react';
+import styled from 'styled-components';
+
+import MovieTextDetail from 'components/ticket/MovieTextDetail';
+import AdmitBtn from 'components/ticket/AdmitBtn';
+import { MovieTicketDetailProps } from 'ticketType';
 
 const MovieTicketDetail = ({
   title,

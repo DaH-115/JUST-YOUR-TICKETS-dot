@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Description } from '../styles/Description';
-import { SlideTitle } from '../styles/StyledTitle';
+
+import Description from 'components/styles/Description';
+import SlideTitle from 'components/styles/StyledTitle';
 
 const SlideList = ({
   title,

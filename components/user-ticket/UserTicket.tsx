@@ -1,19 +1,19 @@
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../../firebase-config';
+import { db } from 'firebase-config';
 import styled from 'styled-components';
-
-import TicketInfoBtn from '../ticket/TicketInfoBtn';
-import MovieTicketDetail from '../ticket/MovieTicketDetail';
-import PosterImage from '../ticket/PosterImage';
-import AlertPopup from '../../components/layout/AlertPopup';
-import PortalAlertPopup from '../popup/PortalAlert';
-import UpdateBtn from '../ticket/UpdateBtn';
-import DeleteBtn from '../ticket/DeleteBtn';
 import Error from 'next/error';
-import { TicketWrapper } from '../styles/TicketWrapper';
-import { MovieIndexBar } from '../styles/MovieIndexBar';
+
+import TicketInfoBtn from 'components/ticket/TicketInfoBtn';
+import MovieTicketDetail from 'components/ticket/MovieTicketDetail';
+import PosterImage from 'components/ticket/PosterImage';
+import AlertPopup from 'components/layout/AlertPopup';
+import PortalAlertPopup from 'components/popup/PortalAlert';
+import UpdateBtn from 'components/ticket/UpdateBtn';
+import DeleteBtn from 'components/ticket/DeleteBtn';
+import TicketWrapper from 'components/styles/TicketWrapper';
+import MovieIndexBar from 'components/styles/MovieIndexBar';
 import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
 

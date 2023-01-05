@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 import { AiFillInfoCircle } from 'react-icons/ai';
 import { TicketInfoProps } from 'ticketType';
-import { StyeldInfo } from '../styles/StyeldInfo';
+import StyeldInfo from 'components/styles/StyeldInfo';
 
 const TicketInfoBtn = ({
   title,

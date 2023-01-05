@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const MovieIndexBar = styled.div<{ routePath?: string }>`
+const MovieIndexBar = styled.div<{ routePath?: string }>`
   position: absolute;
   display: flex;
   justify-content: space-between;
@@ -17,3 +17,5 @@ export const MovieIndexBar = styled.div<{ routePath?: string }>`
   border-top-left-radius: 1.5rem;
   border-top-right-radius: 1.5rem;
 `;
+
+export default MovieIndexBar;

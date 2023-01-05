@@ -5,7 +5,7 @@ import {
   NextPage,
 } from 'next';
 import axios from 'axios';
-import MovieDetail from '../components/movie-detail/MovieDetailPage';
+import MovieDetail from 'components/movie-detail/MovieDetailPage';
 import { TopMovieDataProps } from 'ticketType';
 
 const MovieDetailPage: NextPage<{ movie: TopMovieDataProps }> = ({ movie }) => {

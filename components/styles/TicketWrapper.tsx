@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const TicketWrapper = styled.div`
+const TicketWrapper = styled.div`
   width: ${({ theme }) => theme.posterWidth};
   margin: 2rem 2.5rem;
   margin-bottom: 0;
@@ -17,3 +17,5 @@ export const TicketWrapper = styled.div`
     }
   }
 `;
+
+export default TicketWrapper;

@@ -5,14 +5,14 @@ import axios from 'axios';
 import Error from 'next/error';
 import { BiSearch } from 'react-icons/bi';
 
-import { useAuthState } from '../../components/store/auth-context';
-import withHeadMeta from '../../components/common/withHeadMeta';
-import BackgroundStyle from '../../components/layout/BackgroundStyle';
-import SearchTicket from '../../components/search/SearchTicket';
-import SignInAlert from '../../components/popup/SignInAlert';
+import { useAuthState } from 'components/store/auth-context';
+import withHeadMeta from 'components/common/withHeadMeta';
+import BackgroundStyle from 'components/layout/BackgroundStyle';
+import SearchTicket from 'components/search/SearchTicket';
+import SignInAlert from 'components/popup/SignInAlert';
+import NoneResults from 'components/styles/NoneReults';
 import { SystemError } from 'errorType';
 import { TopMovieDataProps } from 'ticketType';
-import { NoneResults } from '../../components/styles/NoneReults';
 
 const SearchPage: NextPage = () => {
   const { isSigned } = useAuthState();

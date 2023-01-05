@@ -4,9 +4,10 @@ import styled from 'styled-components';
 import Error from 'next/error';
 import { useRouter } from 'next/router';
 import { BiSearch } from 'react-icons/bi';
-import { isAuth } from '../../firebase-config';
+import { isAuth } from 'firebase-config';
+
 import { SystemError } from 'errorType';
-import { useAuthState } from '../store/auth-context';
+import { useAuthState } from 'components/store/auth-context';
 
 const Header = () => {
   const router = useRouter();

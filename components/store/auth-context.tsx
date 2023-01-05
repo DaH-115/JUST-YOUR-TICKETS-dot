@@ -5,7 +5,7 @@ import {
   useState,
   useEffect,
 } from 'react';
-import { isAuth } from '../../firebase-config';
+import { isAuth } from 'firebase-config';
 import { onAuthStateChanged } from 'firebase/auth';
 
 interface authState {

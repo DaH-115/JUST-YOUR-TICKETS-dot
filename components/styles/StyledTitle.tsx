@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const SlideTitle = styled.h1`
+const SlideTitle = styled.h1`
   font-size: 2rem;
   font-weight: 700;
   color: #fff;
@@ -13,3 +13,5 @@ export const SlideTitle = styled.h1`
     margin-left: ${({ theme }) => theme.space.tablet};
   }
 `;
+
+export default SlideTitle;

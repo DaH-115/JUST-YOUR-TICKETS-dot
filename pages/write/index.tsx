@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
-import withHeadMeta from '../../components/common/withHeadMeta';
-import WriteForm from '../../components/write-form/WriteForm';
-import SignInAlert from '../../components/popup/SignInAlert';
-import { useAuthState } from '../../components/store/auth-context';
+import withHeadMeta from 'components/common/withHeadMeta';
+import WriteForm from 'components/write-form/WriteForm';
+import SignInAlert from 'components/popup/SignInAlert';
+import { useAuthState } from 'components/store/auth-context';
 import { WriteFormProps } from 'ticketType';
 
 const WritePage: NextPage = () => {

@@ -5,16 +5,16 @@ import styled from 'styled-components';
 import useGetJanres from '../hooks/useGetJanres';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 
-import BackgroundStyle from '../layout/BackgroundStyle';
-import PosterImage from '../ticket/PosterImage';
+import BackgroundStyle from 'components/layout/BackgroundStyle';
+import PosterImage from 'components/ticket/PosterImage';
 import {
   ContentText,
   DetailTextWrapper,
   MovieDetailWrapper,
   OverviweText,
   StyledLabeling,
-} from '../styles/movie-details';
-import { SlideTitle } from '../styles/StyledTitle';
+} from 'components/styles/movie-details';
+import SlideTitle from 'components/styles/StyledTitle';
 import { MovieDataProps } from 'ticketType';
 
 const MovieDetail = ({

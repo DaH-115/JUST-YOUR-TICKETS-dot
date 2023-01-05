@@ -1,6 +1,6 @@
 import React from 'react';
-import TopMovieTicket from './TopMovieTicket';
-import TicketSlider from '../slider/TicketSlider';
+import TopMovieTicket from 'components/home/TopMovieTicket';
+import TicketSlider from 'components/slider/TicketSlider';
 import { TopMovieDataProps } from 'ticketType';
 
 const TopMovieSlider = ({ movies }: { movies: TopMovieDataProps[] }) => {

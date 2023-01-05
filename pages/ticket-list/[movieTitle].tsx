@@ -2,16 +2,16 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-import BackgroundStyle from '../../components/layout/BackgroundStyle';
-import PosterImage from '../../components/ticket/PosterImage';
+import BackgroundStyle from 'components/layout/BackgroundStyle';
+import PosterImage from 'components/ticket/PosterImage';
 import {
   ContentText,
   DetailTextWrapper,
   MovieDetailWrapper,
   OverviweText,
   StyledLabeling,
-} from '../../components/styles/movie-details';
-import { SlideTitle } from '../../components/styles/StyledTitle';
+} from 'components/styles/movie-details';
+import SlideTitle from 'components/styles/StyledTitle';
 import { QueryData } from 'ticketType';
 
 const UserTicketDetailPage = () => {

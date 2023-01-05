@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StyeldInfo = styled.div`
+const StyeldInfo = styled.div`
   font-size: 1.8rem;
   color: #ffffffbe;
 
@@ -10,3 +10,5 @@ export const StyeldInfo = styled.div`
     transition: color ease-in-out 150ms;
   }
 `;
+
+export default StyeldInfo;

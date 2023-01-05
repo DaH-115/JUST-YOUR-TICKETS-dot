@@ -6,7 +6,7 @@ import {
   NextPage,
 } from 'next';
 import { TopMovieDataProps } from 'ticketType';
-import MovieDetail from '../../components/movie-detail/MovieDetailPage';
+import MovieDetail from 'components/movie-detail/MovieDetailPage';
 
 const SearchListDetailPage: NextPage<{ movie: TopMovieDataProps }> = ({
   movie,

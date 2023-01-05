@@ -7,7 +7,10 @@ import {
   MdOutlineArrowForwardIos,
 } from 'react-icons/md';
 
-import { StyledArrowNext, StyledArrowPrev } from '../styles/StyledArrow';
+import {
+  StyledArrowNext,
+  StyledArrowPrev,
+} from 'components/styles/StyledArrow';
 
 const TicketSlider = ({
   children,

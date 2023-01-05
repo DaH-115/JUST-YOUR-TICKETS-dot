@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Description = styled.p`
+const Description = styled.p`
   color: ${({ theme }) => theme.colors.gray};
   margin: 1rem 0;
   margin-bottom: 0;
@@ -11,3 +11,5 @@ export const Description = styled.p`
     margin-bottom: 1.5rem;
   }
 `;
+
+export default Description;

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { db } from '../../firebase-config';
+import { db } from 'firebase-config';
 import {
   collection,
   DocumentData,
@@ -12,15 +12,15 @@ import {
 } from 'firebase/firestore';
 import styled from 'styled-components';
 
-import withHeadMeta from '../../components/common/withHeadMeta';
-import BackgroundStyle from '../../components/layout/BackgroundStyle';
-import UserTicketSlider from '../../components/user-ticket/UserTicketSlider';
-import SlideList from '../../components/slider/SlideList';
-import { useAuthState } from '../../components/store/auth-context';
+import withHeadMeta from 'components/common/withHeadMeta';
+import BackgroundStyle from 'components/layout/BackgroundStyle';
+import UserTicketSlider from 'components/user-ticket/UserTicketSlider';
+import SlideList from 'components/slider/SlideList';
+import NoneResults from 'components/styles/NoneReults';
+import { useAuthState } from 'components/store/auth-context';
 import { UserTicketProps } from 'ticketType';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { LoadingSpinner } from '../../components/common/LoadingSpinner';
-import { NoneResults } from '../../components/styles/NoneReults';
+import { LoadingSpinner } from 'components/common/LoadingSpinner';
 
 const TicketListPage: NextPage = () => {
   const { userId, isSigned } = useAuthState();

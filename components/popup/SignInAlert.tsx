@@ -1,8 +1,9 @@
 import React from 'react';
 import { useCallback } from 'react';
 import { useRouter } from 'next/router';
-import PortalAlertPopup from './PortalAlert';
-import AlertPopup from '../layout/AlertPopup';
+
+import PortalAlertPopup from 'components/popup/PortalAlert';
+import AlertPopup from 'components/layout/AlertPopup';
 
 const SignInAlert = ({ onToggleHandler }: { onToggleHandler: () => void }) => {
   const router = useRouter();

@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 import Image from 'next/image';
-import useGetJanres from '../../hooks/useGetJanres';
+import useGetJanres from 'hooks/useGetJanres';
 
-import MovieInfoBtn from '../ticket/MovieInfoBtn';
-import MovieTextDetail from '../ticket/MovieTextDetail';
+import MovieInfoBtn from 'components/ticket/MovieInfoBtn';
+import MovieTextDetail from 'components/ticket/MovieTextDetail';
 import { MovieTicketProps } from 'ticketType';
 import { MdOutlineArrowForwardIos } from 'react-icons/md';
 

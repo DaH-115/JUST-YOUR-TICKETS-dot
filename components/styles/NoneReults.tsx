@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const NoneResults = styled.p`
+const NoneResults = styled.p`
   width: 100%;
   height: 100vh;
   color: #fff;
@@ -13,3 +13,5 @@ export const NoneResults = styled.p`
     padding-left: ${({ theme }) => theme.space.tablet};
   }
 `;
+
+export default NoneResults;

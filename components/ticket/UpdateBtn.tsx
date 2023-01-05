@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { BiPencil } from 'react-icons/bi';
 import { WriteFormProps } from 'ticketType';
-import { StyledBtn } from '../styles/StyledBtn';
+import StyledBtn from 'components/styles/StyledBtn';
 
 const UpdateBtn = ({
   ticketId,

@@ -2,13 +2,13 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase-config';
+import { db } from 'firebase-config';
+import Error from 'next/error';
 
-import { useAuthState } from '../store/auth-context';
-import BackgroundStyle from '../layout/BackgroundStyle';
+import { useAuthState } from 'components/store/auth-context';
+import BackgroundStyle from 'components/layout/BackgroundStyle';
 import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
-import Error from 'next/error';
 
 // title, releaseYear, posterImage <- Main/Search/MovieDetailPage에서 받는 값
 // rating, reviewText, ticketId <- UserTicket에서 받는 값

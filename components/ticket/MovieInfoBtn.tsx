@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { AiFillInfoCircle } from 'react-icons/ai';
-import { StyeldInfo } from '../styles/StyeldInfo';
+import StyeldInfo from 'components/styles/StyeldInfo';
 
 const MovieInfoBtn = ({ movieId }: { movieId: number }) => {
   const router = useRouter();

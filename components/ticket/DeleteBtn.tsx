@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { StyledBtn } from '../styles/StyledBtn';
+import StyledBtn from 'components/styles/StyledBtn';
 import { BiTrash } from 'react-icons/bi';
 
 const DeleteBtn = ({ onToggle }: { onToggle: () => void }) => {

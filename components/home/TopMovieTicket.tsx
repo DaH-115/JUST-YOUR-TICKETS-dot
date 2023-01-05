@@ -2,11 +2,11 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import useGetJanres from 'hooks/useGetJanres';
 
-import PosterImage from '../ticket/PosterImage';
+import PosterImage from 'components/ticket/PosterImage';
 import MovieTicketDetail from 'components/ticket/MovieTicketDetail';
 import MovieInfoBtn from 'components/ticket/MovieInfoBtn';
-import { TicketWrapper } from 'components/styles/TicketWrapper';
-import { MovieIndexBar } from 'components/styles/MovieIndexBar';
+import TicketWrapper from 'components/styles/TicketWrapper';
+import MovieIndexBar from 'components/styles/MovieIndexBar';
 import { MovieTicketProps } from 'ticketType';
 
 const TopMovieTicket = ({
