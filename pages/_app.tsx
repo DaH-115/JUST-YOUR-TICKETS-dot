@@ -38,7 +38,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         </Head>
         <GlobalStyle />
         <Header />
-        {/* <Header isUser={isUser} /> */}
         {isLoading && <LoadingMsg />}
         <Component {...pageProps} />
         <Footer />
