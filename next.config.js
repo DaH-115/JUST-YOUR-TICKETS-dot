@@ -14,7 +14,17 @@ const nextConfig = {
     return [
       {
         source: '/write',
-        destination: '/search',
+        destination: '/sign-in',
+        permanent: true,
+      },
+      {
+        source: '/ticket-list',
+        destination: '/sign-in',
+        permanent: true,
+      },
+      {
+        source: '/search',
+        destination: '/sign-in',
         permanent: true,
       },
     ];
