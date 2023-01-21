@@ -36,12 +36,6 @@ const PageTitle = styled.div`
   padding-left: ${({ theme }) => theme.space.mobile};
 
   ${({ theme }) => theme.device.tablet} {
-    padding-top: 2rem;
-    padding-left: ${({ theme }) => theme.space.tablet};
-  }
-
-  ${({ theme }) => theme.device.desktop} {
-    padding-bottom: 4rem;
     padding-left: ${({ theme }) => theme.space.tablet};
   }
 `;

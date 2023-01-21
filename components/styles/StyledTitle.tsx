@@ -4,7 +4,7 @@ const SlideTitle = styled.h1`
   font-size: 2rem;
   font-weight: 700;
   color: #fff;
-  margin-top: 1rem;
+  margin-top: 2rem;
   margin-left: ${({ theme }) => theme.space.mobile};
 
   ${({ theme }) => theme.device.tablet} {
