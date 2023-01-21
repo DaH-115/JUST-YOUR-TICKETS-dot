@@ -18,8 +18,9 @@ const SearchTicket = ({
 }: MovieTicketProps) => {
   const janres = useGetJanres(movieId);
   const releaseYear = releaseDate && releaseDate.slice(0, 4);
-  const posterImage =
-    posterPath && `https://image.tmdb.org/t/p/w500/${posterPath}`;
+  const posterImage = posterPath
+    ? `https://image.tmdb.org/t/p/w500${posterPath}`
+    : undefined;
 
   return (
     <SearchResultWrapper>
@@ -52,9 +53,15 @@ const SearchTicket = ({
         >
           <PosterBtn>
             {posterImage ? (
-              <Image src={posterImage} alt={title} width={180} height={270} />
+              <Image
+                src={posterImage}
+                alt={title}
+                width={180}
+                height={270}
+                unoptimized
+              />
             ) : (
-              <NoneImg>IMAGE IS NONE</NoneImg>
+              <NoneImgTitle>{title}</NoneImgTitle>
             )}
 
             <PosterBtnText>
@@ -70,13 +77,14 @@ const SearchTicket = ({
 
 export default SearchTicket;
 
-const NoneImg = styled.div`
+const NoneImgTitle = styled.div`
   width: 180px;
   height: 270px;
   font-weight: 700;
   color: black;
   background-color: ${({ theme }) => theme.colors.orange};
   text-align: center;
+  padding-top: 1rem;
 `;
 
 const PosterBtn = styled.div`

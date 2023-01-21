@@ -28,7 +28,7 @@ const MovieDetail = ({
   const janreArr = useGetJanres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
   const posterImage = posterPath
-    ? `https://image.tmdb.org/t/p/w500/${posterPath}`
+    ? `https://image.tmdb.org/t/p/w500${posterPath}`
     : '';
   const titleText = `JUST MY TICKETS. | ${title}`;
 

@@ -12,13 +12,13 @@ const PosterImage = ({ title, posterImage, posterPath }: PosterImageProps) => {
   const posterSrc = posterImage
     ? posterImage
     : posterPath
-    ? `https://image.tmdb.org/t/p/w500/${posterPath}`
+    ? `https://image.tmdb.org/t/p/w500${posterPath}`
     : '';
 
   return (
     <ImgBox>
       {!posterImage && !posterPath ? (
-        <NoneImg>IMAGE IS NONE</NoneImg>
+        <NoneImgTitle>{title}</NoneImgTitle>
       ) : (
         <Image
           src={posterSrc}
@@ -45,7 +45,7 @@ const ImgBox = styled.div`
   }
 `;
 
-const NoneImg = styled.div`
+const NoneImgTitle = styled.div`
   width: ${({ theme }) => theme.posterWidth};
   height: ${({ theme }) => theme.posterHeight};
   font-weight: 700;

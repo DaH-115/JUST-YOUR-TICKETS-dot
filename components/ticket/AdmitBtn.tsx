@@ -18,7 +18,7 @@ const AdmitBtn = ({
         query: {
           title,
           releaseYear,
-          posterImage: `https://image.tmdb.org/t/p/w500/${posterPath}`,
+          posterImage: `https://image.tmdb.org/t/p/w500${posterPath}`,
         },
       }}
       as={`/write`}
