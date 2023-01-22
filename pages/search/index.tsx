@@ -5,20 +5,16 @@ import axios from 'axios';
 import Error from 'next/error';
 import { BiSearch } from 'react-icons/bi';
 
-import { useAuthState } from 'components/store/auth-context';
 import withHeadMeta from 'components/common/withHeadMeta';
 import BackgroundStyle from 'components/layout/BackgroundStyle';
 import SearchTicket from 'components/search/SearchTicket';
-import SignInAlert from 'components/popup/SignInAlert';
 import NoneResults from 'components/styles/NoneReults';
 import { SystemError } from 'errorType';
 import { TopMovieDataProps } from 'ticketType';
 
 const SearchPage: NextPage = () => {
-  const { isSigned } = useAuthState();
   const [movieName, setMovieName] = useState<string>('');
   const [searchResults, setSearchResults] = useState<TopMovieDataProps[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -33,12 +29,6 @@ const SearchPage: NextPage = () => {
 
     return () => clearTimeout(timer);
   }, [movieName]);
-
-  useEffect(() => {
-    if (!isSigned) {
-      setIsOpen(true);
-    }
-  }, [isSigned]);
 
   const getSearchResults = async (movieName: string) => {
     try {
@@ -70,13 +60,8 @@ const SearchPage: NextPage = () => {
     []
   );
 
-  const onToggleHandler = useCallback(() => {
-    setIsOpen((prev) => !prev);
-  }, []);
-
   return (
     <BackgroundStyle customMessage='search🎞️'>
-      {isOpen && <SignInAlert onToggleHandler={onToggleHandler} />}
       <FormWrapper>
         <StyledForm onSubmit={searchInputHandler} action='get'>
           <StyledLabel htmlFor='search-input'>{'영화 검색'}</StyledLabel>

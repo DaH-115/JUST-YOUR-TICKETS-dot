@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import Error from 'next/error';
@@ -8,10 +8,12 @@ import { isAuth } from 'firebase-config';
 
 import { SystemError } from 'errorType';
 import { useAuthState } from 'components/store/auth-context';
+import SignInAlert from 'components/popup/SignInAlert';
 
 const Header = () => {
   const router = useRouter();
   const { isSigned } = useAuthState();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onSignOutHandler = useCallback(async () => {
     try {
@@ -21,6 +23,18 @@ const Header = () => {
       const err = error as SystemError;
       return <Error statusCode={err.statusCode} title={err.message} />;
     }
+  }, []);
+
+  const onCheckSignInHandler = useCallback(() => {
+    if (!isSigned) {
+      setIsOpen((prev) => !prev);
+    } else {
+      router.push('/search');
+    }
+  }, [isSigned]);
+
+  const onToggleHandler = useCallback(() => {
+    setIsOpen((prev) => !prev);
   }, []);
 
   return (
@@ -40,11 +54,11 @@ const Header = () => {
           <HeaderLi className='home'>{'SIGN IN'}</HeaderLi>
         </Link>
       )}
-      <Link href='/search'>
-        <SearchIcon>
-          <BiSearch id='search-icon' />
-        </SearchIcon>
-      </Link>
+
+      {isOpen && <SignInAlert onToggleHandler={onToggleHandler} />}
+      <SearchIcon onClick={onCheckSignInHandler}>
+        <BiSearch id='search-icon' />
+      </SearchIcon>
     </HeaderMenu>
   );
 };

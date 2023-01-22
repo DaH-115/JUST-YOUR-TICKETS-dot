@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
 import { db } from 'firebase-config';
 import {
   collection,
@@ -23,11 +22,10 @@ import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
 
 const TicketListPage: NextPage = () => {
-  const { userId, isSigned } = useAuthState();
+  const { userId } = useAuthState();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [usersTicket, setUsersTicket] = useState<UserTicketProps[]>([]);
   const ticketLength = usersTicket.length;
-  const router = useRouter();
   // false -> desc / true -> asc
   const [isSorted, setIsSorted] = useState<boolean>(false);
 
@@ -56,12 +54,6 @@ const TicketListPage: NextPage = () => {
     })();
   }, [userId, isSorted]);
 
-  useEffect(() => {
-    if (!isSigned) {
-      router.push('/');
-    }
-  }, [isSigned]);
-
   return (
     <BackgroundStyle customMessage='your🍿'>
       <SlideList
@@ -69,16 +61,16 @@ const TicketListPage: NextPage = () => {
         ticketLength={ticketLength}
         description='나만의 감상티켓을 모아 보세요'
       >
-        <SortList onClick={onSortedHandler}>
-          <p>{'정렬'}</p>
-          {!isSorted ? <IoIosArrowUp /> : <IoIosArrowDown />}
-        </SortList>
         {isLoading ? (
           <Wrapper>
             <LoadingSpinner />
           </Wrapper>
         ) : (
           <TicketListWrapper>
+            <SortList onClick={onSortedHandler}>
+              <p>{'정렬'}</p>
+              {!isSorted ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </SortList>
             {!ticketLength ? (
               <Wrapper>
                 <NoneResults>{'아직 나의 티켓이 없습니다.'}</NoneResults>
@@ -96,10 +88,6 @@ const TicketListPage: NextPage = () => {
 export default withHeadMeta(TicketListPage, '나의 티켓');
 
 const SortList = styled.div`
-  position: absolute;
-  top: 10.5rem;
-  left: 12rem;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -108,7 +96,8 @@ const SortList = styled.div`
 
   font-weight: 700;
   color: #fff;
-  margin-left: 2rem;
+  margin-top: 1rem;
+  margin-left: ${({ theme }) => theme.space.mobile};
   padding: 0.3rem 0.8rem;
   border: 0.1rem solid ${({ theme }) => theme.colors.orange};
   border-radius: 2rem;
@@ -128,16 +117,14 @@ const SortList = styled.div`
   }
 
   ${({ theme }) => theme.device.tablet} {
-    top: 10.1rem;
-    left: 17rem;
-    width: 5rem;
+    margin-left: ${({ theme }) => theme.space.tablet};
     font-size: 0.8rem;
   }
 
-  ${({ theme }) => theme.device.desktop} {
-    top: 14rem;
+  /* ${({ theme }) => theme.device.desktop} {
+    top: 14.5rem;
     left: 16rem;
-  }
+  } */
 `;
 
 const TicketListWrapper = styled.div`

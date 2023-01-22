@@ -10,6 +10,7 @@ const SignInAlert = ({ onToggleHandler }: { onToggleHandler: () => void }) => {
 
   const onMoveSignInHandler = useCallback(() => {
     router.push('/sign-in');
+    onToggleHandler();
   }, []);
 
   return (
