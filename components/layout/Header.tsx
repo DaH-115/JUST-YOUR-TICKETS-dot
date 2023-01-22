@@ -101,7 +101,7 @@ const HeaderLi = styled.li`
 export const SearchIcon = styled.div`
   position: fixed;
   top: 3rem;
-  right: ${({ theme }) => theme.space.mobile};
+  right: ${({ theme }) => theme.space.small};
   z-index: 999;
 
   width: 3rem;
@@ -130,11 +130,11 @@ export const SearchIcon = styled.div`
 
   ${({ theme }) => theme.device.tablet} {
     top: 2rem;
-    right: ${({ theme }) => theme.space.tablet};
+    right: ${({ theme }) => theme.space.medium};
   }
 
   ${({ theme }) => theme.device.desktop} {
     top: 1.5rem;
-    right: ${({ theme }) => theme.space.tablet};
+    right: ${({ theme }) => theme.space.medium};
   }
 `;

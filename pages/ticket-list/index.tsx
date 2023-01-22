@@ -97,7 +97,7 @@ const SortList = styled.div`
   font-weight: 700;
   color: #fff;
   margin-top: 1rem;
-  margin-left: ${({ theme }) => theme.space.mobile};
+  margin-left: ${({ theme }) => theme.space.small};
   padding: 0.3rem 0.8rem;
   border: 0.1rem solid ${({ theme }) => theme.colors.orange};
   border-radius: 2rem;
@@ -117,7 +117,7 @@ const SortList = styled.div`
   }
 
   ${({ theme }) => theme.device.tablet} {
-    margin-left: ${({ theme }) => theme.space.tablet};
+    margin-left: ${({ theme }) => theme.space.medium};
     font-size: 0.8rem;
   }
 

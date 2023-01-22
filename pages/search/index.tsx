@@ -112,14 +112,14 @@ const SearchWrapper = styled.div`
 const SearchTitle = styled.p`
   color: #fff;
   padding-top: 1rem;
-  padding-left: ${({ theme }) => theme.space.mobile};
+  padding-left: ${({ theme }) => theme.space.small};
 
   font-size: 1.5rem;
   font-weight: 700;
 
   ${({ theme }) => theme.device.tablet} {
     font-size: 2rem;
-    padding-left: ${({ theme }) => theme.space.tablet};
+    padding-left: ${({ theme }) => theme.space.medium};
   }
 `;
 

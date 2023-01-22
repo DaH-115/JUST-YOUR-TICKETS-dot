@@ -33,10 +33,10 @@ const PageTitle = styled.div`
   line-height: 1rem;
   color: ${({ theme }) => theme.colors.yellow};
   padding-top: 1rem;
-  padding-left: ${({ theme }) => theme.space.mobile};
+  padding-left: ${({ theme }) => theme.space.small};
 
   ${({ theme }) => theme.device.tablet} {
-    padding-left: ${({ theme }) => theme.space.tablet};
+    padding-left: ${({ theme }) => theme.space.medium};
   }
 `;
 

@@ -5,12 +5,12 @@ const SlideTitle = styled.h1`
   font-weight: 700;
   color: #fff;
   margin-top: 2rem;
-  margin-left: ${({ theme }) => theme.space.mobile};
+  margin-left: ${({ theme }) => theme.space.small};
 
   ${({ theme }) => theme.device.tablet} {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-left: ${({ theme }) => theme.space.tablet};
+    margin-left: ${({ theme }) => theme.space.medium};
   }
 `;
 

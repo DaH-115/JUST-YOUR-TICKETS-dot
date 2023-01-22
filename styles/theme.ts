@@ -29,9 +29,9 @@ export const theme: DefaultTheme = {
   },
   device,
   space: {
-    mobile: '1rem',
-    tablet: '4rem',
-    desktop: '6rem',
+    small: '1rem',
+    medium: '4rem',
+    large: '6rem',
   },
   posterWidth: '320px',
   posterHeight: '480px',

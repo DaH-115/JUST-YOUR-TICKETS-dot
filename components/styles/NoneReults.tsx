@@ -5,12 +5,12 @@ const NoneResults = styled.p`
   height: 100vh;
   color: #fff;
   padding-top: 1rem;
-  padding-left: ${({ theme }) => theme.space.mobile};
+  padding-left: ${({ theme }) => theme.space.small};
   font-size: 1.2rem;
   font-weight: 400;
 
   ${({ theme }) => theme.device.tablet} {
-    padding-left: ${({ theme }) => theme.space.tablet};
+    padding-left: ${({ theme }) => theme.space.medium};
   }
 `;
 

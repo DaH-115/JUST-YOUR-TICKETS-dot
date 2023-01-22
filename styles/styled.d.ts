@@ -17,9 +17,9 @@ declare module 'styled-components' {
       desktop: string;
     };
     space: {
-      mobile: string;
-      tablet: string;
-      desktop: string;
+      small: string;
+      medium: string;
+      large: string;
     };
     posterWidth: string;
     posterHeight: string;
