@@ -3,14 +3,12 @@ import styled from 'styled-components';
 export const MovieDetailWrapper = styled.div`
   width: 100%;
   height: 100%;
-  max-width: 600px;
   margin-top: 2rem;
 
   ${({ theme }) => theme.device.tablet} {
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 100%;
   }
 `;
 
