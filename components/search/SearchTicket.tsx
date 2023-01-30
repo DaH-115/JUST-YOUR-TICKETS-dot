@@ -24,13 +24,13 @@ const SearchTicket = ({
 
   return (
     <SearchResultWrapper>
-      <SearchResult>
-        <StyledInfo>
-          <TicketIndex>{`${movieIndex + 1}.`}</TicketIndex>
+      <StyledInfo>
+        <TicketIndex>{`${movieIndex + 1}.`}</TicketIndex>
 
-          {/* GO TO MOVIE INFO PAGE BUTTON */}
-          <MovieInfoBtn movieId={movieId} />
-        </StyledInfo>
+        {/* GO TO MOVIE INFO PAGE BUTTON */}
+        <MovieInfoBtn movieId={movieId} />
+      </StyledInfo>
+      <SearchResult>
         <MovieTextWrapper>
           <MovieTextDetail
             title={title}
@@ -102,7 +102,7 @@ const PosterBtnText = styled.p`
   padding: 1rem;
   padding-top: 0.8rem;
   background-color: ${({ theme }) => theme.colors.black};
-  border-left: 0.2rem dashed ${({ theme }) => theme.colors.orange};
+  border-top: 0.1rem dashed ${({ theme }) => theme.colors.orange};
 
   svg {
     font-size: 1rem;
@@ -119,11 +119,15 @@ const PosterBtnText = styled.p`
 `;
 
 const SearchResultWrapper = styled.div`
-  display: flex;
-  justify-content: center;
+  padding: 1rem;
   overflow-y: scroll;
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
+
+  ${({ theme }) => theme.device.tablet} {
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 const SearchResult = styled.div`
@@ -132,24 +136,35 @@ const SearchResult = styled.div`
   width: 100%;
   height: 100%;
   max-width: 650px;
-  padding: 2rem 1rem;
-  padding-left: 0.5rem;
 `;
 
 const StyledInfo = styled.div`
-  margin-right: 0.5rem;
+  display: flex;
+  align-items: center;
+
   div {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: #fff;
+  }
+
+  ${({ theme }) => theme.device.tablet} {
+    display: block;
+    margin-top: 1rem;
+    margin-right: 1rem;
+    align-items: baseline;
   }
 `;
 
 const TicketIndex = styled.p`
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #fff;
   text-align: center;
-  margin-bottom: 0.4rem;
+  margin-right: 0.5rem;
+
+  ${({ theme }) => theme.device.tablet} {
+    margin-right: 0;
+  }
 `;
 
 const MovieTextWrapper = styled.div`
