@@ -15,6 +15,7 @@ import {
   StyledLabeling,
 } from 'components/styles/movie-details';
 import SlideTitle from 'components/styles/StyledTitle';
+import MovieJanreWrapper from 'components/styles/MovieJanreWrapper';
 import { MovieDataProps } from 'ticketType';
 
 const MovieDetail = ({
@@ -98,28 +99,6 @@ const MovieDetail = ({
 };
 
 export default React.memo(MovieDetail);
-
-const MovieJanreWrapper = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  font-size: 1rem;
-  overflow-y: scroll;
-
-  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
-
-  li {
-    margin-right: 0.4rem;
-
-    &::before {
-      content: '/';
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-`;
 
 const AdmitBtnWrapper = styled.div`
   display: flex;

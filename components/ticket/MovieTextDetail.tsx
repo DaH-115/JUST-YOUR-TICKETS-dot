@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { MovieTextDetailProps } from 'ticketType';
+import MovieJanreWrapper from 'components/styles/MovieJanreWrapper';
 
 const MovieTextDetail = ({
   title,
@@ -65,30 +66,6 @@ const MovieRating = styled.div`
   p {
     font-weight: 700;
     line-height: 1rem;
-  }
-`;
-
-const MovieJanreWrapper = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  height: 2.5rem;
-  overflow-y: scroll;
-  font-size: 1rem;
-  color: ${({ theme }) => theme.colors.black};
-
-  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
-
-  li {
-    margin-right: 0.4rem;
-
-    &:not(:first-child)::before {
-      content: '/';
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
   }
 `;
 
