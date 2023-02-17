@@ -10,14 +10,12 @@ import {
   signInWithRedirect,
 } from 'firebase/auth';
 import { useRouter } from 'next/router';
-import { SystemError } from 'errorType';
 import { FcGoogle } from 'react-icons/fc';
 import { BsGithub } from 'react-icons/bs';
 
 import withHeadMeta from 'components/common/withHeadMeta';
 import BackgroundStyle from 'components/layout/BackgroundStyle';
 import LoadingMsg from 'components/common/LoadingMsg';
-import Error from 'next/error';
 import { useAuthState } from 'components/store/auth-context';
 
 const LoginPage: NextPage = () => {
@@ -54,68 +52,63 @@ const LoginPage: NextPage = () => {
       try {
         await createUserWithEmailAndPassword(isAuth, userEmail, userPassword);
       } catch (error) {
-        const err = error as SystemError;
         setIsError(true);
-        return <Error statusCode={err.statusCode} title={err.message} />;
       }
     } else {
       // Sign In
       try {
         await signInWithEmailAndPassword(isAuth, userEmail, userPassword);
       } catch (error) {
-        const err = error as SystemError;
         setIsError(true);
-        return <Error statusCode={err.statusCode} title={err.message} />;
       }
     }
 
     setIsLoading(false);
-  }, []);
+  }, [userEmail, userPassword]);
 
-  const onSubmitHandler = useCallback((event: React.FormEvent) => {
-    event.preventDefault();
-    getUser();
-    setUserEmail('');
-    setUserPassword('');
-  }, []);
+  const onSubmitHandler = useCallback(
+    (event: React.FormEvent) => {
+      event.preventDefault();
+      getUser();
+    },
+    [userEmail, userPassword]
+  );
 
   const onSignUpToggleHandler = useCallback(() => {
     setSignUp((prev) => !prev);
   }, []);
 
-  const onEmailChangeHandler = useCallback(
-    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-      setUserEmail(target.value);
+  const onEmailChangeHandler = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setUserEmail(target.value);
 
-      const emailCheckRegex =
-        /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-      const emailValue = target.value;
+    const emailCheckRegex =
+      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    const emailValue = target.value;
 
-      if (!emailCheckRegex.test(emailValue)) {
-        setIsEmail(false);
-      } else {
-        setIsEmail(true);
-      }
-    },
-    []
-  );
+    if (!emailCheckRegex.test(emailValue)) {
+      setIsEmail(false);
+    } else {
+      setIsEmail(true);
+    }
+  };
 
-  const onPasswordChangeHandler = useCallback(
-    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-      setUserPassword(target.value);
+  const onPasswordChangeHandler = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setUserPassword(target.value);
 
-      const passwordCheckRegex =
-        /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
-      const passwordValue = target.value;
+    const passwordCheckRegex =
+      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+    const passwordValue = target.value;
 
-      if (!passwordCheckRegex.test(passwordValue)) {
-        setIsPassword(false);
-      } else {
-        setIsPassword(true);
-      }
-    },
-    []
-  );
+    if (!passwordCheckRegex.test(passwordValue)) {
+      setIsPassword(false);
+    } else {
+      setIsPassword(true);
+    }
+  };
 
   const onSocialSignInHandler = useCallback(
     async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -123,19 +116,17 @@ const LoginPage: NextPage = () => {
       setIsLoading(true);
 
       try {
-        if (target.name === 'google-signin') {
+        if (target.name === 'google-sign-in') {
           const provider = new GoogleAuthProvider();
           await signInWithRedirect(isAuth, provider);
-          return;
         }
 
-        if (target.name === 'github-signin') {
+        if (target.name === 'github-sign-in') {
           const provider = new GithubAuthProvider();
           await signInWithRedirect(isAuth, provider);
         }
       } catch (error) {
-        const err = error as SystemError;
-        return <Error statusCode={err.statusCode} title={err.message} />;
+        setIsError(true);
       }
 
       setIsLoading(false);
@@ -195,12 +186,12 @@ const LoginPage: NextPage = () => {
         </LoginFormWrapper>
         <SocialSignInWrapper>
           <SocialSignInIcon>
-            <button name='github-signin' onClick={onSocialSignInHandler}>
+            <button name='github-sign-in' onClick={onSocialSignInHandler}>
               <BsGithub />
             </button>
           </SocialSignInIcon>
           <SocialSignInIcon>
-            <button name='google-signin' onClick={onSocialSignInHandler}>
+            <button name='google-sign-in' onClick={onSocialSignInHandler}>
               <FcGoogle />
             </button>
           </SocialSignInIcon>

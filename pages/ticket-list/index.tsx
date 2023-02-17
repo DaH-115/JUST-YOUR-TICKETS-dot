@@ -120,11 +120,6 @@ const SortList = styled.div`
     margin-left: ${({ theme }) => theme.space.medium};
     font-size: 0.8rem;
   }
-
-  /* ${({ theme }) => theme.device.desktop} {
-    top: 14.5rem;
-    left: 16rem;
-  } */
 `;
 
 const TicketListWrapper = styled.div`
