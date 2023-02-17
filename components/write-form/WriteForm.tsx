@@ -29,6 +29,9 @@ const WriteForm = ({
   const reviewRef = useRef<HTMLTextAreaElement>(null);
   const today = new Date().toLocaleDateString();
 
+  let newRatingText: string = '';
+  let newReviewText: string = '';
+
   useEffect(() => {
     const routeChangeStart = (url: string) => {
       if (url !== router.asPath && isSigned && !isConfirm) {
@@ -90,25 +93,27 @@ const WriteForm = ({
     }
   };
 
-  const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    let ratingText: string = '';
-    let reviewText: string = '';
-    setIsConfirm(true);
-
+  const getNewText = () => {
     if (ratingRef.current!.value && reviewRef.current!.value) {
-      ratingText = ratingRef.current!.value;
-      reviewText = reviewRef.current!.value;
+      newRatingText = ratingRef.current!.value;
+      newReviewText = reviewRef.current!.value;
     } else {
       alert('내용을 채워주세요.');
     }
+  };
 
-    // UPDATE
-    if (ticketId) {
-      updateContents(ratingText, reviewText, ticketId);
-    }
+  const onAddHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsConfirm(true);
+    getNewText();
+    addContents(newRatingText, newReviewText);
+  };
 
-    addContents(ratingText, reviewText);
+  const onUpdateHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsConfirm(true);
+    getNewText();
+    updateContents(newRatingText, newReviewText, ticketId);
   };
 
   const onRatingChangeHandler = useCallback(
@@ -130,7 +135,7 @@ const WriteForm = ({
         </MovieDetailWrapper>
 
         <FormWrapper>
-          <StyledForm onSubmit={onSubmitHandler}>
+          <StyledForm onSubmit={!ticketId ? onAddHandler : onUpdateHandler}>
             <InputWrapper>
               <StyledLabel htmlFor='rating'>{'* Rating /점수'}</StyledLabel>
               <StyledDesc>{'얼마나 좋았나요?'}</StyledDesc>
@@ -154,7 +159,7 @@ const WriteForm = ({
               <StyledDesc>{'나의 생각과 느낌을 적어보세요.'}</StyledDesc>
               <StyledTextarea name='reviewText' id='review' ref={reviewRef} />
             </InputWrapper>
-            <StyledBtn>{'입력'}</StyledBtn>
+            <StyledBtn>{!ticketId ? '입력하기' : '수정하기'}</StyledBtn>
           </StyledForm>
         </FormWrapper>
       </WriteFormWrapper>
