@@ -7,7 +7,7 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   GithubAuthProvider,
-  signInWithRedirect,
+  signInWithPopup,
 } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { FcGoogle } from 'react-icons/fc';
@@ -118,12 +118,12 @@ const LoginPage: NextPage = () => {
       try {
         if (target.name === 'google-sign-in') {
           const provider = new GoogleAuthProvider();
-          await signInWithRedirect(isAuth, provider);
+          await signInWithPopup(isAuth, provider);
         }
 
         if (target.name === 'github-sign-in') {
           const provider = new GithubAuthProvider();
-          await signInWithRedirect(isAuth, provider);
+          await signInWithPopup(isAuth, provider);
         }
       } catch (error) {
         setIsError(true);
