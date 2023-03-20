@@ -2,8 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import styled from 'styled-components';
-import useGetJanres from '../hooks/useGetJanres';
 import { AiOutlineArrowRight } from 'react-icons/ai';
+import useGetJanres from 'components/hooks/useGetJanres';
 
 import BackgroundStyle from 'components/layout/BackgroundStyle';
 import PosterImage from 'components/ticket/PosterImage';

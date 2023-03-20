@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { LoadingSpinner } from './LoadingSpinner';
+import { LoadingSpinner } from 'components/common/LoadingSpinner';
 
 const Loading = () => {
   return (
