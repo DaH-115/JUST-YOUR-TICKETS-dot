@@ -15,14 +15,15 @@ const SignUpPage: NextPage = () => {
   const router = useRouter();
   const { isSigned } = useAuthState();
   const [isError, setIsError] = useState<boolean>(false);
+  const [isArrowToggle, setIsArrowToggle] = useState<boolean>(false);
   // User EMAIL Text
-  const [isEmailId, setIsEmailId] = useState<string>('');
-  const [isEmailAddress, setIsEmailAddress] = useState<string>('default');
-  const [isUserEmail, setIsUserEmail] = useState<string>('');
+  const [emailId, setEmailId] = useState<string>('');
+  const [emailAddress, setEmailAddress] = useState<string>('default');
+  const [userEmail, setUserEmail] = useState<string>('');
   const [isAnotherAddress, setIsAnotherAddress] = useState<boolean>(false);
   // User PASSWORD Text
-  const [isUserPassword, setIsUserPassword] = useState<string>('');
-  const [isCheckedPassword, setIsCheckedPassword] = useState<string>('');
+  const [userPassword, setUserPassword] = useState<string>('');
+  const [checkedPassword, setCheckedPassword] = useState<string>('');
   // Validation State
   const [isEmail, setIsEmail] = useState<boolean>(false);
   const [isPassword, setIsPassword] = useState<boolean>(false);
@@ -30,7 +31,6 @@ const SignUpPage: NextPage = () => {
   const isDisabled = isEmail && isPassword && isPasswordCheck ? false : true;
   // Loading State
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isArrowToggle, setIsArrowToggle] = useState<boolean>(false);
 
   useEffect(() => {
     if (isSigned) {
@@ -42,7 +42,7 @@ const SignUpPage: NextPage = () => {
     setIsLoading(true);
 
     try {
-      await createUserWithEmailAndPassword(isAuth, isUserEmail, isUserPassword);
+      await createUserWithEmailAndPassword(isAuth, userEmail, userPassword);
     } catch (error) {
       setIsError(true);
     }
@@ -58,12 +58,12 @@ const SignUpPage: NextPage = () => {
   const onIdChangeHandler = ({
     target,
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setIsEmailId(target.value);
+    setEmailId(target.value);
   };
 
   const onIdBlurHandler = () => {
-    if (isEmailId && isEmailAddress !== 'default') {
-      setIsUserEmail(`${isEmailId}@${isEmailAddress}`);
+    if (emailId && emailAddress !== 'default') {
+      setUserEmail(`${emailId}@${emailAddress}`);
     }
   };
 
@@ -72,35 +72,35 @@ const SignUpPage: NextPage = () => {
   }: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     if (target.value === 'anotherAddress') {
       setIsAnotherAddress(true);
-      setIsEmailAddress('');
+      setEmailAddress('');
     } else {
-      setIsEmailAddress(target.value);
+      setEmailAddress(target.value);
     }
   };
 
   const onAnotherAdrBlurHandler = () => {
-    if (isAnotherAddress && isEmailAddress === '') {
+    if (isAnotherAddress && emailAddress === '') {
       setIsAnotherAddress(false);
       setIsArrowToggle(false);
     }
 
-    if (isEmailAddress !== 'default' && isEmailAddress !== '') {
-      const userEmailText = `${isEmailId}@${isEmailAddress}`;
+    if (emailAddress !== 'default' && emailAddress !== '') {
+      const userEmailText = `${emailId}@${emailAddress}`;
       const emailCheckRegex =
         /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 
       emailCheckRegex.test(userEmailText)
         ? setIsEmail(true)
         : setIsEmail(false);
-      setIsUserEmail(userEmailText);
+      setUserEmail(userEmailText);
     }
   };
 
   const onSelectBlurHandler = () => {
-    if (isEmailAddress !== 'default') {
-      const userEmailText = `${isEmailId}@${isEmailAddress}`;
+    if (emailAddress !== 'default') {
+      const userEmailText = `${emailId}@${emailAddress}`;
 
-      setIsUserEmail(userEmailText);
+      setUserEmail(userEmailText);
       setIsEmail(true);
     } else {
       setIsEmail(false);
@@ -110,24 +110,24 @@ const SignUpPage: NextPage = () => {
   const onPasswordChangeHandler = ({
     target,
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setIsUserPassword(target.value);
+    setUserPassword(target.value);
   };
 
   const onPasswordBlurHandler = () => {
     const passwordCheckRegex =
       /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
 
-    passwordCheckRegex.test(isUserPassword) && setIsPassword(true);
+    passwordCheckRegex.test(userPassword) && setIsPassword(true);
   };
 
   const onPasswordCheckHandler = ({
     target,
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setIsCheckedPassword(target.value);
+    setCheckedPassword(target.value);
   };
 
   const onPWCheckInputBlurHandler = () => {
-    isUserPassword === isCheckedPassword && setIsPasswordCheck(true);
+    userPassword === checkedPassword && setIsPasswordCheck(true);
   };
 
   return (
@@ -147,7 +147,7 @@ const SignUpPage: NextPage = () => {
               <StyledInput
                 type='text'
                 id='user-email'
-                value={isEmailId}
+                value={emailId}
                 onChange={onIdChangeHandler}
                 onBlur={onIdBlurHandler}
               />
@@ -156,14 +156,14 @@ const SignUpPage: NextPage = () => {
                 {isAnotherAddress ? (
                   <StyledInput
                     type='text'
-                    value={isEmailAddress}
+                    value={emailAddress}
                     onChange={onAddressChangeHandler}
                     onBlur={onAnotherAdrBlurHandler}
                   />
                 ) : (
                   <>
                     <select
-                      value={isEmailAddress}
+                      value={emailAddress}
                       onChange={onAddressChangeHandler}
                       onBlur={onSelectBlurHandler}
                     >
@@ -183,7 +183,7 @@ const SignUpPage: NextPage = () => {
             </EmailInputWrapper>
 
             <ValidationMsg isState={isEmail}>
-              {isEmailId === '' && '이메일을 입력해 주세요. '}
+              {emailId === '' && '이메일을 입력해 주세요. '}
               {isAnotherAddress && !isEmail && '이메일을 확인해 주세요.'}
             </ValidationMsg>
 
@@ -192,13 +192,13 @@ const SignUpPage: NextPage = () => {
             <StyledInput
               type='password'
               id='user-password'
-              value={isUserPassword}
+              value={userPassword}
               onChange={onPasswordChangeHandler}
               onBlur={onPasswordBlurHandler}
             />
 
             <ValidationMsg isState={isPassword}>
-              {!isUserPassword
+              {!userPassword
                 ? '비밀번호를 입력해 주세요.'
                 : !isPassword
                 ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
@@ -209,12 +209,12 @@ const SignUpPage: NextPage = () => {
             <StyledInput
               type='password'
               id='user-password-check'
-              value={isCheckedPassword}
+              value={checkedPassword}
               onChange={onPasswordCheckHandler}
               onBlur={onPWCheckInputBlurHandler}
             />
             <ValidationMsg isState={isPasswordCheck}>
-              {!isCheckedPassword
+              {!checkedPassword
                 ? '다시 한번 입력해 주세요.'
                 : !isPasswordCheck
                 ? '위와 동일한 비밀번호가 아닙니다.'
@@ -239,7 +239,6 @@ const EmailInputWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid red;
 `;
 
 const SelectWrapper = styled.div`
