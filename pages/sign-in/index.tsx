@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NextPage } from 'next';
+import Link from 'next/link';
 import styled from 'styled-components';
 import { isAuth } from 'firebase-config';
 import {
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   GithubAuthProvider,
@@ -18,11 +18,10 @@ import BackgroundStyle from 'components/layout/BackgroundStyle';
 import LoadingMsg from 'components/common/LoadingMsg';
 import { useAuthState } from 'components/store/auth-context';
 
-const LoginPage: NextPage = () => {
+const SignInPage: NextPage = () => {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const { isSigned } = useAuthState();
-  const [signUp, setSignUp] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   // User EMAIL-PASSWORD Text
   const [userEmail, setUserEmail] = useState<string>('');
@@ -44,39 +43,22 @@ const LoginPage: NextPage = () => {
     }
   }, [isSigned]);
 
-  const getUser = useCallback(async () => {
+  const getUser = async () => {
     setIsLoading(true);
 
-    if (signUp) {
-      // Sign Up
-      try {
-        await createUserWithEmailAndPassword(isAuth, userEmail, userPassword);
-      } catch (error) {
-        setIsError(true);
-      }
-    } else {
-      // Sign In
-      try {
-        await signInWithEmailAndPassword(isAuth, userEmail, userPassword);
-      } catch (error) {
-        setIsError(true);
-      }
+    try {
+      await signInWithEmailAndPassword(isAuth, userEmail, userPassword);
+    } catch (error) {
+      setIsError(true);
     }
 
     setIsLoading(false);
-  }, [userEmail, userPassword]);
+  };
 
-  const onSubmitHandler = useCallback(
-    (event: React.FormEvent) => {
-      event.preventDefault();
-      getUser();
-    },
-    [userEmail, userPassword]
-  );
-
-  const onSignUpToggleHandler = useCallback(() => {
-    setSignUp((prev) => !prev);
-  }, []);
+  const onSubmitHandler = (event: React.FormEvent) => {
+    event.preventDefault();
+    getUser();
+  };
 
   const onEmailChangeHandler = ({
     target,
@@ -110,47 +92,44 @@ const LoginPage: NextPage = () => {
     }
   };
 
-  const onSocialSignInHandler = useCallback(
-    async (event: React.MouseEvent<HTMLButtonElement>) => {
-      const target = event.currentTarget as HTMLButtonElement;
-      setIsLoading(true);
+  const onSocialSignInHandler = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const target = event.currentTarget as HTMLButtonElement;
+    setIsLoading(true);
 
-      try {
-        if (target.name === 'google-sign-in') {
-          const provider = new GoogleAuthProvider();
-          await signInWithPopup(isAuth, provider);
-        }
-
-        if (target.name === 'github-sign-in') {
-          const provider = new GithubAuthProvider();
-          await signInWithPopup(isAuth, provider);
-        }
-      } catch (error) {
-        setIsError(true);
+    try {
+      if (target.name === 'google-sign-in') {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(isAuth, provider);
       }
 
-      setIsLoading(false);
-    },
-    []
-  );
+      if (target.name === 'github-sign-in') {
+        const provider = new GithubAuthProvider();
+        await signInWithPopup(isAuth, provider);
+      }
+    } catch (error) {
+      setIsError(true);
+    }
+
+    setIsLoading(false);
+  };
 
   return (
     <BackgroundStyle customMessage='create📝'>
       {isLoading && <LoadingMsg />}
       <>
         <LoginFormWrapper>
-          <LoginForTitle>
-            {signUp ? '*Sign Up /회원가입' : '*Sign In /로그인'}
-          </LoginForTitle>
+          <LoginForTitle>{'*Sign In /로그인'}</LoginForTitle>
           {isError && (
             <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요'}.</ErrorMsg>
           )}
           <LoginForm onSubmit={onSubmitHandler}>
-            {/* ID */}
-            <label htmlFor='user-id'>*EMAIL /이메일</label>
+            {/* EMAIL */}
+            <label htmlFor='user-email'>*EMAIL /이메일</label>
             <StyledInput
               type='text'
-              id='user-id'
+              id='user-email'
               value={userEmail}
               onChange={onEmailChangeHandler}
               ref={inputRef}
@@ -180,10 +159,15 @@ const LoginPage: NextPage = () => {
                 : null}
             </ValidationMsg>
             <LoginBtn type='submit' disabled={isDisabled}>
-              {'입력'}
+              {'로그인'}
             </LoginBtn>
+
+            <Link href='/sign-up'>
+              <SignUpBtn>{'회원가입'}</SignUpBtn>
+            </Link>
           </LoginForm>
         </LoginFormWrapper>
+
         <SocialSignInWrapper>
           <SocialSignInIcon>
             <button name='github-sign-in' onClick={onSocialSignInHandler}>
@@ -196,15 +180,12 @@ const LoginPage: NextPage = () => {
             </button>
           </SocialSignInIcon>
         </SocialSignInWrapper>
-        <ToggleText onClick={onSignUpToggleHandler}>
-          {signUp ? '로그인' : '회원가입'}
-        </ToggleText>
       </>
     </BackgroundStyle>
   );
 };
 
-export default withHeadMeta(LoginPage, '로그인');
+export default withHeadMeta(SignInPage, '로그인');
 
 const LoginFormWrapper = styled.div`
   display: flex;
@@ -296,14 +277,22 @@ const LoginBtn = styled.button`
   }
 `;
 
-const ToggleText = styled.p`
-  font-size: 1rem;
+const SignUpBtn = styled.button`
+  width: 100%;
   color: #fff;
-  text-align: center;
-  margin-top: 1.2rem;
-  margin-bottom: 3.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border: 0.05rem solid ${({ theme }) => theme.colors.orange};
+  border-radius: 1.4rem;
+  margin-top: 1.5rem;
 
-  cursor: pointer;
+  &:active,
+  :hover {
+    color: ${({ theme }) => theme.colors.black};
+    background-color: ${({ theme }) => theme.colors.orange};
+    transition: all 0.1s ease-in-out;
+  }
 `;
 
 const SocialSignInWrapper = styled.div`
@@ -320,12 +309,6 @@ const SocialSignInIcon = styled.div`
   button {
     font-size: 0.8rem;
     color: ${({ theme }) => theme.colors.gray};
-
-    &:hover,
-    &:active {
-      color: #fff;
-      transition: color ease-in-out 100ms;
-    }
 
     svg {
       color: #fff;
