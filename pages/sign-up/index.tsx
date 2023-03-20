@@ -283,6 +283,11 @@ const LoginFormWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 5rem;
+
+  ${({ theme }) => theme.device.tablet} {
+    margin-bottom: 3rem;
+  }
 `;
 
 const LoginForTitle = styled.h1`
@@ -304,7 +309,6 @@ const LoginForm = styled.form`
   flex-direction: column;
   justify-content: center;
   width: 18rem;
-  margin-bottom: 1.5rem;
 
   label {
     font-size: 0.8rem;

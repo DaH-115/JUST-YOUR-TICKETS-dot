@@ -22,14 +22,11 @@ const FooterWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  width: 100%;
-  padding: 2rem;
   color: ${({ theme }) => theme.colors.gray};
-  background-color: #0b0b0b;
-  margin-top: 2rem;
 
-  font-size: 0.8rem;
+  padding: 2rem 0;
+
+  font-size: 0.7rem;
   font-weight: 700;
 
   p {
@@ -46,7 +43,6 @@ const FooterWrapper = styled.div`
   }
 
   ${({ theme }) => theme.device.tablet} {
-    padding: 1.5rem;
-    margin-top: 2rem;
+    padding-bottom: 1.5rem;
   }
 `;
