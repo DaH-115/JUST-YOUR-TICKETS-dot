@@ -134,12 +134,12 @@ const SignUpPage: NextPage = () => {
     <BackgroundStyle customMessage='create📝'>
       {isLoading && <LoadingMsg />}
       <>
-        <LoginFormWrapper>
-          <LoginForTitle>{'*Sign Up /회원가입'}</LoginForTitle>
+        <SignUpFormWrapper>
+          <SignUpForTitle>{'*Sign Up /회원가입'}</SignUpForTitle>
           {isError && (
             <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요'}.</ErrorMsg>
           )}
-          <LoginForm onSubmit={onSubmitHandler}>
+          <SignUpForm onSubmit={onSubmitHandler}>
             {/* EMAIL */}
             <label htmlFor='user-email'>{'*EMAIL /이메일'}</label>
 
@@ -221,11 +221,11 @@ const SignUpPage: NextPage = () => {
                 : null}
             </ValidationMsg>
 
-            <LoginBtn type='submit' disabled={isDisabled}>
+            <SignUpBtn type='submit' disabled={isDisabled}>
               {'회원가입'}
-            </LoginBtn>
-          </LoginForm>
-        </LoginFormWrapper>
+            </SignUpBtn>
+          </SignUpForm>
+        </SignUpFormWrapper>
       </>
     </BackgroundStyle>
   );
@@ -278,7 +278,7 @@ const ArrowBtn = styled.div`
   padding-top: 0.1rem;
 `;
 
-const LoginFormWrapper = styled.div`
+const SignUpFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -290,7 +290,7 @@ const LoginFormWrapper = styled.div`
   }
 `;
 
-const LoginForTitle = styled.h1`
+const SignUpForTitle = styled.h1`
   font-size: 1.2rem;
   font-weight: 700;
   color: #fff;
@@ -304,7 +304,7 @@ const LoginForTitle = styled.h1`
   }
 `;
 
-const LoginForm = styled.form`
+const SignUpForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -351,7 +351,7 @@ const ErrorMsg = styled.p`
   margin-bottom: 1rem;
 `;
 
-const LoginBtn = styled.button`
+const SignUpBtn = styled.button`
   font-size: 1rem;
   font-weight: 700;
   padding: 1rem 2rem;
