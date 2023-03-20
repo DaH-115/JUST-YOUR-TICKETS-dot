@@ -1,5 +1,5 @@
 import React from 'react';
-import TopMovieTicket from 'components/home/TopMovieTicket';
+import TopMovieTicket from 'components/top-ticket/TopMovieTicket';
 import TicketSlider from 'components/slider/TicketSlider';
 import { TopMovieDataProps } from 'ticketType';
 

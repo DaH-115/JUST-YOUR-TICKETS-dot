@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import BackgroundStyle from 'components/layout/BackgroundStyle';
 import SlideList from 'components/slider/SlideList';
-import TopMovieSlider from 'components/home/TopMovieSlider';
+import TopMovieSlider from 'components/top-ticket/TopMovieSlider';
 import { TopMovieDataProps } from 'ticketType';
 
 const Home: NextPage<{ topMovies: TopMovieDataProps[] }> = ({ topMovies }) => {

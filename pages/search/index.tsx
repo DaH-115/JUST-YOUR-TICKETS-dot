@@ -7,7 +7,7 @@ import { BiSearch } from 'react-icons/bi';
 
 import withHeadMeta from 'components/common/withHeadMeta';
 import BackgroundStyle from 'components/layout/BackgroundStyle';
-import SearchTicket from 'components/search/SearchTicket';
+import SearchTicket from 'components/search-ticket/SearchTicket';
 import NoneResults from 'components/styles/NoneReults';
 import { SystemError } from 'errorType';
 import { TopMovieDataProps } from 'ticketType';
