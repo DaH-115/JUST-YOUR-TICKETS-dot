@@ -9,7 +9,6 @@ import TicketInfoBtn from 'components/ticket/TicketInfoBtn';
 import MovieTicketDetail from 'components/ticket/MovieTicketDetail';
 import PosterImage from 'components/ticket/PosterImage';
 import AlertPopup from 'components/layout/AlertPopup';
-import PortalAlertPopup from 'components/popup/PortalAlert';
 import UpdateBtn from 'components/ticket/UpdateBtn';
 import DeleteBtn from 'components/ticket/DeleteBtn';
 import TicketWrapper from 'components/styles/TicketWrapper';
@@ -50,14 +49,12 @@ const UserTicket = ({
   return (
     <TicketWrapper>
       {isOpen && (
-        <PortalAlertPopup>
-          <AlertPopup
-            popupType='modal'
-            popupMessage='정말 티켓을 삭제할까요?'
-            onCancelHandler={onToggleHandler}
-            onConfirmHandler={onDeleteHandler}
-          />
-        </PortalAlertPopup>
+        <AlertPopup
+          popupType='modal'
+          popupMessage='정말 티켓을 삭제할까요?'
+          onCancelHandler={onToggleHandler}
+          onConfirmHandler={onDeleteHandler}
+        />
       )}
 
       <MovieIndexBar>

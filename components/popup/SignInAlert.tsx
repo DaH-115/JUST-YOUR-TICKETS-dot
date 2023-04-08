@@ -2,7 +2,6 @@ import React from 'react';
 import { useCallback } from 'react';
 import { useRouter } from 'next/router';
 
-import PortalAlertPopup from 'components/popup/PortalAlert';
 import AlertPopup from 'components/layout/AlertPopup';
 
 const SignInAlert = ({ onToggleHandler }: { onToggleHandler: () => void }) => {
@@ -14,14 +13,12 @@ const SignInAlert = ({ onToggleHandler }: { onToggleHandler: () => void }) => {
   }, []);
 
   return (
-    <PortalAlertPopup>
-      <AlertPopup
-        popupType='alert'
-        popupMessage='로그인이 필요한 페이지 입니다.&nbsp; 로그인 페이지로 이동 합니다.'
-        onCancelHandler={onToggleHandler}
-        onConfirmHandler={onMoveSignInHandler}
-      />
-    </PortalAlertPopup>
+    <AlertPopup
+      popupType='alert'
+      popupMessage='로그인이 필요한 페이지 입니다.&nbsp; 로그인 페이지로 이동 합니다.'
+      onCancelHandler={onToggleHandler}
+      onConfirmHandler={onMoveSignInHandler}
+    />
   );
 };
 
