@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Head from 'next/head';
 import styled from 'styled-components';
 import { AiOutlineArrowRight } from 'react-icons/ai';
-import useGetJanres from 'hooks/useGetJanres';
+import useGetGenres from 'hooks/useGetGenres';
 
 import BackgroundStyle from 'components/layout/BackgroundStyle';
 import PosterImage from 'components/ticket/PosterImage';
@@ -26,7 +26,7 @@ const MovieDetail = ({
   overview,
   posterPath,
 }: MovieDataProps) => {
-  const janreArr = useGetJanres(movieId);
+  const genreArr = useGetGenres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
   const posterImage = posterPath
     ? `https://image.tmdb.org/t/p/w500${posterPath}`
@@ -53,12 +53,12 @@ const MovieDetail = ({
             <ContentText>
               <p>{`${Math.round(voteAverage)} /10`}</p>
             </ContentText>
-            {janreArr && (
+            {genreArr && (
               <>
-                <StyledLabeling>{'* Janres /장르'}</StyledLabeling>
+                <StyledLabeling>{'* Genre /장르'}</StyledLabeling>
                 <ContentText>
                   <MovieJanreWrapper>
-                    {janreArr.map((item, index) => (
+                    {genreArr.map((item, index) => (
                       <li key={index}>{item}</li>
                     ))}
                   </MovieJanreWrapper>

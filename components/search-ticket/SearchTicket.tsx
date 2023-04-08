@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 import Image from 'next/image';
-import useGetJanres from 'hooks/useGetJanres';
+import useGetGenres from 'hooks/useGetGenres';
 
 import MovieInfoBtn from 'components/ticket/MovieInfoBtn';
 import MovieTextDetail from 'components/ticket/MovieTextDetail';
@@ -16,7 +16,7 @@ const SearchTicket = ({
   voteAverage,
   posterPath,
 }: MovieTicketProps) => {
-  const janres = useGetJanres(movieId);
+  const genreArr = useGetGenres(movieId);
   const releaseYear = releaseDate && releaseDate.slice(0, 4);
   const posterImage = posterPath
     ? `https://image.tmdb.org/t/p/w500${posterPath}`
@@ -35,7 +35,7 @@ const SearchTicket = ({
           <MovieTextDetail
             title={title}
             releaseYear={releaseYear}
-            janres={janres}
+            genres={genreArr}
             voteAverage={voteAverage}
           />
         </MovieTextWrapper>

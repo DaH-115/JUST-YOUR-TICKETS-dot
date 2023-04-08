@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const useGetJanres = (movieId: number) => {
-  const [janre, setJanre] = useState<string[]>([]);
+const useGetGenres = (movieId: number) => {
+  const [genres, setGenres] = useState<string[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -15,11 +15,11 @@ const useGetJanres = (movieId: number) => {
         (item: { id: number; name: string }) => item.name
       );
 
-      setJanre(result);
+      setGenres(result);
     })();
   }, [movieId]);
 
-  return janre;
+  return genres;
 };
 
-export default useGetJanres;
+export default useGetGenres;

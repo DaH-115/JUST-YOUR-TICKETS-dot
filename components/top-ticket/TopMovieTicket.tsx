@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import useGetJanres from 'hooks/useGetJanres';
+import useGetGenres from 'hooks/useGetGenres';
 
 import PosterImage from 'components/ticket/PosterImage';
 import MovieTicketDetail from 'components/ticket/MovieTicketDetail';
@@ -18,7 +18,7 @@ const TopMovieTicket = ({
   voteAverage,
 }: MovieTicketProps) => {
   const router = useRouter();
-  const janres = useGetJanres(movieId);
+  const genreArr = useGetGenres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
 
   return (
@@ -38,7 +38,7 @@ const TopMovieTicket = ({
       <MovieTicketDetail
         title={title}
         releaseYear={releaseYear}
-        janres={janres}
+        genres={genreArr}
         voteAverage={voteAverage}
         posterPath={posterPath}
       />

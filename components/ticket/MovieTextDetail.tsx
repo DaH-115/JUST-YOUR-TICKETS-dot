@@ -7,7 +7,7 @@ const MovieTextDetail = ({
   voteAverage,
   releaseYear,
   reviewText,
-  janres,
+  genres,
 }: MovieTextDetailProps) => {
   return (
     <TextWrapper>
@@ -20,9 +20,9 @@ const MovieTextDetail = ({
         </MovieRating>
       </MovieTitle>
 
-      {janres && (
+      {genres && (
         <MovieJanreWrapper>
-          {janres.map((item: string, index) => (
+          {genres.map((item: string, index) => (
             <li key={index}>{item === 'Science Fiction' ? 'SF' : item}</li>
           ))}
         </MovieJanreWrapper>

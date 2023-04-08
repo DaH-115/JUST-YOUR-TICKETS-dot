@@ -46,13 +46,13 @@ declare module 'ticketType' {
   }
 
   export interface MovieTicketDetailProps extends requiredText {
-    janres?: string[];
+    genres?: string[];
     posterPath?: string;
     reviewText?: string;
   }
 
   export interface MovieTextDetailProps extends requiredText {
-    janres?: string[];
+    genres?: string[];
     reviewText?: string;
   }
 

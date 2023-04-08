@@ -8,7 +8,7 @@ import { MovieTicketDetailProps } from 'ticketType';
 const MovieTicketDetail = ({
   title,
   releaseYear,
-  janres,
+  genres,
   voteAverage,
   posterPath,
   reviewText,
@@ -19,7 +19,7 @@ const MovieTicketDetail = ({
         title={title}
         releaseYear={releaseYear}
         voteAverage={voteAverage}
-        janres={janres}
+        genres={genres}
         reviewText={reviewText}
       />
 
