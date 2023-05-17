@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
@@ -9,6 +9,7 @@ import { useAuthState } from 'components/store/auth-context';
 import BackgroundStyle from 'components/layout/BackgroundStyle';
 import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
+import AlertPopup from 'components/layout/AlertPopup';
 
 // title, releaseYear, posterImage <- Main/Search/MovieDetailPage에서 받는 값
 // rating, reviewText, ticketId <- UserTicket에서 받는 값
@@ -21,38 +22,42 @@ const WriteForm = ({
   posterImage,
 }: WriteFormProps) => {
   const router = useRouter();
-  const { userId, isSigned } = useAuthState();
+  const { userId } = useAuthState();
   const [ratingVal, setRatingVal] = useState<boolean>(true);
   const [isConfirm, setIsConfirm] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const ratingRef = useRef<HTMLInputElement>(null);
-  const reviewRef = useRef<HTMLTextAreaElement>(null);
   const today = new Date().toLocaleDateString();
 
-  let newRatingText: string = '';
-  let newReviewText: string = '';
+  const [newRatingText, setNewRatingText] = useState(!rating ? '' : rating);
+  const [newReviewText, setNewReviewText] = useState(
+    !reviewText ? '' : reviewText
+  );
 
   useEffect(() => {
-    const routeChangeStart = (url: string) => {
-      if (url !== router.asPath && isSigned && !isConfirm) {
-        alert('작성하던 내용이 사라지게 됩니다. 페이지를 나가시겠습니까?');
-      }
-    };
+    history.pushState(null, '', location.href);
 
-    router.events.on('routeChangeStart', routeChangeStart);
+    window.addEventListener('popstate', () => {
+      history.pushState(null, '', location.href);
+      setIsOpen(true);
+    });
 
     return () => {
-      router.events.off('routeChangeStart', routeChangeStart);
+      window.removeEventListener('popstate', () => {
+        history.pushState(null, '', location.href);
+        setIsOpen(true);
+      });
     };
-  }, [isSigned, isConfirm]);
+  }, []);
 
-  useEffect(() => {
-    // props로 받아온 값(reviewText && rating)이 있으면 ref에 넣어준다
-    if (rating && reviewText) {
-      ratingRef.current!.value = rating;
-      reviewRef.current!.value = reviewText;
-    }
-  }, [rating, reviewText]);
+  const onConfirmHandler = () => {
+    setIsOpen(false);
+    router.push(ticketId ? '/ticket-list' : '/');
+  };
+
+  const onCancelHandler = () => {
+    setIsOpen(false);
+  };
 
   const updateContents = async (
     rating: string,
@@ -93,76 +98,96 @@ const WriteForm = ({
     }
   };
 
-  const getNewText = () => {
-    if (ratingRef.current!.value && reviewRef.current!.value) {
-      newRatingText = ratingRef.current!.value;
-      newReviewText = reviewRef.current!.value;
-    } else {
-      alert('내용을 채워주세요.');
-    }
-  };
-
   const onAddHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsConfirm(true);
-    getNewText();
-    addContents(newRatingText, newReviewText);
+    isConfirm
+      ? addContents(newRatingText, newReviewText)
+      : alert('내용을 작성해 주세요.');
   };
 
   const onUpdateHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsConfirm(true);
-    getNewText();
-    updateContents(newRatingText, newReviewText, ticketId);
+    isConfirm
+      ? updateContents(newRatingText, newReviewText, ticketId)
+      : alert('내용을 작성해 주세요.');
   };
 
   const onRatingChangeHandler = useCallback(
     ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-      Number(target.value) > 10 ? setRatingVal(false) : setRatingVal(true);
+      if (Number(target.value) > 10) {
+        setRatingVal(false);
+      } else {
+        setRatingVal(true);
+        setNewRatingText(target.value);
+        setIsConfirm(true);
+      }
+    },
+    []
+  );
+
+  const onReviewChangeHandler = useCallback(
+    ({ target }: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setNewReviewText(target.value);
+      setIsConfirm(true);
     },
     []
   );
 
   return (
     <BackgroundStyle customMessage='write✒️'>
-      <WriteFormWrapper>
-        <MovieDetailWrapper>
-          <p>{today}</p>
-          <MovieTitle>
-            <p>{'* Movie Title /제목'}</p>
-            {`"${title}"(${releaseYear})`}
-          </MovieTitle>
-        </MovieDetailWrapper>
+      {isOpen && (
+        <AlertPopup
+          popupType='modal'
+          popupMessage='작성하던 내용이 사라지게 됩니다. 페이지를 나가시겠습니까?'
+          onConfirmHandler={onConfirmHandler}
+          onCancelHandler={onCancelHandler}
+        />
+      )}
+      <Wrapper>
+        <WriteFormWrapper>
+          <MovieDetailWrapper>
+            <p>{today}</p>
+            <MovieTitle>
+              <p>{'* Movie Title /제목'}</p>
+              {`"${title}"(${releaseYear})`}
+            </MovieTitle>
+          </MovieDetailWrapper>
 
-        <FormWrapper>
-          <StyledForm onSubmit={!ticketId ? onAddHandler : onUpdateHandler}>
-            <InputWrapper>
-              <StyledLabel htmlFor='rating'>{'* Rating /점수'}</StyledLabel>
-              <StyledDesc>{'얼마나 좋았나요?'}</StyledDesc>
-              <RatingInputWrapper>
-                <StyledInput
-                  name='rating'
-                  id='rating'
-                  ref={ratingRef}
-                  onChange={onRatingChangeHandler}
+          <FormWrapper>
+            <StyledForm onSubmit={!ticketId ? onAddHandler : onUpdateHandler}>
+              <InputWrapper>
+                <StyledLabel htmlFor='rating'>{'* Rating /점수'}</StyledLabel>
+                <StyledDesc>{'얼마나 좋았나요?'}</StyledDesc>
+                <RatingInputWrapper>
+                  <StyledInput
+                    name='rating'
+                    id='rating'
+                    onChange={onRatingChangeHandler}
+                    value={newRatingText}
+                  />
+                  <p>{' /10'}</p>
+                </RatingInputWrapper>
+                <ValidationMsg isState={ratingVal}>
+                  {'최대 10점까지 줄 수 있어요.'}
+                </ValidationMsg>
+              </InputWrapper>
+              <InputWrapper>
+                <StyledLabel htmlFor='review'>
+                  {'* Review /나의 감상'}
+                </StyledLabel>
+                <StyledDesc>{'나의 생각과 느낌을 적어보세요.'}</StyledDesc>
+                <StyledTextarea
+                  name='reviewText'
+                  id='review'
+                  onChange={onReviewChangeHandler}
+                  value={newReviewText}
                 />
-                <p>{' /10'}</p>
-              </RatingInputWrapper>
-              <ValidationMsg isState={ratingVal}>
-                {'최대 10점까지 줄 수 있어요.'}
-              </ValidationMsg>
-            </InputWrapper>
-            <InputWrapper>
-              <StyledLabel htmlFor='review'>
-                {'* Review /나의 감상'}
-              </StyledLabel>
-              <StyledDesc>{'나의 생각과 느낌을 적어보세요.'}</StyledDesc>
-              <StyledTextarea name='reviewText' id='review' ref={reviewRef} />
-            </InputWrapper>
-            <StyledBtn>{!ticketId ? '입력하기' : '수정하기'}</StyledBtn>
-          </StyledForm>
-        </FormWrapper>
-      </WriteFormWrapper>
+              </InputWrapper>
+              <StyledBtn>{!ticketId ? '입력하기' : '수정하기'}</StyledBtn>
+            </StyledForm>
+          </FormWrapper>
+        </WriteFormWrapper>
+      </Wrapper>
     </BackgroundStyle>
   );
 };
@@ -175,23 +200,20 @@ const ValidationMsg = styled.p<{ isState: boolean }>`
   color: ${({ theme }) => theme.colors.orange};
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const WriteFormWrapper = styled.div`
   width: 100%;
-  max-width: 600px;
-  height: 100%;
+  max-width: ${({ theme }) => theme.size.tablet};
+  margin-top: 2.5rem;
   padding: 1.5rem;
+  padding-bottom: 2rem;
   background-color: #fff;
-  border-top-left-radius: 1.5rem;
-  border-top-right-radius: 1.5rem;
-  filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.4));
-
-  ${({ theme }) => theme.device.tablet} {
-    position: relative;
-    bottom: 0;
-    right: -50%;
-    transform: translateX(-50%);
-    height: 90%;
-  }
+  border-radius: 1.5rem;
 `;
 
 const InputWrapper = styled.div`
