@@ -22,7 +22,7 @@ const AlertPopup = ({
         <PopupTitle>{'*알림'}</PopupTitle>
         <PopupDesc>{popupMessage}</PopupDesc>
         <PopupBtnWrapper>
-          {popupType === 'alert' ? null : (
+          {popupType === 'modal' && (
             <PopupBtnCancel onClick={onCancelHandler}>
               {'아니요'}
             </PopupBtnCancel>
