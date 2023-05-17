@@ -13,6 +13,7 @@ const device = {
 };
 
 export const theme: DefaultTheme = {
+  size,
   colors: {
     black: '#141414',
     gray: '#C2C2C2',
