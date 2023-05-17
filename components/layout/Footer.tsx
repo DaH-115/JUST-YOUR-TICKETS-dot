@@ -8,7 +8,7 @@ const Footer = () => {
       <FooterWrapper>
         <p>{'JUST YOUR TICKETS.'}</p>
         <p>{'ⓒkwak_dahyeon 2023'}</p>
-        <Link href='/'>
+        <Link href='https://github.com/DaH-115/JUST-MOVIE-TICKETS-dot'>
           <BsGithub />
         </Link>
       </FooterWrapper>
