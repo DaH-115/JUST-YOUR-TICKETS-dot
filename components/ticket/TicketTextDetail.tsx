@@ -1,14 +1,14 @@
 import styled from 'styled-components';
-import { MovieTextDetailProps } from 'ticketType';
+import { TicketTextDetailProps } from 'ticketType';
 import MovieJanreWrapper from 'components/styles/MovieJanreWrapper';
 
-const MovieTextDetail = ({
+const TicketTextDetail = ({
   title,
   voteAverage,
   releaseYear,
   reviewText,
   genres,
-}: MovieTextDetailProps) => {
+}: TicketTextDetailProps) => {
   return (
     <TextWrapper>
       <MovieTitle>
@@ -22,8 +22,8 @@ const MovieTextDetail = ({
 
       {genres && (
         <MovieJanreWrapper>
-          {genres.map((item: string, index) => (
-            <li key={index}>{item === 'Science Fiction' ? 'SF' : item}</li>
+          {genres.map((genr: string, index) => (
+            <li key={index}>{genr === 'Science Fiction' ? 'SF' : genr}</li>
           ))}
         </MovieJanreWrapper>
       )}
@@ -33,7 +33,7 @@ const MovieTextDetail = ({
   );
 };
 
-export default MovieTextDetail;
+export default TicketTextDetail;
 
 const TextWrapper = styled.div`
   width: 100%;

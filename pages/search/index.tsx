@@ -10,33 +10,32 @@ import BackgroundStyle from 'components/layout/BackgroundStyle';
 import SearchTicket from 'components/search-ticket/SearchTicket';
 import NoneResults from 'components/styles/NoneReults';
 import { SystemError } from 'errorType';
-import { TopMovieDataProps } from 'ticketType';
+import { Top10MovieDataProps } from 'ticketType';
 
 const SearchPage: NextPage = () => {
-  const [movieName, setMovieName] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<TopMovieDataProps[]>([]);
+  const [movieTitle, setMovieTitle] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<Top10MovieDataProps[]>([]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
-    if (movieName) {
+    if (movieTitle) {
       timer = setTimeout(() => {
-        getSearchResults(movieName);
+        getSearchResults(movieTitle);
       }, 500);
     } else {
       setSearchResults([]);
     }
 
     return () => clearTimeout(timer);
-  }, [movieName]);
+  }, [movieTitle]);
 
-  const getSearchResults = async (movieName: string) => {
+  const getSearchResults = async (movieTitle: string) => {
     try {
       const res = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieName}&language=ko-KR`
+        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieTitle}&language=ko-KR`
       );
-
-      const { results }: { results: TopMovieDataProps[] } = await res.data;
+      const { results }: { results: Top10MovieDataProps[] } = await res.data;
 
       setSearchResults(results);
     } catch (error) {
@@ -48,14 +47,14 @@ const SearchPage: NextPage = () => {
   const searchInputHandler = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault();
-      movieName && getSearchResults(movieName);
+      movieTitle && getSearchResults(movieTitle);
     },
-    [movieName]
+    [movieTitle]
   );
 
   const inputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setMovieName(event.target.value);
+      setMovieTitle(event.target.value);
     },
     []
   );
@@ -68,7 +67,7 @@ const SearchPage: NextPage = () => {
           <StyledInput
             type='text'
             id='search-input'
-            value={movieName}
+            value={movieTitle}
             onChange={inputChangeHandler}
             placeholder='Search Your Ticket.'
           />

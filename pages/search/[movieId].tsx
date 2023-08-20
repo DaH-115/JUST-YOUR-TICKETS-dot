@@ -5,10 +5,10 @@ import {
   GetStaticPropsContext,
   NextPage,
 } from 'next';
-import { TopMovieDataProps } from 'ticketType';
 import MovieDetail from 'components/movie-detail/MovieDetailPage';
+import { Top10MovieDataProps } from 'ticketType';
 
-const SearchListDetailPage: NextPage<{ movie: TopMovieDataProps }> = ({
+const SearchListDetailPage: NextPage<{ movie: Top10MovieDataProps }> = ({
   movie,
 }) => {
   return (
@@ -44,10 +44,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps<{
-  movie: TopMovieDataProps;
+  movie: Top10MovieDataProps;
 }> = async ({ params }: GetStaticPropsContext) => {
   const movieId = params && params.movieId;
-  let movie: TopMovieDataProps;
+  let movie: Top10MovieDataProps;
 
   try {
     const res = await axios.get(

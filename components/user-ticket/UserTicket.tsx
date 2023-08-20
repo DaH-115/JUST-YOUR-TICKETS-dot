@@ -1,18 +1,21 @@
 import { useCallback, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { deleteDoc, doc } from 'firebase/firestore';
 import { db } from 'firebase-config';
 import styled from 'styled-components';
 import Error from 'next/error';
+import { AiFillInfoCircle } from 'react-icons/ai';
+import { BiPencil } from 'react-icons/bi';
+import { BiTrash } from 'react-icons/bi';
 
-import TicketInfoBtn from 'components/ticket/TicketInfoBtn';
 import MovieTicketDetail from 'components/ticket/MovieTicketDetail';
 import PosterImage from 'components/ticket/PosterImage';
-import AlertPopup from 'components/layout/AlertPopup';
-import UpdateBtn from 'components/ticket/UpdateBtn';
-import DeleteBtn from 'components/ticket/DeleteBtn';
+import AlertPopup from 'components/popup/AlertPopup';
 import TicketWrapper from 'components/styles/TicketWrapper';
 import MovieIndexBar from 'components/styles/MovieIndexBar';
+import StyeldInfo from 'components/styles/StyeldInfo';
+import StyledBtn from 'components/styles/StyledBtn';
 import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
 
@@ -61,26 +64,52 @@ const UserTicket = ({
         <WriteDate>{writeDate}</WriteDate>
         <BtnWrapper>
           {/* DELETE BUTTON */}
-          <DeleteBtn onToggle={onToggleHandler} />
+          <DeleteBtnWrapper onClick={onToggleHandler}>
+            <button>
+              <BiTrash />
+            </button>
+          </DeleteBtnWrapper>
 
           {/* UPDATE BUTTON */}
-          <UpdateBtn
-            title={title}
-            ticketId={ticketId}
-            releaseYear={releaseYear}
-            rating={rating}
-            reviewText={reviewText}
-            posterImage={posterImage}
-          />
+          <Link
+            href={{
+              pathname: '/write',
+              query: {
+                ticketId,
+                title,
+                releaseYear,
+                rating,
+                reviewText,
+                posterImage,
+              },
+            }}
+            as={`/write`}
+          >
+            <StyledBtn>
+              <button>
+                <BiPencil />
+              </button>
+            </StyledBtn>
+          </Link>
 
           {/* GO TO MOVIE INFO PAGE BUTTON */}
-          <TicketInfoBtn
-            title={title}
-            releaseYear={releaseYear}
-            posterImage={posterImage}
-            rating={rating}
-            reviewText={reviewText}
-          />
+          <Link
+            href={{
+              pathname: `${router.pathname}/${title}`,
+              query: {
+                title,
+                releaseYear,
+                posterImage,
+                rating,
+                reviewText,
+              },
+            }}
+            as={`${router.pathname}/${title}`}
+          >
+            <StyeldInfo>
+              <AiFillInfoCircle />
+            </StyeldInfo>
+          </Link>
         </BtnWrapper>
       </MovieIndexBar>
 
@@ -110,4 +139,10 @@ const BtnWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 0.5rem;
+`;
+
+const DeleteBtnWrapper = styled(StyledBtn)`
+  button {
+    margin-bottom: 0.05rem;
+  }
 `;

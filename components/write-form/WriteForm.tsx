@@ -9,10 +9,8 @@ import { useAuthState } from 'components/store/auth-context';
 import BackgroundStyle from 'components/layout/BackgroundStyle';
 import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
-import AlertPopup from 'components/layout/AlertPopup';
+import AlertPopup from 'components/popup/AlertPopup';
 
-// title, releaseYear, posterImage <- Main/Search/MovieDetailPage에서 받는 값
-// rating, reviewText, ticketId <- UserTicket에서 받는 값
 const WriteForm = ({
   ticketId,
   title,

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import useGetGenres from 'hooks/useGetGenres';
 
 import MovieInfoBtn from 'components/ticket/MovieInfoBtn';
-import MovieTextDetail from 'components/ticket/MovieTextDetail';
+import TicketTextDetail from 'components/ticket/TicketTextDetail';
 import { MovieTicketProps } from 'ticketType';
 import { MdOutlineArrowForwardIos } from 'react-icons/md';
 
@@ -32,13 +32,14 @@ const SearchTicket = ({
       </StyledInfo>
       <SearchResult>
         <MovieTextWrapper>
-          <MovieTextDetail
+          <TicketTextDetail
             title={title}
             releaseYear={releaseYear}
             genres={genreArr}
             voteAverage={voteAverage}
           />
         </MovieTextWrapper>
+
         {/* POSTER BTN */}
         <Link
           href={{

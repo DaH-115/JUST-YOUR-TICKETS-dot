@@ -9,7 +9,7 @@ import TicketWrapper from 'components/styles/TicketWrapper';
 import MovieIndexBar from 'components/styles/MovieIndexBar';
 import { MovieTicketProps } from 'ticketType';
 
-const TopMovieTicket = ({
+const Top10MovieTicket = ({
   movieId,
   releaseDate,
   movieIndex,
@@ -46,7 +46,7 @@ const TopMovieTicket = ({
   );
 };
 
-export default TopMovieTicket;
+export default Top10MovieTicket;
 
 const MovieRank = styled.p`
   font-size: 3rem;

@@ -16,7 +16,7 @@ import {
 } from 'components/styles/movie-details';
 import SlideTitle from 'components/styles/StyledTitle';
 import MovieJanreWrapper from 'components/styles/MovieJanreWrapper';
-import { MovieDataProps } from 'ticketType';
+import { MovieDetailProps } from 'ticketType';
 
 const MovieDetail = ({
   movieId,
@@ -25,7 +25,7 @@ const MovieDetail = ({
   voteAverage,
   overview,
   posterPath,
-}: MovieDataProps) => {
+}: MovieDetailProps) => {
   const genreArr = useGetGenres(movieId);
   const releaseYear = releaseDate.slice(0, 4);
   const posterImage = posterPath

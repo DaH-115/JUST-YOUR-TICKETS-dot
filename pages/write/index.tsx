@@ -13,8 +13,6 @@ const WritePage: NextPage = () => {
   const { isSigned } = useAuthState();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  // title, releaseYear, posterImage <- Main/Search에서 받는 값
-  // rating, reviewText, ticketId <- User Ticket에서 받는 값
   const { title, releaseYear, posterImage, rating, reviewText, ticketId } =
     router.query as unknown as WriteFormProps;
 
