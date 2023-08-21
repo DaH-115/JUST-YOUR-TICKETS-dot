@@ -72,6 +72,11 @@ const AdmitBtnWrapper = styled.div`
 
   &:hover,
   &:active {
+    button {
+      color: ${({ theme }) => theme.colors.orange};
+      transition: color 200ms ease-in-out;
+    }
+
     div {
       color: ${({ theme }) => theme.colors.orange};
       transition: color 200ms ease-in-out;

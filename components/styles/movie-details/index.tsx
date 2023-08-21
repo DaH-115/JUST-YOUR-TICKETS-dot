@@ -4,11 +4,13 @@ export const MovieDetailWrapper = styled.div`
   width: 100%;
   height: 100%;
   margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   ${({ theme }) => theme.device.tablet} {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: row;
   }
 `;
 
@@ -17,14 +19,13 @@ export const DetailTextWrapper = styled.div`
   height: 100%;
   padding: 1.5rem 2rem;
   background: linear-gradient(white 70%, ${({ theme }) => theme.colors.yellow});
-  margin-top: 1rem;
-  margin-bottom: -2rem;
+  margin-top: -1.2rem;
 
   ${({ theme }) => theme.device.tablet} {
     max-width: 600px;
-    padding: 1.2rem 1rem;
-    margin: 0 0 2rem 2rem;
+    margin-left: 2rem;
     border-radius: 1rem;
+    margin-top: 0;
   }
 `;
 
