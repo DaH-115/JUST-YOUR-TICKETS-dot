@@ -29,19 +29,21 @@ const SearchTicket = ({
         {/* GO TO MOVIE INFO PAGE BUTTON */}
         <MovieInfoBtn movieId={movieId} />
       </StyledInfo>
-      {posterImage ? (
-        <PosterImage>
-          <Image
-            src={posterImage}
-            alt={title}
-            width={180}
-            height={270}
-            unoptimized
-          />
-        </PosterImage>
-      ) : (
-        <PosterImage>{`${title}(${releaseYear})`}</PosterImage>
-      )}
+      <Wrapper>
+        {posterImage ? (
+          <PosterImage>
+            <Image
+              src={posterImage}
+              alt={title}
+              width={180}
+              height={270}
+              unoptimized
+            />
+          </PosterImage>
+        ) : (
+          <PosterImage>{`${title}(${releaseYear})`}</PosterImage>
+        )}
+      </Wrapper>
       <SearchResult>
         <MovieTextWrapper>
           <TicketTextDetail
@@ -98,6 +100,7 @@ const SearchResult = styled.div`
 const StyledInfo = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   div {
     font-size: 1.5rem;
@@ -106,9 +109,7 @@ const StyledInfo = styled.div`
 
   ${({ theme }) => theme.device.tablet} {
     display: block;
-    margin-top: 1rem;
     margin-right: 1rem;
-    align-items: baseline;
   }
 `;
 
@@ -127,4 +128,10 @@ const TicketIndex = styled.p`
 const MovieTextWrapper = styled.div`
   width: 100%;
   height: 100%;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
