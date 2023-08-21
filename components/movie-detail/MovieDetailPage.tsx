@@ -41,7 +41,11 @@ const MovieDetail = ({
       <BackgroundStyle customMessage='info✔️'>
         <SlideTitle>{'영화 상세 정보'}</SlideTitle>
         <MovieDetailWrapper>
-          <PosterImage title={title} posterImage={posterImage} />
+          <PosterImage
+            title={title}
+            releaseYear={releaseYear}
+            posterImage={posterImage}
+          />
           <DetailTextWrapper>
             <StyledLabeling>{'* Movie Title /제목'}</StyledLabeling>
             <ContentText>
@@ -113,12 +117,12 @@ const AdmitBtnWrapper = styled.div`
   &:hover,
   &:active {
     button {
-      color: ${({ theme }) => theme.colors.yellow};
+      color: ${({ theme }) => theme.colors.orange};
       transition: color 200ms ease-in-out;
     }
 
     div {
-      color: ${({ theme }) => theme.colors.yellow};
+      color: ${({ theme }) => theme.colors.orange};
       transition: color 200ms ease-in-out;
     }
   }

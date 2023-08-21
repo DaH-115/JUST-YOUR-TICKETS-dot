@@ -32,7 +32,11 @@ const Top10MovieTicket = ({
       </MovieIndexBar>
 
       {/* POSTER IMAGE */}
-      <PosterImage title={title} posterPath={posterPath} />
+      <PosterImage
+        title={title}
+        releaseYear={releaseYear}
+        posterPath={posterPath}
+      />
 
       {/* TICKET DETAIL */}
       <MovieTicketDetail

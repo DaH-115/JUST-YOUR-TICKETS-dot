@@ -114,7 +114,11 @@ const UserTicket = ({
       </MovieIndexBar>
 
       {/* POSTER IMAGE Section */}
-      <PosterImage title={title} posterImage={posterImage} />
+      <PosterImage
+        title={title}
+        releaseYear={releaseYear}
+        posterImage={posterImage}
+      />
 
       {/* TICKET DETAIL Section */}
       <MovieTicketDetail

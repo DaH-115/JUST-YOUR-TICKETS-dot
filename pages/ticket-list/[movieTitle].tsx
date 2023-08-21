@@ -34,7 +34,11 @@ const UserTicketDetailPage = () => {
       <BackgroundStyle customMessage='info✔️'>
         <SlideTitle>{'영화 상세 정보'}</SlideTitle>
         <MovieDetailWrapper>
-          <PosterImage title={title} posterImage={posterImage} />
+          <PosterImage
+            title={title}
+            releaseYear={releaseYear}
+            posterImage={posterImage}
+          />
           <DetailTextWrapper>
             <StyledLabeling>{'* Movie Title /제목'}</StyledLabeling>
             <ContentText>

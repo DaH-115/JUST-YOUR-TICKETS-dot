@@ -29,10 +29,8 @@ const SearchTicket = ({
         {/* GO TO MOVIE INFO PAGE BUTTON */}
         <MovieInfoBtn movieId={movieId} />
       </StyledInfo>
-      <SearchResult>
-        {/* POSTER BTN */}
-
-        {posterImage && (
+      {posterImage ? (
+        <PosterImage>
           <Image
             src={posterImage}
             alt={title}
@@ -40,8 +38,11 @@ const SearchTicket = ({
             height={270}
             unoptimized
           />
-        )}
-
+        </PosterImage>
+      ) : (
+        <PosterImage>{`${title}(${releaseYear})`}</PosterImage>
+      )}
+      <SearchResult>
         <MovieTextWrapper>
           <TicketTextDetail
             title={title}
@@ -72,6 +73,18 @@ const SearchResultWrapper = styled.div`
     display: flex;
     justify-content: center;
   }
+`;
+
+const PosterImage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 180px;
+  height: 270px;
+
+  color: #fff;
+  background-color: ${({ theme }) => theme.colors.black};
 `;
 
 const SearchResult = styled.div`

@@ -4,11 +4,17 @@ import styled from 'styled-components';
 
 interface PosterImageProps {
   title: string;
+  releaseYear: string;
   posterImage?: string;
   posterPath?: string;
 }
 
-const PosterImage = ({ title, posterImage, posterPath }: PosterImageProps) => {
+const PosterImage = ({
+  title,
+  releaseYear,
+  posterImage,
+  posterPath,
+}: PosterImageProps) => {
   const posterSrc = posterImage
     ? posterImage
     : posterPath
@@ -16,41 +22,37 @@ const PosterImage = ({ title, posterImage, posterPath }: PosterImageProps) => {
     : '';
 
   return (
-    <ImgBox>
+    <ImgContainer>
       {!posterImage && !posterPath ? (
-        <NoneImgTitle>{title}</NoneImgTitle>
+        <ImgContainer>{`${title}(${releaseYear})`}</ImgContainer>
       ) : (
         <Image
           src={posterSrc}
-          alt={title}
+          alt={`${title}(${releaseYear})`}
           width={320}
           height={480}
           unoptimized
         />
       )}
-    </ImgBox>
+    </ImgContainer>
   );
 };
 
 export default React.memo(PosterImage);
 
-const ImgBox = styled.div`
+const ImgContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  width: ${({ theme }) => theme.posterWidth};
+  height: ${({ theme }) => theme.posterHeight};
   border-radius: 1.5rem;
+
+  color: #fff;
+  background-color: ${({ theme }) => theme.colors.black};
 
   img {
     border-radius: 1.5rem;
   }
-`;
-
-const NoneImgTitle = styled.div`
-  width: ${({ theme }) => theme.posterWidth};
-  height: ${({ theme }) => theme.posterHeight};
-  font-weight: 700;
-  color: black;
-  border-radius: 1rem;
-  background-color: ${({ theme }) => theme.colors.orange};
-  text-align: center;
 `;
