@@ -1,12 +1,11 @@
-import Link from 'next/link';
 import styled from 'styled-components';
 import Image from 'next/image';
 import useGetGenres from 'hooks/useGetGenres';
 
 import MovieInfoBtn from 'components/ticket/MovieInfoBtn';
 import TicketTextDetail from 'components/ticket/TicketTextDetail';
+import AdmitBtn from 'components/ticket/AdmitBtn';
 import { MovieTicketProps } from 'ticketType';
-import { MdOutlineArrowForwardIos } from 'react-icons/md';
 
 const SearchTicket = ({
   title,
@@ -31,6 +30,18 @@ const SearchTicket = ({
         <MovieInfoBtn movieId={movieId} />
       </StyledInfo>
       <SearchResult>
+        {/* POSTER BTN */}
+
+        {posterImage && (
+          <Image
+            src={posterImage}
+            alt={title}
+            width={180}
+            height={270}
+            unoptimized
+          />
+        )}
+
         <MovieTextWrapper>
           <TicketTextDetail
             title={title}
@@ -39,85 +50,17 @@ const SearchTicket = ({
             voteAverage={voteAverage}
           />
         </MovieTextWrapper>
-
-        {/* POSTER BTN */}
-        <Link
-          href={{
-            pathname: '/write',
-            query: {
-              title,
-              releaseYear,
-              posterImage,
-            },
-          }}
-          as={`/write`}
-        >
-          <PosterBtn>
-            {posterImage ? (
-              <Image
-                src={posterImage}
-                alt={title}
-                width={180}
-                height={270}
-                unoptimized
-              />
-            ) : (
-              <NoneImgTitle>{title}</NoneImgTitle>
-            )}
-
-            <PosterBtnText>
-              {'ADMIT ONE'}
-              <MdOutlineArrowForwardIos />
-            </PosterBtnText>
-          </PosterBtn>
-        </Link>
+        <AdmitBtn
+          title={title}
+          releaseYear={releaseYear}
+          posterPath={posterPath}
+        />
       </SearchResult>
     </SearchResultWrapper>
   );
 };
 
 export default SearchTicket;
-
-const NoneImgTitle = styled.div`
-  width: 180px;
-  height: 270px;
-  font-weight: 700;
-  color: black;
-  background-color: ${({ theme }) => theme.colors.orange};
-  text-align: center;
-  padding-top: 1rem;
-`;
-
-const PosterBtn = styled.div`
-  background-color: ${({ theme }) => theme.colors.black};
-  filter: drop-shadow(10px 10px 20px rgba(0, 0, 0, 0.9));
-`;
-
-const PosterBtnText = styled.p`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #fff;
-  padding: 1rem;
-  padding-top: 0.8rem;
-  background-color: ${({ theme }) => theme.colors.black};
-  border-top: 0.1rem dashed ${({ theme }) => theme.colors.orange};
-
-  svg {
-    font-size: 1rem;
-    margin-left: 0.3rem;
-  }
-
-  &:hover,
-  &:active {
-    svg {
-      color: ${({ theme }) => theme.colors.orange};
-      transition: color 150ms ease-in-out;
-    }
-  }
-`;
 
 const SearchResultWrapper = styled.div`
   padding: 1rem;
@@ -171,5 +114,4 @@ const TicketIndex = styled.p`
 const MovieTextWrapper = styled.div`
   width: 100%;
   height: 100%;
-  margin-top: 1rem;
 `;
