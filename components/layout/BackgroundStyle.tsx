@@ -24,7 +24,11 @@ export default BackgroundStyle;
 
 const Wrapper = styled.div`
   width: 100%;
-  background: linear-gradient(#000 10%, ${({ theme }) => theme.colors.black});
+  background: linear-gradient(
+    ${({ theme }) => theme.colors.black},
+    #000 10%,
+    ${({ theme }) => theme.colors.black}
+  );
 `;
 
 const PageTitle = styled.div`

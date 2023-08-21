@@ -15,10 +15,9 @@ const StyledArrow = styled.div`
 
   &:hover,
   &:active {
-    color: ${({ theme }) => theme.colors.yellow};
-    transition: color ease-in-out 150ms;
+    color: #fff;
     background: linear-gradient(
-      ${({ theme }) => theme.colors.black} 30%,
+      transparent 30%,
       ${({ theme }) => theme.colors.orange}
     );
     border-color: ${({ theme }) => theme.colors.orange};

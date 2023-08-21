@@ -107,7 +107,7 @@ const AdmitBtnWrapper = styled.div`
   background-color: #fff;
   margin-top: 2rem;
   padding: 1rem;
-  background-color: ${({ theme }) => theme.colors.orange};
+  background-color: ${({ theme }) => theme.colors.black};
   border-radius: 1rem;
 
   &:hover,
@@ -124,7 +124,7 @@ const AdmitBtnWrapper = styled.div`
   }
 
   button {
-    color: ${({ theme }) => theme.colors.black};
+    color: #fff;
     font-size: 1rem;
     font-weight: 700;
   }

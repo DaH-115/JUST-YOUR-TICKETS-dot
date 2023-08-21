@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const MovieDetailWrapper = styled.div`
   width: 100%;
   height: 100%;
-  margin-top: 2rem;
+  margin: 2rem 0;
 
   ${({ theme }) => theme.device.tablet} {
     display: flex;

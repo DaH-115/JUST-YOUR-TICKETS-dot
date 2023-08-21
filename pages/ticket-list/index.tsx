@@ -107,7 +107,7 @@ const SortList = styled.div`
   &:hover,
   &:active {
     background: linear-gradient(
-      ${({ theme }) => theme.colors.black} 60%,
+      transparent 60%,
       ${({ theme }) => theme.colors.orange}
     );
   }

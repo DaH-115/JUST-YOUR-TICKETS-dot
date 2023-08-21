@@ -13,7 +13,7 @@ export const GlobalStyle = createGlobalStyle`
       font-size: 20px;
       color: #141414;
       background-color: #141414;
-      min-width: 350px;
+      min-width: 360px;
     }
 
   h1, p {

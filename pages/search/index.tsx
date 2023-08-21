@@ -127,6 +127,7 @@ const FormWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-top: 2rem;
 `;
 
 const StyledLabel = styled.label`

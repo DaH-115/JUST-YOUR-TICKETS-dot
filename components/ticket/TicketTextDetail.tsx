@@ -41,7 +41,9 @@ const TextWrapper = styled.div`
   padding: 0.5rem;
   box-sizing: border-box;
   background: linear-gradient(white 80%, ${({ theme }) => theme.colors.yellow});
-  border-left: 0.2rem solid ${({ theme }) => theme.colors.orange};
+  border-left: 0.4rem dotted ${({ theme }) => theme.colors.black};
+
+  border-radius: 0.2rem 0 0 0.2rem;
 `;
 
 const MovieTitle = styled.div`

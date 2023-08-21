@@ -40,15 +40,15 @@ const Header = () => {
   return (
     <HeaderMenu>
       <Link href='/'>
-        <HeaderLi className='home'>{'HOME'}</HeaderLi>
+        <HeaderLi className='home'>{'Home'}</HeaderLi>
       </Link>
       {isSigned && (
         <Link href='/ticket-list'>
-          <HeaderLi>{'MY TICKETS'}</HeaderLi>
+          <HeaderLi>{'My Tickets'}</HeaderLi>
         </Link>
       )}
       {isSigned ? (
-        <HeaderLi onClick={onSignOutHandler}>{'LOGOUT'}</HeaderLi>
+        <HeaderLi onClick={onSignOutHandler}>{'Logout'}</HeaderLi>
       ) : (
         <Link href='/sign-in'>
           <HeaderLi className='home'>{'SIGN IN'}</HeaderLi>
@@ -69,6 +69,7 @@ const HeaderMenu = styled.ul`
   display: flex;
   justify-content: center;
   font-weight: 700;
+  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
 
   ${({ theme }) => theme.device.tablet} {
     position: absolute;
@@ -94,11 +95,11 @@ const HeaderLi = styled.li`
   }
 
   ${({ theme }) => theme.device.tablet} {
-    color: ${({ theme }) => theme.colors.yellow};
+    color: #fff;
   }
 `;
 
-export const SearchIcon = styled.div`
+const SearchIcon = styled.div`
   position: fixed;
   top: 3rem;
   right: ${({ theme }) => theme.space.small};
@@ -116,11 +117,7 @@ export const SearchIcon = styled.div`
   &:hover,
   &:active {
     color: ${({ theme }) => theme.colors.yellow};
-    transition: color 150ms ease-in-out;
-    background: linear-gradient(
-      ${({ theme }) => theme.colors.black} 60%,
-      ${({ theme }) => theme.colors.orange}
-    );
+    transition: color 200ms ease-in-out;
   }
 
   #search-icon {

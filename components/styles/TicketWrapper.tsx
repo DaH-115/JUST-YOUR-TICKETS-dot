@@ -5,7 +5,7 @@ const TicketWrapper = styled.div`
   margin: 0 auto;
   margin-top: 2rem;
 
-  ${({ theme }) => theme.device.desktop} {
+  ${({ theme }) => theme.device.tablet} {
     margin: 0;
     padding-top: 1rem;
 
