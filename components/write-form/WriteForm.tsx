@@ -9,7 +9,7 @@ import { useAuthState } from 'components/store/auth-context';
 import BackgroundStyle from 'components/layout/BackgroundStyle';
 import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
-import AlertPopup from 'components/popup/AlertPopup';
+import AlertPopup from 'components/modals/AlertPopup';
 
 const WriteForm = ({
   ticketId,

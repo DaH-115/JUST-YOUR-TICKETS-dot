@@ -1,7 +1,7 @@
 import { GetStaticProps, NextPage } from 'next';
+import styled from 'styled-components';
 import axios from 'axios';
 
-import BackgroundStyle from 'components/layout/BackgroundStyle';
 import SlideList from 'components/slider/SlideList';
 import Top10MovieSlider from 'components/top10-tickets/Top10MovieSlider';
 import { Top10MovieDataProps } from 'ticketType';
@@ -10,14 +10,12 @@ const Home: NextPage<{ top10Movies: Top10MovieDataProps[] }> = ({
   top10Movies,
 }) => {
   return (
-    <BackgroundStyle customMessage='your💭'>
-      <SlideList
-        title='인기 영화 10'
-        description='지금 가장 인기 있는 영화를 확인해 보세요!'
-      >
-        <Top10MovieSlider movies={top10Movies} />
-      </SlideList>
-    </BackgroundStyle>
+    <SlideList
+      title='인기 영화 10'
+      description='지금 가장 인기 있는 영화를 확인해 보세요!'
+    >
+      {/* <Top10MovieSlider movies={top10Movies} /> */}
+    </SlideList>
   );
 };
 

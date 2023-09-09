@@ -4,38 +4,29 @@ import { BsGithub } from 'react-icons/bs';
 
 const Footer = () => {
   return (
-    <footer>
-      <FooterWrapper>
-        <p>{'JUST YOUR TICKETS.'}</p>
-        <p>{'ⓒkwak_dahyeon 2023'}</p>
-        <Link href='https://github.com/DaH-115/JUST-MOVIE-TICKETS-dot'>
-          <BsGithub />
-        </Link>
-      </FooterWrapper>
-    </footer>
+    <FooterWrapper>
+      <ProjectName>{'JUST YOUR TICKETS.'}</ProjectName>
+      <Copyright>{'ⓒkwak_dahyeon 2023'}</Copyright>
+      <Link href='https://github.com/DaH-115/JUST-MOVIE-TICKETS-dot'>
+        <BsGithub />
+      </Link>
+    </FooterWrapper>
   );
 };
 
 export default Footer;
 
-const FooterWrapper = styled.div`
+const FooterWrapper = styled.footer`
   display: flex;
   justify-content: center;
   align-items: center;
   color: ${({ theme }) => theme.colors.gray};
 
-  padding: 2rem 0;
+  background-color: ${({ theme }) => theme.colors.black};
+  padding: 1rem 0;
 
   font-size: 0.7rem;
   font-weight: 700;
-
-  p {
-    margin-right: 0.5rem;
-
-    &:nth-child(2) {
-      font-size: 0.6rem;
-    }
-  }
 
   a {
     font-size: 1rem;
@@ -43,6 +34,14 @@ const FooterWrapper = styled.div`
   }
 
   ${({ theme }) => theme.device.tablet} {
-    padding-bottom: 1.5rem;
   }
+`;
+
+const ProjectName = styled.p`
+  margin-right: 0.5rem;
+`;
+
+const Copyright = styled.p`
+  font-size: 0.6rem;
+  margin-right: 0.5rem;
 `;

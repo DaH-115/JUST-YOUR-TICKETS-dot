@@ -1,43 +1,62 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
-import Description from 'components/styles/Description';
-import SlideTitle from 'components/styles/StyledTitle';
-
-const SlideList = ({
-  title,
-  description,
-  children,
-  ticketLength,
-}: {
+interface SlideListProps {
+  children: ReactNode;
   title: string;
   description: string;
-  children: React.ReactNode;
   ticketLength?: number;
-}) => {
+}
+
+const SlideList = ({
+  children,
+  title,
+  description,
+  ticketLength,
+}: SlideListProps) => {
   return (
-    <Container>
-      <SlideTextWrapper>
+    <SlideListWrapper>
+      <SlideHeader>
         <SlideTitle>{title}</SlideTitle>
-        {ticketLength ? (
-          <TicketLength>{`${ticketLength} 장`}</TicketLength>
-        ) : null}
-      </SlideTextWrapper>
+        {ticketLength && <TicketLength>{`${ticketLength} 장`}</TicketLength>}
+      </SlideHeader>
       <Description>{description}</Description>
       {children}
-    </Container>
+    </SlideListWrapper>
   );
 };
 
 export default React.memo(SlideList);
 
-const Container = styled.div`
+const SlideListWrapper = styled.div`
+  flex: 1;
   width: 100%;
   height: 100%;
+  background-color: ${({ theme }) => theme.colors.black};
 `;
 
-const SlideTextWrapper = styled.div`
+const SlideHeader = styled.div`
   display: flex;
+
+  ${({ theme }) => theme.device.tablet} {
+  }
+`;
+
+const SlideTitle = styled.h1`
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+
+  ${({ theme }) => theme.device.tablet} {
+  }
+`;
+
+const Description = styled.p`
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.gray};
+
+  ${({ theme }) => theme.device.tablet} {
+  }
 `;
 
 const TicketLength = styled.p`

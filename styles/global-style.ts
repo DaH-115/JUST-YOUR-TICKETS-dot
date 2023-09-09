@@ -12,8 +12,7 @@ export const GlobalStyle = createGlobalStyle`
       font-family: 'Montserrat', 'Nanum Gothic', sans-serif;
       font-size: 20px;
       color: #141414;
-      background-color: #141414;
-      min-width: 360px;
+      min-width: 375px;
     }
 
   h1, p {

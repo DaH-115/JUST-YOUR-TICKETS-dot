@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import PortalAlert from 'components/popup/PortalAlert';
+import PortalComponents from 'components/modals/PortalComponents';
 
 interface AlertPopupProps {
   popupType: string;
@@ -16,7 +16,7 @@ const AlertPopup = ({
   onConfirmHandler,
 }: AlertPopupProps) => {
   return (
-    <PortalAlert>
+    <PortalComponents>
       <BackDrop />
       <PopupBox>
         <PopupTitle>{'*알림'}</PopupTitle>
@@ -30,7 +30,7 @@ const AlertPopup = ({
           <PopupBtnConfirm onClick={onConfirmHandler}>{'네'}</PopupBtnConfirm>
         </PopupBtnWrapper>
       </PopupBox>
-    </PortalAlert>
+    </PortalComponents>
   );
 };
 

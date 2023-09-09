@@ -3,16 +3,18 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import Error from 'next/error';
 import { useRouter } from 'next/router';
-import { BiSearch } from 'react-icons/bi';
 import { isAuth } from 'firebase-config';
-
+import { BiSearch } from 'react-icons/bi';
+import { MdOutlineMenu } from 'react-icons/md';
 import { SystemError } from 'errorType';
 import { useAuthState } from 'components/store/auth-context';
-import SignInAlert from 'components/popup/SignInAlert';
+import SignInAlert from 'components/modals/SignInAlert';
+import SlideMenu from 'components/modals/SlideMenu';
 
 const Header = () => {
   const router = useRouter();
   const { isSigned } = useAuthState();
+  const [isChecked, setIsChecked] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onSignOutHandler = useCallback(async () => {
@@ -27,11 +29,15 @@ const Header = () => {
 
   const onCheckSignInHandler = useCallback(() => {
     if (!isSigned) {
-      setIsOpen((prev) => !prev);
+      setIsChecked((prev) => !prev);
     } else {
       router.push('/search');
     }
   }, [isSigned]);
+
+  const onCheckedHandler = useCallback(() => {
+    setIsChecked((prev) => !prev);
+  }, []);
 
   const onToggleHandler = useCallback(() => {
     setIsOpen((prev) => !prev);
@@ -39,80 +45,125 @@ const Header = () => {
 
   return (
     <HeaderMenu>
-      <Link href='/'>
-        <HeaderLi className='home'>{'Home'}</HeaderLi>
-      </Link>
-      {isSigned && (
-        <Link href='/ticket-list'>
-          <HeaderLi>{'My Tickets'}</HeaderLi>
-        </Link>
-      )}
-      {isSigned ? (
-        <HeaderLi onClick={onSignOutHandler}>{'Logout'}</HeaderLi>
-      ) : (
-        <Link href='/sign-in'>
-          <HeaderLi className='home'>{'SIGN IN'}</HeaderLi>
-        </Link>
-      )}
+      <LogoWrapper>
+        <div>{'JUST'}</div>
+        <StyledLogo>{'MY'}</StyledLogo>
+        <div>{'TICKTES.'}</div>
+      </LogoWrapper>
 
-      {isOpen && <SignInAlert onToggleHandler={onToggleHandler} />}
+      <MenuWrapper>
+        <Link href='/'>
+          <MenuItem>{'Home'}</MenuItem>
+        </Link>
+        {isSigned && (
+          <Link href='/ticket-list'>
+            <MenuItem>{'My Tickets'}</MenuItem>
+          </Link>
+        )}
+        {isSigned ? (
+          <MenuItem onClick={onSignOutHandler}>{'Sign Out'}</MenuItem>
+        ) : (
+          <Link href='/sign-in'>
+            <MenuItem>{'Sign In'}</MenuItem>
+          </Link>
+        )}
+      </MenuWrapper>
+
       <SearchIcon onClick={onCheckSignInHandler}>
-        <BiSearch id='search-icon' />
+        <BiSearch />
       </SearchIcon>
+
+      <SlideMenu isopen={isOpen} closeHandler={onToggleHandler}>
+        <Link href='/'>
+          <MenuItem>{'Home'}</MenuItem>
+        </Link>
+        {isSigned && (
+          <Link href='/search'>
+            <MenuItem>{'Search'}</MenuItem>
+          </Link>
+        )}
+        {isSigned && (
+          <Link href='/ticket-list'>
+            <MenuItem>{'My Tickets'}</MenuItem>
+          </Link>
+        )}
+        {isSigned ? (
+          <MenuItem onClick={onSignOutHandler}>{'Sign Out'}</MenuItem>
+        ) : (
+          <Link href='/sign-in'>
+            <MenuItem>{'Sign In'}</MenuItem>
+          </Link>
+        )}
+      </SlideMenu>
+      <SlideMenuIcon onClick={onToggleHandler}>
+        <MdOutlineMenu />
+      </SlideMenuIcon>
+
+      {isChecked && <SignInAlert onToggleHandler={onCheckedHandler} />}
     </HeaderMenu>
   );
 };
 
 export default React.memo(Header);
 
-const HeaderMenu = styled.ul`
+const HeaderMenu = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 1rem;
   font-weight: 700;
-  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
+  background-color: ${({ theme }) => theme.colors.black};
+  padding: 1rem;
 
   ${({ theme }) => theme.device.tablet} {
-    position: absolute;
-    top: 2rem;
-    right: 8rem;
-    font-size: 1.2rem;
-  }
-
-  ${({ theme }) => theme.device.desktop} {
-    right: 10rem;
+    padding: 1rem 2rem;
   }
 `;
 
-const HeaderLi = styled.li`
+const LogoWrapper = styled.h1`
+  color: ${({ theme }) => theme.colors.yellow};
+`;
+
+const StyledLogo = styled.div`
+  color: ${({ theme }) => theme.colors.orange};
+`;
+
+const MenuWrapper = styled.ul`
+  display: none;
+
+  ${({ theme }) => theme.device.tablet} {
+    display: flex;
+    align-items: center;
+  }
+`;
+
+const MenuItem = styled.li`
   color: #fff;
-  padding: 0.5rem;
+  padding: 1rem;
   cursor: pointer;
 
   &:hover,
   &:active {
     color: ${({ theme }) => theme.colors.orange};
-    transition: color ease-in-out 150ms;
-  }
-
-  ${({ theme }) => theme.device.tablet} {
-    color: #fff;
+    transition: color ease-in-out 200ms;
   }
 `;
 
 const SearchIcon = styled.div`
-  position: fixed;
-  top: 3rem;
-  right: ${({ theme }) => theme.space.small};
-  z-index: 999;
+  display: none;
 
-  width: 3rem;
-  height: 3rem;
-  font-size: 1.8rem;
-  color: #fff;
-  padding: 0.5rem;
-  border: 0.1rem solid ${({ theme }) => theme.colors.orange};
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+
+  margin-left: 0.5rem;
+
+  color: #000;
+  background-color: ${({ theme }) => theme.colors.orange};
   border-radius: 50%;
-  filter: drop-shadow(10px 10px 10px #0000004e);
+
+  cursor: pointer;
 
   &:hover,
   &:active {
@@ -120,18 +171,36 @@ const SearchIcon = styled.div`
     transition: color 200ms ease-in-out;
   }
 
-  #search-icon {
-    margin-top: 2px;
-    margin-left: 1px;
+  ${({ theme }) => theme.device.tablet} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
+const SlideMenuIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+
+  color: ${({ theme }) => theme.colors.black};
+  background-color: ${({ theme }) => theme.colors.orange};
+  border-radius: 50%;
+
+  margin-left: 0.5rem;
+
+  cursor: pointer;
+
+  &:active {
+    color: ${({ theme }) => theme.colors.yellow};
+    transition: color 200ms ease-in-out;
   }
 
   ${({ theme }) => theme.device.tablet} {
-    top: 2rem;
-    right: ${({ theme }) => theme.space.medium};
-  }
-
-  ${({ theme }) => theme.device.desktop} {
-    top: 1.5rem;
-    right: ${({ theme }) => theme.space.medium};
+    display: none;
   }
 `;

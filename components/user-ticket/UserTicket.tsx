@@ -11,7 +11,7 @@ import { BiTrash } from 'react-icons/bi';
 
 import MovieTicketDetail from 'components/ticket/MovieTicketDetail';
 import PosterImage from 'components/ticket/PosterImage';
-import AlertPopup from 'components/popup/AlertPopup';
+import AlertPopup from 'components/modals/AlertPopup';
 import TicketWrapper from 'components/styles/TicketWrapper';
 import MovieIndexBar from 'components/styles/MovieIndexBar';
 import StyeldInfo from 'components/styles/StyeldInfo';

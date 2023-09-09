@@ -9,6 +9,7 @@ import Footer from 'components/layout/Footer';
 import FaviconTags from 'components/common/FaviconTags';
 import MetaTags from 'components/common/MetaTags';
 import AuthStateProvider from 'components/store/auth-context';
+import Layout from 'components/layout/Layout';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const titleText = 'JUST MY TICKETS.';
@@ -26,9 +27,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           <MetaTags />
         </Head>
         <GlobalStyle />
-        <Header />
-        <Component {...pageProps} />
-        <Footer />
+        <Layout>
+          <Header />
+          <Component {...pageProps} />
+          <Footer />
+        </Layout>
       </ThemeProvider>
     </AuthStateProvider>
   );

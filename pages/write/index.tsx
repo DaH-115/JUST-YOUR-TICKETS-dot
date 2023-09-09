@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 import withHeadMeta from 'components/common/withHeadMeta';
 import WriteForm from 'components/write-form/WriteForm';
-import SignInAlert from 'components/popup/SignInAlert';
+import SignInAlert from 'components/modals/SignInAlert';
 import { useAuthState } from 'components/store/auth-context';
 import { WriteFormProps } from 'ticketType';
 
