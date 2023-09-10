@@ -1,16 +1,16 @@
 import React from 'react';
-import Top10MovieTicket from 'components/top10-tickets/Top10MovieTicket';
+import TopTenMovieTicket from 'components/top10-tickets/TopTenMovieTicket';
 import TicketSlider from 'components/slider/TicketSlider';
-import { Top10MovieDataProps } from 'ticketType';
+import { TopTenMovieDataProps } from 'ticketType';
 
-const Top10MovieSlider = ({ movies }: { movies: Top10MovieDataProps[] }) => {
+const TopTenMovieSlider = ({ movies }: { movies: TopTenMovieDataProps[] }) => {
   const movieLength = movies.length;
 
   return (
     <TicketSlider movieLength={movieLength}>
-      {movies.map((item: Top10MovieDataProps, index) => {
+      {movies.map((item: TopTenMovieDataProps, index) => {
         return (
-          <Top10MovieTicket
+          <TopTenMovieTicket
             key={item.id}
             movieId={item.id}
             movieIndex={index + 1}
@@ -25,4 +25,4 @@ const Top10MovieSlider = ({ movies }: { movies: Top10MovieDataProps[] }) => {
   );
 };
 
-export default React.memo(Top10MovieSlider);
+export default React.memo(TopTenMovieSlider);

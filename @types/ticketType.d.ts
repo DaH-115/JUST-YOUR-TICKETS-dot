@@ -1,5 +1,5 @@
 declare module 'ticketType' {
-  export interface Top10MovieDataProps {
+  export interface TopTenMovieDataProps {
     id: number;
     title: string;
     release_date: string;

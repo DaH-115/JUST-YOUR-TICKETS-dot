@@ -22,9 +22,9 @@ const PosterImage = ({
     : '';
 
   return (
-    <ImgContainer>
+    <ImgWrapper>
       {!posterImage && !posterPath ? (
-        <ImgContainer>{`${title}(${releaseYear})`}</ImgContainer>
+        <ImgWrapper>{`${title}(${releaseYear})`}</ImgWrapper>
       ) : (
         <Image
           src={posterSrc}
@@ -34,23 +34,16 @@ const PosterImage = ({
           unoptimized
         />
       )}
-    </ImgContainer>
+    </ImgWrapper>
   );
 };
 
 export default React.memo(PosterImage);
 
-const ImgContainer = styled.div`
+const ImgWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  width: ${({ theme }) => theme.posterWidth};
-  height: ${({ theme }) => theme.posterHeight};
-  border-radius: 1.5rem;
-
-  color: #fff;
-  background-color: ${({ theme }) => theme.colors.black};
 
   img {
     border-radius: 1.5rem;

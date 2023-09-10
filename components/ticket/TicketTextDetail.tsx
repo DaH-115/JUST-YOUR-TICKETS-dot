@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { TicketTextDetailProps } from 'ticketType';
-import MovieJanreWrapper from 'components/styles/MovieJanreWrapper';
 
 const TicketTextDetail = ({
   title,
@@ -10,72 +9,83 @@ const TicketTextDetail = ({
   genres,
 }: TicketTextDetailProps) => {
   return (
-    <TextWrapper>
-      <MovieTitle>
-        <h1>
+    <TicketTextWrapper>
+      <TicketHeader>
+        <MovieTitle>
           {title} ({releaseYear})
-        </h1>
-        <MovieRating>
-          <p>{`${Math.round(voteAverage)} /10`}</p>
-        </MovieRating>
-      </MovieTitle>
+        </MovieTitle>
+        <MovieRating>{`${Math.round(voteAverage)} /10`}</MovieRating>
+      </TicketHeader>
 
       {genres && (
-        <MovieJanreWrapper>
-          {genres.map((genr: string, index) => (
-            <li key={index}>{genr === 'Science Fiction' ? 'SF' : genr}</li>
+        <JanreList>
+          {genres.map((genre: string, index) => (
+            <JanreItem key={index}>
+              {genre === 'Science Fiction' ? 'SF' : genre}
+            </JanreItem>
           ))}
-        </MovieJanreWrapper>
+        </JanreList>
       )}
 
       {reviewText && <StyledReviewText>{reviewText}</StyledReviewText>}
-    </TextWrapper>
+    </TicketTextWrapper>
   );
 };
 
 export default TicketTextDetail;
 
-const TextWrapper = styled.div`
+const TicketTextWrapper = styled.div`
   width: 100%;
-  height: 8rem;
   padding: 0.5rem;
-  box-sizing: border-box;
-  background: linear-gradient(white 80%, ${({ theme }) => theme.colors.yellow});
-  border-left: 0.4rem dotted ${({ theme }) => theme.colors.black};
+  background: linear-gradient(#fff 80%, ${({ theme }) => theme.colors.yellow});
 
+  border-left: 0.5rem dotted ${({ theme }) => theme.colors.black};
   border-radius: 0.2rem 0 0 0.2rem;
-`;
 
-const MovieTitle = styled.div`
-  width: auto;
-  font-size: 1rem;
-  color: ${({ theme }) => theme.colors.black};
-  overflow-y: scroll;
-  margin-bottom: 0.5rem;
-
-  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
-
-  h1 {
-    font-weight: 700;
+  ${({ theme }) => theme.device.tablet} {
+    border-left: 0.3rem dotted ${({ theme }) => theme.colors.black};
   }
 `;
 
-const MovieRating = styled.div`
-  display: flex;
-  margin-top: 0.5rem;
-  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
+const TicketHeader = styled.div`
+  overflow-y: scroll;
+  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
+`;
 
-  p {
-    font-weight: 700;
-    line-height: 1rem;
+const MovieTitle = styled.h1`
+  font-weight: 700;
+`;
+
+const MovieRating = styled.p`
+  display: flex;
+  font-weight: 700;
+  border-bottom: 0.1rem dashed ${({ theme }) => theme.colors.orange};
+`;
+
+const JanreList = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+
+  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
+`;
+
+const JanreItem = styled.li`
+  margin-right: 0.2rem;
+
+  &:not(:first-child)::before {
+    content: '/';
+  }
+
+  &:last-child {
+    margin-right: 0;
   }
 `;
 
 const StyledReviewText = styled.p`
   width: 100%;
-  height: 3rem;
-  margin: 1rem 0;
-  margin-top: 0.5rem;
+  margin: 0.5rem 0 1rem;
   overflow-y: scroll;
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}

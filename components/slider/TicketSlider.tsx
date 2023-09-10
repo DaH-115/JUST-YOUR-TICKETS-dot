@@ -1,12 +1,10 @@
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import styled from 'styled-components';
 import {
   MdOutlineArrowBackIos,
   MdOutlineArrowForwardIos,
 } from 'react-icons/md';
-
 import {
   StyledArrowNext,
   StyledArrowPrev,
@@ -52,7 +50,7 @@ const TicketSlider = ({
         },
       },
       {
-        breakpoint: 650,
+        breakpoint: 768,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -61,20 +59,6 @@ const TicketSlider = ({
     ],
   };
 
-  return <StyledSlider {...settings}>{children}</StyledSlider>;
+  return <Slider {...settings}>{children}</Slider>;
 };
-
 export default TicketSlider;
-
-const StyledSlider = styled(Slider)`
-  .slick-list {
-    ${({ theme }) => theme.device.tablet} {
-      padding: 0 1.4rem;
-    }
-  }
-
-  .slick-arrow {
-    margin: 0;
-    padding: 0;
-  }
-`;

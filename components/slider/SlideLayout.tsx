@@ -1,61 +1,61 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
-interface SlideListProps {
+interface SlideLayoutProps {
   children: ReactNode;
   title: string;
   description: string;
   ticketLength?: number;
 }
 
-const SlideList = ({
+const SlideLayout = ({
   children,
   title,
   description,
   ticketLength,
-}: SlideListProps) => {
+}: SlideLayoutProps) => {
   return (
-    <SlideListWrapper>
+    <SlideLayoutWrapper>
       <SlideHeader>
         <SlideTitle>{title}</SlideTitle>
         {ticketLength && <TicketLength>{`${ticketLength} 장`}</TicketLength>}
       </SlideHeader>
       <Description>{description}</Description>
       {children}
-    </SlideListWrapper>
+    </SlideLayoutWrapper>
   );
 };
 
-export default React.memo(SlideList);
+export default React.memo(SlideLayout);
 
-const SlideListWrapper = styled.div`
-  flex: 1;
-  width: 100%;
-  height: 100%;
+const SlideLayoutWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.black};
+  padding-top: 2rem;
 `;
 
 const SlideHeader = styled.div`
   display: flex;
+  margin-left: 1rem;
 
   ${({ theme }) => theme.device.tablet} {
+    margin-left: 2rem;
   }
 `;
 
 const SlideTitle = styled.h1`
+  color: #fff;
   font-size: 2rem;
   font-weight: 700;
-  color: #fff;
-
-  ${({ theme }) => theme.device.tablet} {
-  }
+  margin-bottom: 0.5rem;
 `;
 
 const Description = styled.p`
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: ${({ theme }) => theme.colors.gray};
+  margin-left: 1rem;
 
   ${({ theme }) => theme.device.tablet} {
+    margin-left: 2rem;
   }
 `;
 

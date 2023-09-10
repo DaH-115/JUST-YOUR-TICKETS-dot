@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import withHeadMeta from 'components/common/withHeadMeta';
 import BackgroundStyle from 'components/layout/BackgroundStyle';
 import UserTicketSlider from 'components/user-ticket/UserTicketSlider';
-import SlideList from 'components/slider/SlideList';
+import SlideLayout from 'components/slider/SlideLayout';
 import NoneResults from 'components/styles/NoneReults';
 import { useAuthState } from 'components/store/auth-context';
 import { UserTicketProps } from 'ticketType';
@@ -55,8 +55,8 @@ const TicketListPage: NextPage = () => {
   }, [userId, isSorted]);
 
   return (
-    <BackgroundStyle customMessage='your🍿'>
-      <SlideList
+    <BackgroundStyle>
+      <SlideLayout
         title='나의 티켓'
         ticketLength={ticketLength}
         description='나만의 감상티켓을 모아 보세요'
@@ -80,7 +80,7 @@ const TicketListPage: NextPage = () => {
             )}
           </TicketListWrapper>
         )}
-      </SlideList>
+      </SlideLayout>
     </BackgroundStyle>
   );
 };

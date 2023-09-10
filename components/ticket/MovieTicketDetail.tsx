@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { TicketTextDetailProps } from 'ticketType';
 import TicketTextDetail from 'components/ticket/TicketTextDetail';
 import AdmitBtn from './AdmitBtn';
-import { TicketTextDetailProps } from 'ticketType';
 
 const MovieTicketDetail = ({
   title,
@@ -23,7 +23,6 @@ const MovieTicketDetail = ({
         reviewText={reviewText}
       />
 
-      {/* GO TO "/write" PAGE BUTTON */}
       {!reviewText && (
         <AdmitBtn
           title={title}
@@ -38,13 +37,15 @@ const MovieTicketDetail = ({
 export default React.memo(MovieTicketDetail);
 
 const MovieTicketDetailWrapper = styled.div`
-  position: relative;
-  bottom: 1.5rem;
+  position: absolute;
+  bottom: 0;
   left: 0;
 
   display: flex;
+  justify-content: center;
+
+  /* Poster Img Size */
   width: 100%;
-  height: 100%;
-  color: ${({ theme }) => theme.colors.black};
-  filter: drop-shadow(0px 0px 25px rgba(50, 50, 50, 0.9));
+  width: ${({ theme }) => theme.posterWidth};
+  height: 7rem;
 `;

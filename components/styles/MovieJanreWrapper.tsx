@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const MovieJanreWrapper = styled.ul`
+const JanreWrapper = styled.ul`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
@@ -23,4 +23,4 @@ const MovieJanreWrapper = styled.ul`
   }
 `;
 
-export default MovieJanreWrapper;
+export default JanreWrapper;

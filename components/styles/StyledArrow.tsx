@@ -5,22 +5,18 @@ const StyledArrow = styled.div`
   height: 2.5rem;
   font-size: 1rem;
   line-height: 2.5rem;
+  text-align: center;
 
   color: #fff;
   border: 0.1rem solid #fff;
   border-radius: 50%;
-  filter: drop-shadow(10px 10px 20px rgba(0, 0, 0, 1));
-
-  text-align: center;
 
   &:hover,
   &:active {
     color: #fff;
-    background: linear-gradient(
-      transparent 30%,
-      ${({ theme }) => theme.colors.orange}
-    );
+    background-color: ${({ theme }) => theme.colors.orange};
     border-color: ${({ theme }) => theme.colors.orange};
+    transition: all ease-in-out 200ms;
   }
 
   &::before {

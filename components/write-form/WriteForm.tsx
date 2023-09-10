@@ -5,10 +5,9 @@ import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from 'firebase-config';
 import Error from 'next/error';
 
-import { useAuthState } from 'components/store/auth-context';
-import BackgroundStyle from 'components/layout/BackgroundStyle';
 import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
+import { useAuthState } from 'components/store/auth-context';
 import AlertPopup from 'components/modals/AlertPopup';
 
 const WriteForm = ({
@@ -21,30 +20,26 @@ const WriteForm = ({
 }: WriteFormProps) => {
   const router = useRouter();
   const { userId } = useAuthState();
-  const [ratingVal, setRatingVal] = useState<boolean>(true);
-  const [isConfirm, setIsConfirm] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState(false);
-
-  const today = new Date().toLocaleDateString();
-
-  const [newRatingText, setNewRatingText] = useState(!rating ? '' : rating);
-  const [newReviewText, setNewReviewText] = useState(
+  const [isValidation, setIsValidation] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [newRatingText, setNewRatingText] = useState<string>(
+    !rating ? '' : rating
+  );
+  const [newReviewText, setNewReviewText] = useState<string>(
     !reviewText ? '' : reviewText
   );
 
   useEffect(() => {
-    history.pushState(null, '', location.href);
-
-    window.addEventListener('popstate', () => {
+    const onPushStateHanlder = () => {
       history.pushState(null, '', location.href);
       setIsOpen(true);
-    });
+    };
+
+    history.pushState(null, '', location.href);
+    window.addEventListener('popstate', onPushStateHanlder);
 
     return () => {
-      window.removeEventListener('popstate', () => {
-        history.pushState(null, '', location.href);
-        setIsOpen(true);
-      });
+      window.removeEventListener('popstate', onPushStateHanlder);
     };
   }, []);
 
@@ -57,7 +52,7 @@ const WriteForm = ({
     setIsOpen(false);
   };
 
-  const updateContents = async (
+  const onUpdateContentsHandler = async (
     rating: string,
     reviewText: string,
     ticketId: string
@@ -77,7 +72,7 @@ const WriteForm = ({
     }
   };
 
-  const addContents = async (rating: string, reviewText: string) => {
+  const onAddContentsHandler = async (rating: string, reviewText: string) => {
     try {
       await addDoc(collection(db, 'users-tickets'), {
         creatorId: userId,
@@ -98,26 +93,27 @@ const WriteForm = ({
 
   const onAddHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    isConfirm
-      ? addContents(newRatingText, newReviewText)
+    newRatingText && newReviewText
+      ? onAddContentsHandler(newRatingText, newReviewText)
       : alert('내용을 작성해 주세요.');
   };
 
   const onUpdateHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    isConfirm
-      ? updateContents(newRatingText, newReviewText, ticketId)
+    newRatingText && newReviewText
+      ? onUpdateContentsHandler(newRatingText, newReviewText, ticketId)
       : alert('내용을 작성해 주세요.');
   };
 
   const onRatingChangeHandler = useCallback(
     ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-      if (Number(target.value) > 10) {
-        setRatingVal(false);
+      const trimmedValue = target.value.trim();
+
+      if (Number(trimmedValue) > 10) {
+        setIsValidation(false);
       } else {
-        setRatingVal(true);
-        setNewRatingText(target.value);
-        setIsConfirm(true);
+        setIsValidation(true);
+        setNewRatingText(trimmedValue);
       }
     },
     []
@@ -125,14 +121,14 @@ const WriteForm = ({
 
   const onReviewChangeHandler = useCallback(
     ({ target }: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setNewReviewText(target.value);
-      setIsConfirm(true);
+      const trimmedValue = target.value.trim();
+      setNewReviewText(trimmedValue);
     },
     []
   );
 
   return (
-    <BackgroundStyle customMessage='write✒️'>
+    <BackgroundStyle>
       {isOpen && (
         <AlertPopup
           popupType='modal'
@@ -141,77 +137,97 @@ const WriteForm = ({
           onCancelHandler={onCancelHandler}
         />
       )}
-      <Wrapper>
-        <WriteFormWrapper>
-          <MovieDetailWrapper>
-            <p>{today}</p>
-            <MovieTitle>
-              <p>{'* Movie Title /제목'}</p>
-              {`"${title}"(${releaseYear})`}
-            </MovieTitle>
-          </MovieDetailWrapper>
 
-          <FormWrapper>
-            <StyledForm onSubmit={!ticketId ? onAddHandler : onUpdateHandler}>
-              <InputWrapper>
-                <StyledLabel htmlFor='rating'>{'* Rating /점수'}</StyledLabel>
-                <StyledDesc>{'얼마나 좋았나요?'}</StyledDesc>
-                <RatingInputWrapper>
-                  <StyledInput
-                    name='rating'
-                    id='rating'
-                    onChange={onRatingChangeHandler}
-                    value={newRatingText}
-                  />
-                  <p>{' /10'}</p>
-                </RatingInputWrapper>
-                <ValidationMsg isState={ratingVal}>
-                  {'최대 10점까지 줄 수 있어요.'}
-                </ValidationMsg>
-              </InputWrapper>
-              <InputWrapper>
-                <StyledLabel htmlFor='review'>
-                  {'* Review /나의 감상'}
-                </StyledLabel>
-                <StyledDesc>{'나의 생각과 느낌을 적어보세요.'}</StyledDesc>
-                <StyledTextarea
-                  name='reviewText'
-                  id='review'
-                  onChange={onReviewChangeHandler}
-                  value={newReviewText}
-                />
-              </InputWrapper>
-              <StyledBtn>{!ticketId ? '입력하기' : '수정하기'}</StyledBtn>
-            </StyledForm>
-          </FormWrapper>
-        </WriteFormWrapper>
-      </Wrapper>
+      <WriteFormWrapper>
+        <MovieDetailWrapper>
+          <MovieTitleLabel>{'Movie Title /제목'}</MovieTitleLabel>
+          <MovieTitle>{`"${title}"(${releaseYear})`}</MovieTitle>
+        </MovieDetailWrapper>
+
+        <StyledForm onSubmit={!ticketId ? onAddHandler : onUpdateHandler}>
+          <InputWrapper>
+            <StyledLabel htmlFor='rating'>{'Rating /점수'}</StyledLabel>
+            <StyledDesc>{'얼마나 좋았나요?'}</StyledDesc>
+            <RatingInputWrapper>
+              <StyledInput
+                name='rating'
+                id='rating'
+                onChange={onRatingChangeHandler}
+                value={newRatingText}
+                placeholder='0'
+              />
+              <LimitNumber>{'/10'}</LimitNumber>
+            </RatingInputWrapper>
+            <ValidationMsg isState={isValidation}>
+              {'최대 10점까지 줄 수 있어요.'}
+            </ValidationMsg>
+          </InputWrapper>
+
+          <InputWrapper>
+            <StyledLabel htmlFor='review'>{'Review /나의 감상'}</StyledLabel>
+            <StyledDesc>{'나의 생각과 느낌을 적어보세요.'}</StyledDesc>
+            <StyledTextarea
+              name='reviewText'
+              id='review'
+              onChange={onReviewChangeHandler}
+              value={newReviewText}
+            />
+          </InputWrapper>
+          <StyledBtn>{!ticketId ? '등록하기' : '수정하기'}</StyledBtn>
+        </StyledForm>
+      </WriteFormWrapper>
     </BackgroundStyle>
   );
 };
 
 export default WriteForm;
 
-const ValidationMsg = styled.p<{ isState: boolean }>`
-  visibility: ${({ isState }) => (isState ? 'hidden' : 'visible')};
-  font-size: 0.7rem;
-  color: ${({ theme }) => theme.colors.orange};
-`;
-
-const Wrapper = styled.div`
+const BackgroundStyle = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+
+  background-color: ${({ theme }) => theme.colors.black};
+  padding: 2rem 0;
+  padding-bottom: 0;
 `;
 
 const WriteFormWrapper = styled.div`
+  background: linear-gradient(#fff 90%, ${({ theme }) => theme.colors.yellow});
+  padding: 2rem;
+  border-top-right-radius: 1rem;
+  border-top-left-radius: 1rem;
+  border-top: 0.8rem dotted ${({ theme }) => theme.colors.black};
+
+  ${({ theme }) => theme.device.tablet} {
+    border-top-right-radius: 0.9rem;
+    border-top-left-radius: 0.9rem;
+    border-top: 0.7rem dotted ${({ theme }) => theme.colors.black};
+  }
+`;
+
+const MovieDetailWrapper = styled.div`
   width: 100%;
-  max-width: ${({ theme }) => theme.size.tablet};
-  margin-top: 2.5rem;
-  padding: 1.5rem;
-  padding-bottom: 2rem;
-  background-color: #fff;
-  border-radius: 1.5rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 0.1rem dashed ${({ theme }) => theme.colors.orange};
+`;
+
+const MovieTitleLabel = styled.p`
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+`;
+
+const MovieTitle = styled.h1`
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+`;
+
+const StyledForm = styled.form`
+  width: 100%;
 `;
 
 const InputWrapper = styled.div`
@@ -223,80 +239,30 @@ const InputWrapper = styled.div`
 const RatingInputWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
-
-  p {
-    margin-top: 0.5rem;
-    padding: 0.4rem;
-  }
 `;
 
-const MovieDetailWrapper = styled.div`
-  width: 100%;
-  height: auto;
-  font-weight: 700;
-  margin-bottom: 1.6rem;
-  border-bottom: 0.1rem solid ${({ theme }) => theme.colors.orange};
-  padding-bottom: 0.5rem;
-
-  p {
-    font-size: 0.8rem;
-    margin-bottom: 1rem;
-    font-weight: 300;
-  }
-`;
-
-const MovieTitle = styled.h1`
-  text-align: center;
-  font-size: 1.4rem;
-
-  p {
-    font-weight: 700;
-    font-size: 0.8rem;
-    text-align: left;
-  }
-`;
-
-const FormWrapper = styled.div`
-  width: 100%;
+const LimitNumber = styled.p`
+  font-size: 1rem;
+  margin-left: 0.5rem;
 `;
 
 const StyledLabel = styled.label`
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 700;
 `;
 
-const StyledForm = styled.form`
-  width: 100%;
-`;
-
-const StyledTextarea = styled.textarea`
-  font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
-  letter-spacing: -0.06em;
-
-  width: 100%;
-  height: 10rem;
-  margin-top: 0.6rem;
-  border-radius: 0.4rem;
-  padding: 0.6rem 0.8rem;
-  font-size: 1rem;
-  letter-spacing: -0.06em;
-  border: 1px solid ${({ theme }) => theme.colors.gray};
-
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.orange};
-    box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
-  }
+const StyledDesc = styled.p`
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.gray};
+  margin: 0.2rem 0 0.5rem;
 `;
 
 const StyledInput = styled.input`
   width: 100%;
   height: 100%;
-  margin-top: 0.6rem;
   border-radius: 0.4rem;
   padding: 0.4rem 0.8rem;
   font-size: 1rem;
-  letter-spacing: -0.06em;
   border: 1px solid ${({ theme }) => theme.colors.gray};
 
   &::placeholder {
@@ -317,24 +283,50 @@ const StyledInput = styled.input`
 
   &:focus {
     border-color: ${({ theme }) => theme.colors.orange};
+    box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.orange};
+  }
+`;
+
+const StyledTextarea = styled.textarea`
+  font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+  letter-spacing: -0.06em;
+
+  width: 100%;
+  height: 10rem;
+
+  font-size: 1rem;
+  letter-spacing: -0.06em;
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid ${({ theme }) => theme.colors.gray};
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.orange};
     box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
   }
 `;
 
 const StyledBtn = styled.button`
   width: 100%;
-  height: auto;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 700;
   padding: 0.8rem;
   border-radius: 0.6rem;
-  background-color: ${({ theme }) => theme.colors.orange};
+  background-color: #fff;
+  border: 0.1rem solid ${({ theme }) => theme.colors.orange};
+
+  &:hover,
+  &:active {
+    color: ${({ theme }) => theme.colors.yellow};
+    background-color: ${({ theme }) => theme.colors.orange};
+    transition: all ease 400ms;
+  }
 `;
 
-const StyledDesc = styled.p`
-  margin-top: 0.2rem;
-  font-size: 0.7rem;
-  font-weight: 300;
-  letter-spacing: -0.09em;
-  color: ${({ theme }) => theme.colors.gray};
+const ValidationMsg = styled.p<{ isState: boolean }>`
+  visibility: ${({ isState }) => (isState ? 'hidden' : 'visible')};
+  color: ${({ theme }) => theme.colors.orange};
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-top: 0.4rem;
 `;

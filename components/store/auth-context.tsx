@@ -8,12 +8,12 @@ import {
 import { isAuth } from 'firebase-config';
 import { onAuthStateChanged } from 'firebase/auth';
 
-interface authState {
+interface AuthStateTypes {
   userId: string;
   isSigned: boolean;
 }
 
-const defaultState: authState = {
+const defaultState: AuthStateTypes = {
   userId: '',
   isSigned: false,
 };
@@ -35,7 +35,7 @@ const AuthStateProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
-  const authCtx: authState = {
+  const authCtx: AuthStateTypes = {
     userId: authState.userId,
     isSigned: authState.isSigned,
   };

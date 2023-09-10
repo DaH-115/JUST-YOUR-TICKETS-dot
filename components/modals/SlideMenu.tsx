@@ -82,11 +82,10 @@ const SlideMenuWrapper = styled.div<{ isopen: boolean }>`
 const LogoWrapper = styled.div`
   color: ${({ theme }) => theme.colors.yellow};
   font-size: 1rem;
-  border-bottom: 0.2rem dotted ${({ theme }) => theme.colors.orange};
+  border-bottom: 0.15rem dashed ${({ theme }) => theme.colors.orange};
 
   margin: 1rem;
   margin-top: 0;
-
   padding-bottom: 1rem;
 `;
 

@@ -17,7 +17,7 @@ export const theme: DefaultTheme = {
   colors: {
     black: '#141414',
     gray: '#C2C2C2',
-    orange: '#F68924',
+    orange: '#F27405',
     yellow: '#F6EE24',
   },
   scrollbarStyle: {
