@@ -308,18 +308,17 @@ const StyledTextarea = styled.textarea`
 
 const StyledBtn = styled.button`
   width: 100%;
+  color: #fff;
   font-size: 0.9rem;
   font-weight: 700;
   padding: 0.8rem;
   border-radius: 0.6rem;
-  background-color: #fff;
-  border: 0.1rem solid ${({ theme }) => theme.colors.orange};
+  background-color: ${({ theme }) => theme.colors.black};
 
   &:hover,
   &:active {
-    color: ${({ theme }) => theme.colors.yellow};
-    background-color: ${({ theme }) => theme.colors.orange};
-    transition: all ease 400ms;
+    color: ${({ theme }) => theme.colors.orange};
+    transition: color ease-in-out 200ms;
   }
 `;
 

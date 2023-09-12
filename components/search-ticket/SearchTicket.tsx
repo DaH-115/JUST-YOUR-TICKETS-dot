@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 import Image from 'next/image';
 import useGetGenres from 'hooks/useGetGenres';
-
+import { MovieTicketProps } from 'ticketType';
 import MovieInfoBtn from 'components/ticket/MovieInfoBtn';
 import TicketTextDetail from 'components/ticket/TicketTextDetail';
 import AdmitBtn from 'components/ticket/AdmitBtn';
-import { MovieTicketProps } from 'ticketType';
 
 const SearchTicket = ({
   title,
@@ -22,14 +21,13 @@ const SearchTicket = ({
     : undefined;
 
   return (
-    <SearchResultWrapper>
-      <StyledInfo>
-        <TicketIndex>{`${movieIndex + 1}.`}</TicketIndex>
-
-        {/* GO TO MOVIE INFO PAGE BUTTON */}
+    <SearchTicketWrapper>
+      <MovieIndexBar>
+        <TicketIndex>{`${movieIndex}.`}</TicketIndex>
         <MovieInfoBtn movieId={movieId} />
-      </StyledInfo>
-      <Wrapper>
+      </MovieIndexBar>
+
+      <PosterImageWrapper>
         {posterImage ? (
           <PosterImage>
             <Image
@@ -43,37 +41,51 @@ const SearchTicket = ({
         ) : (
           <PosterImage>{`${title}(${releaseYear})`}</PosterImage>
         )}
-      </Wrapper>
-      <SearchResult>
-        <MovieTextWrapper>
-          <TicketTextDetail
-            title={title}
-            releaseYear={releaseYear}
-            genres={genreArr}
-            voteAverage={voteAverage}
-          />
-        </MovieTextWrapper>
+      </PosterImageWrapper>
+
+      <TicketDetailWrapper>
+        <TicketTextDetail
+          title={title}
+          releaseYear={releaseYear}
+          voteAverage={voteAverage}
+          genres={genreArr}
+        />
         <AdmitBtn
           title={title}
           releaseYear={releaseYear}
           posterPath={posterPath}
         />
-      </SearchResult>
-    </SearchResultWrapper>
+      </TicketDetailWrapper>
+    </SearchTicketWrapper>
   );
 };
 
 export default SearchTicket;
 
-const SearchResultWrapper = styled.div`
-  padding: 1rem;
+const SearchTicketWrapper = styled.div`
+  width: 100%;
+  height: 100%;
   overflow-y: scroll;
+  margin-bottom: 1rem;
 
   ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
   ${({ theme }) => theme.device.tablet} {
     display: flex;
     justify-content: center;
+  }
+`;
+
+const PosterImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 1rem;
+
+  ${({ theme }) => theme.device.tablet} {
+    margin-bottom: 0;
+    margin: 0 1rem;
   }
 `;
 
@@ -89,49 +101,35 @@ const PosterImage = styled.div`
   background-color: ${({ theme }) => theme.colors.black};
 `;
 
-const SearchResult = styled.div`
+const TicketDetailWrapper = styled.div`
   display: flex;
   justify-content: center;
+
   width: 100%;
   height: 100%;
-  max-width: 650px;
+  max-width: ${({ theme }) => theme.size.mobile};
 `;
 
-const StyledInfo = styled.div`
+const MovieIndexBar = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 
-  div {
-    font-size: 1.5rem;
-    color: #fff;
-  }
+  font-size: 1.5rem;
+  color: #fff;
 
   ${({ theme }) => theme.device.tablet} {
     display: block;
-    margin-right: 1rem;
   }
 `;
 
 const TicketIndex = styled.p`
-  font-weight: 700;
-  font-size: 1.5rem;
   color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
   text-align: center;
-  margin-right: 0.5rem;
 
   ${({ theme }) => theme.device.tablet} {
-    margin-right: 0;
+    font-size: 1.8rem;
   }
-`;
-
-const MovieTextWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;

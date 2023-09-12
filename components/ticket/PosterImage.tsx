@@ -46,6 +46,6 @@ const ImgWrapper = styled.div`
   align-items: center;
 
   img {
-    border-radius: 1.5rem;
+    border-radius: 1.2rem;
   }
 `;

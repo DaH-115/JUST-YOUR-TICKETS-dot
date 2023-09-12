@@ -11,21 +11,20 @@ import {
 } from 'firebase/firestore';
 import styled from 'styled-components';
 
+import { UserTicketProps } from 'ticketType';
 import withHeadMeta from 'components/common/withHeadMeta';
-import BackgroundStyle from 'components/layout/BackgroundStyle';
 import UserTicketSlider from 'components/user-ticket/UserTicketSlider';
 import SlideLayout from 'components/slider/SlideLayout';
 import NoneResults from 'components/styles/NoneReults';
 import { useAuthState } from 'components/store/auth-context';
-import { UserTicketProps } from 'ticketType';
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 const TicketListPage: NextPage = () => {
   const { userId } = useAuthState();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [usersTicket, setUsersTicket] = useState<UserTicketProps[]>([]);
-  const ticketLength = usersTicket.length;
+  const [usersTicket, setUsersTicket] = useState<UserTicketProps[]>();
+  const ticketLength = usersTicket && usersTicket.length;
   // false -> desc / true -> asc
   const [isSorted, setIsSorted] = useState<boolean>(false);
 
@@ -44,12 +43,12 @@ const TicketListPage: NextPage = () => {
       );
       const dbContents = await getDocs(contentQuery);
 
-      const newData = dbContents.docs.map((item: DocumentData) => ({
+      const userTickets = dbContents.docs.map((item: DocumentData) => ({
         id: item.id,
         ...item.data(),
       }));
 
-      setUsersTicket(newData);
+      console.log(usersTicket);
       setIsLoading(false);
     })();
   }, [userId, isSorted]);
@@ -61,25 +60,21 @@ const TicketListPage: NextPage = () => {
         ticketLength={ticketLength}
         description='나만의 감상티켓을 모아 보세요'
       >
-        {isLoading ? (
-          <Wrapper>
-            <LoadingSpinner />
-          </Wrapper>
-        ) : (
-          <TicketListWrapper>
-            <SortList onClick={onSortedHandler}>
-              <p>{'정렬'}</p>
+        <Wrapper>
+          <SortListWrapper onClick={onSortedHandler}>
+            <SoertListBtn>{'정렬'}</SoertListBtn>
+            <SoertIconBtn>
               {!isSorted ? <IoIosArrowUp /> : <IoIosArrowDown />}
-            </SortList>
-            {!ticketLength ? (
-              <Wrapper>
-                <NoneResults>{'아직 나의 티켓이 없습니다.'}</NoneResults>
-              </Wrapper>
-            ) : (
-              <UserTicketSlider movies={usersTicket} />
-            )}
-          </TicketListWrapper>
-        )}
+            </SoertIconBtn>
+          </SortListWrapper>
+          {isLoading ? (
+            <LoadingSpinner />
+          ) : !usersTicket ? (
+            <NoneResults>{'결과가 없습니다.'}</NoneResults>
+          ) : (
+            <UserTicketSlider movies={usersTicket} />
+          )}
+        </Wrapper>
       </SlideLayout>
     </BackgroundStyle>
   );
@@ -87,50 +82,58 @@ const TicketListPage: NextPage = () => {
 
 export default withHeadMeta(TicketListPage, '나의 티켓');
 
-const SortList = styled.div`
+const Wrapper = styled.div`
+  width: 100%;
+  padding: 0 1rem;
+
+  ${({ theme }) => theme.device.tablet} {
+    padding: 0 2rem;
+  }
+`;
+
+const BackgroundStyle = styled.div`
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.black};
+`;
+
+const SortListWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
 
-  width: 5.2rem;
-
-  font-weight: 700;
+  width: 5rem;
   color: #fff;
-  margin-top: 1rem;
-  margin-left: ${({ theme }) => theme.space.small};
-  padding: 0.3rem 0.8rem;
+  font-weight: 700;
+  border-radius: 1rem;
   border: 0.1rem solid ${({ theme }) => theme.colors.orange};
-  border-radius: 2rem;
 
+  padding: 0.5rem;
+  margin: 1rem 0;
   cursor: pointer;
 
   &:hover,
   &:active {
-    background: linear-gradient(
-      transparent 60%,
-      ${({ theme }) => theme.colors.orange}
-    );
+    div {
+      color: ${({ theme }) => theme.colors.orange};
+      transition: color ease-in-out 200ms;
+    }
   }
+`;
 
-  p {
-    margin-right: 0.3rem;
-  }
+const SoertListBtn = styled.div`
+  font-size: 1rem;
 
   ${({ theme }) => theme.device.tablet} {
-    margin-left: ${({ theme }) => theme.space.medium};
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
 `;
 
-const TicketListWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
-const Wrapper = styled.div`
+const SoertIconBtn = styled.div`
   display: flex;
   justify-content: center;
-  width: 100%;
-  height: 100vh;
-  margin-top: 1rem;
+  align-items: center;
+  margin-left: 0.1rem;
+
+  ${({ theme }) => theme.device.tablet} {
+  }
 `;

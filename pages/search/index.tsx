@@ -5,23 +5,24 @@ import axios from 'axios';
 import Error from 'next/error';
 import { BiSearch } from 'react-icons/bi';
 
+import { SystemError } from 'errorType';
+import { TopTenMovieDataProps } from 'ticketType';
 import withHeadMeta from 'components/common/withHeadMeta';
-import BackgroundStyle from 'components/layout/BackgroundStyle';
 import SearchTicket from 'components/search-ticket/SearchTicket';
 import NoneResults from 'components/styles/NoneReults';
-import { SystemError } from 'errorType';
-import { Top10MovieDataProps } from 'ticketType';
 
 const SearchPage: NextPage = () => {
   const [movieTitle, setMovieTitle] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<Top10MovieDataProps[]>([]);
+  const [searchResults, setSearchResults] = useState<TopTenMovieDataProps[]>(
+    []
+  );
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
     if (movieTitle) {
       timer = setTimeout(() => {
-        getSearchResults(movieTitle);
+        getSearchResultsHandler(movieTitle);
       }, 500);
     } else {
       setSearchResults([]);
@@ -30,12 +31,12 @@ const SearchPage: NextPage = () => {
     return () => clearTimeout(timer);
   }, [movieTitle]);
 
-  const getSearchResults = async (movieTitle: string) => {
+  const getSearchResultsHandler = async (movieTitle: string) => {
     try {
       const res = await axios.get(
         `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieTitle}&language=ko-KR`
       );
-      const { results }: { results: Top10MovieDataProps[] } = await res.data;
+      const { results }: { results: TopTenMovieDataProps[] } = await res.data;
 
       setSearchResults(results);
     } catch (error) {
@@ -44,15 +45,17 @@ const SearchPage: NextPage = () => {
     }
   };
 
-  const searchInputHandler = useCallback(
+  const onSubmitHandler = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault();
-      movieTitle && getSearchResults(movieTitle);
+      if (movieTitle) {
+        getSearchResultsHandler(movieTitle);
+      }
     },
     [movieTitle]
   );
 
-  const inputChangeHandler = useCallback(
+  const onInputChangeHandler = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setMovieTitle(event.target.value);
     },
@@ -60,16 +63,16 @@ const SearchPage: NextPage = () => {
   );
 
   return (
-    <BackgroundStyle customMessage='search🎞️'>
+    <BackgroundStyle>
       <FormWrapper>
-        <StyledForm onSubmit={searchInputHandler} action='get'>
+        <StyledForm onSubmit={onSubmitHandler} action='get'>
           <StyledLabel htmlFor='search-input'>{'영화 검색'}</StyledLabel>
           <StyledInput
             type='text'
             id='search-input'
             value={movieTitle}
-            onChange={inputChangeHandler}
-            placeholder='Search Your Ticket.'
+            onChange={onInputChangeHandler}
+            placeholder='티켓을 검색해 보세요.'
           />
           <InputSearchBtn>
             <button type='submit'>
@@ -88,7 +91,7 @@ const SearchPage: NextPage = () => {
             <SearchTicket
               key={item.id}
               movieId={item.id}
-              movieIndex={index}
+              movieIndex={index + 1}
               title={item.title}
               voteAverage={item.vote_average}
               releaseDate={item.release_date}
@@ -104,22 +107,9 @@ const SearchPage: NextPage = () => {
 
 export default withHeadMeta(SearchPage, '검색');
 
-const SearchWrapper = styled.div`
+const BackgroundStyle = styled.div`
   width: 100%;
-`;
-
-const SearchTitle = styled.p`
-  color: #fff;
-  padding-top: 1rem;
-  padding-left: ${({ theme }) => theme.space.small};
-
-  font-size: 1.5rem;
-  font-weight: 700;
-
-  ${({ theme }) => theme.device.tablet} {
-    font-size: 2rem;
-    padding-left: ${({ theme }) => theme.space.medium};
-  }
+  background-color: ${({ theme }) => theme.colors.black};
 `;
 
 const FormWrapper = styled.div`
@@ -127,7 +117,14 @@ const FormWrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: 2rem;
+  margin: 1rem 0 2rem;
+`;
+
+const StyledForm = styled.form`
+  display: flex;
+
+  ${({ theme }) => theme.device.tablet} {
+  }
 `;
 
 const StyledLabel = styled.label`
@@ -137,27 +134,12 @@ const StyledLabel = styled.label`
   visibility: hidden;
 `;
 
-const StyledForm = styled.form`
-  display: flex;
-  margin: 1rem 0;
-
-  ${({ theme }) => theme.device.tablet} {
-    width: 40%;
-    margin-top: 0;
-  }
-
-  ${({ theme }) => theme.device.desktop} {
-    width: 30%;
-  }
-`;
-
 const StyledInput = styled.input`
   width: 100%;
+  font-size: 0.9rem;
   padding: 0.1rem 1rem;
   border: none;
   border-radius: 2rem;
-  font-size: 0.8rem;
-  font-weight: 600;
 
   &:focus {
     border-color: ${({ theme }) => theme.colors.orange};
@@ -180,10 +162,7 @@ const StyledInput = styled.input`
     color: ${({ theme }) => theme.colors.gray};
   }
 
-  ${({ theme }) => theme.device.desktop} {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 2rem;
+  ${({ theme }) => theme.device.tablet} {
   }
 `;
 
@@ -205,5 +184,26 @@ const InputSearchBtn = styled.div`
   &:active {
     background-color: ${({ theme }) => theme.colors.orange};
     transition: all ease-in-out 150ms;
+  }
+`;
+
+const SearchWrapper = styled.div`
+  width: 100%;
+  padding: 0 1rem;
+
+  ${({ theme }) => theme.device.tablet} {
+    padding: 0 2rem;
+  }
+`;
+
+const SearchTitle = styled.p`
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+
+  ${({ theme }) => theme.device.tablet} {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
   }
 `;

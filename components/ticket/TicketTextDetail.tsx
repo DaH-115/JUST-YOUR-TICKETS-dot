@@ -1,13 +1,13 @@
 import styled from 'styled-components';
-import { TicketTextDetailProps } from 'ticketType';
+import { TicketDetailProps } from 'ticketType';
 
 const TicketTextDetail = ({
   title,
-  voteAverage,
   releaseYear,
-  reviewText,
+  voteAverage,
   genres,
-}: TicketTextDetailProps) => {
+  reviewText,
+}: TicketDetailProps) => {
   return (
     <TicketTextWrapper>
       <TicketHeader>
@@ -27,7 +27,11 @@ const TicketTextDetail = ({
         </JanreList>
       )}
 
-      {reviewText && <StyledReviewText>{reviewText}</StyledReviewText>}
+      {reviewText && (
+        <ReviewWrapper>
+          <ReviewText>{reviewText}</ReviewText>
+        </ReviewWrapper>
+      )}
     </TicketTextWrapper>
   );
 };
@@ -36,11 +40,15 @@ export default TicketTextDetail;
 
 const TicketTextWrapper = styled.div`
   width: 100%;
+  height: 8.5rem;
+
   padding: 0.5rem;
   background: linear-gradient(#fff 80%, ${({ theme }) => theme.colors.yellow});
 
   border-left: 0.5rem dotted ${({ theme }) => theme.colors.black};
   border-radius: 0.2rem 0 0 0.2rem;
+  overflow-y: scroll;
+  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
   ${({ theme }) => theme.device.tablet} {
     border-left: 0.3rem dotted ${({ theme }) => theme.colors.black};
@@ -83,10 +91,9 @@ const JanreItem = styled.li`
   }
 `;
 
-const StyledReviewText = styled.p`
+const ReviewWrapper = styled.div`
   width: 100%;
   margin: 0.5rem 0 1rem;
-  overflow-y: scroll;
-
-  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 `;
+
+const ReviewText = styled.p``;

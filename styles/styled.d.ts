@@ -21,11 +21,6 @@ declare module 'styled-components' {
       tablet: string;
       desktop: string;
     };
-    space: {
-      small: string;
-      medium: string;
-      large: string;
-    };
     posterWidth: string;
     posterHeight: string;
   }

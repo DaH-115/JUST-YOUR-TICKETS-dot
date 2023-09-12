@@ -1,7 +1,7 @@
 import React from 'react';
+import { UserTicketProps } from 'ticketType';
 import TicketSlider from 'components/slider/TicketSlider';
 import UserTicket from 'components/user-ticket/UserTicket';
-import { UserTicketProps } from 'ticketType';
 
 const UserTicketSlider = ({ movies }: { movies: UserTicketProps[] }) => {
   const movieLength = movies.length;

@@ -6,9 +6,9 @@ import {
 } from 'next';
 import axios from 'axios';
 import MovieDetail from 'components/movie-detail/MovieDetailPage';
-import { Top10MovieDataProps } from 'ticketType';
+import { TopTenMovieDataProps } from 'ticketType';
 
-const MovieDetailPage: NextPage<{ movie: Top10MovieDataProps }> = ({
+const MovieDetailPage: NextPage<{ movie: TopTenMovieDataProps }> = ({
   movie,
 }) => {
   return (
@@ -47,10 +47,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps<{
-  movie: Top10MovieDataProps;
+  movie: TopTenMovieDataProps;
 }> = async ({ params }: GetStaticPropsContext) => {
   const movieId = params && params.movieId;
-  let movie: Top10MovieDataProps;
+  let movie: TopTenMovieDataProps;
 
   try {
     const res = await axios.get(

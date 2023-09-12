@@ -3,8 +3,7 @@ import useGetGenres from 'hooks/useGetGenres';
 import { MovieTicketProps } from 'ticketType';
 import PosterImage from 'components/ticket/PosterImage';
 import MovieInfoBtn from 'components/ticket/MovieInfoBtn';
-import TicketTextDetail from 'components/ticket/TicketTextDetail';
-import AdmitBtn from 'components/ticket/AdmitBtn';
+import TicketDetails from 'components/ticket/TicketDetails';
 
 const TopTenMovieTicket = ({
   movieId,
@@ -30,19 +29,13 @@ const TopTenMovieTicket = ({
         posterPath={posterPath}
       />
 
-      <MovieTicketDetailWrapper>
-        <TicketTextDetail
-          title={title}
-          releaseYear={releaseYear}
-          voteAverage={voteAverage}
-          genres={genreArr}
-        />
-        <AdmitBtn
-          title={title}
-          releaseYear={releaseYear}
-          posterPath={posterPath}
-        />
-      </MovieTicketDetailWrapper>
+      <TicketDetails
+        title={title}
+        releaseYear={releaseYear}
+        voteAverage={voteAverage}
+        genres={genreArr}
+        posterPath={posterPath}
+      />
     </TicketWrapper>
   );
 };
@@ -86,21 +79,5 @@ const MovieRank = styled.h2`
 
   ${({ theme }) => theme.device.tablet} {
     font-size: 2.8rem;
-  }
-`;
-
-const MovieTicketDetailWrapper = styled.div`
-  position: relative;
-  bottom: 1rem;
-  left: 0;
-
-  display: flex;
-  justify-content: center;
-
-  /* Poster Img Size */
-  width: ${({ theme }) => theme.posterWidth};
-
-  ${({ theme }) => theme.device.tablet} {
-    bottom: 3.8rem;
   }
 `;

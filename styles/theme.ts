@@ -29,11 +29,6 @@ export const theme: DefaultTheme = {
     }`,
   },
   device,
-  space: {
-    small: '1rem',
-    medium: '4rem',
-    large: '6rem',
-  },
   posterWidth: '320px',
   posterHeight: '480px',
 };

@@ -1,20 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-
-import { TicketTextDetailProps } from 'ticketType';
+import { TicketDetailProps } from 'ticketType';
 import TicketTextDetail from 'components/ticket/TicketTextDetail';
-import AdmitBtn from './AdmitBtn';
+import AdmitBtn from 'components/ticket/AdmitBtn';
 
-const MovieTicketDetail = ({
+const TicketDetails = ({
   title,
   releaseYear,
-  genres,
   voteAverage,
+  genres,
   posterPath,
   reviewText,
-}: TicketTextDetailProps) => {
+}: TicketDetailProps) => {
   return (
-    <MovieTicketDetailWrapper>
+    <TicketDetailWrapper>
       <TicketTextDetail
         title={title}
         releaseYear={releaseYear}
@@ -30,22 +29,24 @@ const MovieTicketDetail = ({
           posterPath={posterPath}
         />
       )}
-    </MovieTicketDetailWrapper>
+    </TicketDetailWrapper>
   );
 };
 
-export default React.memo(MovieTicketDetail);
+export default React.memo(TicketDetails);
 
-const MovieTicketDetailWrapper = styled.div`
-  position: absolute;
-  bottom: 0;
+const TicketDetailWrapper = styled.div`
+  position: relative;
+  bottom: 1rem;
   left: 0;
 
   display: flex;
   justify-content: center;
 
   /* Poster Img Size */
-  width: 100%;
   width: ${({ theme }) => theme.posterWidth};
-  height: 7rem;
+
+  ${({ theme }) => theme.device.tablet} {
+    bottom: 3.8rem;
+  }
 `;

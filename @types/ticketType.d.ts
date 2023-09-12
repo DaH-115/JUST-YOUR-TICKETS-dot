@@ -37,7 +37,7 @@ declare module 'ticketType' {
     voteAverage: number;
   }
 
-  export interface TicketTextDetailProps extends requiredText {
+  export interface TicketDetailProps extends requiredText {
     genres?: string[];
     posterPath?: string;
     reviewText?: string;

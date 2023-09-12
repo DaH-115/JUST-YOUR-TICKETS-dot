@@ -9,13 +9,9 @@ import { AiFillInfoCircle } from 'react-icons/ai';
 import { BiPencil } from 'react-icons/bi';
 import { BiTrash } from 'react-icons/bi';
 
-import MovieTicketDetail from 'components/ticket/MovieTicketDetail';
+import TicketDetails from 'components/ticket/TicketDetails';
 import PosterImage from 'components/ticket/PosterImage';
 import AlertPopup from 'components/modals/AlertPopup';
-import TicketWrapper from 'components/styles/TicketWrapper';
-import MovieIndexBar from 'components/styles/MovieIndexBar';
-import StyeldInfo from 'components/styles/StyeldInfo';
-import StyledBtn from 'components/styles/StyledBtn';
 import { SystemError } from 'errorType';
 import { UserTicketProps } from 'ticketType';
 
@@ -28,7 +24,7 @@ const UserTicket = ({
   reviewText,
   createdAt,
 }: UserTicketProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const router = useRouter();
   const writeDate = new Date(createdAt).toLocaleDateString();
 
@@ -63,14 +59,11 @@ const UserTicket = ({
       <MovieIndexBar>
         <WriteDate>{writeDate}</WriteDate>
         <BtnWrapper>
-          {/* DELETE BUTTON */}
           <DeleteBtnWrapper onClick={onToggleHandler}>
-            <button>
+            <DeleteBtn>
               <BiTrash />
-            </button>
+            </DeleteBtn>
           </DeleteBtnWrapper>
-
-          {/* UPDATE BUTTON */}
           <Link
             href={{
               pathname: '/write',
@@ -85,14 +78,13 @@ const UserTicket = ({
             }}
             as={`/write`}
           >
-            <StyledBtn>
-              <button>
+            <UpdateBtnWrapper>
+              <UpdateBtn>
                 <BiPencil />
-              </button>
-            </StyledBtn>
+              </UpdateBtn>
+            </UpdateBtnWrapper>
           </Link>
 
-          {/* GO TO MOVIE INFO PAGE BUTTON */}
           <Link
             href={{
               pathname: `${router.pathname}/${title}`,
@@ -106,22 +98,20 @@ const UserTicket = ({
             }}
             as={`${router.pathname}/${title}`}
           >
-            <StyeldInfo>
+            <ReviewInfoBtn>
               <AiFillInfoCircle />
-            </StyeldInfo>
+            </ReviewInfoBtn>
           </Link>
         </BtnWrapper>
       </MovieIndexBar>
 
-      {/* POSTER IMAGE Section */}
       <PosterImage
         title={title}
         releaseYear={releaseYear}
         posterImage={posterImage}
       />
 
-      {/* TICKET DETAIL Section */}
-      <MovieTicketDetail
+      <TicketDetails
         title={title}
         releaseYear={releaseYear}
         voteAverage={+rating}
@@ -134,19 +124,85 @@ const UserTicket = ({
 
 export default UserTicket;
 
+const TicketWrapper = styled.div`
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+  margin-top: 1rem;
+`;
+
+const MovieIndexBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  color: #fff;
+  padding: 0 2rem;
+
+  ${({ theme }) => theme.device.tablet} {
+    padding: 0 1rem;
+  }
+`;
+
 const WriteDate = styled.p`
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+
+  ${({ theme }) => theme.device.tablet} {
+    font-size: 1rem;
+  }
 `;
 
 const BtnWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-top: 0.5rem;
+  align-items: center;
 `;
 
-const DeleteBtnWrapper = styled(StyledBtn)`
-  button {
-    margin-bottom: 0.05rem;
+const UpdateBtnWrapper = styled.div`
+  padding: 0.5rem 0.25rem;
+`;
+
+const UpdateBtn = styled.button`
+  color: #fff;
+  font-size: 1.5rem;
+
+  &:active,
+  &:hover {
+    color: ${({ theme }) => theme.colors.orange};
+    transition: color ease-in-out 200ms;
+  }
+`;
+
+const DeleteBtnWrapper = styled.div`
+  padding: 0.5rem 0.25rem;
+`;
+
+const DeleteBtn = styled.button`
+  color: #fff;
+  font-size: 1.5rem;
+
+  &:active,
+  &:hover {
+    color: ${({ theme }) => theme.colors.orange};
+    transition: color ease-in-out 200ms;
+  }
+`;
+
+const ReviewInfoBtn = styled.div`
+  font-size: 1.8rem;
+  color: #fff;
+
+  &:active,
+  &:hover {
+    color: ${({ theme }) => theme.colors.orange};
+    transition: color ease-in-out 200ms;
   }
 `;

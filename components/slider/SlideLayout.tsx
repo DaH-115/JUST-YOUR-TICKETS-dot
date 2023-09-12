@@ -50,19 +50,19 @@ const SlideTitle = styled.h1`
 `;
 
 const Description = styled.p`
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: ${({ theme }) => theme.colors.gray};
   margin-left: 1rem;
 
   ${({ theme }) => theme.device.tablet} {
+    font-size: 0.9rem;
     margin-left: 2rem;
   }
 `;
 
 const TicketLength = styled.p`
+  color: ${({ theme }) => theme.colors.yellow};
   font-size: 1.4rem;
   font-weight: 700;
-  color: #fff;
-  margin-top: 1rem;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
 `;
