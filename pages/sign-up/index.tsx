@@ -6,7 +6,7 @@ import { isAuth } from 'firebase-config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
-import { useAuthState } from 'components/store/auth-context';
+import { useAuthState } from 'store/auth-context';
 import withHeadMeta from 'components/common/withHeadMeta';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
 import SignFormLayout from 'components/layout/SignFormLayout';

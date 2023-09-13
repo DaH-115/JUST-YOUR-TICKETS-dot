@@ -7,7 +7,7 @@ import { isAuth } from 'firebase-config';
 import { BiSearch } from 'react-icons/bi';
 import { MdOutlineMenu } from 'react-icons/md';
 import { SystemError } from 'errorType';
-import { useAuthState } from 'components/store/auth-context';
+import { useAuthState } from 'store/auth-context';
 import SignInAlert from 'components/modals/SignInAlert';
 import SlideMenu from 'components/modals/SlideMenu';
 

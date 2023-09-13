@@ -8,7 +8,7 @@ import Header from 'components/layout/Header';
 import Footer from 'components/layout/Footer';
 import FaviconTags from 'components/common/FaviconTags';
 import MetaTags from 'components/common/MetaTags';
-import AuthStateProvider from 'components/store/auth-context';
+import AuthStateProvider from 'store/auth-context';
 import Layout from 'components/layout/Layout';
 
 function MyApp({ Component, pageProps }: AppProps) {

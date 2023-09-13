@@ -8,8 +8,7 @@ import { BiSearch } from 'react-icons/bi';
 import { SystemError } from 'errorType';
 import { TopTenMovieDataProps } from 'ticketType';
 import withHeadMeta from 'components/common/withHeadMeta';
-import SearchTicket from 'components/search-ticket/SearchTicket';
-import NoneResults from 'components/styles/NoneReults';
+import SearchTicket from 'pages/search/SearchTicket';
 
 const SearchPage: NextPage = () => {
   const [movieTitle, setMovieTitle] = useState<string>('');
@@ -206,4 +205,12 @@ const SearchTitle = styled.p`
     font-size: 2rem;
     margin-bottom: 0.5rem;
   }
+`;
+
+const NoneResults = styled.p`
+  width: 100%;
+  height: 100vh;
+
+  color: #fff;
+  font-size: 1.2rem;
 `;

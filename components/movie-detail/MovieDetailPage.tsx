@@ -6,7 +6,6 @@ import { AiOutlineArrowRight } from 'react-icons/ai';
 import useGetGenres from 'hooks/useGetGenres';
 import { MovieDetailProps } from 'ticketType';
 import PosterImage from 'components/ticket/PosterImage';
-import MovieJanreWrapper from 'components/styles/MovieJanreWrapper';
 
 const MovieDetail = ({
   movieId,
@@ -52,11 +51,11 @@ const MovieDetail = ({
             <StyledLabel>{'Genre /장르'}</StyledLabel>
             {genreArr && (
               <ContentText>
-                <MovieJanreWrapper>
+                <JanreWrapper>
                   {genreArr.map((item, index) => (
-                    <li key={index}>{item}</li>
+                    <JanreItem key={index}>{item}</JanreItem>
                   ))}
-                </MovieJanreWrapper>
+                </JanreWrapper>
               </ContentText>
             )}
 
@@ -100,14 +99,14 @@ const BackgroundStyle = styled.div`
 `;
 
 const PageTitle = styled.h1`
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #fff;
   margin-top: 1rem;
   margin-left: 1rem;
 
   ${({ theme }) => theme.device.tablet} {
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-left: 2rem;
   }
 `;
@@ -120,6 +119,8 @@ const MovieDetailWrapper = styled.div`
 
   width: 100%;
   padding: 2rem 0 0;
+  overflow-y: scroll;
+  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
 
   ${({ theme }) => theme.device.tablet} {
     flex-direction: row;
@@ -175,6 +176,28 @@ const MovieTitle = styled.h1`
 
 const RatingNumber = styled.p`
   width: 100%;
+`;
+
+const JanreWrapper = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 2rem;
+  font-size: 1rem;
+  overflow-y: scroll;
+  ${({ theme }) => theme.scrollbarStyle.scrollbarReset}
+`;
+
+const JanreItem = styled.li`
+  margin-right: 0.4rem;
+
+  &:not(:first-child)::before {
+    content: '/';
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
 `;
 
 const OverviweText = styled.p`

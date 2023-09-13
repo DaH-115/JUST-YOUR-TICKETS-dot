@@ -14,7 +14,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { BsGithub } from 'react-icons/bs';
 
 import withHeadMeta from 'components/common/withHeadMeta';
-import { useAuthState } from 'components/store/auth-context';
+import { useAuthState } from 'store/auth-context';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
 import SignFormLayout from 'components/layout/SignFormLayout';
 

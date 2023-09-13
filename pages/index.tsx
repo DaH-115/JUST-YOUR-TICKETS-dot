@@ -2,7 +2,7 @@ import { GetStaticProps, NextPage } from 'next';
 import axios from 'axios';
 import { Top10MovieDataProps } from 'ticketType';
 import SlideLayout from 'components/slider/SlideLayout';
-import TopTenMovieSlider from 'components/top10-tickets/TopTenMovieSlider';
+import TopTenMovieSlider from 'components/ticket/top10-tickets/TopTenMovieSlider';
 
 const Home: NextPage<{ top10Movies: Top10MovieDataProps[] }> = ({
   top10Movies,

@@ -3,9 +3,9 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
 import withHeadMeta from 'components/common/withHeadMeta';
-import WriteForm from 'components/write-form/WriteForm';
+import WriteForm from 'pages/write/WriteForm';
 import SignInAlert from 'components/modals/SignInAlert';
-import { useAuthState } from 'components/store/auth-context';
+import { useAuthState } from 'store/auth-context';
 import { WriteFormProps } from 'ticketType';
 
 const WritePage: NextPage = () => {

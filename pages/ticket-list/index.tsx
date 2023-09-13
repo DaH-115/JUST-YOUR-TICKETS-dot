@@ -13,10 +13,9 @@ import styled from 'styled-components';
 
 import { UserTicketProps } from 'ticketType';
 import withHeadMeta from 'components/common/withHeadMeta';
-import UserTicketSlider from 'components/user-ticket/UserTicketSlider';
+import UserTicketSlider from 'components/ticket/user-ticket/UserTicketSlider';
 import SlideLayout from 'components/slider/SlideLayout';
-import NoneResults from 'components/styles/NoneReults';
-import { useAuthState } from 'components/store/auth-context';
+import { useAuthState } from 'store/auth-context';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
@@ -136,4 +135,12 @@ const SoertIconBtn = styled.div`
 
   ${({ theme }) => theme.device.tablet} {
   }
+`;
+
+const NoneResults = styled.p`
+  width: 100%;
+  height: 100vh;
+
+  color: #fff;
+  font-size: 1.2rem;
 `;

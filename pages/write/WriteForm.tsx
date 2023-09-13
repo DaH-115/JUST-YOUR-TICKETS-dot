@@ -7,7 +7,7 @@ import Error from 'next/error';
 
 import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
-import { useAuthState } from 'components/store/auth-context';
+import { useAuthState } from 'store/auth-context';
 import Confirm from 'components/modals/Confirm';
 
 const WriteForm = ({
