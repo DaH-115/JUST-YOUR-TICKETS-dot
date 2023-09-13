@@ -48,7 +48,7 @@ const TicketListPage: NextPage = () => {
         ...item.data(),
       }));
 
-      console.log(usersTicket);
+      setUsersTicket(userTickets);
       setIsLoading(false);
     })();
   }, [userId, isSorted]);

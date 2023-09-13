@@ -14,9 +14,9 @@ const SlideMenu = ({ children, isopen, closeHandler }: SlideMenuProps) => {
     <PortalComponents>
       <SlideMenuWrapper isopen={isopen} onClick={closeHandler}>
         <LogoWrapper>
-          <div>{'JUST'}</div>
+          {'JUST'}
           <StyledLogo>{'MY'}</StyledLogo>
-          <div>{'TICKTES.'}</div>
+          {'TICKTES.'}
         </LogoWrapper>
         {children}
         <CloseBtn>
@@ -63,9 +63,9 @@ const SlideMenuWrapper = styled.div<{ isopen: boolean }>`
   z-index: 999;
 
   visibility: ${({ isopen }) => (isopen ? 'visible' : 'hidden')};
-  animation: ${({ isopen }) => (isopen ? fadeSlideIn : fadeSlideOut)} 0.4s
+  animation: ${({ isopen }) => (isopen ? fadeSlideIn : fadeSlideOut)} 400ms
     ease-in-out;
-  transition: visibility 0.4s ease-in-out;
+  transition: visibility 400ms ease-in-out;
 
   width: 100%;
   height: 100vh;

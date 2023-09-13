@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { isAuth } from 'firebase-config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from 'next/router';
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
 import { useAuthState } from 'components/store/auth-context';
 import withHeadMeta from 'components/common/withHeadMeta';
-import LoadingMsg from 'components/common/LoadingMsg';
-import BackgroundStyle from 'components/layout/BackgroundStyle';
+import { LoadingSpinner } from 'components/common/LoadingSpinner';
+import SignFormLayout from 'components/layout/SignFormLayout';
 
 const SignUpPage: NextPage = () => {
   const router = useRouter();
@@ -38,7 +38,7 @@ const SignUpPage: NextPage = () => {
     }
   }, [isSigned]);
 
-  const getUser = async () => {
+  const getUserHandler = async () => {
     setIsLoading(true);
 
     try {
@@ -52,7 +52,7 @@ const SignUpPage: NextPage = () => {
 
   const onSubmitHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    getUser();
+    getUserHandler();
   };
 
   const onIdChangeHandler = ({
@@ -78,7 +78,7 @@ const SignUpPage: NextPage = () => {
     }
   };
 
-  const onAnotherAdrBlurHandler = () => {
+  const onAnotherAdrsBlurHandler = () => {
     if (isAnotherAddress && emailAddress === '') {
       setIsAnotherAddress(false);
       setIsArrowToggle(false);
@@ -131,107 +131,108 @@ const SignUpPage: NextPage = () => {
   };
 
   return (
-    <BackgroundStyle customMessage='create📝'>
-      {isLoading && <LoadingMsg />}
-      <>
-        <SignUpFormWrapper>
-          <SignUpForTitle>{'*Sign Up /회원가입'}</SignUpForTitle>
-          {isError && (
-            <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요'}.</ErrorMsg>
-          )}
-          <SignUpForm onSubmit={onSubmitHandler}>
-            {/* EMAIL */}
-            <label htmlFor='user-email'>{'*EMAIL /이메일'}</label>
+    <SignFormLayout formTitle='Sign Up /회원가입'>
+      {isLoading && <LoadingSpinner />}
+      {isError && (
+        <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요.'}</ErrorMsg>
+      )}
 
-            <EmailInputWrapper>
+      <SignUpForm onSubmit={onSubmitHandler}>
+        <InputLabel htmlFor='user-email'>{'Email /이메일'}</InputLabel>
+        <EmailInputWrapper>
+          <StyledInput
+            type='text'
+            id='user-email'
+            value={emailId}
+            onChange={onIdChangeHandler}
+            onBlur={onIdBlurHandler}
+          />
+          <AtSign>{'@'}</AtSign>
+          <SelectWrapper onClick={() => setIsArrowToggle((prev) => !prev)}>
+            {isAnotherAddress ? (
               <StyledInput
                 type='text'
-                id='user-email'
-                value={emailId}
-                onChange={onIdChangeHandler}
-                onBlur={onIdBlurHandler}
+                value={emailAddress}
+                onChange={onAddressChangeHandler}
+                onBlur={onAnotherAdrsBlurHandler}
               />
-              <AtSign>{'@'}</AtSign>
-              <SelectWrapper onClick={() => setIsArrowToggle((prev) => !prev)}>
-                {isAnotherAddress ? (
-                  <StyledInput
-                    type='text'
-                    value={emailAddress}
-                    onChange={onAddressChangeHandler}
-                    onBlur={onAnotherAdrBlurHandler}
-                  />
-                ) : (
-                  <>
-                    <select
-                      value={emailAddress}
-                      onChange={onAddressChangeHandler}
-                      onBlur={onSelectBlurHandler}
-                    >
-                      <option value='default'>{'주소를 선택하세요.'}</option>
-                      <option value='naver.com'>{'naver.com'}</option>
-                      <option value='gmail.com'>{'gmail.com'}</option>
-                      <option value='daum.net'>{'daum.net'}</option>
-                      <option value='nate.com'>{'nate.com'}</option>
-                      <option value='anotherAddress'>{'직접 입력하기'}</option>
-                    </select>
-                    <ArrowBtn>
-                      {isArrowToggle ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                    </ArrowBtn>
-                  </>
-                )}
-              </SelectWrapper>
-            </EmailInputWrapper>
+            ) : (
+              <>
+                <InputSelect
+                  value={emailAddress}
+                  onChange={onAddressChangeHandler}
+                  onBlur={onSelectBlurHandler}
+                >
+                  <option value='default'>{'주소를 선택하세요.'}</option>
+                  <option value='naver.com'>{'naver.com'}</option>
+                  <option value='gmail.com'>{'gmail.com'}</option>
+                  <option value='daum.net'>{'daum.net'}</option>
+                  <option value='nate.com'>{'nate.com'}</option>
+                  <option value='anotherAddress'>{'직접 입력하기'}</option>
+                </InputSelect>
+                <ArrowBtn>
+                  {isArrowToggle ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                </ArrowBtn>
+              </>
+            )}
+          </SelectWrapper>
+        </EmailInputWrapper>
+        <ValidationMsg isState={isEmail}>
+          {emailId === '' && '이메일을 입력해 주세요. '}
+          {isAnotherAddress && !isEmail && '이메일을 확인해 주세요.'}
+        </ValidationMsg>
 
-            <ValidationMsg isState={isEmail}>
-              {emailId === '' && '이메일을 입력해 주세요. '}
-              {isAnotherAddress && !isEmail && '이메일을 확인해 주세요.'}
-            </ValidationMsg>
+        <InputLabel htmlFor='user-password'>{'Password /비밀번호'}</InputLabel>
+        <StyledInput
+          type='password'
+          id='user-password'
+          value={userPassword}
+          onChange={onPasswordChangeHandler}
+          onBlur={onPasswordBlurHandler}
+        />
+        <ValidationMsg isState={isPassword}>
+          {!userPassword
+            ? '비밀번호를 입력해 주세요.'
+            : !isPassword
+            ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
+            : null}
+        </ValidationMsg>
 
-            {/* PASSWORD */}
-            <label htmlFor='user-password'>{'*PASSWORD /비밀번호'}</label>
-            <StyledInput
-              type='password'
-              id='user-password'
-              value={userPassword}
-              onChange={onPasswordChangeHandler}
-              onBlur={onPasswordBlurHandler}
-            />
+        <InputLabel htmlFor='user-password-check'>
+          {'Password /비밀번호'}
+        </InputLabel>
+        <StyledInput
+          type='password'
+          id='user-password-check'
+          value={checkedPassword}
+          onChange={onPasswordCheckHandler}
+          onBlur={onPWCheckInputBlurHandler}
+        />
+        <ValidationMsg isState={isPasswordCheck}>
+          {!checkedPassword
+            ? '다시 한번 입력해 주세요.'
+            : !isPasswordCheck
+            ? '위와 동일한 비밀번호가 아닙니다.'
+            : null}
+        </ValidationMsg>
 
-            <ValidationMsg isState={isPassword}>
-              {!userPassword
-                ? '비밀번호를 입력해 주세요.'
-                : !isPassword
-                ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
-                : null}
-            </ValidationMsg>
-
-            <label htmlFor='user-password-check'>{'*PASSWORD /비밀번호'}</label>
-            <StyledInput
-              type='password'
-              id='user-password-check'
-              value={checkedPassword}
-              onChange={onPasswordCheckHandler}
-              onBlur={onPWCheckInputBlurHandler}
-            />
-            <ValidationMsg isState={isPasswordCheck}>
-              {!checkedPassword
-                ? '다시 한번 입력해 주세요.'
-                : !isPasswordCheck
-                ? '위와 동일한 비밀번호가 아닙니다.'
-                : null}
-            </ValidationMsg>
-
-            <SignUpBtn type='submit' disabled={isDisabled}>
-              {'회원가입'}
-            </SignUpBtn>
-          </SignUpForm>
-        </SignUpFormWrapper>
-      </>
-    </BackgroundStyle>
+        <SignUpBtn type='submit' disabled={isDisabled}>
+          {'회원가입'}
+        </SignUpBtn>
+      </SignUpForm>
+    </SignFormLayout>
   );
 };
 
 export default withHeadMeta(SignUpPage, '회원가입');
+
+const SignUpForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+`;
 
 const EmailInputWrapper = styled.div`
   position: relative;
@@ -241,80 +242,10 @@ const EmailInputWrapper = styled.div`
   align-items: center;
 `;
 
-const SelectWrapper = styled.div`
-  width: 100%;
-
-  select {
-    width: 100%;
-    height: 100%;
-    padding: 0.6rem;
-    border-radius: 1rem;
-
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-
-    &::-ms-expand {
-      display: none;
-    }
-
-    &:focus {
-      border-color: ${({ theme }) => theme.colors.orange};
-      box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
-    }
-  }
-`;
-
-const AtSign = styled.div`
-  color: #fff;
-  margin: 0 0.3rem;
-  font-size: 0.8rem;
-`;
-
-const ArrowBtn = styled.div`
-  position: absolute;
-  top: 0.4rem;
-  right: 0.4rem;
-  padding-top: 0.1rem;
-`;
-
-const SignUpFormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 5rem;
-
-  ${({ theme }) => theme.device.tablet} {
-    margin-bottom: 3rem;
-  }
-`;
-
-const SignUpForTitle = styled.h1`
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #fff;
-  margin-top: 1.5rem;
-  margin-bottom: 3rem;
-
-  ${({ theme }) => theme.device.desktop} {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-    padding-left: 0;
-  }
-`;
-
-const SignUpForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 18rem;
-
-  label {
-    font-size: 0.8rem;
-    color: ${({ theme }) => theme.colors.gray};
-    margin-bottom: 0.4rem;
-  }
+const InputLabel = styled.label`
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.gray};
+  margin-bottom: 0.8rem;
 `;
 
 const StyledInput = styled.input`
@@ -336,19 +267,55 @@ const StyledInput = styled.input`
 
 const ValidationMsg = styled.p<{ isState: boolean }>`
   visibility: ${({ isState }) => (isState ? 'hidden' : 'visible')};
-  font-size: 0.7rem;
-  color: ${({ theme, isState }) => (isState ? '#fff' : theme.colors.orange)};
   width: 100%;
-  height: 1rem;
-  padding-left: 0.2rem;
+  color: ${({ theme, isState }) => (isState ? '#fff' : theme.colors.orange)};
+  font-size: 0.9rem;
+
   margin-top: 0.4rem;
   margin-bottom: 1rem;
 `;
 
 const ErrorMsg = styled.p`
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   color: red;
   margin-bottom: 1rem;
+`;
+
+const SelectWrapper = styled.div`
+  width: 100%;
+`;
+
+const InputSelect = styled.select`
+  width: 100%;
+  height: 100%;
+  padding: 0.6rem;
+  border-radius: 1rem;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &::-ms-expand {
+    display: none;
+  }
+
+  &:focus {
+    border-color: ${({ theme }) => theme.colors.orange};
+    box-shadow: 0 0 10px ${({ theme }) => theme.colors.orange};
+  }
+`;
+
+const AtSign = styled.div`
+  color: #fff;
+  margin: 0 0.3rem;
+  font-size: 0.8rem;
+`;
+
+const ArrowBtn = styled.div`
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  padding-top: 0.1rem;
 `;
 
 const SignUpBtn = styled.button`
@@ -357,7 +324,7 @@ const SignUpBtn = styled.button`
   padding: 1rem 2rem;
   background-color: ${({ theme }) => theme.colors.orange};
   border-radius: 1.4rem;
-  margin-top: 1.5rem;
+  margin-bottom: 1rem;
 
   &:active {
     color: ${({ theme }) => theme.colors.yellow};

@@ -9,11 +9,11 @@ import { AiFillInfoCircle } from 'react-icons/ai';
 import { BiPencil } from 'react-icons/bi';
 import { BiTrash } from 'react-icons/bi';
 
+import { UserTicketProps } from 'ticketType';
+import { SystemError } from 'errorType';
 import TicketDetails from 'components/ticket/TicketDetails';
 import PosterImage from 'components/ticket/PosterImage';
-import AlertPopup from 'components/modals/AlertPopup';
-import { SystemError } from 'errorType';
-import { UserTicketProps } from 'ticketType';
+import Confirm from 'components/modals/Confirm';
 
 const UserTicket = ({
   id: ticketId,
@@ -48,9 +48,8 @@ const UserTicket = ({
   return (
     <TicketWrapper>
       {isOpen && (
-        <AlertPopup
-          popupType='modal'
-          popupMessage='정말 티켓을 삭제할까요?'
+        <Confirm
+          confirmMessage='정말 티켓을 삭제할까요?'
           onCancelHandler={onToggleHandler}
           onConfirmHandler={onDeleteHandler}
         />
@@ -146,10 +145,10 @@ const MovieIndexBar = styled.div`
   height: 100%;
 
   color: #fff;
-  padding: 0 2rem;
+  padding: 0 1rem;
 
   ${({ theme }) => theme.device.tablet} {
-    padding: 0 1rem;
+    padding: 0 0.5rem;
   }
 `;
 

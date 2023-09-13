@@ -8,7 +8,7 @@ import Error from 'next/error';
 import { SystemError } from 'errorType';
 import { WriteFormProps } from 'ticketType';
 import { useAuthState } from 'components/store/auth-context';
-import AlertPopup from 'components/modals/AlertPopup';
+import Confirm from 'components/modals/Confirm';
 
 const WriteForm = ({
   ticketId,
@@ -130,9 +130,8 @@ const WriteForm = ({
   return (
     <BackgroundStyle>
       {isOpen && (
-        <AlertPopup
-          popupType='modal'
-          popupMessage='작성하던 내용이 사라지게 됩니다. 페이지를 나가시겠습니까?'
+        <Confirm
+          confirmMessage='작성하던 내용이 사라지게 됩니다. 페이지를 나가시겠습니까?'
           onConfirmHandler={onConfirmHandler}
           onCancelHandler={onCancelHandler}
         />

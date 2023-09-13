@@ -1,8 +1,7 @@
 import React from 'react';
 import { useCallback } from 'react';
 import { useRouter } from 'next/router';
-
-import AlertPopup from 'components/modals/AlertPopup';
+import Alert from 'components/modals/Alert';
 
 const SignInAlert = ({ onToggleHandler }: { onToggleHandler: () => void }) => {
   const router = useRouter();
@@ -12,14 +11,7 @@ const SignInAlert = ({ onToggleHandler }: { onToggleHandler: () => void }) => {
     onToggleHandler();
   }, []);
 
-  return (
-    <AlertPopup
-      popupType='alert'
-      popupMessage='로그인이 필요한 페이지 입니다.&nbsp; 로그인 페이지로 이동 합니다.'
-      onCancelHandler={onToggleHandler}
-      onConfirmHandler={onMoveSignInHandler}
-    />
-  );
+  return <Alert onConfirmHandler={onMoveSignInHandler} />;
 };
 
 export default React.memo(SignInAlert);
