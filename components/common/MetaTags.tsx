@@ -1,6 +1,11 @@
 const MetaTags = () => {
   return (
     <>
+      <meta
+        name='viewport'
+        content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
+      />
+
       <meta name='description' content='나의 영화 감상 티켓을 모아보세요.' />
       <meta
         name='keywords'

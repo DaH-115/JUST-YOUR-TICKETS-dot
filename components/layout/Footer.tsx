@@ -23,7 +23,7 @@ const FooterWrapper = styled.footer`
   color: ${({ theme }) => theme.colors.gray};
 
   background-color: ${({ theme }) => theme.colors.black};
-  padding: 1rem 0;
+  padding: 1.5rem 0;
 
   font-size: 0.7rem;
   font-weight: 700;
@@ -31,9 +31,6 @@ const FooterWrapper = styled.footer`
   a {
     font-size: 1rem;
     color: ${({ theme }) => theme.colors.gray};
-  }
-
-  ${({ theme }) => theme.device.tablet} {
   }
 `;
 
