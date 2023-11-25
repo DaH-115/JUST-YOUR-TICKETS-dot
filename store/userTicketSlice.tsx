@@ -38,24 +38,28 @@ const initialState: initialStateProps = {
   error: undefined,
 };
 
-export const getUserTicketDetails = createAsyncThunk(
-  'userTickets/getDetails',
-  async (ticketId: string) => {
+export const getUserTicketDetails = createAsyncThunk<
+  UserTicketDetailsProps,
+  string,
+  { rejectValue: string }
+>('userTickets/getDetails', async (ticketId, thunkAPI) => {
+  try {
     const userTicketRef = doc(db, 'users-tickets', `${ticketId}`);
     const docSnapshot = await getDoc(userTicketRef);
 
-    if (docSnapshot.exists()) {
-      const UserTicketDetails = docSnapshot.data() as UserTicketDetailsProps;
-      return UserTicketDetails;
-    } else {
-      return {};
-    }
+    const UserTicketDetails = docSnapshot.data() as UserTicketDetailsProps;
+    return UserTicketDetails;
+  } catch (error) {
+    return thunkAPI.rejectWithValue('에러가 발생했습니다.');
   }
-);
+});
 
-export const getUserTickets = createAsyncThunk(
-  'userTickets/get',
-  async (user: { userId: string; isSorted: boolean }) => {
+export const getUserTickets = createAsyncThunk<
+  UserTicketTypes[],
+  { userId: string; isSorted: boolean },
+  { rejectValue: string }
+>('userTickets/get', async (user, thunkAPI) => {
+  try {
     const ticketRef = collection(db, 'users-tickets');
     const contentQuery = query(
       ticketRef,
@@ -70,19 +74,26 @@ export const getUserTickets = createAsyncThunk(
     })) as UserTicketTypes[];
 
     return userTickets;
+  } catch (error) {
+    return thunkAPI.rejectWithValue('에러가 발생했습니다.');
   }
-);
+});
 
-export const deleteTicket = createAsyncThunk(
-  'userTickets/deleteTicket',
-  async (ticketId: string) => {
+export const deleteTicket = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>('userTickets/deleteTicket', async (ticketId, thunkAPI) => {
+  try {
     const userTicketRef = doc(db, 'users-tickets', ticketId);
 
     await deleteDoc(userTicketRef);
 
     return ticketId;
+  } catch (error) {
+    return thunkAPI.rejectWithValue('에러가 발생했습니다.');
   }
-);
+});
 
 const userTicketSlice = createSlice({
   name: 'userTicket',
@@ -98,7 +109,7 @@ const userTicketSlice = createSlice({
     });
     builder.addCase(getUserTickets.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.code;
+      state.error = action.payload;
     });
     builder.addCase(deleteTicket.pending, (state) => {
       state.status = 'loading';
@@ -111,7 +122,7 @@ const userTicketSlice = createSlice({
     });
     builder.addCase(deleteTicket.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.code;
+      state.error = action.payload;
     });
     builder.addCase(getUserTicketDetails.pending, (state) => {
       state.status = 'loading';
@@ -122,7 +133,7 @@ const userTicketSlice = createSlice({
     });
     builder.addCase(getUserTicketDetails.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.code;
+      state.error = action.payload;
     });
   },
 });
