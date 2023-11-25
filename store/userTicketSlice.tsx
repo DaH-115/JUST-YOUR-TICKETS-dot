@@ -27,15 +27,15 @@ interface UserTicketTypes {
 interface initialStateProps {
   userTicketList: UserTicketTypes[] | [];
   userTicketDetails: UserTicketDetailsProps | {};
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string;
+  isStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+  isError: string;
 }
 
 const initialState: initialStateProps = {
   userTicketList: [],
   userTicketDetails: {},
-  status: 'idle',
-  error: '',
+  isStatus: 'idle',
+  isError: '',
 };
 
 export const getUserTicketDetails = createAsyncThunk<
@@ -101,39 +101,39 @@ const userTicketSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getUserTickets.pending, (state) => {
-      state.status = 'loading';
+      state.isStatus = 'loading';
     });
     builder.addCase(getUserTickets.fulfilled, (state, action) => {
-      state.status = 'succeeded';
+      state.isStatus = 'succeeded';
       state.userTicketList = action.payload;
     });
     builder.addCase(getUserTickets.rejected, (state, action) => {
-      state.status = 'failed';
-      state.error = action.error.message;
+      state.isStatus = 'failed';
+      state.isError = action.payload || '';
     });
     builder.addCase(deleteTicket.pending, (state) => {
-      state.status = 'loading';
+      state.isStatus = 'loading';
     });
     builder.addCase(deleteTicket.fulfilled, (state, action) => {
-      state.status = 'succeeded';
+      state.isStatus = 'succeeded';
       state.userTicketList = state.userTicketList.filter(
         (item) => item.id !== action.payload
       );
     });
     builder.addCase(deleteTicket.rejected, (state, action) => {
-      state.status = 'failed';
-      state.error = action.error.message;
+      state.isStatus = 'failed';
+      state.isError = action.payload || '';
     });
     builder.addCase(getUserTicketDetails.pending, (state) => {
-      state.status = 'loading';
+      state.isStatus = 'loading';
     });
     builder.addCase(getUserTicketDetails.fulfilled, (state, action) => {
-      state.status = 'succeeded';
+      state.isStatus = 'succeeded';
       state.userTicketDetails = action.payload;
     });
     builder.addCase(getUserTicketDetails.rejected, (state, action) => {
-      state.status = 'failed';
-      state.error = action.error.message;
+      state.isStatus = 'failed';
+      state.isError = action.payload || '';
     });
   },
 });

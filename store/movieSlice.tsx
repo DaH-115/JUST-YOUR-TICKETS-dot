@@ -11,20 +11,23 @@ export interface movieDetailsProps {
 interface initialStateProps {
   movieList: MovieDataProps[] | [];
   movieDetails: movieDetailsProps | {};
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | undefined;
+  isStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+  isError: string;
 }
 
 const initialState: initialStateProps = {
   movieList: [],
   movieDetails: {},
-  status: 'idle',
-  error: undefined,
+  isStatus: 'idle',
+  isError: '',
 };
 
-export const getTicketDetails = createAsyncThunk(
-  'ticket/get',
-  async (movieId: string) => {
+export const getTicketDetails = createAsyncThunk<
+  movieDetailsProps,
+  string,
+  { rejectValue: string }
+>('ticket/get', async (movieId, thunkAPI) => {
+  try {
     const res = await axios.get(
       `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko-KR`
     );
@@ -36,8 +39,10 @@ export const getTicketDetails = createAsyncThunk(
     };
 
     return contents;
+  } catch (error) {
+    return thunkAPI.rejectWithValue('에러가 발생했습니다.');
   }
-);
+});
 
 const movieSlice = createSlice({
   name: 'movieData',
@@ -58,10 +63,10 @@ const movieSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getTicketDetails.pending, (state) => {
-      state.status = 'loading';
+      state.isStatus = 'loading';
     });
     builder.addCase(getTicketDetails.fulfilled, (state, action) => {
-      state.status = 'succeeded';
+      state.isStatus = 'succeeded';
       const { title, release_date, poster_path } = action.payload;
       const newMovieDetails = {
         title,
@@ -72,8 +77,8 @@ const movieSlice = createSlice({
       state.movieDetails = newMovieDetails;
     });
     builder.addCase(getTicketDetails.rejected, (state, action) => {
-      state.status = 'failed';
-      state.error = action.error.code;
+      state.isStatus = 'failed';
+      state.isError = action.payload || '';
     });
   },
 });

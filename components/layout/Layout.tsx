@@ -8,13 +8,13 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const errorAlertState = useAppSelector(
     (state) => state.modal.errorAlertState
   );
-  const errorState = useAppSelector((state) => state.userTicket.error);
+  const errorState = useAppSelector((state) => state.userTicket.isError);
   const signAlertState = useAppSelector((state) => state.modal.signAlertState);
 
   return (
     <LayoutdWrapper>
-      {errorAlertState && errorState !== '' ? (
-        <ErrorAlert errorCode={errorState} />
+      {errorAlertState || errorState !== '' ? (
+        <ErrorAlert errorMessage={errorState} />
       ) : undefined}
       {signAlertState && <SignInAlert />}
       {children}

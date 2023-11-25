@@ -25,8 +25,10 @@ const WritePage: NextPage = () => {
     (state) => state.movieData.movieDetails
   ) as movieDetailsProps;
   const { isSigned } = useAuthState();
-  const movieDataLoading = useAppSelector((state) => state.movieData.status);
-  const userTicketLoading = useAppSelector((state) => state.userTicket.status);
+  const movieDataLoading = useAppSelector((state) => state.movieData.isStatus);
+  const userTicketLoading = useAppSelector(
+    (state) => state.userTicket.isStatus
+  );
   const isLoading = ticketId ? userTicketLoading : movieDataLoading;
 
   useEffect(() => {

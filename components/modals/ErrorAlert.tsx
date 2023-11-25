@@ -5,7 +5,7 @@ import Alert from 'components/modals/Alert';
 import { useAppDispatch } from 'store/hooks';
 import { modalIsClose } from 'store/modalSlice';
 
-const ErrorAlert = ({ errorCode }: { errorCode?: string }) => {
+const ErrorAlert = ({ errorMessage }: { errorMessage: string }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -14,12 +14,7 @@ const ErrorAlert = ({ errorCode }: { errorCode?: string }) => {
     dispatch(modalIsClose());
   }, []);
 
-  return (
-    <Alert
-      alertDesc={`${errorCode} 문제가 발생했습니다.`}
-      onConfirmHandler={goToBackHandler}
-    />
-  );
+  return <Alert alertDesc={errorMessage} onConfirmHandler={goToBackHandler} />;
 };
 
 export default React.memo(ErrorAlert);

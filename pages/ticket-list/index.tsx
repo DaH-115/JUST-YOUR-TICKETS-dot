@@ -22,7 +22,7 @@ const TicketListPage: NextPage = () => {
     (state) => state.userTicket.userTicketList
   );
   const ticketLength = userTicketList.length;
-  const isLoading = useAppSelector((state) => state.userTicket.status);
+  const isLoading = useAppSelector((state) => state.userTicket.isStatus);
 
   const onSortedHandler = useCallback(() => {
     setIsSorted((prev) => !prev);
