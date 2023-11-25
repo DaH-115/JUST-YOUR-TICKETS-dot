@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { TicketDetailsProps } from './TicketDetails';
+import { TicketDetailsProps } from 'components/ticket/TicketDetails';
 
 const TicketTextDetail = ({
   title,

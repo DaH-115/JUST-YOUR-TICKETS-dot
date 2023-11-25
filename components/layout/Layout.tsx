@@ -8,23 +8,22 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const errorAlertState = useAppSelector(
     (state) => state.modal.errorAlertState
   );
-  const errorState = useAppSelector((state) => state.userTicket.isError);
   const signAlertState = useAppSelector((state) => state.modal.signAlertState);
 
   return (
-    <LayoutdWrapper>
-      {errorAlertState || errorState !== '' ? (
-        <ErrorAlert errorMessage={errorState} />
+    <LayoutWrapper>
+      {errorAlertState ? (
+        <ErrorAlert errorMessage={'문제가 발생했습니다.'} />
       ) : undefined}
       {signAlertState && <SignInAlert />}
       {children}
-    </LayoutdWrapper>
+    </LayoutWrapper>
   );
 };
 
 export default Layout;
 
-const LayoutdWrapper = styled.div`
+const LayoutWrapper = styled.div`
   display: flex;
   flex-direction: column;
 

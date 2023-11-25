@@ -40,7 +40,7 @@ export const getTicketDetails = createAsyncThunk<
 
     return contents;
   } catch (error) {
-    return thunkAPI.rejectWithValue('에러가 발생했습니다.');
+    return thunkAPI.rejectWithValue('문제가 발생했습니다.');
   }
 });
 

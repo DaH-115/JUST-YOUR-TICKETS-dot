@@ -50,7 +50,7 @@ export const getUserTicketDetails = createAsyncThunk<
     const UserTicketDetails = docSnapshot.data() as UserTicketDetailsProps;
     return UserTicketDetails;
   } catch (error) {
-    return thunkAPI.rejectWithValue('에러가 발생했습니다.');
+    return thunkAPI.rejectWithValue('문제가 발생했습니다.');
   }
 });
 
@@ -75,7 +75,7 @@ export const getUserTickets = createAsyncThunk<
 
     return userTickets;
   } catch (error) {
-    return thunkAPI.rejectWithValue('에러가 발생했습니다.');
+    return thunkAPI.rejectWithValue('문제가 발생했습니다.');
   }
 });
 
@@ -91,7 +91,7 @@ export const deleteTicket = createAsyncThunk<
 
     return ticketId;
   } catch (error) {
-    return thunkAPI.rejectWithValue('에러가 발생했습니다.');
+    return thunkAPI.rejectWithValue('문제가 발생했습니다.');
   }
 });
 
@@ -109,7 +109,7 @@ const userTicketSlice = createSlice({
     });
     builder.addCase(getUserTickets.rejected, (state, action) => {
       state.isStatus = 'failed';
-      state.isError = action.payload || '';
+      state.isError = action.error.message || '';
     });
     builder.addCase(deleteTicket.pending, (state) => {
       state.isStatus = 'loading';

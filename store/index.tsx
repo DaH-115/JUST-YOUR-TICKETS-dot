@@ -1,7 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import modalSlice from 'store/modalSlice';
-import movieSlice from './movieSlice';
-import userTicketSlice from './userticketSlice';
+import movieSlice from 'store/movieSlice';
+import userTicketSlice from 'store/userticketSlice';
 
 const rootReducers = combineReducers({
   modal: modalSlice.reducer,
