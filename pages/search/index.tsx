@@ -91,7 +91,7 @@ const SearchPage: NextPage = () => {
         <SearchTitle>{'검색 결과'}</SearchTitle>
         {loadingState ? (
           <LoadingSpinner />
-        ) : searchResults[0].id === 0 ? (
+        ) : !searchResults.length ? (
           <NoneResults>{'검색 결과가 없습니다.'}</NoneResults>
         ) : (
           searchResults.map((item, index) => (
