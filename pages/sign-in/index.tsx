@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import { FcGoogle } from 'react-icons/fc';
 import { BsGithub } from 'react-icons/bs';
 
-import withHeadMeta from 'components/common/withHeadMeta';
+import withHead from 'components/common/withHead';
 import { useAuthState } from 'store/auth-context';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
 import SignFormLayout from 'components/layout/SignFormLayout';
@@ -175,7 +175,7 @@ const SignInPage: NextPage = () => {
   );
 };
 
-export default withHeadMeta(SignInPage, '로그인');
+export default withHead(SignInPage, '로그인');
 
 const SignInForm = styled.form`
   display: flex;

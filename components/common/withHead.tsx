@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { ComponentType } from 'react';
 
-const withHeadMeta = (Component: ComponentType, title: string) => {
+const withHead = (Component: ComponentType, title: string) => {
   const titleText = `JUST MY TICKETS. | ${title}`;
 
   const component = (props: JSX.IntrinsicAttributes) => {
@@ -18,4 +18,4 @@ const withHeadMeta = (Component: ComponentType, title: string) => {
   return component;
 };
 
-export default withHeadMeta;
+export default withHead;

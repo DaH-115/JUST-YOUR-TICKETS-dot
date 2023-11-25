@@ -2,11 +2,19 @@ import React from 'react';
 import styled from 'styled-components';
 import Modal from 'components/modals/Modal';
 
-const Alert = ({ onConfirmHandler }: { onConfirmHandler: () => void }) => {
+const Alert = ({
+  alertDesc,
+  onConfirmHandler,
+}: {
+  alertDesc: string;
+  onConfirmHandler: () => void;
+}) => {
   return (
     <Modal>
-      <AlertDesc>{'로그인이 필요한 페이지 입니다.'}</AlertDesc>
-      <AlertBtn onClick={onConfirmHandler}>{'네'}</AlertBtn>
+      <AlertDesc>{alertDesc}</AlertDesc>
+      <AlertBtnWrapper>
+        <AlertBtn onClick={onConfirmHandler}>{'네'}</AlertBtn>
+      </AlertBtnWrapper>
     </Modal>
   );
 };
@@ -22,10 +30,14 @@ const AlertDesc = styled.p`
   }
 `;
 
+const AlertBtnWrapper = styled.div`
+  background-color: ${({ theme }) => theme.colors.black};
+  border-radius: 1rem;
+`;
+
 const AlertBtn = styled.button`
   width: 100%;
   padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => theme.colors.black};
 
   color: #fff;
   font-size: 1rem;

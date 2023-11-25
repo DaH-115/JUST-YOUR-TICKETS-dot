@@ -1,5 +1,5 @@
 declare module 'ticketType' {
-  export interface TopTenMovieDataProps {
+  export interface MovieDataProps {
     id: number;
     title: string;
     release_date: string;
@@ -31,30 +31,11 @@ declare module 'ticketType' {
     posterImage?: string;
   }
 
-  export interface requiredText {
+  export interface UserTicketDetailsProps {
     title: string;
     releaseYear: string;
-    voteAverage: number;
-  }
-
-  export interface TicketDetailProps extends requiredText {
-    genres?: string[];
-    posterPath?: string;
-    reviewText?: string;
-  }
-
-  export interface QueryData extends requiredText {
     posterImage: string;
-    reviewText: string;
-    rating: string;
-  }
-
-  export interface WriteFormProps {
-    ticketId: string;
-    title: string;
-    releaseYear: string;
     rating: string;
     reviewText: string;
-    posterImage?: string;
   }
 }

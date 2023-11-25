@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { TicketDetailProps } from 'ticketType';
+import { TicketDetailsProps } from './TicketDetails';
 
 const TicketTextDetail = ({
   title,
@@ -7,7 +7,7 @@ const TicketTextDetail = ({
   voteAverage,
   genres,
   reviewText,
-}: TicketDetailProps) => {
+}: TicketDetailsProps) => {
   return (
     <TicketTextWrapper>
       <TicketHeader>
@@ -19,7 +19,7 @@ const TicketTextDetail = ({
 
       {genres && (
         <JanreList>
-          {genres.map((genre: string, index) => (
+          {genres.map((genre, index) => (
             <JanreItem key={index}>
               {genre === 'Science Fiction' ? 'SF' : genre}
             </JanreItem>

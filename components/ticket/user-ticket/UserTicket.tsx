@@ -1,16 +1,13 @@
 import { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from 'firebase-config';
 import styled from 'styled-components';
-import Error from 'next/error';
 import { AiFillInfoCircle } from 'react-icons/ai';
 import { BiPencil } from 'react-icons/bi';
 import { BiTrash } from 'react-icons/bi';
-
+import { useAppDispatch } from 'store/hooks';
+import { deleteTicket } from 'store/userticketSlice';
 import { UserTicketProps } from 'ticketType';
-import { SystemError } from 'errorType';
 import TicketDetails from 'components/ticket/TicketDetails';
 import PosterImage from 'components/ticket/PosterImage';
 import Confirm from 'components/modals/Confirm';
@@ -24,34 +21,27 @@ const UserTicket = ({
   reviewText,
   createdAt,
 }: UserTicketProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const router = useRouter();
   const writeDate = new Date(createdAt).toLocaleDateString();
-
-  const onDeleteHandler = useCallback(async () => {
-    const userTicketRef = doc(db, 'users-tickets', `${ticketId}`);
-    setIsOpen((prev) => !prev);
-
-    try {
-      await deleteDoc(userTicketRef);
-      router.reload();
-    } catch (error) {
-      const err = error as SystemError;
-      return <Error statusCode={err.statusCode} title={err.message} />;
-    }
-  }, [ticketId]);
+  const dispatch = useAppDispatch();
+  const [confirmState, setConfirmState] = useState<boolean>(false);
 
   const onToggleHandler = useCallback(() => {
-    setIsOpen((prev) => !prev);
+    setConfirmState((prev) => !prev);
   }, []);
+
+  const onDeleteHandler = useCallback(() => {
+    dispatch(deleteTicket(ticketId));
+    setConfirmState(false);
+  }, [dispatch, ticketId]);
 
   return (
     <TicketWrapper>
-      {isOpen && (
+      {confirmState && (
         <Confirm
           confirmMessage='정말 티켓을 삭제할까요?'
-          onCancelHandler={onToggleHandler}
           onConfirmHandler={onDeleteHandler}
+          onCancelHandler={onToggleHandler}
         />
       )}
 
@@ -68,11 +58,6 @@ const UserTicket = ({
               pathname: '/write',
               query: {
                 ticketId,
-                title,
-                releaseYear,
-                rating,
-                reviewText,
-                posterImage,
               },
             }}
             as={`/write`}
@@ -88,11 +73,7 @@ const UserTicket = ({
             href={{
               pathname: `${router.pathname}/${title}`,
               query: {
-                title,
-                releaseYear,
-                posterImage,
-                rating,
-                reviewText,
+                ticketId,
               },
             }}
             as={`${router.pathname}/${title}`}

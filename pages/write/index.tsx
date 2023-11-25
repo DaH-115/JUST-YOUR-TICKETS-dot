@@ -1,44 +1,70 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-
-import withHeadMeta from 'components/common/withHeadMeta';
-import WriteForm from 'pages/write/WriteForm';
-import SignInAlert from 'components/modals/SignInAlert';
 import { useAuthState } from 'store/auth-context';
-import { WriteFormProps } from 'ticketType';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { errorAlertIsOpen, signAlertIsOpen } from 'store/modalSlice';
+import WriteForm from 'pages/write/WriteForm';
+import withHead from 'components/common/withHead';
+import { LoadingSpinner } from 'components/common/LoadingSpinner';
+import { UserTicketDetailsProps } from 'ticketType';
+import { getUserTicketDetails } from 'store/userticketSlice';
+import { movieDetailsProps, getTicketDetails } from 'store/movieSlice';
 
 const WritePage: NextPage = () => {
   const router = useRouter();
+  const { movieId, ticketId } = router.query as {
+    movieId: string;
+    ticketId: string;
+  };
+  const dispatch = useAppDispatch();
+  const userTicketData = useAppSelector(
+    (state) => state.userTicket.userTicketDetails
+  ) as UserTicketDetailsProps;
+  const movieDetails = useAppSelector(
+    (state) => state.movieData.movieDetails
+  ) as movieDetailsProps;
   const { isSigned } = useAuthState();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const { title, releaseYear, posterImage, rating, reviewText, ticketId } =
-    router.query as unknown as WriteFormProps;
+  const movieDataLoading = useAppSelector((state) => state.movieData.status);
+  const userTicketLoading = useAppSelector((state) => state.userTicket.status);
+  const isLoading = ticketId ? userTicketLoading : movieDataLoading;
 
   useEffect(() => {
-    if (!isSigned) {
-      setIsOpen(true);
+    if (!movieId && !ticketId) {
+      dispatch(errorAlertIsOpen());
+    } else if (!isSigned) {
+      dispatch(signAlertIsOpen());
     }
-  }, [isSigned]);
+  }, [movieId, ticketId]);
 
-  const onToggleHandler = useCallback(() => {
-    setIsOpen((prev) => !prev);
-  }, []);
+  useEffect(() => {
+    if (ticketId) {
+      dispatch(getUserTicketDetails(ticketId));
+    } else {
+      dispatch(getTicketDetails(movieId));
+    }
+  }, [ticketId]);
 
   return (
     <>
-      {isOpen && <SignInAlert onToggleHandler={onToggleHandler} />}
-      <WriteForm
-        title={title}
-        releaseYear={releaseYear}
-        posterImage={posterImage}
-        rating={rating}
-        reviewText={reviewText}
-        ticketId={ticketId}
-      />
+      {isLoading === 'loading' ? (
+        <LoadingSpinner />
+      ) : (
+        <WriteForm
+          title={ticketId ? userTicketData.title : movieDetails.title}
+          releaseYear={
+            ticketId ? userTicketData.releaseYear : movieDetails.release_date
+          }
+          posterImage={
+            ticketId ? userTicketData.posterImage : movieDetails.poster_path
+          }
+          rating={ticketId ? userTicketData.rating : ''}
+          reviewText={ticketId ? userTicketData.reviewText : ''}
+          ticketId={ticketId}
+        />
+      )}
     </>
   );
 };
 
-export default withHeadMeta(WritePage, '리뷰 작성');
+export default withHead(WritePage, '리뷰 작성');

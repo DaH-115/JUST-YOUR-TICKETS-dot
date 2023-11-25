@@ -1,43 +1,37 @@
 import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
-import Error from 'next/error';
 import { useRouter } from 'next/router';
 import { isAuth } from 'firebase-config';
 import { BiSearch } from 'react-icons/bi';
 import { MdOutlineMenu } from 'react-icons/md';
-import { SystemError } from 'errorType';
 import { useAuthState } from 'store/auth-context';
-import SignInAlert from 'components/modals/SignInAlert';
 import SlideMenu from 'components/modals/SlideMenu';
+import { useAppDispatch } from 'store/hooks';
+import { errorAlertIsOpen, signAlertIsOpen } from 'store/modalSlice';
 
 const Header = () => {
   const router = useRouter();
   const { isSigned } = useAuthState();
-  const [isChecked, setIsChecked] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   const onSignOutHandler = useCallback(async () => {
     try {
       await isAuth.signOut();
       router.reload();
     } catch (error) {
-      const err = error as SystemError;
-      return <Error statusCode={err.statusCode} title={err.message} />;
+      dispatch(errorAlertIsOpen());
     }
   }, []);
 
   const onCheckSignInHandler = useCallback(() => {
     if (!isSigned) {
-      setIsChecked((prev) => !prev);
+      dispatch(signAlertIsOpen());
     } else {
       router.push('/search');
     }
   }, [isSigned]);
-
-  const onCheckedHandler = useCallback(() => {
-    setIsChecked((prev) => !prev);
-  }, []);
 
   const onToggleHandler = useCallback(() => {
     setIsOpen((prev) => !prev);
@@ -98,8 +92,6 @@ const Header = () => {
       <SlideMenuIcon onClick={onToggleHandler}>
         <MdOutlineMenu />
       </SlideMenuIcon>
-
-      {isChecked && <SignInAlert onToggleHandler={onCheckedHandler} />}
     </HeaderMenu>
   );
 };

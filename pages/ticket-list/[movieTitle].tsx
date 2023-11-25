@@ -1,60 +1,61 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
-import PosterImage from 'components/ticket/PosterImage';
-import { QueryData } from 'ticketType';
 import styled from 'styled-components';
+import withHead from 'components/common/withHead';
+import PosterImage from 'components/ticket/PosterImage';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { getUserTicketDetails } from 'store/userticketSlice';
+import { UserTicketDetailsProps } from 'ticketType';
 
 const UserTicketDetailPage = () => {
   const router = useRouter();
-  const { title, releaseYear, rating, posterImage, reviewText } =
-    router.query as unknown as QueryData;
-  const titleText = `JUST MY TICKETS. | ${title}`;
+  const { ticketId } = router.query as { ticketId: string };
+  const dispatch = useAppDispatch();
+  const userTicketDetails = useAppSelector(
+    (state) => state.userTicket.userTicketDetails
+  );
+  const { title, releaseYear, posterImage, rating, reviewText } =
+    userTicketDetails as UserTicketDetailsProps;
 
   useEffect(() => {
-    if (router.query.title === undefined) {
+    if (ticketId) {
+      dispatch(getUserTicketDetails(ticketId));
+    } else {
       router.push('/ticket-list');
     }
-  }, []);
+  }, [ticketId]);
 
   return (
-    <>
-      <Head>
-        <title>{titleText}</title>
-      </Head>
-
-      <BackgroundStyle>
-        <PageTitle>{'나의 티켓'}</PageTitle>
-        <MovieDetailWrapper>
-          <PosterImage
-            title={title}
-            releaseYear={releaseYear}
-            posterImage={posterImage}
-          />
-          <DetailTextWrapper>
-            <StyledLabel>{'Movie Title /제목'}</StyledLabel>
-            <ContentText>
-              <MovieTitle>
-                {title}({releaseYear})
-              </MovieTitle>
-            </ContentText>
-            <StyledLabel>{'Rating /나의 점수'}</StyledLabel>
-            <ContentText>
-              <p>{`${Math.round(+rating)} /10`}</p>
-            </ContentText>
-
-            <StyledLabel>{'Review /나의 감상'}</StyledLabel>
-            <ContentText>
-              <OverviweText>{reviewText}</OverviweText>
-            </ContentText>
-          </DetailTextWrapper>
-        </MovieDetailWrapper>
-      </BackgroundStyle>
-    </>
+    <BackgroundStyle>
+      <PageTitle>{'나의 티켓'}</PageTitle>
+      <MovieDetailWrapper>
+        <PosterImage
+          title={title!}
+          releaseYear={releaseYear!}
+          posterImage={posterImage}
+        />
+        <DetailTextWrapper>
+          <StyledLabel>{'Movie Title /제목'}</StyledLabel>
+          <ContentText>
+            <MovieTitle>
+              {title}({releaseYear})
+            </MovieTitle>
+          </ContentText>
+          <StyledLabel>{'Rating /나의 점수'}</StyledLabel>
+          <ContentText>
+            <RatingNumber>{`${rating} /10`}</RatingNumber>
+          </ContentText>
+          <StyledLabel>{'Review /나의 감상'}</StyledLabel>
+          <ContentText>
+            <OverviweText>{reviewText}</OverviweText>
+          </ContentText>
+        </DetailTextWrapper>
+      </MovieDetailWrapper>
+    </BackgroundStyle>
   );
 };
 
-export default UserTicketDetailPage;
+export default withHead(UserTicketDetailPage, '나의 티켓');
 
 const BackgroundStyle = styled.div`
   width: 100%;
@@ -98,8 +99,7 @@ const DetailTextWrapper = styled.div`
   margin-top: 1rem;
   background: linear-gradient(#fff 80%, ${({ theme }) => theme.colors.yellow});
 
-  border-top-right-radius: 0.9rem;
-  border-top-left-radius: 0.9rem;
+  border-radius: 0.9rem;
   border-top: 0.7rem dotted ${({ theme }) => theme.colors.black};
 
   ${({ theme }) => theme.device.tablet} {
@@ -135,6 +135,11 @@ const MovieTitle = styled.h1`
     padding-bottom: 0.8rem;
     margin-bottom: 0.8rem;
   }
+`;
+
+const RatingNumber = styled.p`
+  width: 100%;
+  margin-bottom: 0.5rem;
 `;
 
 const OverviweText = styled.p`

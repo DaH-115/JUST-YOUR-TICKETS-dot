@@ -1,24 +1,25 @@
 import styled from 'styled-components';
 import Image from 'next/image';
+import { useAppSelector } from 'store/hooks';
 import useGetGenres from 'hooks/useGetGenres';
-import { MovieTicketProps } from 'ticketType';
 import MovieInfoBtn from 'components/ticket/MovieInfoBtn';
 import TicketTextDetail from 'components/ticket/TicketTextDetail';
 import AdmitBtn from 'components/ticket/AdmitBtn';
+import { MovieDataProps } from 'ticketType';
 
-const SearchTicket = ({
-  title,
-  releaseDate,
-  movieId,
-  movieIndex,
-  voteAverage,
-  posterPath,
-}: MovieTicketProps) => {
+interface SearchTicketProps {
+  movieId: number;
+  movieIndex: number;
+}
+
+const SearchTicket = ({ movieId, movieIndex }: SearchTicketProps) => {
+  const movieData = useAppSelector((state) => state.movieData.movieList);
+  const filteredMovieData = movieData.filter(
+    (item: MovieDataProps) => item.id === movieId
+  );
+  const { title, vote_average, release_date, poster_path } =
+    filteredMovieData[0];
   const genreArr = useGetGenres(movieId);
-  const releaseYear = releaseDate && releaseDate.slice(0, 4);
-  const posterImage = posterPath
-    ? `https://image.tmdb.org/t/p/w500${posterPath}`
-    : undefined;
 
   return (
     <SearchTicketWrapper>
@@ -28,10 +29,10 @@ const SearchTicket = ({
       </MovieIndexBar>
 
       <PosterImageWrapper>
-        {posterImage ? (
+        {poster_path ? (
           <PosterImage>
             <Image
-              src={posterImage}
+              src={poster_path}
               alt={title}
               width={180}
               height={270}
@@ -39,22 +40,18 @@ const SearchTicket = ({
             />
           </PosterImage>
         ) : (
-          <PosterImage>{`${title}(${releaseYear})`}</PosterImage>
+          <PosterImage>{`${title}(${release_date})`}</PosterImage>
         )}
       </PosterImageWrapper>
 
       <TicketDetailWrapper>
         <TicketTextDetail
           title={title}
-          releaseYear={releaseYear}
-          voteAverage={voteAverage}
+          releaseYear={release_date}
+          voteAverage={vote_average}
           genres={genreArr}
         />
-        <AdmitBtn
-          title={title}
-          releaseYear={releaseYear}
-          posterPath={posterPath}
-        />
+        <AdmitBtn movieId={movieId} />
       </TicketDetailWrapper>
     </SearchTicketWrapper>
   );

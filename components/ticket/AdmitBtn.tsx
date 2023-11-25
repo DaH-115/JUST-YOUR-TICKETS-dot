@@ -3,20 +3,16 @@ import styled from 'styled-components';
 import { MdOutlineArrowForwardIos } from 'react-icons/md';
 
 interface AdmitBtnProps {
-  title: string;
-  releaseYear: string;
-  posterPath?: string;
+  movieId: number;
 }
 
-const AdmitBtn = ({ title, releaseYear, posterPath }: AdmitBtnProps) => {
+const AdmitBtn = ({ movieId }: AdmitBtnProps) => {
   return (
     <Link
       href={{
         pathname: '/write',
         query: {
-          title,
-          releaseYear,
-          posterImage: `https://image.tmdb.org/t/p/w500${posterPath}`,
+          movieId,
         },
       }}
       as={`/write`}

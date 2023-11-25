@@ -1,56 +1,41 @@
 import { useCallback, useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import { db } from 'firebase-config';
-import {
-  collection,
-  DocumentData,
-  getDocs,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore';
 import styled from 'styled-components';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import { useAuthState } from 'store/auth-context';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { getUserTickets } from 'store/userticketSlice';
+import { LoadingSpinner } from 'components/common/LoadingSpinner';
+import SlideLayout from 'components/slider/SlideLayout';
+import withHead from 'components/common/withHead';
 
 import { UserTicketProps } from 'ticketType';
-import withHeadMeta from 'components/common/withHeadMeta';
-import UserTicketSlider from 'components/ticket/user-ticket/UserTicketSlider';
-import SlideLayout from 'components/slider/SlideLayout';
-import { useAuthState } from 'store/auth-context';
-import { LoadingSpinner } from 'components/common/LoadingSpinner';
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
+import TicketSlider from 'components/slider/TicketSlider';
+import UserTicket from 'components/ticket/user-ticket/UserTicket';
 
 const TicketListPage: NextPage = () => {
   const { userId } = useAuthState();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [usersTicket, setUsersTicket] = useState<UserTicketProps[]>();
-  const ticketLength = usersTicket && usersTicket.length;
   // false -> desc / true -> asc
   const [isSorted, setIsSorted] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const userTicketList = useAppSelector(
+    (state) => state.userTicket.userTicketList
+  );
+  const ticketLength = userTicketList.length;
+  const isLoading = useAppSelector((state) => state.userTicket.status);
 
   const onSortedHandler = useCallback(() => {
     setIsSorted((prev) => !prev);
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
-    (async () => {
-      const ticketRef = collection(db, 'users-tickets');
-      const contentQuery = query(
-        ticketRef,
-        where('creatorId', '==', `${userId}`),
-        orderBy('createdAt', `${!isSorted ? 'desc' : 'asc'}`)
-      );
-      const dbContents = await getDocs(contentQuery);
+    const user = {
+      userId: userId,
+      isSorted: isSorted,
+    };
 
-      const userTickets = dbContents.docs.map((item: DocumentData) => ({
-        id: item.id,
-        ...item.data(),
-      }));
-
-      setUsersTicket(userTickets);
-      setIsLoading(false);
-    })();
-  }, [userId, isSorted]);
+    dispatch(getUserTickets(user));
+  }, [userId, isSorted, dispatch]);
 
   return (
     <BackgroundStyle>
@@ -66,12 +51,25 @@ const TicketListPage: NextPage = () => {
               {!isSorted ? <IoIosArrowUp /> : <IoIosArrowDown />}
             </SoertIconBtn>
           </SortListWrapper>
-          {isLoading ? (
+          {isLoading === 'loading' ? (
             <LoadingSpinner />
-          ) : !usersTicket ? (
+          ) : !userTicketList.length ? (
             <NoneResults>{'결과가 없습니다.'}</NoneResults>
           ) : (
-            <UserTicketSlider movies={usersTicket} />
+            <TicketSlider movieLength={userTicketList.length}>
+              {userTicketList.map((item: UserTicketProps) => (
+                <UserTicket
+                  key={item.id}
+                  id={item.id}
+                  title={item.title}
+                  releaseYear={item.releaseYear}
+                  rating={item.rating}
+                  createdAt={item.createdAt}
+                  reviewText={item.reviewText}
+                  posterImage={item.posterImage}
+                />
+              ))}
+            </TicketSlider>
           )}
         </Wrapper>
       </SlideLayout>
@@ -79,7 +77,7 @@ const TicketListPage: NextPage = () => {
   );
 };
 
-export default withHeadMeta(TicketListPage, '나의 티켓');
+export default withHead(TicketListPage, '나의 티켓');
 
 const Wrapper = styled.div`
   width: 100%;

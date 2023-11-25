@@ -70,9 +70,7 @@ const MovieDetail = ({
               href={{
                 pathname: '/write',
                 query: {
-                  title,
-                  releaseYear,
-                  posterImage,
+                  movieId,
                 },
               }}
               as={`/write`}
@@ -176,6 +174,7 @@ const MovieTitle = styled.h1`
 
 const RatingNumber = styled.p`
   width: 100%;
+  margin-bottom: 0.5rem;
 `;
 
 const JanreWrapper = styled.ul`

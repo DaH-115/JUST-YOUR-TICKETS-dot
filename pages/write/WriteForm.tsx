@@ -3,12 +3,19 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from 'firebase-config';
-import Error from 'next/error';
-
-import { SystemError } from 'errorType';
-import { WriteFormProps } from 'ticketType';
 import { useAuthState } from 'store/auth-context';
 import Confirm from 'components/modals/Confirm';
+import { useAppDispatch } from 'store/hooks';
+import { errorAlertIsOpen, modalIsClose } from 'store/modalSlice';
+
+interface WriteFormProps {
+  title: string;
+  releaseYear: string;
+  rating?: string;
+  posterImage?: string;
+  reviewText?: string;
+  ticketId?: string;
+}
 
 const WriteForm = ({
   ticketId,
@@ -20,36 +27,25 @@ const WriteForm = ({
 }: WriteFormProps) => {
   const router = useRouter();
   const { userId } = useAuthState();
+  const [newRatingText, setNewRatingText] = useState<string>('');
+  const [newReviewText, setNewReviewText] = useState<string>('');
   const [isValidation, setIsValidation] = useState<boolean>(true);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [newRatingText, setNewRatingText] = useState<string>(
-    !rating ? '' : rating
-  );
-  const [newReviewText, setNewReviewText] = useState<string>(
-    !reviewText ? '' : reviewText
-  );
+  const [confirmState, setConfirmState] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const moviePoster = posterImage?.includes('https')
+    ? posterImage
+    : `https://image.tmdb.org/t/p/w500${posterImage}`;
 
   useEffect(() => {
-    const onPushStateHanlder = () => {
-      history.pushState(null, '', location.href);
-      setIsOpen(true);
-    };
-
-    history.pushState(null, '', location.href);
-    window.addEventListener('popstate', onPushStateHanlder);
-
-    return () => {
-      window.removeEventListener('popstate', onPushStateHanlder);
-    };
-  }, []);
+    if (rating && reviewText) {
+      setNewRatingText(rating);
+      setNewReviewText(reviewText);
+    }
+  }, [rating, reviewText]);
 
   const onConfirmHandler = () => {
-    setIsOpen(false);
     router.push(ticketId ? '/ticket-list' : '/');
-  };
-
-  const onCancelHandler = () => {
-    setIsOpen(false);
+    dispatch(modalIsClose());
   };
 
   const onUpdateContentsHandler = async (
@@ -67,8 +63,7 @@ const WriteForm = ({
 
       router.push('/ticket-list');
     } catch (error) {
-      const err = error as SystemError;
-      return <Error statusCode={err.statusCode} title={err.message} />;
+      dispatch(errorAlertIsOpen());
     }
   };
 
@@ -81,13 +76,12 @@ const WriteForm = ({
         releaseYear,
         rating,
         reviewText,
-        posterImage,
+        posterImage: moviePoster,
       });
 
       router.push('/ticket-list');
     } catch (error) {
-      const err = error as SystemError;
-      return <Error statusCode={err.statusCode} title={err.message} />;
+      dispatch(errorAlertIsOpen());
     }
   };
 
@@ -100,7 +94,7 @@ const WriteForm = ({
 
   const onUpdateHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    newRatingText && newReviewText
+    newRatingText && newReviewText && ticketId
       ? onUpdateContentsHandler(newRatingText, newReviewText, ticketId)
       : alert('내용을 작성해 주세요.');
   };
@@ -127,13 +121,17 @@ const WriteForm = ({
     []
   );
 
+  const onToggleHandler = useCallback(() => {
+    setConfirmState((prev) => !prev);
+  }, []);
+
   return (
     <BackgroundStyle>
-      {isOpen && (
+      {confirmState && (
         <Confirm
           confirmMessage='작성하던 내용이 사라지게 됩니다. 페이지를 나가시겠습니까?'
           onConfirmHandler={onConfirmHandler}
-          onCancelHandler={onCancelHandler}
+          onCancelHandler={onToggleHandler}
         />
       )}
 

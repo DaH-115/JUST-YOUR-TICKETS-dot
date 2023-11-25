@@ -1,17 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
-import { TicketDetailProps } from 'ticketType';
 import TicketTextDetail from 'components/ticket/TicketTextDetail';
 import AdmitBtn from 'components/ticket/AdmitBtn';
+
+export interface TicketDetailsProps {
+  title: string;
+  releaseYear: string;
+  voteAverage: number;
+  genres?: string[];
+  posterPath?: string;
+  reviewText?: string;
+  movieId?: number;
+}
 
 const TicketDetails = ({
   title,
   releaseYear,
   voteAverage,
   genres,
-  posterPath,
   reviewText,
-}: TicketDetailProps) => {
+  movieId,
+}: TicketDetailsProps) => {
   return (
     <TicketDetailWrapper>
       <TicketTextDetail
@@ -22,13 +31,7 @@ const TicketDetails = ({
         reviewText={reviewText}
       />
 
-      {!reviewText && (
-        <AdmitBtn
-          title={title}
-          releaseYear={releaseYear}
-          posterPath={posterPath}
-        />
-      )}
+      {!reviewText && <AdmitBtn movieId={movieId!} />}
     </TicketDetailWrapper>
   );
 };

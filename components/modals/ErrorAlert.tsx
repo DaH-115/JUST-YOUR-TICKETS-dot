@@ -5,21 +5,21 @@ import Alert from 'components/modals/Alert';
 import { useAppDispatch } from 'store/hooks';
 import { modalIsClose } from 'store/modalSlice';
 
-const SignInAlert = () => {
+const ErrorAlert = ({ errorCode }: { errorCode?: string }) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const onMoveSignInHandler = useCallback(() => {
-    router.push('/sign-in');
+  const goToBackHandler = useCallback(() => {
+    router.push('/');
     dispatch(modalIsClose());
   }, []);
 
   return (
     <Alert
-      alertDesc={'로그인이 필요한 페이지 입니다.'}
-      onConfirmHandler={onMoveSignInHandler}
+      alertDesc={`${errorCode} 문제가 발생했습니다.`}
+      onConfirmHandler={goToBackHandler}
     />
   );
 };
 
-export default React.memo(SignInAlert);
+export default React.memo(ErrorAlert);

@@ -7,7 +7,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
 import { useAuthState } from 'store/auth-context';
-import withHeadMeta from 'components/common/withHeadMeta';
+import withHead from 'components/common/withHead';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
 import SignFormLayout from 'components/layout/SignFormLayout';
 
@@ -224,7 +224,7 @@ const SignUpPage: NextPage = () => {
   );
 };
 
-export default withHeadMeta(SignUpPage, '회원가입');
+export default withHead(SignUpPage, '회원가입');
 
 const SignUpForm = styled.form`
   display: flex;

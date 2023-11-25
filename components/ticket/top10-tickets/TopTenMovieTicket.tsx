@@ -35,6 +35,7 @@ const TopTenMovieTicket = ({
         voteAverage={voteAverage}
         genres={genreArr}
         posterPath={posterPath}
+        movieId={movieId}
       />
     </TicketWrapper>
   );

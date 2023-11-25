@@ -2,19 +2,24 @@ import { useState, useEffect, useCallback } from 'react';
 import { NextPage } from 'next';
 import styled from 'styled-components';
 import axios from 'axios';
-import Error from 'next/error';
 import { BiSearch } from 'react-icons/bi';
-
-import { SystemError } from 'errorType';
-import { TopTenMovieDataProps } from 'ticketType';
-import withHeadMeta from 'components/common/withHeadMeta';
+import { MovieDataProps } from 'ticketType';
+import withHead from 'components/common/withHead';
 import SearchTicket from 'pages/search/SearchTicket';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { getMovieListData } from 'store/movieSlice';
+import {
+  errorAlertIsOpen,
+  loadingIsOpen,
+  modalIsClose,
+} from 'store/modalSlice';
+import { LoadingSpinner } from 'components/common/LoadingSpinner';
 
 const SearchPage: NextPage = () => {
   const [movieTitle, setMovieTitle] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<TopTenMovieDataProps[]>(
-    []
-  );
+  const dispatch = useAppDispatch();
+  const searchResults = useAppSelector((state) => state.movieData.movieList);
+  const loadingState = useAppSelector((state) => state.modal.loadingState);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -23,25 +28,26 @@ const SearchPage: NextPage = () => {
       timer = setTimeout(() => {
         getSearchResultsHandler(movieTitle);
       }, 500);
-    } else {
-      setSearchResults([]);
     }
 
     return () => clearTimeout(timer);
   }, [movieTitle]);
 
   const getSearchResultsHandler = async (movieTitle: string) => {
+    dispatch(loadingIsOpen());
+
     try {
       const res = await axios.get(
         `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${movieTitle}&language=ko-KR`
       );
-      const { results }: { results: TopTenMovieDataProps[] } = await res.data;
+      const { results }: { results: MovieDataProps[] } = await res.data;
 
-      setSearchResults(results);
+      dispatch(getMovieListData(results));
     } catch (error) {
-      const err = error as SystemError;
-      return <Error statusCode={err.statusCode} title={err.message} />;
+      dispatch(errorAlertIsOpen());
     }
+
+    dispatch(modalIsClose());
   };
 
   const onSubmitHandler = useCallback(
@@ -83,7 +89,9 @@ const SearchPage: NextPage = () => {
 
       <SearchWrapper>
         <SearchTitle>{'검색 결과'}</SearchTitle>
-        {!searchResults?.length ? (
+        {loadingState ? (
+          <LoadingSpinner />
+        ) : searchResults[0].id === 0 ? (
           <NoneResults>{'검색 결과가 없습니다.'}</NoneResults>
         ) : (
           searchResults.map((item, index) => (
@@ -91,11 +99,6 @@ const SearchPage: NextPage = () => {
               key={item.id}
               movieId={item.id}
               movieIndex={index + 1}
-              title={item.title}
-              voteAverage={item.vote_average}
-              releaseDate={item.release_date}
-              posterPath={item.poster_path}
-              overview={item.overview}
             />
           ))
         )}
@@ -104,7 +107,7 @@ const SearchPage: NextPage = () => {
   );
 };
 
-export default withHeadMeta(SearchPage, '검색');
+export default withHead(SearchPage, '검색');
 
 const BackgroundStyle = styled.div`
   width: 100%;
