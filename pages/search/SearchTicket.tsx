@@ -17,8 +17,10 @@ const SearchTicket = ({ movieId, movieIndex }: SearchTicketProps) => {
   const filteredMovieData = movieData.filter(
     (item: MovieDataProps) => item.id === movieId
   );
-  const { title, vote_average, release_date, poster_path } =
-    filteredMovieData[0];
+  const moviePoster = filteredMovieData[0]?.poster_path || undefined;
+  const movieTitle = filteredMovieData[0]?.title || '제목없음';
+  const movieDate = filteredMovieData[0]?.release_date || '없음';
+  const movieVote = filteredMovieData[0]?.vote_average || 0;
   const genreArr = useGetGenres(movieId);
 
   return (
@@ -29,26 +31,26 @@ const SearchTicket = ({ movieId, movieIndex }: SearchTicketProps) => {
       </MovieIndexBar>
 
       <PosterImageWrapper>
-        {poster_path ? (
+        {moviePoster ? (
           <PosterImage>
             <Image
-              src={poster_path}
-              alt={title}
+              src={moviePoster}
+              alt={movieTitle}
               width={180}
               height={270}
               unoptimized
             />
           </PosterImage>
         ) : (
-          <PosterImage>{`${title}(${release_date})`}</PosterImage>
+          <PosterImage>{`${movieTitle}(${movieDate})`}</PosterImage>
         )}
       </PosterImageWrapper>
 
       <TicketDetailWrapper>
         <TicketTextDetail
-          title={title}
-          releaseYear={release_date}
-          voteAverage={vote_average}
+          title={movieTitle}
+          releaseYear={movieDate}
+          voteAverage={movieVote}
           genres={genreArr}
         />
         <AdmitBtn movieId={movieId} />
