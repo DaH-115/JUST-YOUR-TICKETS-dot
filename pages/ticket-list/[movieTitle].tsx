@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import withHead from 'components/common/withHead';
 import PosterImage from 'components/ticket/PosterImage';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { getUserTicketDetails } from 'store/userticketSlice';
+import { getUserTicketDetails } from 'store/userTicketSlice';
 import { UserTicketDetailsProps } from 'ticketType';
 
 const UserTicketDetailPage = () => {

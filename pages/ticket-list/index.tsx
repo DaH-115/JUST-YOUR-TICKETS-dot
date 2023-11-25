@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { useAuthState } from 'store/auth-context';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { getUserTickets } from 'store/userticketSlice';
+import { getUserTickets } from 'store/userTicketSlice';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
 import SlideLayout from 'components/slider/SlideLayout';
 import withHead from 'components/common/withHead';

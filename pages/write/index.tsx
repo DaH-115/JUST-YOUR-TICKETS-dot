@@ -8,7 +8,7 @@ import WriteForm from 'pages/write/WriteForm';
 import withHead from 'components/common/withHead';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
 import { UserTicketDetailsProps } from 'ticketType';
-import { getUserTicketDetails } from 'store/userticketSlice';
+import { getUserTicketDetails } from 'store/userTicketSlice';
 import { movieDetailsProps, getTicketDetails } from 'store/movieSlice';
 
 const WritePage: NextPage = () => {

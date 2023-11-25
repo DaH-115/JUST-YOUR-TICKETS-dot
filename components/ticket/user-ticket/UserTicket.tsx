@@ -6,7 +6,7 @@ import { AiFillInfoCircle } from 'react-icons/ai';
 import { BiPencil } from 'react-icons/bi';
 import { BiTrash } from 'react-icons/bi';
 import { useAppDispatch } from 'store/hooks';
-import { deleteTicket } from 'store/userticketSlice';
+import { deleteTicket } from 'store/userTicketSlice';
 import { UserTicketProps } from 'ticketType';
 import TicketDetails from 'components/ticket/TicketDetails';
 import PosterImage from 'components/ticket/PosterImage';
