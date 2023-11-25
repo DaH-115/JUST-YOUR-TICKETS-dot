@@ -28,14 +28,14 @@ interface initialStateProps {
   userTicketList: UserTicketTypes[] | [];
   userTicketDetails: UserTicketDetailsProps | {};
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | undefined;
+  error: string;
 }
 
 const initialState: initialStateProps = {
   userTicketList: [],
   userTicketDetails: {},
   status: 'idle',
-  error: undefined,
+  error: '',
 };
 
 export const getUserTicketDetails = createAsyncThunk<
@@ -109,7 +109,7 @@ const userTicketSlice = createSlice({
     });
     builder.addCase(getUserTickets.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.payload;
+      state.error = action.error.message;
     });
     builder.addCase(deleteTicket.pending, (state) => {
       state.status = 'loading';
@@ -122,7 +122,7 @@ const userTicketSlice = createSlice({
     });
     builder.addCase(deleteTicket.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.payload;
+      state.error = action.error.message;
     });
     builder.addCase(getUserTicketDetails.pending, (state) => {
       state.status = 'loading';
@@ -133,7 +133,7 @@ const userTicketSlice = createSlice({
     });
     builder.addCase(getUserTicketDetails.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.payload;
+      state.error = action.error.message;
     });
   },
 });

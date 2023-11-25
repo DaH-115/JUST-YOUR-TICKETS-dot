@@ -13,7 +13,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <LayoutdWrapper>
-      {errorAlertState || errorState ? (
+      {errorAlertState && errorState !== '' ? (
         <ErrorAlert errorCode={errorState} />
       ) : undefined}
       {signAlertState && <SignInAlert />}
