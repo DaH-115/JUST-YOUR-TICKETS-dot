@@ -28,6 +28,8 @@ const SearchPage: NextPage = () => {
       timer = setTimeout(() => {
         getSearchResultsHandler(movieTitle);
       }, 500);
+    } else {
+      getSearchResultsHandler('');
     }
 
     return () => clearTimeout(timer);
