@@ -12,9 +12,11 @@ import {
 import { useRouter } from 'next/router';
 import { FcGoogle } from 'react-icons/fc';
 import { BsGithub } from 'react-icons/bs';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { loadingIsOpen, modalIsClose } from 'store/modalSlice';
+import { useAuthState } from 'store/auth-context';
 
 import withHead from 'components/common/withHead';
-import { useAuthState } from 'store/auth-context';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
 import SignFormLayout from 'components/layout/SignFormLayout';
 
@@ -22,16 +24,15 @@ const SignInPage: NextPage = () => {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const { isSigned } = useAuthState();
+  const dispatch = useAppDispatch();
+  const loadingState = useAppSelector((state) => state.modal.loadingState);
   const [isError, setIsError] = useState<boolean>(false);
-  // User EMAIL-PASSWORD Text
   const [userEmail, setUserEmail] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
   // Validation State
   const [isEmail, setIsEmail] = useState<boolean>(false);
   const [isPassword, setIsPassword] = useState<boolean>(false);
   const isDisabled = isEmail && isPassword ? false : true;
-  // Loading State
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     inputRef.current!.focus();
@@ -44,7 +45,7 @@ const SignInPage: NextPage = () => {
   }, [isSigned]);
 
   const getUserHandler = async () => {
-    setIsLoading(true);
+    dispatch(loadingIsOpen());
 
     try {
       await signInWithEmailAndPassword(isAuth, userEmail, userPassword);
@@ -52,7 +53,7 @@ const SignInPage: NextPage = () => {
       setIsError(true);
     }
 
-    setIsLoading(false);
+    dispatch(modalIsClose());
   };
 
   const onSubmitHandler = (event: React.FormEvent) => {
@@ -96,7 +97,7 @@ const SignInPage: NextPage = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     const target = event.currentTarget as HTMLButtonElement;
-    setIsLoading(true);
+    dispatch(loadingIsOpen());
 
     try {
       if (target.name === 'google-sign-in') {
@@ -112,66 +113,79 @@ const SignInPage: NextPage = () => {
       setIsError(true);
     }
 
-    setIsLoading(false);
+    dispatch(modalIsClose());
   };
 
   return (
-    <SignFormLayout formTitle='Sign In /로그인'>
-      {isLoading && <LoadingSpinner />}
-      {isError && (
-        <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요.'}</ErrorMsg>
+    <>
+      {loadingState ? (
+        <LoadingSpinner />
+      ) : (
+        <SignFormLayout formTitle='Sign In /로그인'>
+          {isError && (
+            <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요.'}</ErrorMsg>
+          )}
+
+          <SignInForm onSubmit={onSubmitHandler}>
+            <InputLabel htmlFor='user-email'>{'Email /이메일'}</InputLabel>
+            <StyledInput
+              type='text'
+              id='user-email'
+              value={userEmail}
+              onChange={onEmailChangeHandler}
+              ref={inputRef}
+            />
+            <ValidationMsg isState={isEmail}>
+              {!userEmail
+                ? '이메일을 입력해 주세요.'
+                : !isEmail
+                ? '이메일은 " @ " , " . " 을 포함해야합니다.'
+                : null}
+            </ValidationMsg>
+
+            <InputLabel htmlFor='user-password'>
+              {'Password /비밀번호'}
+            </InputLabel>
+            <StyledInput
+              type='password'
+              id='user-password'
+              value={userPassword}
+              onChange={onPasswordChangeHandler}
+            />
+
+            <ValidationMsg isState={isPassword}>
+              {!userPassword
+                ? '비밀번호를 입력해 주세요.'
+                : !isPassword
+                ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
+                : null}
+            </ValidationMsg>
+            <SignInBtn type='submit' disabled={isDisabled}>
+              {'로그인'}
+            </SignInBtn>
+
+            <Link href='/sign-up'>
+              <SignUpBtn>{'회원가입'}</SignUpBtn>
+            </Link>
+          </SignInForm>
+
+          <SocialSignInWrapper>
+            <SocialSignInBtn
+              name='github-sign-in'
+              onClick={onSocialSignInHandler}
+            >
+              <BsGithub />
+            </SocialSignInBtn>
+            <SocialSignInBtn
+              name='google-sign-in'
+              onClick={onSocialSignInHandler}
+            >
+              <FcGoogle />
+            </SocialSignInBtn>
+          </SocialSignInWrapper>
+        </SignFormLayout>
       )}
-
-      <SignInForm onSubmit={onSubmitHandler}>
-        <InputLabel htmlFor='user-email'>{'Email /이메일'}</InputLabel>
-        <StyledInput
-          type='text'
-          id='user-email'
-          value={userEmail}
-          onChange={onEmailChangeHandler}
-          ref={inputRef}
-        />
-        <ValidationMsg isState={isEmail}>
-          {!userEmail
-            ? '이메일을 입력해 주세요.'
-            : !isEmail
-            ? '이메일은 " @ " , " . " 을 포함해야합니다.'
-            : null}
-        </ValidationMsg>
-
-        <InputLabel htmlFor='user-password'>{'Password /비밀번호'}</InputLabel>
-        <StyledInput
-          type='password'
-          id='user-password'
-          value={userPassword}
-          onChange={onPasswordChangeHandler}
-        />
-
-        <ValidationMsg isState={isPassword}>
-          {!userPassword
-            ? '비밀번호를 입력해 주세요.'
-            : !isPassword
-            ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
-            : null}
-        </ValidationMsg>
-        <SignInBtn type='submit' disabled={isDisabled}>
-          {'로그인'}
-        </SignInBtn>
-
-        <Link href='/sign-up'>
-          <SignUpBtn>{'회원가입'}</SignUpBtn>
-        </Link>
-      </SignInForm>
-
-      <SocialSignInWrapper>
-        <SocialSignInBtn name='github-sign-in' onClick={onSocialSignInHandler}>
-          <BsGithub />
-        </SocialSignInBtn>
-        <SocialSignInBtn name='google-sign-in' onClick={onSocialSignInHandler}>
-          <FcGoogle />
-        </SocialSignInBtn>
-      </SocialSignInWrapper>
-    </SignFormLayout>
+    </>
   );
 };
 
@@ -266,7 +280,7 @@ const SocialSignInWrapper = styled.div`
   align-items: center;
 
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
 
   margin-bottom: 1rem;
 `;

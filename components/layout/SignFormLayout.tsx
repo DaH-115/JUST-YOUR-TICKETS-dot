@@ -48,6 +48,7 @@ const SignFormTitle = styled.h1`
   font-size: 1.2rem;
   font-weight: 700;
   color: #fff;
+  margin-top: 1.5rem;
   margin-bottom: 2rem;
 
   ${({ theme }) => theme.device.tablet} {
