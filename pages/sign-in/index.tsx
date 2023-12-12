@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { NextPage } from 'next';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { isAuth } from 'firebase-config';
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -12,13 +11,15 @@ import {
 import { useRouter } from 'next/router';
 import { FcGoogle } from 'react-icons/fc';
 import { BsGithub } from 'react-icons/bs';
+import { isAuth } from 'firebase-config';
+
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { loadingIsOpen, modalIsClose } from 'store/modalSlice';
 import { useAuthState } from 'store/auth-context';
-
+import { validateEmail, validatePassword } from 'hooks/useValidation';
 import withHead from 'components/common/withHead';
-import { LoadingSpinner } from 'components/common/LoadingSpinner';
 import SignFormLayout from 'components/layout/SignFormLayout';
+import { LoadingSpinner } from 'components/common/LoadingSpinner';
 
 const SignInPage: NextPage = () => {
   const router = useRouter();
@@ -30,9 +31,9 @@ const SignInPage: NextPage = () => {
   const [userEmail, setUserEmail] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
   // Validation State
-  const [isEmail, setIsEmail] = useState<boolean>(false);
-  const [isPassword, setIsPassword] = useState<boolean>(false);
-  const isDisabled = isEmail && isPassword ? false : true;
+  const [isEmailCheck, setIsEmailCheck] = useState<boolean>(false);
+  const [isPasswordCheck, setIsPasswordCheck] = useState<boolean>(false);
+  const isDisabled = isEmailCheck && isPasswordCheck ? false : true;
 
   useEffect(() => {
     inputRef.current!.focus();
@@ -65,49 +66,43 @@ const SignInPage: NextPage = () => {
     target,
   }: React.ChangeEvent<HTMLInputElement>) => {
     setUserEmail(target.value);
+    const validationCheck = validateEmail(target.value);
 
-    const emailCheckRegex =
-      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    const emailValue = target.value;
-
-    if (!emailCheckRegex.test(emailValue)) {
-      setIsEmail(false);
+    if (validationCheck) {
+      setIsEmailCheck(true);
     } else {
-      setIsEmail(true);
+      setIsEmailCheck(false);
     }
   };
 
   const onPasswordChangeHandler = ({
     target,
   }: React.ChangeEvent<HTMLInputElement>) => {
+    const validationCheck = validatePassword(target.value);
     setUserPassword(target.value);
 
-    const passwordCheckRegex =
-      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
-    const passwordValue = target.value;
-
-    if (!passwordCheckRegex.test(passwordValue)) {
-      setIsPassword(false);
+    if (validationCheck) {
+      setIsPasswordCheck(true);
     } else {
-      setIsPassword(true);
+      setIsPasswordCheck(false);
     }
   };
 
   const onSocialSignInHandler = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    const target = event.currentTarget as HTMLButtonElement;
     dispatch(loadingIsOpen());
 
     try {
-      if (target.name === 'google-sign-in') {
-        const provider = new GoogleAuthProvider();
-        await signInWithPopup(isAuth, provider);
-      }
-
-      if (target.name === 'github-sign-in') {
-        const provider = new GithubAuthProvider();
-        await signInWithPopup(isAuth, provider);
+      switch (event.currentTarget.name) {
+        case 'google-sign-in':
+          await signInWithPopup(isAuth, new GoogleAuthProvider());
+          break;
+        case 'github-sign-in':
+          await signInWithPopup(isAuth, new GithubAuthProvider());
+          break;
+        default:
+          break;
       }
     } catch (error) {
       setIsError(true);
@@ -135,10 +130,10 @@ const SignInPage: NextPage = () => {
               onChange={onEmailChangeHandler}
               ref={inputRef}
             />
-            <ValidationMsg isState={isEmail}>
+            <ValidationMsg isState={isEmailCheck}>
               {!userEmail
                 ? '이메일을 입력해 주세요.'
-                : !isEmail
+                : !isEmailCheck
                 ? '이메일은 " @ " , " . " 을 포함해야합니다.'
                 : null}
             </ValidationMsg>
@@ -153,10 +148,10 @@ const SignInPage: NextPage = () => {
               onChange={onPasswordChangeHandler}
             />
 
-            <ValidationMsg isState={isPassword}>
+            <ValidationMsg isState={isPasswordCheck}>
               {!userPassword
                 ? '비밀번호를 입력해 주세요.'
-                : !isPassword
+                : !isPasswordCheck
                 ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
                 : null}
             </ValidationMsg>
@@ -280,8 +275,6 @@ const SocialSignInWrapper = styled.div`
   align-items: center;
 
   width: 100%;
-  /* height: 100%; */
-
   margin-bottom: 1rem;
 `;
 

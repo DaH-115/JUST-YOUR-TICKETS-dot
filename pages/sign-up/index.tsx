@@ -2,11 +2,18 @@ import { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import { isAuth } from 'firebase-config';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
+import { isAuth } from 'firebase-config';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useAuthState } from 'store/auth-context';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import {
+  validateEAdress,
+  validateId,
+  validatePassword,
+} from 'hooks/useValidation';
+import { loadingIsOpen, modalIsClose } from 'store/modalSlice';
 import withHead from 'components/common/withHead';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
 import SignFormLayout from 'components/layout/SignFormLayout';
@@ -14,6 +21,8 @@ import SignFormLayout from 'components/layout/SignFormLayout';
 const SignUpPage: NextPage = () => {
   const router = useRouter();
   const { isSigned } = useAuthState();
+  const dispatch = useAppDispatch();
+  const loadingState = useAppSelector((state) => state.modal.loadingState);
   const [isError, setIsError] = useState<boolean>(false);
   const [isArrowToggle, setIsArrowToggle] = useState<boolean>(false);
   // User EMAIL Text
@@ -25,12 +34,11 @@ const SignUpPage: NextPage = () => {
   const [userPassword, setUserPassword] = useState<string>('');
   const [checkedPassword, setCheckedPassword] = useState<string>('');
   // Validation State
-  const [isEmail, setIsEmail] = useState<boolean>(false);
-  const [isPassword, setIsPassword] = useState<boolean>(false);
+  const [isEmailCheck, setIsEmailCheck] = useState<boolean>(false);
   const [isPasswordCheck, setIsPasswordCheck] = useState<boolean>(false);
-  const isDisabled = isEmail && isPassword && isPasswordCheck ? false : true;
-  // Loading State
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSamePwCheck, setIsSamePwCheck] = useState<boolean>(false);
+  const isDisabled =
+    isEmailCheck && isPasswordCheck && isSamePwCheck ? false : true;
 
   useEffect(() => {
     if (isSigned) {
@@ -39,7 +47,7 @@ const SignUpPage: NextPage = () => {
   }, [isSigned]);
 
   const getUserHandler = async () => {
-    setIsLoading(true);
+    dispatch(loadingIsOpen());
 
     try {
       await createUserWithEmailAndPassword(isAuth, userEmail, userPassword);
@@ -47,7 +55,7 @@ const SignUpPage: NextPage = () => {
       setIsError(true);
     }
 
-    setIsLoading(false);
+    dispatch(modalIsClose());
   };
 
   const onSubmitHandler = (event: React.FormEvent) => {
@@ -58,19 +66,19 @@ const SignUpPage: NextPage = () => {
   const onIdChangeHandler = ({
     target,
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailId(target.value);
-  };
-
-  const onIdBlurHandler = () => {
-    if (emailId && emailAddress !== 'default') {
-      setUserEmail(`${emailId}@${emailAddress}`);
+    const validationCheck = validateId(target.value);
+    if (validationCheck) {
+      setIsEmailCheck(false);
+    } else {
+      setEmailId(target.value);
+      setIsEmailCheck(true);
     }
   };
 
   const onAddressChangeHandler = ({
     target,
   }: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    if (target.value === 'anotherAddress') {
+    if (target.value === 'another-address') {
       setIsAnotherAddress(true);
       setEmailAddress('');
     } else {
@@ -78,32 +86,24 @@ const SignUpPage: NextPage = () => {
     }
   };
 
-  const onAnotherAdrsBlurHandler = () => {
-    if (isAnotherAddress && emailAddress === '') {
+  const onAddressBlurHandler = () => {
+    const validationCheck = validateEAdress(emailAddress);
+
+    if (emailId && validationCheck) {
+      setUserEmail(`${emailId}@${emailAddress}`);
+      setIsEmailCheck(true);
+    } else {
+      setIsEmailCheck(false);
       setIsAnotherAddress(false);
-      setIsArrowToggle(false);
-    }
-
-    if (emailAddress !== 'default' && emailAddress !== '') {
-      const userEmailText = `${emailId}@${emailAddress}`;
-      const emailCheckRegex =
-        /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-
-      emailCheckRegex.test(userEmailText)
-        ? setIsEmail(true)
-        : setIsEmail(false);
-      setUserEmail(userEmailText);
     }
   };
 
   const onSelectBlurHandler = () => {
-    if (emailAddress !== 'default') {
-      const userEmailText = `${emailId}@${emailAddress}`;
-
-      setUserEmail(userEmailText);
-      setIsEmail(true);
+    if (emailId && emailAddress) {
+      setUserEmail(`${emailId}@${emailAddress}`);
+      setIsEmailCheck(true);
     } else {
-      setIsEmail(false);
+      setIsEmailCheck(false);
     }
   };
 
@@ -114,10 +114,12 @@ const SignUpPage: NextPage = () => {
   };
 
   const onPasswordBlurHandler = () => {
-    const passwordCheckRegex =
-      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
-
-    passwordCheckRegex.test(userPassword) && setIsPassword(true);
+    const validationCheck = validatePassword(userPassword);
+    if (validationCheck) {
+      setIsPasswordCheck(true);
+    } else {
+      setIsPasswordCheck(false);
+    }
   };
 
   const onPasswordCheckHandler = ({
@@ -127,100 +129,108 @@ const SignUpPage: NextPage = () => {
   };
 
   const onPWCheckInputBlurHandler = () => {
-    userPassword === checkedPassword && setIsPasswordCheck(true);
+    userPassword === checkedPassword && setIsSamePwCheck(true);
   };
 
   return (
-    <SignFormLayout formTitle='Sign Up /회원가입'>
-      {isLoading && <LoadingSpinner />}
-      {isError && (
-        <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요.'}</ErrorMsg>
-      )}
+    <>
+      {loadingState ? (
+        <LoadingSpinner />
+      ) : (
+        <SignFormLayout formTitle='Sign Up /회원가입'>
+          {isError && (
+            <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요.'}</ErrorMsg>
+          )}
 
-      <SignUpForm onSubmit={onSubmitHandler}>
-        <InputLabel htmlFor='user-email'>{'Email /이메일'}</InputLabel>
-        <EmailInputWrapper>
-          <StyledInput
-            type='text'
-            id='user-email'
-            value={emailId}
-            onChange={onIdChangeHandler}
-            onBlur={onIdBlurHandler}
-          />
-          <AtSign>{'@'}</AtSign>
-          <SelectWrapper onClick={() => setIsArrowToggle((prev) => !prev)}>
-            {isAnotherAddress ? (
+          <SignUpForm onSubmit={onSubmitHandler}>
+            <InputLabel htmlFor='user-email'>{'Email /이메일'}</InputLabel>
+            <EmailInputWrapper>
               <StyledInput
                 type='text'
-                value={emailAddress}
-                onChange={onAddressChangeHandler}
-                onBlur={onAnotherAdrsBlurHandler}
+                id='user-email'
+                value={emailId}
+                onChange={onIdChangeHandler}
               />
-            ) : (
-              <>
-                <InputSelect
-                  value={emailAddress}
-                  onChange={onAddressChangeHandler}
-                  onBlur={onSelectBlurHandler}
-                >
-                  <option value='default'>{'주소를 선택하세요.'}</option>
-                  <option value='naver.com'>{'naver.com'}</option>
-                  <option value='gmail.com'>{'gmail.com'}</option>
-                  <option value='daum.net'>{'daum.net'}</option>
-                  <option value='nate.com'>{'nate.com'}</option>
-                  <option value='anotherAddress'>{'직접 입력하기'}</option>
-                </InputSelect>
-                <ArrowBtn>
-                  {isArrowToggle ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                </ArrowBtn>
-              </>
-            )}
-          </SelectWrapper>
-        </EmailInputWrapper>
-        <ValidationMsg isState={isEmail}>
-          {emailId === '' && '이메일을 입력해 주세요. '}
-          {isAnotherAddress && !isEmail && '이메일을 확인해 주세요.'}
-        </ValidationMsg>
+              <AtSign>{'@'}</AtSign>
+              <SelectWrapper onClick={() => setIsArrowToggle((prev) => !prev)}>
+                {isAnotherAddress ? (
+                  <StyledInput
+                    type='text'
+                    value={emailAddress}
+                    onChange={onAddressChangeHandler}
+                    onBlur={onAddressBlurHandler}
+                  />
+                ) : (
+                  <>
+                    <InputSelect
+                      value={emailAddress}
+                      onChange={onAddressChangeHandler}
+                      onBlur={onSelectBlurHandler}
+                    >
+                      <option value='default'>{'주소를 선택하세요.'}</option>
+                      <option value='naver.com'>{'naver.com'}</option>
+                      <option value='gmail.com'>{'gmail.com'}</option>
+                      <option value='daum.net'>{'daum.net'}</option>
+                      <option value='nate.com'>{'nate.com'}</option>
+                      <option value='another-address'>{'직접 입력하기'}</option>
+                    </InputSelect>
+                    <ArrowBtn>
+                      {isArrowToggle ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                    </ArrowBtn>
+                  </>
+                )}
+              </SelectWrapper>
+            </EmailInputWrapper>
 
-        <InputLabel htmlFor='user-password'>{'Password /비밀번호'}</InputLabel>
-        <StyledInput
-          type='password'
-          id='user-password'
-          value={userPassword}
-          onChange={onPasswordChangeHandler}
-          onBlur={onPasswordBlurHandler}
-        />
-        <ValidationMsg isState={isPassword}>
-          {!userPassword
-            ? '비밀번호를 입력해 주세요.'
-            : !isPassword
-            ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
-            : null}
-        </ValidationMsg>
+            <ValidationMsg isState={isEmailCheck}>
+              {'이메일을 확인해 주세요'}
+            </ValidationMsg>
 
-        <InputLabel htmlFor='user-password-check'>
-          {'Password /비밀번호'}
-        </InputLabel>
-        <StyledInput
-          type='password'
-          id='user-password-check'
-          value={checkedPassword}
-          onChange={onPasswordCheckHandler}
-          onBlur={onPWCheckInputBlurHandler}
-        />
-        <ValidationMsg isState={isPasswordCheck}>
-          {!checkedPassword
-            ? '다시 한번 입력해 주세요.'
-            : !isPasswordCheck
-            ? '위와 동일한 비밀번호가 아닙니다.'
-            : null}
-        </ValidationMsg>
+            <InputLabel htmlFor='user-password'>
+              {'Password /비밀번호'}
+            </InputLabel>
+            <StyledInput
+              type='password'
+              id='user-password'
+              value={userPassword}
+              onChange={onPasswordChangeHandler}
+              onBlur={onPasswordBlurHandler}
+            />
 
-        <SignUpBtn type='submit' disabled={isDisabled}>
-          {'회원가입'}
-        </SignUpBtn>
-      </SignUpForm>
-    </SignFormLayout>
+            <ValidationMsg isState={isPasswordCheck}>
+              {!userPassword
+                ? '비밀번호를 입력해 주세요.'
+                : !isPasswordCheck
+                ? '숫자 + 영문자 + 특수문자 조합으로 8자리 이상 입력해야 합니다.'
+                : null}
+            </ValidationMsg>
+
+            <InputLabel htmlFor='checked-password'>
+              {'Password /비밀번호'}
+            </InputLabel>
+            <StyledInput
+              type='password'
+              id='checked-password'
+              value={checkedPassword}
+              onChange={onPasswordCheckHandler}
+              onBlur={onPWCheckInputBlurHandler}
+            />
+
+            <ValidationMsg isState={isSamePwCheck}>
+              {!checkedPassword
+                ? '다시 한번 입력해 주세요.'
+                : !isSamePwCheck
+                ? '위와 동일한 비밀번호가 아닙니다.'
+                : null}
+            </ValidationMsg>
+
+            <SignUpBtn type='submit' disabled={isDisabled}>
+              {'회원가입'}
+            </SignUpBtn>
+          </SignUpForm>
+        </SignFormLayout>
+      )}
+    </>
   );
 };
 
