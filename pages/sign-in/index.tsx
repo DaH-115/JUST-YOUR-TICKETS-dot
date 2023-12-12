@@ -18,8 +18,16 @@ import { loadingIsOpen, modalIsClose } from 'store/modalSlice';
 import { useAuthState } from 'store/auth-context';
 import { validateEmail, validatePassword } from 'hooks/useValidation';
 import withHead from 'components/common/withHead';
-import SignFormLayout from 'components/layout/SignFormLayout';
 import { LoadingSpinner } from 'components/common/LoadingSpinner';
+import {
+  SignFormLayout,
+  StyledInput,
+  ValidationMsg,
+  ErrorMsg,
+  SignUpBtn,
+  InputLabel,
+  SignForm,
+} from 'components/sign-form';
 
 const SignInPage: NextPage = () => {
   const router = useRouter();
@@ -121,7 +129,7 @@ const SignInPage: NextPage = () => {
             <ErrorMsg>{'아이디 또는 비밀번호를 확인해 주세요.'}</ErrorMsg>
           )}
 
-          <SignInForm onSubmit={onSubmitHandler}>
+          <SignForm onSubmit={onSubmitHandler}>
             <InputLabel htmlFor='user-email'>{'Email /이메일'}</InputLabel>
             <StyledInput
               type='text'
@@ -162,7 +170,7 @@ const SignInPage: NextPage = () => {
             <Link href='/sign-up'>
               <SignUpBtn>{'회원가입'}</SignUpBtn>
             </Link>
-          </SignInForm>
+          </SignForm>
 
           <SocialSignInWrapper>
             <SocialSignInBtn
@@ -186,54 +194,6 @@ const SignInPage: NextPage = () => {
 
 export default withHead(SignInPage, '로그인');
 
-const SignInForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 1.5rem;
-`;
-
-const InputLabel = styled.label`
-  font-size: 1rem;
-  color: ${({ theme }) => theme.colors.gray};
-  margin-bottom: 0.8rem;
-`;
-
-const StyledInput = styled.input`
-  width: 100%;
-  font-size: 1rem;
-  padding: 0.8rem 1rem;
-  border-radius: 1rem;
-  border: none;
-
-  &[type='password'] {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
-
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.orange};
-    box-shadow: 0 0 0.5rem ${({ theme }) => theme.colors.orange};
-  }
-`;
-
-const ValidationMsg = styled.p<{ isState: boolean }>`
-  visibility: ${({ isState }) => (isState ? 'hidden' : 'visible')};
-  width: 100%;
-  color: ${({ theme, isState }) => (isState ? '#fff' : theme.colors.orange)};
-  font-size: 0.9rem;
-
-  margin-top: 0.4rem;
-  margin-bottom: 1rem;
-`;
-
-const ErrorMsg = styled.p`
-  font-size: 0.9rem;
-  color: red;
-  margin-bottom: 1rem;
-`;
-
 const SignInBtn = styled.button`
   font-size: 1rem;
   font-weight: 700;
@@ -249,23 +209,6 @@ const SignInBtn = styled.button`
   &:disabled {
     background-color: ${({ theme }) => theme.colors.gray};
     color: ${({ theme }) => theme.colors.black};
-  }
-`;
-
-const SignUpBtn = styled.button`
-  width: 100%;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 1rem 2rem;
-  border: 0.05rem solid ${({ theme }) => theme.colors.orange};
-  border-radius: 1.4rem;
-
-  &:hover,
-  &:active {
-    color: ${({ theme }) => theme.colors.black};
-    background-color: ${({ theme }) => theme.colors.orange};
-    transition: all 400ms ease-in-out;
   }
 `;
 
