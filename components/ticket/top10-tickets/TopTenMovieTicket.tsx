@@ -53,7 +53,7 @@ const TicketWrapper = styled.div`
 
   width: 100%;
   height: 100%;
-  margin-top: 2rem;
+  margin-top: 4rem;
 `;
 
 const MovieIndexBar = styled.div`
@@ -63,22 +63,21 @@ const MovieIndexBar = styled.div`
 
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  padding: 0 2rem;
 
   width: 100%;
   color: #fff;
-  padding: 0 2rem;
+  background: linear-gradient(
+    ${({ theme }) => theme.colors.black},
+    rgba(0, 0, 0, 0)
+  );
 
   ${({ theme }) => theme.device.tablet} {
-    padding: 0 1rem;
+    padding: 0 1.5rem;
   }
 `;
 
 const MovieRank = styled.h2`
   font-size: 3rem;
   font-weight: 700;
-
-  ${({ theme }) => theme.device.tablet} {
-    font-size: 2.8rem;
-  }
 `;

@@ -33,8 +33,4 @@ const StyeldInfoBtn = styled.div`
     color: ${({ theme }) => theme.colors.orange};
     transition: color ease-in-out 200ms;
   }
-
-  ${({ theme }) => theme.device.tablet} {
-    font-size: 1.8rem;
-  }
 `;

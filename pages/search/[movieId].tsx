@@ -5,7 +5,7 @@ import {
   GetStaticPropsContext,
   NextPage,
 } from 'next';
-import MovieDetail from 'components/movie-detail/MovieDetailPage';
+import MovieDetail from 'components/movie-detail/MovieDetail';
 import { MovieDataProps } from 'ticketType';
 
 const SearchListDetailPage: NextPage<{ movie: MovieDataProps }> = ({

@@ -46,6 +46,7 @@ const ImgWrapper = styled.div`
   align-items: center;
 
   img {
+    box-shadow: rgba(84, 84, 84, 0.4) 0 1rem 3rem;
     border-radius: 1.2rem;
   }
 `;

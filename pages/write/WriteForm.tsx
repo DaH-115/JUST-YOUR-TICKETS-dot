@@ -195,12 +195,10 @@ const WriteFormWrapper = styled.div`
   padding: 2rem;
   border-top-right-radius: 1rem;
   border-top-left-radius: 1rem;
-  border-top: 0.8rem dotted ${({ theme }) => theme.colors.black};
 
   ${({ theme }) => theme.device.tablet} {
     border-top-right-radius: 0.9rem;
     border-top-left-radius: 0.9rem;
-    border-top: 0.7rem dotted ${({ theme }) => theme.colors.black};
   }
 `;
 

@@ -40,7 +40,7 @@ export default React.memo(TicketDetails);
 
 const TicketDetailWrapper = styled.div`
   position: relative;
-  bottom: 1rem;
+  bottom: 1.2rem;
   left: 0;
 
   display: flex;
@@ -50,6 +50,6 @@ const TicketDetailWrapper = styled.div`
   width: ${({ theme }) => theme.posterWidth};
 
   ${({ theme }) => theme.device.tablet} {
-    bottom: 3.8rem;
+    bottom: 2rem;
   }
 `;

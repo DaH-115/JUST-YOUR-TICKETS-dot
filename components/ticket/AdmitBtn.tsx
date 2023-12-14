@@ -34,16 +34,14 @@ export default AdmitBtn;
 const AdmitBtnWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 
   width: 100%;
   height: 100%;
   background: linear-gradient(#fff 80%, ${({ theme }) => theme.colors.yellow});
-  border-radius: 0.2rem;
+  background-color: #fff;
+  border-radius: 0 0.5rem 0.5rem 0;
 
   border-left: 0.1rem dashed ${({ theme }) => theme.colors.orange};
-  border-right: 0.5rem dotted ${({ theme }) => theme.colors.black};
 
   padding: 1rem;
 
@@ -55,20 +53,12 @@ const AdmitBtnWrapper = styled.div`
       transition: color 200ms ease-in-out;
     }
   }
-
-  ${({ theme }) => theme.device.tablet} {
-    border-right: 0.3rem dotted ${({ theme }) => theme.colors.black};
-  }
 `;
 
 const StyledBtn = styled.button`
   font-size: 1rem;
   font-weight: 700;
   background: #fff;
-
-  ${({ theme }) => theme.device.tablet} {
-    font-size: 0.9rem;
-  }
 `;
 
 const BtnText = styled.p`

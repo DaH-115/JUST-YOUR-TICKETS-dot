@@ -39,11 +39,13 @@ const Header = () => {
 
   return (
     <HeaderMenu>
-      <LogoWrapper>
-        <div>{'JUST'}</div>
-        <StyledLogo>{'MY'}</StyledLogo>
-        <div>{'TICKTES.'}</div>
-      </LogoWrapper>
+      <Link href='/'>
+        <LogoWrapper>
+          <div>{'JUST'}</div>
+          <StyledLogo>{'MY'}</StyledLogo>
+          <div>{'TICKTES.'}</div>
+        </LogoWrapper>
+      </Link>
 
       <MenuWrapper>
         <Link href='/'>
