@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Movie } from "../page";
 import useGetGenres from "hooks/useGetGenres";
+import Link from "next/link";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   const [castList, setCastList] = useState([]);
@@ -110,7 +111,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         </div>
       </div>
       <div className="w-full border-t-2 border-black p-8 text-center md:mt-0">
-        누르면 이동합니다
+        <Link href={`/movie-detail/${id}`}>누르면 이동합니다</Link>
       </div>
     </div>
   );

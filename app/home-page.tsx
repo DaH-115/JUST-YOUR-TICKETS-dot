@@ -67,11 +67,11 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
           {/* POSTER */}
           <section className="w-1/2">
             <Image
-              width={640}
-              height={750}
               className="h-full w-full object-cover"
               src={`https://image.tmdb.org/t/p/original${poster_path}`}
               alt={`${title}(${original_title})`}
+              width={640}
+              height={750}
             />
           </section>
         </div>

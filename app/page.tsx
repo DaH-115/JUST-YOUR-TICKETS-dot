@@ -9,6 +9,7 @@ export interface Movie {
   release_date: string;
   title: string;
   vote_average: number;
+  genres: { id: number; name: string }[];
 }
 
 async function getPosts() {
