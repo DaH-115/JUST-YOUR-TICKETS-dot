@@ -1,6 +1,8 @@
 import { Movie } from "app/page";
 import useGetGenres from "hooks/useGetGenres";
 import Image from "next/image";
+import Link from "next/link";
+import { FaInfoCircle } from "react-icons/fa";
 
 export default function SwiperCard({
   idx,
@@ -28,11 +30,16 @@ export default function SwiperCard({
       />
       {/* MOVIE INFO CARD */}
       <div className="absolute bottom-5 left-0 w-full border-2 border-black bg-white">
-        <div className="inline-block w-full border-b-2 border-black p-4 text-2xl font-bold">{`${title}(${original_title})`}</div>
-        <div className="flex w-full flex-wrap p-1">
+        <div className="flex p-4 pb-0">
+          <div className="inline-block w-full pb-4 text-2xl font-bold">{`${title}(${original_title})`}</div>
+          <Link href={`/movie-detail/${id}`}>
+            <FaInfoCircle />
+          </Link>
+        </div>
+        <div className="flex w-full flex-wrap border-t-2 border-black p-1">
           {genres.map((genre, idx) => (
             <p
-              className="m-1 rounded-full border-2 border-black bg-white p-2 px-2 py-1 text-sm text-black"
+              className="m-1 rounded-full border-2 border-black bg-white px-2 py-1 text-sm text-black"
               key={idx}
             >
               {genre}

@@ -1,6 +1,6 @@
 import { Movie } from "app/page";
-import useGetGenres from "hooks/useGetGenres";
 import Image from "next/image";
+import TicketSwiper from "app/ticket-swiper";
 
 async function getPosts(id: Number) {
   const res = await fetch(
@@ -11,12 +11,22 @@ async function getPosts(id: Number) {
   return posts;
 }
 
+async function getSimilarPosts(id: Number) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}`,
+    { cache: "force-cache" },
+  );
+  const posts = await res.json();
+  return posts.results;
+}
+
 export default async function MovieDetailPage({
   params,
 }: {
   params: { id: Number };
 }) {
   const movieDetails: Movie = await getPosts(params.id);
+  const similarPosts: Movie[] = await getSimilarPosts(params.id);
 
   const {
     title,
@@ -49,52 +59,58 @@ export default async function MovieDetailPage({
   };
 
   return (
-    <div className="flex justify-center">
-      {/* LEFT SIDE */}
-      <div className="w-full bg-red-50">
-        <Image
-          src={`https://image.tmdb.org/t/p/original${poster_path}`}
-          alt={`${title}(${original_title})`}
-          width={640}
-          height={750}
-          className="h-full w-full object-cover"
-        />
+    <>
+      <div className="mb-16 flex justify-center px-6">
+        {/* LEFT SIDE */}
+        <div className="w-full bg-red-50">
+          <Image
+            src={`https://image.tmdb.org/t/p/original${poster_path}`}
+            alt={`${title}(${original_title})`}
+            width={640}
+            height={750}
+            className="h-full w-full object-cover"
+          />
+        </div>
+        {/* RIGHT SIDE */}
+        <div className="mx-auto w-full bg-white p-6">
+          <div className="mb-4 font-bold">
+            <p className="">타이틀</p>
+            <h1 className="text-4xl">{`${title}(${original_title})`}</h1>
+          </div>
+          <div className="mb-4">
+            <p className="font-bold">장르</p>
+            <ul className="flex items-center space-x-2 text-xs">
+              {genres.map((genre: { id: number; name: string }) => (
+                <li
+                  className="rounded-full border-2 border-black bg-white p-2 px-2 py-1 text-sm text-black"
+                  key={genre.id}
+                >
+                  {genre.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mb-4">
+            <p className="font-bold">평가</p>
+            <p>{vote_average}</p>
+          </div>
+          <div className="mb-4">
+            <p className="font-bold">개봉일</p>
+            <p>{formatDate(release_date)}</p>
+          </div>
+          <div className="mb-4">
+            <p className="font-bold">줄거리</p>
+            <p>{overview}</p>
+          </div>
+          <div className="mt-16 w-full border-y-2 border-black p-8 text-center">
+            누르면 이동합니다
+          </div>
+        </div>
       </div>
-      {/* RIGHT SIDE */}
-      <div className="mx-auto w-full bg-white p-6">
-        <div className="mb-4 font-bold">
-          <p className="">타이틀</p>
-          <h1 className="text-4xl">{`${title}(${original_title})`}</h1>
-        </div>
-        <div className="mb-4">
-          <p className="font-bold">장르</p>
-          <ul className="flex items-center space-x-2 text-xs">
-            {genres.map((genre: { id: number; name: string }) => (
-              <li
-                className="rounded-full border-2 border-black bg-white p-2 px-2 py-1 text-sm text-black"
-                key={genre.id}
-              >
-                {genre.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="mb-4">
-          <p className="font-bold">평가</p>
-          <p>{vote_average}</p>
-        </div>
-        <div className="mb-4">
-          <p className="font-bold">개봉일</p>
-          <p>{formatDate(release_date)}</p>
-        </div>
-        <div className="mb-4">
-          <p className="font-bold">줄거리</p>
-          <p>{overview}</p>
-        </div>
-        <div className="w-full border-y-2 border-black p-8 text-center md:mt-0">
-          누르면 이동합니다
-        </div>
+      <div className="px-6">
+        <p className="text-2xl font-bold">이런 영화는 어때요?</p>
+        <TicketSwiper movieList={similarPosts} />
       </div>
-    </div>
+    </>
   );
 }

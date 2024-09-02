@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Movie } from "../page";
 import useGetGenres from "hooks/useGetGenres";
 import Link from "next/link";
+import { FaInfoCircle } from "react-icons/fa";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   const [castList, setCastList] = useState([]);
@@ -63,7 +64,12 @@ export default function MovieCard({ movie }: { movie: Movie }) {
     <div className="mx-auto mt-2 self-start border-2 border-black bg-white">
       <div className="px-4 py-4">
         <h2 className="text-xs font-bold md:text-base">추천 영화</h2>
-        <h1 className="mb-2 text-4xl font-bold">{`${title}(${original_title})`}</h1>
+        <div className="flex">
+          <h1 className="mb-2 text-4xl font-bold">{`${title}(${original_title})`}</h1>
+          <Link href={`/movie-detail/${id}`}>
+            <FaInfoCircle />
+          </Link>
+        </div>
         <ul className="mb-6 mt-4 flex items-center space-x-2 text-xs">
           {genres.map((genre, idx) => (
             <li
@@ -75,9 +81,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           ))}
         </ul>
         {overview ? (
-          <p
-            className={`mb-1 text-xs md:mt-3 ${isExpanded ? "" : "line-clamp-2"}`}
-          >
+          <p className={`mb-6 text-xs ${isExpanded ? "" : "line-clamp-2"}`}>
             {overview}
           </p>
         ) : null}
