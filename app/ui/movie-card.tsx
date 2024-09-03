@@ -10,8 +10,15 @@ export default function MovieCard({ movie }: { movie: Movie }) {
   const [castList, setCastList] = useState([]);
   const [director, setDirector] = useState();
   const [isExpanded, setIsExpanded] = useState(false);
-  const { id, original_title, overview, release_date, title, vote_average } =
-    movie;
+  const {
+    id,
+    original_title,
+    overview,
+    release_date,
+    title,
+    vote_average,
+    backdrop_path,
+  } = movie;
   const { genres } = useGetGenres(id);
 
   const formatDate = (dateString: string): string => {
@@ -81,7 +88,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           ))}
         </ul>
         {overview ? (
-          <p className={`mb-6 text-xs ${isExpanded ? "" : "line-clamp-2"}`}>
+          <p className={`mb-2 text-xs ${isExpanded ? "" : "line-clamp-2"}`}>
             {overview}
           </p>
         ) : null}
@@ -115,7 +122,11 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         </div>
       </div>
       <div className="w-full border-t-2 border-black p-8 text-center md:mt-0">
-        <Link href={`/movie-detail/${id}`}>누르면 이동합니다</Link>
+        <Link
+          href={`/post-create?backdrop_path=${encodeURIComponent(backdrop_path ? backdrop_path : "")}`}
+        >
+          누르면 이동합니다
+        </Link>
       </div>
     </div>
   );

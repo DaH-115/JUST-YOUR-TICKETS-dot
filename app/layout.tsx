@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <Header />
-        <div className="mt-16 md:mt-36">{children}</div>
+        <div>{children}</div>
       </body>
     </html>
   );

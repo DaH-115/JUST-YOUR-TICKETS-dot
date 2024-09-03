@@ -8,13 +8,11 @@ import Image from "next/image";
 
 export default function HomePage({ movieList }: { movieList: Movie[] }) {
   const [randomIndex, setRandomIndex] = useState(0);
-  const [isMounted, setIsMounted] = useState(false);
   const [trailerKey, setTrailerKey] = useState("");
 
   useEffect(() => {
     if (movieList.length > 0) {
       setRandomIndex(Math.floor(Math.random() * movieList.length));
-      setIsMounted(true);
     }
   }, [movieList.length]);
 
