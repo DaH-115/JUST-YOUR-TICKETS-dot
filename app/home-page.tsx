@@ -1,80 +1,79 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MovieCard from "./ui/movie-card";
-import TicketSwiper from "./ticket-swiper";
-import { Movie } from "./page";
+import MovieCard from "app/ui/movie-card";
+import TicketSwiper from "app/ticket-swiper";
+import { Movie } from "app/page";
 import Image from "next/image";
+import { fetchVideosMovies } from "api/fetchVideosMovies";
 
 export default function HomePage({ movieList }: { movieList: Movie[] }) {
-  const [randomIndex, setRandomIndex] = useState(0);
-  const [trailerKey, setTrailerKey] = useState("");
+  const [trailerKey, setTrailerKey] = useState<string>("");
+  const [currentMovie, setCurrentMovie] = useState<Movie | null>(null);
 
   useEffect(() => {
     if (movieList.length > 0) {
-      setRandomIndex(Math.floor(Math.random() * movieList.length));
+      const newIndex = Math.floor(Math.random() * movieList.length);
+      setCurrentMovie(movieList[newIndex]);
     }
-  }, [movieList.length]);
+  }, [movieList]);
 
   useEffect(() => {
-    if (randomIndex !== null) {
-      const { id } = movieList[randomIndex];
+    if (!currentMovie) return;
 
-      const fetchData = async () => {
-        try {
-          const res = await fetch(
-            `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko-KR`,
-            { cache: "force-cache" },
-          );
-          const posts = await res.json();
+    const fetchTrailer = async () => {
+      setTrailerKey("");
+      try {
+        const posts = await fetchVideosMovies(currentMovie.id);
 
-          setTrailerKey(posts.results[0].key);
-        } catch (error) {
-          console.error("Error fetching data:", error);
+        if (posts && posts.length > 0) {
+          setTrailerKey(posts[0].key);
+        } else {
+          console.log("Not found for this movie");
         }
-      };
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-      fetchData();
-    }
-  }, [randomIndex, movieList]);
-
-  if (randomIndex === null) {
-    return <div>Loading...</div>;
-  }
-
-  const { original_title, poster_path, title } = movieList[randomIndex];
+    fetchTrailer();
+  }, [currentMovie]);
 
   return (
     <>
       <div className="fixed left-0 right-0 top-16 mx-auto hidden text-center font-bold md:top-20 md:block md:text-2xl">
         Make a ticket for your own movie review.
       </div>
-      {/* TO DO: 스타일링 수정 */}
-      <main className="mx-auto mb-10 md:w-1/2">
+      <main className="mx-auto mb-10 mt-20 md:w-1/2">
         {/* TRAILER */}
         <div className="flex w-full items-center justify-center">
           <section className="aspect-video w-1/2">
-            <iframe
-              src={`https://www.youtube.com/embed/${trailerKey}`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title={`${original_title} Trailer`}
-              className="h-full w-full"
-            ></iframe>
+            {trailerKey ? (
+              <iframe
+                src={`https://www.youtube.com/embed/${trailerKey}`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={`${currentMovie?.original_title} Trailer`}
+                className="h-full w-full"
+              />
+            ) : (
+              "Not found for this movie"
+            )}
           </section>
           {/* POSTER */}
           <section className="w-1/2">
             <Image
               className="h-full w-full object-cover"
-              src={`https://image.tmdb.org/t/p/original${poster_path}`}
-              alt={`${title}(${original_title})`}
+              src={`https://image.tmdb.org/t/p/original${currentMovie?.poster_path}`}
+              alt={`${currentMovie?.title}(${currentMovie?.original_title})`}
               width={640}
               height={750}
+              priority
             />
           </section>
         </div>
         {/* MOVIE CARD */}
-        <MovieCard movie={movieList[randomIndex]} />
+        {currentMovie ? <MovieCard movie={currentMovie} /> : "Loading..."}
       </main>
       <div className="px-6">
         <div className="mb-4 text-5xl font-bold">Now Playing</div>

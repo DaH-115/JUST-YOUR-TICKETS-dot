@@ -18,7 +18,7 @@ export default function Page() {
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   return (
-    <div className="min-h-screen w-full bg-white md:flex md:justify-center">
+    <div className="mt-16 min-h-screen w-full bg-white md:flex md:justify-center">
       {/* LEFT SIDE */}
       <div className="mb-3 w-full border-t-2 border-gray-200 pl-3 pt-4 text-4xl font-bold md:mb-0 md:ml-8 md:min-h-screen md:w-1/3 md:border-r-2 md:border-t-0 md:pl-0 md:pt-0 md:text-8xl">
         <h1>LOG IN</h1>

@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Movie } from "app/page";
-import SwiperCard from "../ui/swiper-card";
+import SwiperCard from "app/ui/swiper-card";
+import { fetchSearchMovies } from "api/fetchSearchMovies";
 
 const searchSchema = z.object({
   query: z.string().min(1, "검색어를 입력해주세요."),
@@ -25,17 +26,12 @@ export default function Page() {
     resolver: zodResolver(searchSchema),
   });
 
-  const onSubmit = async (data: SearchSchema) => {
-    console.log("Search query:", data.query);
-
+  const onSubmit = async ({ query }: { query: string }) => {
     setIsLoading(true);
+
     try {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${data.query}&include_adult=true&language=ko-KR`,
-        { cache: "force-cache" },
-      );
-      const posts = await res.json();
-      setSearchResults(posts.results);
+      const posts = await fetchSearchMovies(query);
+      setSearchResults(posts);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -44,7 +40,7 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
+    <div className="mt-16 min-h-screen px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-md">
         <form onSubmit={handleSubmit(onSubmit)} className="mb-8">
           <div className="flex items-center border-b border-black py-2">

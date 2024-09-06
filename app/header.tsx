@@ -13,7 +13,7 @@ export default function Header() {
             <span className="absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-black transition-transform group-hover:scale-x-100 group-focus:scale-x-100"></span>
           </li>
           <li className="group relative">
-            <Link href="/ticket-list-now" className="whitespace-nowrap">
+            <Link href="/ticket-list" className="whitespace-nowrap">
               Ticket List
             </Link>
             <span className="absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-black transition-transform group-hover:scale-x-100 group-focus:scale-x-100"></span>

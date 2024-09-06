@@ -1,33 +1,56 @@
-import { Movie } from "app/page";
 import Image from "next/image";
+import { Movie } from "app/page";
+import { fetchMovieDetails } from "api/fetchMovieDetails";
+import { fetchSimilarMovies } from "api/fetchSimilarMovies";
 import TicketSwiper from "app/ticket-swiper";
+import { fetchMovieCredits } from "api/fetchMovieCredits";
+import useGetTitle from "hooks/useGetTitle";
+import useFormatDate from "hooks/useFormatDate";
 
-async function getPosts(id: Number) {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}`,
-    { cache: "force-cache" },
-  );
-  const posts = await res.json();
-  return posts;
+type MovieCredits = {
+  cast: { name: string }[];
+  crew: { name: string; job: string }[];
+};
+
+async function getMovies(id: number) {
+  try {
+    const movieDetails = await fetchMovieDetails(id);
+    return movieDetails;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 }
 
-async function getSimilarPosts(id: Number) {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}`,
-    { cache: "force-cache" },
-  );
-  const posts = await res.json();
-  return posts.results;
+async function getMoviesCredits(id: number) {
+  try {
+    const movieCredits = await fetchMovieCredits(id);
+    return movieCredits;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+
+async function getSimilarPosts(id: number) {
+  try {
+    const similarPosts = await fetchSimilarMovies(id);
+    return similarPosts.results;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 }
 
 export default async function MovieDetailPage({
   params,
 }: {
-  params: { id: Number };
+  params: { id: number };
 }) {
-  const movieDetails: Movie = await getPosts(params.id);
+  const movieDetails: Movie = await getMovies(params.id);
   const similarPosts: Movie[] = await getSimilarPosts(params.id);
-
+  const movieCredits: MovieCredits = await getMoviesCredits(params.id);
+  const castList = movieCredits.cast.slice(0, 3);
+  const directorsName = movieCredits.crew.filter(
+    (member: { job: string }) => member.job === "Director",
+  );
   const {
     title,
     release_date,
@@ -37,45 +60,27 @@ export default async function MovieDetailPage({
     vote_average,
     genres,
   } = movieDetails;
-
-  const formatDate = (dateString: string): string => {
-    const [year, month, day] = dateString.split("-");
-    const monthNames = [
-      "1월",
-      "2월",
-      "3월",
-      "4월",
-      "5월",
-      "6월",
-      "7월",
-      "8월",
-      "9월",
-      "10월",
-      "11월",
-      "12월",
-    ];
-    const monthName = monthNames[parseInt(month, 10) - 1];
-    return `${year}년 ${monthName} ${parseInt(day, 10)}일`;
-  };
+  const movieTitle = useGetTitle(original_title, title);
+  const movieDate = useFormatDate(release_date);
 
   return (
     <>
-      <div className="mb-16 flex justify-center px-6">
+      <div className="mb-16 mt-16 flex justify-center px-6">
         {/* LEFT SIDE */}
         <div className="w-full bg-red-50">
           <Image
             src={`https://image.tmdb.org/t/p/original${poster_path}`}
-            alt={`${title}(${original_title})`}
+            alt={movieTitle}
             width={640}
             height={750}
-            className="h-full w-full object-cover"
+            className="w-full object-cover"
           />
         </div>
         {/* RIGHT SIDE */}
         <div className="mx-auto w-full bg-white p-6">
           <div className="mb-4 font-bold">
-            <p className="">타이틀</p>
-            <h1 className="text-4xl">{`${title}(${original_title})`}</h1>
+            <p>타이틀</p>
+            <h1 className="text-4xl">{movieTitle}</h1>
           </div>
           <div className="mb-4">
             <p className="font-bold">장르</p>
@@ -90,19 +95,31 @@ export default async function MovieDetailPage({
               ))}
             </ul>
           </div>
-          <div className="mb-4">
-            <p className="font-bold">평가</p>
-            <p>{vote_average}</p>
+          <div className="mb-4 font-bold">
+            <p>평가</p>
+            <p className="text-4xl">{vote_average}</p>
           </div>
           <div className="mb-4">
             <p className="font-bold">개봉일</p>
-            <p>{formatDate(release_date)}</p>
+            <p>{movieDate}</p>
+          </div>
+          <div className="mb-4">
+            <div className="font-bold">Stars</div>
+            <ul>
+              {castList?.map((cast: any, idx: number) => (
+                <li key={idx}>{cast.name}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="mb-4">
+            <p className="font-bold">Director</p>
+            <p>{directorsName[0].name}</p>
           </div>
           <div className="mb-4">
             <p className="font-bold">줄거리</p>
             <p>{overview}</p>
           </div>
-          <div className="mt-16 w-full border-y-2 border-black p-8 text-center">
+          <div className="mt-16 w-full border-2 border-black p-8 text-center">
             누르면 이동합니다
           </div>
         </div>

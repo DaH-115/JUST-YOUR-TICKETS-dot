@@ -1,4 +1,5 @@
-import HomePage from "./home-page";
+import { fetchNowPlayingMovies } from "api/fetchNowPlayingMovies";
+import HomePage from "app/home-page";
 
 export interface Movie {
   genre_ids: number[];
@@ -14,16 +15,11 @@ export interface Movie {
 }
 
 async function getPosts() {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&include_adult=true&language=ko-KR`,
-    { cache: "force-cache" },
-  );
-  const posts = await res.json();
-  return posts.results;
+  const nowPlayingMovies = fetchNowPlayingMovies();
+  return nowPlayingMovies;
 }
 
 export default async function Page() {
-  const recentPosts: Movie[] = await getPosts();
-
-  return <HomePage movieList={recentPosts.slice(0, 10)} />;
+  const nowPlayingMovies: Movie[] = await getPosts();
+  return <HomePage movieList={nowPlayingMovies.slice(0, 10)} />;
 }

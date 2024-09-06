@@ -62,7 +62,7 @@ export default function Page() {
 
   return (
     // TO DO: 반응형 디자인 적용
-    <div className="relative left-0 top-0 mt-20">
+    <div className="relative left-0 top-0 mt-16">
       {backdrop_path && (
         <div className="w-full">
           <Image

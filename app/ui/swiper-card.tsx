@@ -1,5 +1,6 @@
 import { Movie } from "app/page";
 import useGetGenres from "hooks/useGetGenres";
+import useGetTitle from "hooks/useGetTitle";
 import Image from "next/image";
 import Link from "next/link";
 import { FaInfoCircle } from "react-icons/fa";
@@ -15,6 +16,7 @@ export default function SwiperCard({
 }) {
   const { genres } = useGetGenres(id);
   const { original_title, poster_path, title, vote_average } = movie;
+  const movieTitle = useGetTitle(original_title, title);
 
   return (
     <div className="relative h-dvh py-6">
@@ -26,7 +28,7 @@ export default function SwiperCard({
         height={750}
         className="h-full w-full object-cover object-center"
         src={`https://image.tmdb.org/t/p/original/${poster_path}`}
-        alt={`${title}(${original_title})`}
+        alt={movieTitle}
       />
       {/* MOVIE INFO CARD */}
       <div className="absolute bottom-5 left-0 w-full border-2 border-black bg-white">
@@ -47,7 +49,9 @@ export default function SwiperCard({
           ))}
         </div>
         <div className="flex w-full border-t-2 border-black text-center">
-          <div className="border-r-2 border-black p-2">{vote_average}</div>
+          <div className="border-r-2 border-black p-2 font-bold">
+            {vote_average}
+          </div>
           <div className="p-2">누르면 이동합니다</div>
         </div>
       </div>

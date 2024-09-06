@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Movie } from "../page";
-import useGetGenres from "hooks/useGetGenres";
 import Link from "next/link";
+import { Movie } from "app/page";
+import { fetchMovieCredits } from "api/fetchMovieCredits";
+import useGetGenres from "hooks/useGetGenres";
+import useGetTitle from "hooks/useGetTitle";
+import useFormatDate from "hooks/useFormatDate";
 import { FaInfoCircle } from "react-icons/fa";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
@@ -20,37 +23,16 @@ export default function MovieCard({ movie }: { movie: Movie }) {
     backdrop_path,
   } = movie;
   const { genres } = useGetGenres(id);
-
-  const formatDate = (dateString: string): string => {
-    const [year, month, day] = dateString.split("-");
-    const monthNames = [
-      "1월",
-      "2월",
-      "3월",
-      "4월",
-      "5월",
-      "6월",
-      "7월",
-      "8월",
-      "9월",
-      "10월",
-      "11월",
-      "12월",
-    ];
-    const monthName = monthNames[parseInt(month, 10) - 1];
-    return `${year}년 ${monthName} ${parseInt(day, 10)}일`;
-  };
+  const movieTitle = useGetTitle(original_title, title);
+  const movieDate = useFormatDate(release_date);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko-KR`,
-        );
-        const posts = await res.json();
+        const res = await fetchMovieCredits(id);
 
-        const castList = posts.cast.slice(0, 3);
-        const directorsName = posts.crew.filter(
+        const castList = res.cast.slice(0, 3);
+        const directorsName = res.crew.filter(
           (member: any) => member.job === "Director",
         );
         setCastList(castList);
@@ -69,15 +51,17 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
   return (
     <div className="mx-auto mt-2 self-start border-2 border-black bg-white">
-      <div className="px-4 py-4">
-        <h2 className="text-xs font-bold md:text-base">추천 영화</h2>
-        <div className="flex">
-          <h1 className="mb-2 text-4xl font-bold">{`${title}(${original_title})`}</h1>
-          <Link href={`/movie-detail/${id}`}>
-            <FaInfoCircle />
-          </Link>
+      <div className="">
+        <div className="p-4">
+          <h2 className="text-xs font-bold md:text-base">추천 영화</h2>
+          <div className="flex">
+            <h1 className="mb-2 text-4xl font-bold">{movieTitle}</h1>
+            <Link href={`/movie-detail/${id}`}>
+              <FaInfoCircle />
+            </Link>
+          </div>
         </div>
-        <ul className="mb-6 mt-4 flex items-center space-x-2 text-xs">
+        <ul className="flex items-center space-x-2 border-y-2 border-black px-4 py-4 text-xs">
           {genres.map((genre, idx) => (
             <li
               className="rounded-full border-2 border-black bg-white p-2 px-2 py-1 text-sm text-black"
@@ -87,27 +71,27 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </li>
           ))}
         </ul>
-        {overview ? (
-          <p className={`mb-2 text-xs ${isExpanded ? "" : "line-clamp-2"}`}>
-            {overview}
-          </p>
-        ) : null}
+        <div className="border-b-2 border-black px-4 py-6">
+          {overview ? (
+            <p className={` ${isExpanded ? "" : "line-clamp-2"}`}>{overview}</p>
+          ) : null}
 
-        {overview.split(" ").length > 30 && (
-          <button onClick={toggleExpand} className="text-xs text-gray-500">
-            {isExpanded ? "접기" : "더 보기"}
-          </button>
-        )}
-        <div className="mt-2 flex justify-evenly">
-          <div>
+          {overview.split(" ").length > 30 && (
+            <button onClick={toggleExpand} className="text-xs text-gray-500">
+              {isExpanded ? "접기" : "더 보기"}
+            </button>
+          )}
+        </div>
+        <div className="flex justify-center text-center">
+          <div className="border-r border-gray-300 p-4">
             <p className="font-bold">Release Date</p>
-            <p>{formatDate(release_date)}</p>
+            <p>{movieDate}</p>
           </div>
-          <div>
+          <div className="border-r border-gray-300 p-4">
             <p className="font-bold">Director</p>
             <p>{director}</p>
           </div>
-          <div>
+          <div className="border-r border-gray-300 p-4">
             <div className="font-bold">Stars</div>
             <ul>
               {castList?.map((cast: any, idx: number) => (
@@ -115,9 +99,9 @@ export default function MovieCard({ movie }: { movie: Movie }) {
               ))}
             </ul>
           </div>
-          <div>
-            <p className="font-bold">Rated</p>
-            <p>{vote_average}</p>
+          <div className="flex-1 p-4 font-bold">
+            <p>Rated</p>
+            <p className="text-4xl">{vote_average}</p>
           </div>
         </div>
       </div>
