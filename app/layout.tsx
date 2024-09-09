@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import "./globals.css";
-import Header from "./header";
+import "app/globals.css";
+import Header from "app/ui/header";
 
 export const metadata: Metadata = {
   title: "My Home",

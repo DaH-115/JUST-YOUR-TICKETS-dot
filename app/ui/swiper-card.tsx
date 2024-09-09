@@ -33,7 +33,9 @@ export default function SwiperCard({
       {/* MOVIE INFO CARD */}
       <div className="absolute bottom-5 left-0 w-full border-2 border-black bg-white">
         <div className="flex p-4 pb-0">
-          <div className="inline-block w-full pb-4 text-2xl font-bold">{`${title}(${original_title})`}</div>
+          <div className="inline-block w-full pb-4 text-2xl font-bold">
+            {movieTitle}
+          </div>
           <Link href={`/movie-detail/${id}`}>
             <FaInfoCircle />
           </Link>

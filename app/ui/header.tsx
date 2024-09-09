@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeaderSearchBar from "app/ui/header-search-bar";
 
 export default function Header() {
   return (
@@ -28,13 +29,8 @@ export default function Header() {
         </div>
       </div>
       <div className="flex shrink-0 items-center justify-end">
-        <div className="mr-4 hidden w-2/3 md:flex">
-          <input
-            type="search"
-            placeholder="search "
-            className="w-full rounded-md border-2 border-black px-3 py-2 text-sm"
-          />
-        </div>
+        {/* SEARCH BAR */}
+        <HeaderSearchBar />
         <Link href="/login">
           <button
             type="button"
