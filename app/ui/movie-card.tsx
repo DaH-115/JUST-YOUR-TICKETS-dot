@@ -106,11 +106,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         </div>
       </div>
       <div className="w-full border-t-2 border-black p-8 text-center md:mt-0">
-        <Link
-          href={`/post-create?backdrop_path=${encodeURIComponent(backdrop_path ? backdrop_path : "")}`}
-        >
-          누르면 이동합니다
-        </Link>
+        <Link href={`/post-create?id=${id}`}>누르면 이동합니다</Link>
       </div>
     </div>
   );

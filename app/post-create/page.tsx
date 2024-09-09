@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
+import { db } from "firebase-config";
+import { collection, addDoc } from "firebase/firestore";
+import { fetchMovieDetails } from "api/fetchMovieDetails";
+import useGetTitle from "hooks/useGetTitle";
 
 type PostData = {
   date: string;
@@ -16,7 +20,30 @@ type PostData = {
 export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const backdrop_path = searchParams.get("backdrop_path");
+  const movieId = searchParams.get("id");
+  const [movieInfo, setMovieInfo] = useState({
+    title: "",
+    release_date: "",
+    poster_path: "",
+    backdrop_path: "",
+    original_title: "",
+    vote_average: 0,
+  });
+  const movieTitle = useGetTitle(movieInfo.original_title, movieInfo.title);
+
+  useEffect(() => {
+    const fetchMovieInfo = async () => {
+      try {
+        const res = await fetchMovieDetails(Number(movieId));
+        setMovieInfo(res);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchMovieInfo();
+  }, [movieId]);
+
   const {
     register,
     handleSubmit,
@@ -33,8 +60,23 @@ export default function Page() {
 
   const [showExitConfirmation, setShowExitConfirmation] = useState(false);
 
-  const onSubmit = (data: PostData) => {
-    console.log("Post saved:", data);
+  const onSubmit = async (data: PostData) => {
+    try {
+      const { poster_path, release_date } = movieInfo;
+
+      const docRef = await addDoc(collection(db, "movie-reviews"), {
+        title: data.title,
+        rating: data.rating,
+        review: data.review,
+        date: data.date,
+        movieTitle,
+        releaseYear: release_date.slice(0, 4),
+        posterImage: poster_path,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   const handlePageExit = useCallback(() => {
@@ -63,10 +105,10 @@ export default function Page() {
   return (
     // TO DO: 반응형 디자인 적용
     <div className="relative left-0 top-0 mt-16">
-      {backdrop_path && (
+      {movieInfo.backdrop_path && (
         <div className="w-full">
           <Image
-            src={`https://image.tmdb.org/t/p/original${decodeURIComponent(backdrop_path)}`}
+            src={`https://image.tmdb.org/t/p/original${movieInfo.backdrop_path}`}
             alt="Backdrop"
             width={1280}
             height={720}
