@@ -1,9 +1,9 @@
 import { Movie } from "app/page";
-import useGetGenres from "hooks/useGetGenres";
-import useGetTitle from "hooks/useGetTitle";
 import Image from "next/image";
 import Link from "next/link";
 import { FaInfoCircle } from "react-icons/fa";
+import useGetGenres from "hooks/useGetGenres";
+import useGetTitle from "hooks/useGetTitle";
 
 export default function SwiperCard({
   idx,

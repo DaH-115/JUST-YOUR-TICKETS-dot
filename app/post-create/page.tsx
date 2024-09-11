@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import Image from "next/image";
 import { db } from "firebase-config";
 import { collection, addDoc } from "firebase/firestore";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
@@ -12,7 +12,7 @@ import useGetTitle from "hooks/useGetTitle";
 
 type PostData = {
   date: string;
-  title: string;
+  reviewTitle: string;
   rating: number;
   review: string;
 };
@@ -52,7 +52,7 @@ export default function Page() {
   } = useForm<PostData>({
     defaultValues: {
       date: new Date().toLocaleDateString(),
-      title: "",
+      reviewTitle: "",
       rating: 0,
       review: "",
     },
@@ -63,12 +63,13 @@ export default function Page() {
   const onSubmit = async (data: PostData) => {
     try {
       const { poster_path, release_date } = movieInfo;
+      const { reviewTitle, rating, review, date } = data;
 
       const docRef = await addDoc(collection(db, "movie-reviews"), {
-        title: data.title,
-        rating: data.rating,
-        review: data.review,
-        date: data.date,
+        reviewTitle,
+        rating,
+        review,
+        date,
         movieTitle,
         releaseYear: release_date.slice(0, 4),
         posterImage: poster_path,
@@ -166,20 +167,20 @@ export default function Page() {
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="title" className="mb-2 block font-bold">
+                  <label htmlFor="reviewTitle" className="mb-2 block font-bold">
                     Title 제목
                   </label>
                   <input
                     type="text"
-                    id="title"
-                    {...register("title", {
+                    id="reviewTitle"
+                    {...register("reviewTitle", {
                       required: "제목을 입력해주세요.",
                     })}
                     className="w-full rounded-lg border p-2"
                   />
-                  {errors.title && (
+                  {errors.reviewTitle && (
                     <p className="mt-2 text-sm text-red-600">
-                      {errors.title.message}
+                      {errors.reviewTitle.message}
                     </p>
                   )}
                 </div>
