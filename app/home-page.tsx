@@ -41,10 +41,13 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
 
   return (
     <>
-      <div className="fixed left-0 right-0 top-16 mx-auto hidden text-center font-bold md:top-20 md:block md:text-2xl">
+      <div
+        id="catchphrase"
+        className="fixed left-0 right-0 top-16 z-0 mx-auto hidden text-center font-bold md:top-20 md:block md:text-2xl"
+      >
         Make a ticket for your own movie review.
       </div>
-      <main className="mx-auto mb-10 mt-20 md:w-1/2">
+      <main className="relative z-10 mx-auto mb-10 mt-20 md:w-1/2">
         {/* TRAILER */}
         <div className="flex w-full items-center justify-center">
           <section className="aspect-video w-1/2">
@@ -75,7 +78,7 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
         {/* MOVIE CARD */}
         {currentMovie ? <MovieCard movie={currentMovie} /> : "Loading..."}
       </main>
-      <div className="px-6">
+      <div className="relative z-10 px-6">
         <div className="mb-4 text-5xl font-bold">Now Playing</div>
         <p className="text-sm">현재 가장 인기 있는 영화들을 확인해 보세요</p>
         {/* POSTER SWIPER */}

@@ -3,7 +3,7 @@ import HeaderSearchBar from "app/ui/header-search-bar";
 
 export default function Header() {
   return (
-    <header className="fixed left-0 right-0 top-0 flex w-full p-4 md:justify-between md:py-5 md:pl-11 md:pr-11">
+    <header className="fixed left-0 right-0 top-0 z-50 flex w-full p-4 md:justify-between md:py-5 md:pl-11 md:pr-11">
       <div className="flex w-full justify-between md:items-center">
         <div className="flex items-center justify-center font-bold md:mr-24">
           just your tickets.
