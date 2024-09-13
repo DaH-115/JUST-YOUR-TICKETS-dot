@@ -6,6 +6,7 @@ import TicketSwiper from "app/ticket-swiper";
 import { Movie } from "app/page";
 import Image from "next/image";
 import { fetchVideosMovies } from "api/fetchVideosMovies";
+import ScrollToTopButton from "app/ui/ScrollToTopButton";
 
 export default function HomePage({ movieList }: { movieList: Movie[] }) {
   const [trailerKey, setTrailerKey] = useState<string>("");
@@ -84,6 +85,7 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
         {/* POSTER SWIPER */}
         <TicketSwiper movieList={movieList} />
       </div>
+      <ScrollToTopButton />
     </>
   );
 }
