@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { db } from "firebase-config";
 import { collection, addDoc } from "firebase/firestore";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
+import { useAppDispatch } from "store/hooks";
+import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
 import useGetTitle from "hooks/useGetTitle";
 
 type PostData = {
@@ -30,6 +32,7 @@ export default function Page() {
     vote_average: 0,
   });
   const movieTitle = useGetTitle(movieInfo.original_title, movieInfo.title);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetchMovieInfo = async () => {
@@ -75,6 +78,7 @@ export default function Page() {
         posterImage: poster_path,
       });
       console.log("Document written with ID: ", docRef.id);
+      dispatch(addNewReviewAlertHandler());
     } catch (e) {
       console.error("Error adding document: ", e);
     }

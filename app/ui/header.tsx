@@ -1,7 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { useAppSelector } from "store/hooks";
 import HeaderSearchBar from "app/ui/header-search-bar";
 
 export default function Header() {
+  const newReviewAlertState = useAppSelector(
+    (state) => state.newReviewAlert.newReviewAlertState,
+  );
+
   return (
     <header className="fixed left-0 right-0 top-0 z-50 flex w-full p-4 md:justify-between md:py-5 md:pl-11 md:pr-11">
       <div className="flex w-full justify-between md:items-center">
@@ -14,7 +21,11 @@ export default function Header() {
             <span className="absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-black transition-transform group-hover:scale-x-100 group-focus:scale-x-100"></span>
           </li>
           <li className="group relative">
-            <Link href="/ticket-list" className="whitespace-nowrap">
+            {/* ADD SIGN ALERT */}
+            <Link
+              href="/ticket-list"
+              className={`whitespace-nowrap rounded-full border-2 px-4 py-2 ${newReviewAlertState ? "border-red-700" : "border-none"}`}
+            >
               Ticket List
             </Link>
             <span className="absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-black transition-transform group-hover:scale-x-100 group-focus:scale-x-100"></span>

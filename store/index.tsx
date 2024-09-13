@@ -1,12 +1,14 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import modalSlice from 'store/modalSlice';
-import movieSlice from 'store/movieSlice';
-import userTicketSlice from 'store/userTicketSlice';
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import modalSlice from "store/modalSlice";
+import movieSlice from "store/movieSlice";
+import userTicketSlice from "store/userTicketSlice";
+import newReviewAlertSlice from "store/newReviewAlertSlice";
 
 const rootReducers = combineReducers({
   modal: modalSlice.reducer,
   movieData: movieSlice.reducer,
   userTicket: userTicketSlice.reducer,
+  newReviewAlert: newReviewAlertSlice.reducer,
 });
 
 const store = configureStore({

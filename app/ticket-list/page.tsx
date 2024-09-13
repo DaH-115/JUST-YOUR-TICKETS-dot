@@ -4,11 +4,18 @@ import { useEffect, useState } from "react";
 import { db } from "firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import Image from "next/image";
+import { useAppSelector } from "store/hooks";
+import { useAppDispatch } from "store/hooks";
+import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
 
 export default function Page() {
   const [reviews, setReviews] = useState<any>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
+  const newReviewAlertState = useAppSelector(
+    (state) => state.newReviewAlert.newReviewAlertState,
+  );
+  const dispatch = useAppDispatch();
 
   const openModalHandler = (content: string) => {
     setModalContent(content);
@@ -19,6 +26,10 @@ export default function Page() {
     setIsModalOpen(false);
     setModalContent("");
   };
+
+  useEffect(() => {
+    newReviewAlertState ? dispatch(addNewReviewAlertHandler()) : null;
+  }, []);
 
   useEffect(() => {
     const getPosts = async () => {
