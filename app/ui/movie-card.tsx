@@ -8,20 +8,14 @@ import useGetGenres from "hooks/useGetGenres";
 import useGetTitle from "hooks/useGetTitle";
 import useFormatDate from "hooks/useFormatDate";
 import { FaInfoCircle } from "react-icons/fa";
+import { IoStar } from "react-icons/io5";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   const [castList, setCastList] = useState([]);
   const [director, setDirector] = useState();
   const [isExpanded, setIsExpanded] = useState(false);
-  const {
-    id,
-    original_title,
-    overview,
-    release_date,
-    title,
-    vote_average,
-    backdrop_path,
-  } = movie;
+  const { id, original_title, overview, release_date, title, vote_average } =
+    movie;
   const { genres } = useGetGenres(id);
   const movieTitle = useGetTitle(original_title, title);
   const movieDate = useFormatDate(release_date);
@@ -100,8 +94,11 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </ul>
           </div>
           <div className="flex-1 p-4 font-bold">
-            <p>Rated</p>
-            <p className="text-4xl">{vote_average}</p>
+            <p className="mb-2">Rated</p>
+            <div className="flex items-center justify-center">
+              <IoStar className="mr-2" size={24} />
+              <p className="text-4xl">{Math.round(vote_average * 10) / 10}</p>
+            </div>
           </div>
         </div>
       </div>

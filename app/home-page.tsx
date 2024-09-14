@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MovieCard from "app/ui/movie-card";
-import TicketSwiper from "app/ticket-swiper";
 import { Movie } from "app/page";
 import Image from "next/image";
 import { fetchVideosMovies } from "api/fetchVideosMovies";
 import ScrollToTopButton from "app/ui/ScrollToTopButton";
+import MovieCard from "app/ui/movie-card";
+import TicketSwiper from "app/ticket-swiper";
 
 export default function HomePage({ movieList }: { movieList: Movie[] }) {
   const [trailerKey, setTrailerKey] = useState<string>("");
@@ -51,8 +51,8 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
       <main className="relative z-10 mx-auto mb-10 mt-20 md:w-1/2">
         {/* TRAILER */}
         <div className="flex w-full items-center justify-center">
-          <section className="aspect-video w-1/2">
-            {trailerKey ? (
+          {trailerKey ? (
+            <section className="aspect-video w-1/2">
               <iframe
                 src={`https://www.youtube.com/embed/${trailerKey}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -60,21 +60,21 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
                 title={`${currentMovie?.original_title} Trailer`}
                 className="h-full w-full"
               />
-            ) : (
-              "Not found for this movie"
-            )}
-          </section>
+            </section>
+          ) : null}
           {/* POSTER */}
-          <section className="w-1/2">
-            <Image
-              className="h-full w-full object-cover"
-              src={`https://image.tmdb.org/t/p/original${currentMovie?.poster_path}`}
-              alt={`${currentMovie?.title}(${currentMovie?.original_title})`}
-              width={640}
-              height={750}
-              priority
-            />
-          </section>
+          {currentMovie?.poster_path ? (
+            <section className="w-1/2">
+              <Image
+                className="h-full w-full object-cover"
+                src={`https://image.tmdb.org/t/p/original${currentMovie?.poster_path}`}
+                alt={`${currentMovie?.title}(${currentMovie?.original_title})`}
+                width={640}
+                height={750}
+                priority
+              />
+            </section>
+          ) : null}
         </div>
         {/* MOVIE CARD */}
         {currentMovie ? <MovieCard movie={currentMovie} /> : "Loading..."}
@@ -85,6 +85,7 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
         {/* POSTER SWIPER */}
         <TicketSwiper movieList={movieList} />
       </div>
+      {/* Scroll To Top Button */}
       <ScrollToTopButton />
     </>
   );

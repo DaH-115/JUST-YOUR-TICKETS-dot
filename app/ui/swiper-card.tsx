@@ -1,9 +1,10 @@
 import { Movie } from "app/page";
 import Image from "next/image";
 import Link from "next/link";
-import { FaInfoCircle } from "react-icons/fa";
 import useGetGenres from "hooks/useGetGenres";
 import useGetTitle from "hooks/useGetTitle";
+import { FaInfoCircle } from "react-icons/fa";
+import { IoStar } from "react-icons/io5";
 
 export default function SwiperCard({
   idx,
@@ -23,13 +24,20 @@ export default function SwiperCard({
       <div className="absolute left-0 top-5 w-full bg-gradient-to-t from-transparent to-black p-4 pt-5 text-6xl font-bold text-white">
         {idx + 1}.
       </div>
-      <Image
-        width={640}
-        height={750}
-        className="h-full w-full object-cover object-center"
-        src={`https://image.tmdb.org/t/p/original/${poster_path}`}
-        alt={movieTitle}
-      />
+      {poster_path ? (
+        <Image
+          width={640}
+          height={750}
+          className="h-full w-full object-cover object-center"
+          src={`https://image.tmdb.org/t/p/original/${poster_path}`}
+          alt={movieTitle}
+        />
+      ) : (
+        <div className="h-full w-full overflow-hidden bg-black text-4xl font-bold text-white">
+          Make a ticket for your own movie review.
+        </div>
+      )}
+
       {/* MOVIE INFO CARD */}
       <div className="absolute bottom-5 left-0 w-full border-2 border-black bg-white">
         <div className="flex p-4 pb-0">
@@ -51,10 +59,13 @@ export default function SwiperCard({
           ))}
         </div>
         <div className="flex w-full border-t-2 border-black text-center">
-          <div className="border-r-2 border-black p-2 font-bold">
-            {vote_average}
+          <div className="flex items-center border-r-2 border-black px-2">
+            <IoStar />
+            <div className="font-bold">
+              {Math.round(vote_average * 10) / 10}
+            </div>
           </div>
-          <div className="p-2">누르면 이동합니다</div>
+          <div className="flex-1 p-2">누르면 이동합니다</div>
         </div>
       </div>
     </div>

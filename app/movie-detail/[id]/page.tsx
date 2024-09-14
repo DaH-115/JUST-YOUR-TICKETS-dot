@@ -6,6 +6,7 @@ import TicketSwiper from "app/ticket-swiper";
 import { fetchMovieCredits } from "api/fetchMovieCredits";
 import useGetTitle from "hooks/useGetTitle";
 import useFormatDate from "hooks/useFormatDate";
+import { IoStar } from "react-icons/io5";
 
 type MovieCredits = {
   cast: { name: string }[];
@@ -97,7 +98,10 @@ export default async function MovieDetailPage({
           </div>
           <div className="mb-4 font-bold">
             <p>평가</p>
-            <p className="text-4xl">{vote_average}</p>
+            <div className="flex items-center">
+              <IoStar className="mr-2" size={48} />
+              <p className="text-4xl">{Math.round(vote_average * 10) / 10}</p>
+            </div>
           </div>
           <div className="mb-4">
             <p className="font-bold">개봉일</p>
