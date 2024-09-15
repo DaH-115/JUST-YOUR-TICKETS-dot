@@ -11,6 +11,8 @@ export interface Movie {
   title: string;
   vote_average: number;
   genres: { id: number; name: string }[];
+  runtime: string;
+  production_companies: { id: number; name: string }[];
   backdrop_path?: string;
 }
 
