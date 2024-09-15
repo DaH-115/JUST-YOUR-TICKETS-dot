@@ -54,7 +54,7 @@ export default function HeaderSearchBar() {
   }, []);
 
   return (
-    <div className="relative mr-4 hidden w-2/3 md:flex" ref={dropdownRef}>
+    <div className="relative mr-4 hidden w-1/5 md:flex" ref={dropdownRef}>
       <input
         {...register("search")}
         type="search"

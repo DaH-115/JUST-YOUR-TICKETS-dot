@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import useGetGenres from "hooks/useGetGenres";
 import useGetTitle from "hooks/useGetTitle";
-import { FaInfoCircle } from "react-icons/fa";
+import { FaArrowRight, FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 
 export default function SwiperCard({
@@ -41,9 +41,7 @@ export default function SwiperCard({
       {/* MOVIE INFO CARD */}
       <div className="absolute bottom-5 left-0 w-full border-2 border-black bg-white">
         <div className="flex p-4 pb-0">
-          <div className="inline-block w-full pb-4 text-2xl font-bold">
-            {movieTitle}
-          </div>
+          <div className="truncate pb-4 text-xl font-bold">{movieTitle}</div>
           <Link href={`/movie-detail/${id}`}>
             <FaInfoCircle />
           </Link>
@@ -61,11 +59,21 @@ export default function SwiperCard({
         <div className="flex w-full border-t-2 border-black text-center">
           <div className="flex items-center border-r-2 border-black px-2">
             <IoStar />
-            <div className="font-bold">
+            <div className="text-xl font-bold">
               {Math.round(vote_average * 10) / 10}
             </div>
           </div>
-          <div className="flex-1 p-2">누르면 이동합니다</div>
+          <div className="flex-1 bg-black text-white">
+            <Link
+              href={`/post-create?id=${id}`}
+              className="group relative flex items-center justify-end p-4"
+            >
+              <p className="text-sm transition-colors duration-300 group-hover:text-gray-400">
+                리뷰 작성하기
+              </p>
+              <FaArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-2" />
+            </Link>
+          </div>
         </div>
       </div>
     </div>

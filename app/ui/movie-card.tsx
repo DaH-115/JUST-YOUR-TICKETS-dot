@@ -9,6 +9,7 @@ import useGetTitle from "hooks/useGetTitle";
 import useFormatDate from "hooks/useFormatDate";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
+import { FaArrowRight } from "react-icons/fa";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   const [castList, setCastList] = useState([]);
@@ -102,8 +103,19 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           </div>
         </div>
       </div>
-      <div className="w-full border-t-2 border-black p-8 text-center md:mt-0">
-        <Link href={`/post-create?id=${id}`}>누르면 이동합니다</Link>
+      <div className="flex w-full border-t-2 border-black bg-black text-center text-white">
+        <Link
+          href={`/post-create?id=${id}`}
+          className="group relative flex w-full items-center justify-end p-8"
+        >
+          <p className="text-xl transition-colors duration-300 group-hover:text-gray-400">
+            리뷰 작성하기
+          </p>
+          <FaArrowRight
+            className="ml-2 transition-transform duration-300 group-hover:translate-x-2"
+            size={24}
+          />
+        </Link>
       </div>
     </div>
   );
