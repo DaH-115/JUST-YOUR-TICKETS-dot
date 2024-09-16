@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import SocialLogin from "./social-login";
+import { isAuth } from "firebase-config";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import SocialLoginButtons from "app/login/social-login";
 
 type Inputs = {
   email: string;
@@ -10,12 +14,22 @@ type Inputs = {
 };
 
 export default function Page() {
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState<any>(null);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      await signInWithEmailAndPassword(isAuth, data.email, data.password);
+      router.push("/");
+    } catch (error) {
+      console.error("회원가입 에러:", error);
+      setErrorMessage(error);
+    }
+  };
 
   return (
     <div className="mt-16 min-h-screen w-full bg-white md:flex md:justify-center">
@@ -27,7 +41,7 @@ export default function Page() {
       <div className="md:w-2/3">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mx-auto w-2/3 space-y-6"
+          className="mx-auto w-2/3 space-y-6 md:mt-24"
         >
           <div>
             <div className="border-b border-black py-2">
@@ -64,6 +78,7 @@ export default function Page() {
                 id="password"
                 type="password"
                 placeholder="••••••••"
+                autoComplete="on"
                 {...register("password", {
                   required: "비밀번호를 입력해주세요.",
                 })}
@@ -76,7 +91,7 @@ export default function Page() {
               </p>
             )}
           </div>
-
+          {errorMessage && <p className="text-red-600">{errorMessage}</p>}
           <div className="font-bold">
             <button
               type="submit"
@@ -95,12 +110,7 @@ export default function Page() {
           </div>
         </form>
         {/* SocialLogin */}
-        <div className="mx-auto my-4 flex w-2/3 items-center">
-          <div className="flex-grow border-t border-gray-400"></div>
-          <span className="mx-4 text-gray-500">OR</span>
-          <div className="flex-grow border-t border-gray-400"></div>
-        </div>
-        <SocialLogin />
+        <SocialLoginButtons />
       </div>
     </div>
   );

@@ -86,13 +86,12 @@ export default async function MovieDetailPage({
   const movieTitle = useGetTitle(original_title, title);
   const movieDate = useFormatDate(release_date);
   const getYouTubeUrl = (key: string) => `https://www.youtube.com/embed/${key}`;
-  console.log(movieTrailer);
 
   return (
     <>
       <div id="page-header-image" className="h-[300px] overflow-hidden">
         <Image
-          src={`https://image.tmdb.org/t/p/w1280${backdrop_path}`}
+          src={`https://image.tmdb.org/t/p/original${backdrop_path}`}
           alt={movieTitle}
           width={1280}
           height={720}
@@ -162,7 +161,7 @@ export default async function MovieDetailPage({
             <p className="font-bold">줄거리</p>
             <p className="text-lg font-light">{overview}</p>
           </div>
-          <div className="mb-4">
+          <div className="mb-8">
             <p className="font-bold">제작사</p>
             <div className="flex space-x-4 text-sm">
               {production_companies.map((company: any, index: any) => (
