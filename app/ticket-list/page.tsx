@@ -9,6 +9,7 @@ import { useAppSelector } from "store/hooks";
 import { useAppDispatch } from "store/hooks";
 import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
 import { IoStar } from "react-icons/io5";
+import { FaArrowRight } from "react-icons/fa";
 
 export default function Page() {
   const [reviews, setReviews] = useState<any>();
@@ -64,9 +65,16 @@ export default function Page() {
       )}
       <div className="mt-16 grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {reviews &&
-          reviews.map((post: any) => (
+          reviews.map((post: any, index: any) => (
             <div key={post.id} className="relative h-[600px]">
-              <div className="h-4/5">
+              {/* CARD HEADER */}
+              <div className="absolute left-0 top-0 flex w-full items-center justify-between p-2">
+                <p className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
+                  {index + 1}
+                </p>
+              </div>
+
+              <div id="movie-poster" className="h-4/5">
                 <Image
                   src={`https://image.tmdb.org/t/p/original${post.posterImage}`}
                   alt={post.movieTitle}
@@ -99,9 +107,18 @@ export default function Page() {
                     {post.review}
                   </p>
                 </div>
-                <div className="border-t-2 border-black p-2">
-                  <button onClick={() => openModalHandler(post.review)}>
-                    더 자세히 보기
+                <div className="border-t-2 border-black">
+                  <button
+                    className="flex w-full items-center justify-end p-2"
+                    onClick={() => openModalHandler(post.review)}
+                  >
+                    <div className="flex">
+                      <p className="mr-2 font-bold">
+                        {post.userName ? post.userName : "Guest"}
+                      </p>
+                      님의 리뷰
+                    </div>
+                    <FaArrowRight className="ml-2" size={18} />
                   </button>
                 </div>
               </div>
