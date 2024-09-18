@@ -22,7 +22,7 @@ export default function Header() {
         setUserState(user);
       }
     });
-  }, [isAuth]);
+  }, []);
 
   const logoutHandler = async () => {
     try {
@@ -83,9 +83,18 @@ export default function Header() {
       {/* SEARCH BAR */}
       <HeaderSearchBar />
       {userState?.displayName ? (
-        <button onClick={logoutHandler}>
-          <p>{userState?.displayName ? userState?.displayName : "익명"} 님</p>
-        </button>
+        <>
+          <Link href="/my-page">
+            <button>
+              <p>
+                {userState?.displayName ? userState?.displayName : "익명"} 님
+              </p>
+            </button>
+          </Link>
+          <button onClick={logoutHandler} className="px-2">
+            로그아웃
+          </button>
+        </>
       ) : (
         <Link href="/login">
           <button

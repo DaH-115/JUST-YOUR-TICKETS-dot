@@ -5,9 +5,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { isAuth } from "firebase-config";
+import { db, isAuth } from "firebase-config";
 import { useRouter } from "next/navigation";
 import SocialLogin from "app/login/social-login";
+import { doc, setDoc } from "firebase/firestore";
 
 const signupSchema = z
   .object({
@@ -49,11 +50,16 @@ export default function Page() {
       const userCredential = await createUserWithEmailAndPassword(
         isAuth,
         data.email,
-        data.confirmPassword,
+        data.password,
       );
+      const user = userCredential.user;
 
-      await updateProfile(userCredential.user, {
+      await updateProfile(user, {
         displayName: data.name,
+      });
+
+      await setDoc(doc(db, "users", user.uid), {
+        biography: "Make a ticket for your own movie review.",
       });
 
       router.push("/");
