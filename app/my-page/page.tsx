@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { db, isAuth } from "firebase-config";
-import { onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
+import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import ChangePassword from "app/my-page/change-password";
 import SideReviewList from "app/my-page/side-review-list";
+import SideMenu from "./side-menu";
 
 type FormData = {
   displayName: string;
@@ -15,7 +15,6 @@ type FormData = {
 };
 
 export default function MyPage() {
-  const router = useRouter();
   const [userState, setUserState] = useState<any>(null);
   const [userDoc, setUserDoc] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -108,13 +107,8 @@ export default function MyPage() {
 
   return (
     <div id="layout" className="mt-24 flex w-full px-8">
-      {/* Side Menu */}
-      <div id="side-menu" className="w-full flex-1 pr-8">
-        <div className="text-4xl md:text-8xl">PROFILE</div>
-        <div className="text-2xl text-gray-300 hover:text-black md:text-8xl">
-          REVIEW LIST
-        </div>
-      </div>
+      <SideMenu />
+
       {/* Main */}
       <div className="flex w-full flex-col">
         <div className="border-2 border-black px-8 pb-12 pt-8">
@@ -176,7 +170,7 @@ export default function MyPage() {
       </div>
 
       {/* Side Review List */}
-      <SideReviewList />
+      <SideReviewList uid={userState?.uid} />
     </div>
   );
 }
