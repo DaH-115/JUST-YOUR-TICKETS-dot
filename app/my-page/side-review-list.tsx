@@ -56,9 +56,11 @@ export default function SideReviewList({ uid }: { uid: string }) {
         {userReviews.map((review, index) => (
           <li
             key={review.id}
-            className="flex items-center border-b-2 border-black p-4"
+            className="flex items-center border-b-2 border-gray-300 p-4"
           >
-            <div className="mr-4">{index + 1}</div>
+            <p className="mr-4 rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
+              {index + 1}
+            </p>
             <div>
               <div className="text-sm">{review.date}</div>
               <div className="font-bold">{review.reviewTitle}</div>

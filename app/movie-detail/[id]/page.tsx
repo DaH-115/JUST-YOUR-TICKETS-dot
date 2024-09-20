@@ -99,89 +99,91 @@ export default async function MovieDetailPage({
           priority
         />
       </div>
-      <div className="mb-12 mt-8 flex justify-center pl-8">
-        {/* LEFT SIDE */}
-        <div className="w-1/3">
-          <Image
-            src={`https://image.tmdb.org/t/p/original${poster_path}`}
-            alt={movieTitle}
-            width={1280}
-            height={720}
-            className="rounded-lg object-cover shadow-lg"
-          />
-        </div>
-        {/* RIGHT SIDE */}
-        <div className="mx-auto w-full bg-white px-12">
-          <div className="mb-4 font-bold">
-            <p>영화 정보</p>
-            <h1 className="text-4xl">{movieTitle}</h1>
+      <div className="flex w-full items-center justify-center">
+        <div className="mb-12 mt-8 flex w-2/3 justify-center pl-8">
+          {/* LEFT SIDE */}
+          <div className="w-1/3">
+            <Image
+              src={`https://image.tmdb.org/t/p/original${poster_path}`}
+              alt={movieTitle}
+              width={1280}
+              height={720}
+              className="rounded-lg object-cover shadow-lg"
+            />
           </div>
-          <div className="mb-4">
-            <ul className="flex items-center space-x-2 text-xs">
-              {genres.map((genre: { id: number; name: string }) => (
-                <li
-                  className="rounded-full border-2 border-black bg-white p-2 px-2 py-1 text-sm text-black"
-                  key={genre.id}
-                >
-                  {genre.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="mb-4 font-bold">
-            <div className="flex items-center">
-              <IoStar className="mr-2" size={48} />
-              <p className="text-4xl">{Math.round(vote_average * 10) / 10}</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-12">
-            <div className="mb-4">
-              <p className="font-bold">개봉일</p>
-              <p>{movieDate}</p>
+          {/* RIGHT SIDE */}
+          <div className="mx-auto w-full bg-white px-12">
+            <div className="mb-4 font-bold">
+              <p>영화 정보</p>
+              <h1 className="text-4xl">{movieTitle}</h1>
             </div>
             <div className="mb-4">
-              <p className="font-bold">러닝 타임</p>
-              <p>{runtime}</p>
+              <ul className="flex items-center space-x-2 text-xs">
+                {genres.map((genre: { id: number; name: string }) => (
+                  <li
+                    className="rounded-full border-2 border-black bg-white p-2 px-2 py-1 text-sm text-black"
+                    key={genre.id}
+                  >
+                    {genre.name}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="mb-4">
-              <p className="font-bold">감독</p>
-              <p>{directorsName[0].name}</p>
+            <div className="mb-4 font-bold">
+              <div className="flex items-center">
+                <IoStar className="mr-2" size={48} />
+                <p className="text-4xl">{Math.round(vote_average * 10) / 10}</p>
+              </div>
             </div>
-          </div>
+            <div className="flex items-center space-x-12">
+              <div className="mb-4">
+                <p className="font-bold">개봉일</p>
+                <p>{movieDate}</p>
+              </div>
+              <div className="mb-4">
+                <p className="font-bold">러닝 타임</p>
+                <p>{runtime}</p>
+              </div>
+              <div className="mb-4">
+                <p className="font-bold">감독</p>
+                <p>{directorsName[0].name}</p>
+              </div>
+            </div>
 
-          <div className="mb-4">
-            <div className="font-bold">배우</div>
-            <ul>
-              {castList?.map((cast: any, idx: number) => (
-                <li key={idx}>{cast.name}</li>
-              ))}
-            </ul>
-          </div>
-          <div className="mb-8">
-            <p className="font-bold">줄거리</p>
-            <p className="text-lg font-light">{overview}</p>
-          </div>
-          <div className="mb-8">
-            <p className="font-bold">제작사</p>
-            <div className="flex space-x-4 text-sm">
-              {production_companies.map((company: any, index: any) => (
-                <div key={index}>{company.name}</div>
-              ))}
+            <div className="mb-4">
+              <div className="font-bold">배우</div>
+              <ul>
+                {castList?.map((cast: any, idx: number) => (
+                  <li key={idx}>{cast.name}</li>
+                ))}
+              </ul>
             </div>
-          </div>
-          <div className="group flex w-full rounded-full border-t-2 border-black bg-black text-center text-white">
-            <Link
-              href={`/post-create?id=${id}`}
-              className="relative flex w-full items-center justify-center p-8"
-            >
-              <p className="text-xl transition-colors duration-300 group-hover:text-gray-400">
-                리뷰 작성하기
-              </p>
-              <FaArrowRight
-                className="ml-2 transition-transform duration-300 group-hover:translate-x-2"
-                size={24}
-              />
-            </Link>
+            <div className="mb-8">
+              <p className="font-bold">줄거리</p>
+              <p className="text-lg font-light">{overview}</p>
+            </div>
+            <div className="mb-8">
+              <p className="font-bold">제작사</p>
+              <div className="flex space-x-4 text-sm">
+                {production_companies.map((company: any, index: any) => (
+                  <div key={index}>{company.name}</div>
+                ))}
+              </div>
+            </div>
+            <div className="group flex w-full rounded-full border-t-2 border-black bg-black text-center text-white">
+              <Link
+                href={`/post-create?id=${id}`}
+                className="relative flex w-full items-center justify-center p-8"
+              >
+                <p className="text-xl transition-colors duration-300 group-hover:text-gray-400">
+                  리뷰 작성하기
+                </p>
+                <FaArrowRight
+                  className="ml-2 transition-transform duration-300 group-hover:translate-x-2"
+                  size={24}
+                />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

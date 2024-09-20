@@ -64,7 +64,7 @@ export default function MySideReviewList() {
 
   return (
     <div id="layout" className="mt-24 flex w-full px-8">
-      <SideMenu />
+      <SideMenu uid={uid ? uid : ""} />
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -86,70 +86,70 @@ export default function MySideReviewList() {
           <div className="mr-4 text-2xl font-bold">MY REVIEW LIST</div>
           <div>총 {userReviews.length}개</div>
         </div>
-        <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3">
-          {userReviews &&
-            userReviews.map((post: any, index: any) => (
-              <div key={post.id} className="relative h-[600px]">
-                {/* CARD HEADER */}
-                <div className="absolute left-0 top-0 flex w-full items-center justify-between p-2">
-                  <p className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
-                    {index + 1}
+        <div className="grid grid-cols-3 gap-4 p-6">
+          {userReviews.map((post: any, index) => (
+            <div key={post.id} className="relative h-[300px]">
+              {/* CARD HEADER */}
+              <div className="absolute left-0 top-0 flex w-full items-center justify-between p-2">
+                <p className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
+                  {index + 1}
+                </p>
+              </div>
+
+              <div id="movie-poster" className="h-3/5">
+                <Image
+                  src={`https://image.tmdb.org/t/p/original${post.posterImage}`}
+                  alt={post.movieTitle}
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+              <div
+                id="info-card"
+                className="absolute bottom-0 left-0 w-full border-2 border-black bg-white"
+              >
+                <div className="flex items-center border-b-2 border-black">
+                  <div className="flex items-center justify-center px-2">
+                    <IoStar className="mt-1" size={14} />
+                    <p className="text-2xl font-bold">{post.rating}</p>
+                  </div>
+                  <div className="border-l-2 border-black p-2">
+                    <p className="text-xs">{post.date}</p>
+                    <div className="flex font-bold">
+                      <p className="truncate text-sm">
+                        {post.movieTitle} - {post.releaseYear}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1 p-2">
+                  <p className="truncate text-xs font-bold">
+                    {post.reviewTitle}
+                  </p>
+                  <p id="review-post" className="truncate text-xs">
+                    {post.review}
                   </p>
                 </div>
-
-                <div id="movie-poster" className="h-4/5">
-                  <Image
-                    src={`https://image.tmdb.org/t/p/original${post.posterImage}`}
-                    alt={post.movieTitle}
-                    width={1280}
-                    height={720}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div
-                  id="info-card"
-                  className="absolute bottom-0 left-0 w-full border-2 border-black bg-white"
-                >
-                  <div className="flex items-center border-b-2 border-black">
-                    <div className="flex items-center justify-center px-2">
-                      <IoStar className="mt-2" size={18} />
-                      <p className="text-4xl font-bold">{post.rating}</p>
+                <div className="border-t-2 border-black">
+                  <button
+                    className="flex w-full items-center justify-end p-2"
+                    onClick={() => openModalHandler(post.review)}
+                  >
+                    <div className="flex text-xs">
+                      <p className="mr-1 font-bold">
+                        {post.userName ? post.userName : "Guest"}
+                      </p>
+                      님의 리뷰
                     </div>
-                    <div className="border-l-2 border-black p-2">
-                      <p className="text-sm">{post.date}</p>
-                      <div className="flex font-bold">
-                        <p>
-                          {post.movieTitle} - {post.releaseYear}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex-1 p-2">
-                    <p className="text-sm font-bold">{post.reviewTitle}</p>
-                    <p id="review-post" className="truncate">
-                      {post.review}
-                    </p>
-                  </div>
-                  <div className="border-t-2 border-black">
-                    <button
-                      className="flex w-full items-center justify-end p-2"
-                      onClick={() => openModalHandler(post.review)}
-                    >
-                      <div className="flex">
-                        <p className="mr-2 font-bold">
-                          {post.userName ? post.userName : "Guest"}
-                        </p>
-                        님의 리뷰
-                      </div>
-                      <FaArrowRight className="ml-2" size={18} />
-                    </button>
-                  </div>
+                    <FaArrowRight className="ml-1" size={14} />
+                  </button>
                 </div>
               </div>
-            ))}
-          <div className="flex h-[600px] items-center justify-center rounded-xl border-2 border-dotted border-gray-300 p-4">
+            </div>
+          ))}
+          <div className="flex h-[300px] items-center justify-center rounded-xl border-2 border-dotted border-gray-300 p-4">
             <Link href="/search">
-              <button className="text-xl font-bold">리뷰 작성하기</button>
+              <button className="text-lg font-bold">리뷰 작성하기</button>
             </Link>
           </div>
         </div>
