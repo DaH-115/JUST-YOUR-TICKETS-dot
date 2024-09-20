@@ -1,17 +1,16 @@
 "use client";
 
-import { useState, useEffect, useCallback, use } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { db, isAuth } from "firebase-config";
+import { db } from "firebase-config";
 import { collection, addDoc } from "firebase/firestore";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
-import { useAppDispatch } from "store/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
 import useGetTitle from "hooks/useGetTitle";
-import { onAuthStateChanged } from "firebase/auth";
 
 type PostData = {
   date: string;
@@ -24,7 +23,7 @@ export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const movieId = searchParams.get("id");
-  const [userState, setUserState] = useState<any>(null);
+  const userState = useAppSelector((state) => state.user.user);
   const [movieInfo, setMovieInfo] = useState({
     title: "",
     release_date: "",
@@ -35,14 +34,6 @@ export default function Page() {
   });
   const movieTitle = useGetTitle(movieInfo.original_title, movieInfo.title);
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    onAuthStateChanged(isAuth, (user) => {
-      if (user) {
-        setUserState(user);
-      }
-    });
-  }, [isAuth]);
 
   useEffect(() => {
     const fetchMovieInfo = async () => {

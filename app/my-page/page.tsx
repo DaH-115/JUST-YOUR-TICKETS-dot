@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { db, isAuth } from "firebase-config";
-import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { db } from "firebase-config";
+import { updateProfile } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import ChangePassword from "app/my-page/change-password";
 import SideReviewList from "app/my-page/side-review-list";
 import SideMenu from "./side-menu";
+import { useAppSelector } from "store/hooks";
 
 type FormData = {
   displayName: string;
@@ -15,10 +16,9 @@ type FormData = {
 };
 
 export default function MyPage() {
-  const [userState, setUserState] = useState<any>(null);
   const [userDoc, setUserDoc] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
-
+  const userState = useAppSelector((state) => state.user.user);
   const {
     setValue,
     register,
@@ -30,14 +30,6 @@ export default function MyPage() {
       biography: userDoc?.biography,
     },
   });
-
-  useEffect(() => {
-    onAuthStateChanged(isAuth, (user) => {
-      if (user) {
-        setUserState(user);
-      }
-    });
-  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -89,7 +81,6 @@ export default function MyPage() {
 
       if (dirtyFields.displayName && userState) {
         await updateProfile(userState, { displayName: data.displayName });
-        setUserState({ ...userState, displayName: data.displayName });
       }
 
       if (dirtyFields.biography && userState?.uid) {
@@ -107,7 +98,7 @@ export default function MyPage() {
 
   return (
     <div id="layout" className="mt-24 flex w-full px-8">
-      <SideMenu />
+      <SideMenu uid={userState?.uid} />
 
       {/* Main */}
       <div className="flex w-full flex-col">
