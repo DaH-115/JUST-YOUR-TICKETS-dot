@@ -4,37 +4,29 @@ import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { Review } from "app/ticket-list/page";
+import ReviewDetailsModal from "app/ui/reviewDetailsModal";
 
 export default function TicketList({ reviews }: { reviews: Review[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState("");
+  const [selectedReview, setSelectedReview] = useState<Review>();
 
-  const openModalHandler = (content: string) => {
-    setModalContent(content);
+  const openModalHandler = (content: Review) => {
+    setSelectedReview(content);
     setIsModalOpen(true);
   };
 
   const closeModalHandler = () => {
     setIsModalOpen(false);
-    setModalContent("");
   };
 
   return (
     <>
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="rounded bg-white p-6">
-            <p className="mb-2 text-sm font-bold">Review 리뷰</p>
-            <p className="mb-6">{modalContent}</p>
-            <button
-              onClick={closeModalHandler}
-              className="w-full rounded bg-black px-4 py-2 text-white"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      <ReviewDetailsModal
+        selectedReview={selectedReview}
+        isModalOpen={isModalOpen}
+        closeModalHandler={closeModalHandler}
+      />
+
       {reviews.length > 0 &&
         reviews.map((post, index) => (
           <div key={post.id} className="relative h-[600px]">
@@ -82,7 +74,7 @@ export default function TicketList({ reviews }: { reviews: Review[] }) {
               <div className="border-t-2 border-black">
                 <button
                   className="flex w-full items-center justify-end p-2"
-                  onClick={() => openModalHandler(post.review)}
+                  onClick={() => openModalHandler(post)}
                 >
                   <div className="flex">
                     <p className="mr-2 font-bold">

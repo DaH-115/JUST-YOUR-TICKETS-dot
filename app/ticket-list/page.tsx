@@ -50,7 +50,7 @@ export default function Page() {
 
   return (
     <div className="mt-16 grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      <TicketList reviews={reviews} />;
+      <TicketList reviews={reviews} />
     </div>
   );
 }
