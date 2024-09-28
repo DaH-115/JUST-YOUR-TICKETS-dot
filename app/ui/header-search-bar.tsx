@@ -6,12 +6,14 @@ import { useForm } from "react-hook-form";
 import { fetchSearchMovies } from "api/fetchSearchMovies";
 import { debounce } from "lodash";
 import { Movie } from "app/page";
+import { IoSearchOutline } from "react-icons/io5";
 
 export default function HeaderSearchBar() {
   const { register, watch, reset } = useForm();
   const searchQuery = watch("search");
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const debounceHandler = useCallback(
@@ -28,7 +30,7 @@ export default function HeaderSearchBar() {
     [],
   );
 
-  const inputFocusHanlder = useCallback(() => {
+  const inputFocusHandler = useCallback(() => {
     if (searchResults.length > 0) {
       setIsDropdownOpen(true);
     }
@@ -45,6 +47,7 @@ export default function HeaderSearchBar() {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsDropdownOpen(false);
+        setIsSearchOpen(false);
       }
     };
 
@@ -54,23 +57,50 @@ export default function HeaderSearchBar() {
     };
   }, []);
 
+  const handleIconClick = () => {
+    setIsSearchOpen((prev) => !prev);
+    if (!isSearchOpen) {
+      setTimeout(
+        () =>
+          (
+            document.querySelector('input[type="search"]') as HTMLInputElement
+          )?.focus(),
+        300,
+      );
+    }
+  };
+
   return (
-    <div className="relative mr-4 hidden w-1/5 md:flex" ref={dropdownRef}>
-      <input
-        {...register("search")}
-        type="search"
-        placeholder="Search"
-        className="w-full rounded-md border-2 border-black px-3 py-2 text-sm"
-        onFocus={inputFocusHanlder}
-      />
+    <div className="mr-4 flex h-10" ref={dropdownRef}>
+      <div className="relative flex h-full w-full items-center justify-end">
+        <input
+          {...register("search")}
+          type="search"
+          placeholder="Search..."
+          className={`h-full transition-all duration-300 ease-in-out ${
+            isSearchOpen
+              ? "w-64 rounded-md border-2 border-black pl-4 pr-3 text-sm"
+              : "w-10 rounded-full border-2 border-black opacity-0"
+          }`}
+          onFocus={inputFocusHandler}
+        />
+        <div
+          className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full ${isSearchOpen ? "border-none bg-none" : "border-2 border-black bg-white"} transition-all duration-300 ease-in-out`}
+          onClick={handleIconClick}
+        >
+          <IoSearchOutline size={24} />
+        </div>
+      </div>
+
       {isDropdownOpen && searchResults.length > 0 && (
-        <div className="absolute right-0 top-full z-10 mt-1 max-h-60 cursor-pointer overflow-auto rounded-md border border-gray-300 bg-white shadow-lg">
+        <div className="absolute right-0 top-full z-10 mt-1 max-h-60 w-64 cursor-pointer overflow-auto rounded-md border border-gray-300 bg-white shadow-lg">
           {searchResults.map((result, index) => (
             <div
               key={index}
               className="px-3 py-2 hover:bg-gray-100"
               onClick={() => {
                 setIsDropdownOpen(false);
+                setIsSearchOpen(false);
                 reset({ search: "" });
               }}
             >

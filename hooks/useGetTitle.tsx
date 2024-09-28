@@ -1,4 +1,7 @@
-export default function useGetTitle(original_title: string, title: string) {
+export default function useGetTitle(
+  original_title: string = "Movie Title",
+  title: string = "영화 제목",
+) {
   if (original_title === title) {
     return title;
   } else {

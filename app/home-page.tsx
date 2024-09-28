@@ -1,16 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Movie } from "app/page";
 import Image from "next/image";
 import { fetchVideosMovies } from "api/fetchVideosMovies";
+import useGetTitle from "hooks/useGetTitle";
+import BackGround from "app/ui/back-ground";
 import ScrollToTopButton from "app/ui/ScrollToTopButton";
 import MovieCard from "app/ui/movie-card";
 import TicketSwiper from "app/ticket-swiper";
+import { Movie } from "app/page";
 
 export default function HomePage({ movieList }: { movieList: Movie[] }) {
   const [trailerKey, setTrailerKey] = useState<string>("");
-  const [currentMovie, setCurrentMovie] = useState<Movie | null>(null);
+  const [currentMovie, setCurrentMovie] = useState<Movie>();
+  const movieTitle = useGetTitle(
+    currentMovie?.original_title,
+    currentMovie?.title,
+  );
 
   useEffect(() => {
     if (movieList.length > 0) {
@@ -42,13 +48,17 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
 
   return (
     <>
+      <BackGround
+        imageUrl={currentMovie?.backdrop_path}
+        movieTitle={movieTitle}
+      />
       <div
         id="catchphrase"
         className="fixed left-0 right-0 top-16 z-0 mx-auto hidden text-center font-bold md:top-20 md:block md:text-2xl"
       >
         Make a ticket for your own movie review.
       </div>
-      <main className="relative z-10 mx-auto mb-10 mt-20 md:w-1/2">
+      <main className="relative z-10 mx-auto mb-10 mt-32 md:w-1/2">
         {/* TRAILER */}
         <div className="flex w-full items-center justify-center">
           {trailerKey ? (
@@ -68,7 +78,7 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
               <Image
                 className="h-full w-full object-cover"
                 src={`https://image.tmdb.org/t/p/original${currentMovie?.poster_path}`}
-                alt={`${currentMovie?.title}(${currentMovie?.original_title})`}
+                alt={movieTitle}
                 width={640}
                 height={750}
                 priority

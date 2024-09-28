@@ -53,7 +53,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="fixed left-0 top-0 z-50 flex w-full items-center px-8 py-4">
+    <header className="fixed left-0 top-0 z-50 flex h-24 w-full items-center px-8 py-4">
       {/* RIGHT SIDE */}
       <div className="flex-1">
         {/* LOGO */}
@@ -99,7 +99,7 @@ export default function Header() {
 
       {/* LEFT SIDE */}
       {userDisplayName ? (
-        <div className="relative mr-4" ref={dropdownRef}>
+        <div className="relative mr-8" ref={dropdownRef}>
           <button onClick={dropDownHandler}>
             {userDisplayName ? userDisplayName : "Guest"} 님
           </button>
