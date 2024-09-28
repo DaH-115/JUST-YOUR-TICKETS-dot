@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import "app/globals.css";
 import Providers from "app/providers";
 import Header from "app/ui/header";
+import Footer from "app/ui/footer";
 
 export const metadata: Metadata = {
   title: "My Home",
@@ -18,7 +19,8 @@ export default function RootLayout({
       <body>
         <Providers>
           <Header />
-          {children}
+          <div className="h-vh">{children}</div>
+          <Footer />
         </Providers>
       </body>
     </html>

@@ -63,10 +63,10 @@ export default function SwiperCard({
               {Math.round(vote_average * 10) / 10}
             </div>
           </div>
-          <div className="flex-1 bg-black text-white">
+          <div className="flex-1 p-1">
             <Link
               href={`/post-create?id=${id}`}
-              className="group relative flex items-center justify-end p-4"
+              className="group relative flex items-center justify-end rounded-xl bg-black p-4 text-white"
             >
               <p className="text-sm transition-colors duration-300 group-hover:text-gray-400">
                 리뷰 작성하기

@@ -1,19 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { db } from "firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-
-interface Review {
-  id: string;
-  movieTitle: string;
-  reviewTitle: string;
-  date: string;
-  releaseYear: string;
-  rating: number;
-  userUid: string;
-}
+import { Review } from "app/ticket-list/page";
+import { IoStar } from "react-icons/io5";
 
 export default function SideReviewList({ uid }: { uid: string }) {
   const [userReviews, setUserReviews] = useState<Review[]>([]);
@@ -44,12 +36,14 @@ export default function SideReviewList({ uid }: { uid: string }) {
   }, [uid]);
 
   return (
-    <div id="side-review-list" className="w-full px-8">
+    <div className="w-full px-8">
       <div className="flex items-center">
-        <div className="mr-4 text-2xl font-bold">REVIEW LIST</div>
+        <div className="mr-4 text-2xl font-bold">TICKET LIST</div>
         <div className="mr-4">총 {userReviews.length}개</div>
         <Link href={`/my-page/my-review-list?uid=${uid}`}>
-          <div className="font-bold">전체보기</div>
+          <div className="rounded-full border-2 border-gray-300 p-1 px-2 text-xs font-bold text-gray-500 transition-all duration-200 hover:bg-black hover:text-white focus:outline-none">
+            전체보기
+          </div>
         </Link>
       </div>
       <ul className="space-y-4">
@@ -64,9 +58,12 @@ export default function SideReviewList({ uid }: { uid: string }) {
             <div>
               <div className="text-sm">{review.date}</div>
               <div className="font-bold">{review.reviewTitle}</div>
-              <div className="flex text-sm text-gray-500">
+              <div className="flex items-center text-sm text-gray-500">
                 <div>{`${review.movieTitle} - ${review.releaseYear}`}</div>
-                <div>{review.rating}</div>
+                <div className="ml-2 flex items-center justify-center font-bold">
+                  <IoStar />
+                  {review.rating}
+                </div>
               </div>
             </div>
           </li>
