@@ -9,8 +9,8 @@ export default function SideMenu({ uid }: { uid: string }) {
       <Link href="/my-page">
         <div className={profileMenuStyle}>PROFILE</div>
       </Link>
-      <Link href={`/my-page/my-review-list?uid=${uid}`}>
-        <div className={sideMenuStyle}>MY REVIEW LIST</div>
+      <Link href={`/my-page/my-ticket-list?uid=${uid}`}>
+        <div className={sideMenuStyle}>MY TICKET LIST</div>
       </Link>
     </div>
   );
