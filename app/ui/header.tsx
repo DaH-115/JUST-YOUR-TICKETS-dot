@@ -105,6 +105,7 @@ export default function Header() {
           </button>
 
           <div
+            onClick={dropDownHandler}
             className={`absolute -right-10 top-full z-10 mt-1 flex w-[150px] cursor-pointer flex-col items-center justify-center whitespace-nowrap rounded-xl border border-gray-300 bg-white shadow-lg transition-all duration-300 ${
               isDropdownOpen
                 ? "pointer-events-auto translate-y-0 opacity-100"
