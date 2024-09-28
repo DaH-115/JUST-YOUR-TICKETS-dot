@@ -43,7 +43,7 @@ export default function Page() {
     resolver: zodResolver(signupSchema),
     mode: "onTouched",
   });
-  const [errorMessage, setErrorMessage] = useState<any>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const onSubmit = async (data: SignupSchema) => {
     try {
@@ -64,8 +64,11 @@ export default function Page() {
 
       router.push("/");
     } catch (error) {
-      console.error("회원가입 에러:", error);
-      setErrorMessage(error);
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
 

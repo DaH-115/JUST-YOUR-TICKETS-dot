@@ -1,15 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useState, useRef } from "react";
-import { useForm } from "react-hook-form";
-import { debounce } from "lodash";
-import { fetchSearchMovies } from "api/fetchSearchMovies";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { fetchSearchMovies } from "api/fetchSearchMovies";
+import { debounce } from "lodash";
+import { Movie } from "app/page";
 
 export default function HeaderSearchBar() {
   const { register, watch, reset } = useForm();
   const searchQuery = watch("search");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -64,7 +65,7 @@ export default function HeaderSearchBar() {
       />
       {isDropdownOpen && searchResults.length > 0 && (
         <div className="absolute right-0 top-full z-10 mt-1 max-h-60 cursor-pointer overflow-auto rounded-md border border-gray-300 bg-white shadow-lg">
-          {searchResults.map((result: any, index: number) => (
+          {searchResults.map((result, index) => (
             <div
               key={index}
               className="px-3 py-2 hover:bg-gray-100"

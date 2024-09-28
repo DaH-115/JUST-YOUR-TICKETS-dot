@@ -15,8 +15,13 @@ type FormData = {
   biography: string;
 };
 
+interface UserDoc {
+  biography: string;
+  userName: string;
+}
+
 export default function MyPage() {
-  const [userDoc, setUserDoc] = useState<any>(null);
+  const [userDoc, setUserDoc] = useState<UserDoc>();
   const [isEditing, setIsEditing] = useState(false);
   const userState = useAppSelector((state) => state.user.user);
   const {
@@ -39,7 +44,7 @@ export default function MyPage() {
         const docSnap = await getDoc(userDocRef);
 
         if (docSnap.exists()) {
-          const userDoc = docSnap.data();
+          const userDoc = docSnap.data() as UserDoc;
           setUserDoc(userDoc);
         } else {
           console.log("해당 문서가 존재하지 않습니다.");
@@ -86,10 +91,14 @@ export default function MyPage() {
       if (dirtyFields.biography && userState?.uid) {
         const userDocRef = doc(db, "users", userState.uid);
         await updateDoc(userDocRef, { biography: data.biography });
-        setUserDoc({ ...userDoc, biography: data.biography });
+        setUserDoc((prevUserDoc) => {
+          if (prevUserDoc) {
+            return { ...prevUserDoc, biography: data.biography };
+          }
+          return prevUserDoc;
+        });
       }
 
-      console.log("프로필이 성공적으로 업데이트되었습니다.");
       setIsEditing(false);
     } catch (error) {
       console.error("프로필 업데이트 중 오류 발생:", error);

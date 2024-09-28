@@ -3,18 +3,13 @@ import Image from "next/image";
 import { Movie } from "app/page";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
 import { fetchSimilarMovies } from "api/fetchSimilarMovies";
-import TicketSwiper from "app/ticket-swiper";
 import { fetchMovieCredits } from "api/fetchMovieCredits";
+import { fetchVideosMovies } from "api/fetchVideosMovies";
 import useGetTitle from "hooks/useGetTitle";
 import useFormatDate from "hooks/useFormatDate";
 import { IoStar } from "react-icons/io5";
 import { FaArrowRight } from "react-icons/fa";
-import { fetchVideosMovies } from "api/fetchVideosMovies";
-
-type MovieCredits = {
-  cast: { name: string }[];
-  crew: { name: string; job: string }[];
-};
+import TicketSwiper from "app/ticket-swiper";
 
 async function getMovies(id: number) {
   try {
@@ -37,7 +32,7 @@ async function getMoviesCredits(id: number) {
 async function getSimilarPosts(id: number) {
   try {
     const similarPosts = await fetchSimilarMovies(id);
-    return similarPosts.results;
+    return similarPosts;
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -62,13 +57,13 @@ export default async function MovieDetailPage({
 }: {
   params: { id: number };
 }) {
-  const movieDetails: Movie = await getMovies(params.id);
-  const similarPosts: Movie[] = await getSimilarPosts(params.id);
-  const movieCredits: MovieCredits = await getMoviesCredits(params.id);
+  const movieDetails = await getMovies(params.id);
+  const similarPosts = await getSimilarPosts(params.id);
+  const movieCredits = await getMoviesCredits(params.id);
   const movieTrailer = await getMovieTrailer(params.id);
-  const castList = movieCredits.cast.slice(0, 3);
-  const directorsName = movieCredits.crew.filter(
-    (member: { job: string }) => member.job === "Director",
+  const castList = movieCredits?.cast.slice(0, 3);
+  const directorsName = movieCredits?.crew.filter(
+    (member) => member.job === "Director",
   );
   const {
     id,
@@ -82,7 +77,7 @@ export default async function MovieDetailPage({
     backdrop_path,
     runtime,
     production_companies,
-  } = movieDetails;
+  } = movieDetails as Movie;
   const movieTitle = useGetTitle(original_title, title);
   const movieDate = useFormatDate(release_date);
   const getYouTubeUrl = (key: string) => `https://www.youtube.com/embed/${key}`;
@@ -119,7 +114,7 @@ export default async function MovieDetailPage({
             </div>
             <div className="mb-4">
               <ul className="flex items-center space-x-2 text-xs">
-                {genres.map((genre: { id: number; name: string }) => (
+                {genres.map((genre) => (
                   <li
                     className="rounded-full border-2 border-black bg-white p-2 px-2 py-1 text-sm text-black"
                     key={genre.id}
@@ -146,15 +141,15 @@ export default async function MovieDetailPage({
               </div>
               <div className="mb-4">
                 <p className="font-bold">감독</p>
-                <p>{directorsName[0].name}</p>
+                <p>{directorsName && directorsName[0].name}</p>
               </div>
             </div>
 
             <div className="mb-4">
               <div className="font-bold">배우</div>
               <ul>
-                {castList?.map((cast: any, idx: number) => (
-                  <li key={idx}>{cast.name}</li>
+                {castList?.map((cast, index) => (
+                  <li key={index}>{cast.name}</li>
                 ))}
               </ul>
             </div>
@@ -165,7 +160,7 @@ export default async function MovieDetailPage({
             <div className="mb-8">
               <p className="font-bold">제작사</p>
               <div className="flex space-x-4 text-sm">
-                {production_companies.map((company: any, index: any) => (
+                {production_companies.map((company, index) => (
                   <div key={index}>{company.name}</div>
                 ))}
               </div>
@@ -187,11 +182,11 @@ export default async function MovieDetailPage({
           </div>
         </div>
       </div>
-      {movieTrailer ? (
+      {movieTrailer && movieTrailer.length > 0 ? (
         <div className="px-8 pb-12">
           <h2 className="mb-4 text-2xl font-bold">영화 예고편</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {movieTrailer.map((trailer: any) => (
+            {movieTrailer.map((trailer) => (
               <div key={trailer.id} className="aspect-video">
                 <iframe
                   src={getYouTubeUrl(trailer.key)}
@@ -205,10 +200,12 @@ export default async function MovieDetailPage({
           </div>
         </div>
       ) : null}
-      <div className="px-8">
-        <p className="text-2xl font-bold">이런 영화는 어때요?</p>
-        <TicketSwiper movieList={similarPosts} />
-      </div>
+      {similarPosts && similarPosts.length > 0 ? (
+        <div className="px-8">
+          <p className="text-2xl font-bold">이런 영화는 어때요?</p>
+          <TicketSwiper movieList={similarPosts} />
+        </div>
+      ) : null}
     </>
   );
 }

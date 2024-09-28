@@ -15,7 +15,7 @@ type Inputs = {
 
 export default function Page() {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState<any>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -26,8 +26,11 @@ export default function Page() {
       await signInWithEmailAndPassword(isAuth, data.email, data.password);
       router.push("/");
     } catch (error) {
-      console.error("회원가입 에러:", error);
-      setErrorMessage(error);
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
 

@@ -1,3 +1,9 @@
+interface MovieTrailer {
+  name: string;
+  key: string;
+  id: string;
+}
+
 export async function fetchVideosMovies(id: number) {
   try {
     const res = await fetch(
@@ -10,7 +16,7 @@ export async function fetchVideosMovies(id: number) {
     }
 
     const data = await res.json();
-    return data.results;
+    return data.results as MovieTrailer[];
   } catch (error) {
     console.error("Error fetching now playing movies:", error);
     return [];

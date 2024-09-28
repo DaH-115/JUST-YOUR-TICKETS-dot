@@ -1,3 +1,5 @@
+import { Movie } from "app/page";
+
 export async function fetchMovieDetails(id: number) {
   try {
     const res = await fetch(
@@ -10,9 +12,9 @@ export async function fetchMovieDetails(id: number) {
     }
 
     const data = await res.json();
-    return data;
+    return data as Movie;
   } catch (error) {
     console.error("Error fetching now playing movies:", error);
-    return [];
+    return;
   }
 }
