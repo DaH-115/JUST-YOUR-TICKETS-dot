@@ -5,7 +5,7 @@ import Image from "next/image";
 import { fetchVideosMovies } from "api/fetchVideosMovies";
 import useGetTitle from "hooks/useGetTitle";
 import BackGround from "app/ui/back-ground";
-import ScrollToTopButton from "app/ui/ScrollToTopButton";
+import ScrollToTopButton from "app/ui/scroll-to-top-button";
 import MovieCard from "app/ui/movie-card";
 import TicketSwiper from "app/ticket-swiper";
 import { Movie } from "app/page";
@@ -52,7 +52,7 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
         imageUrl={currentMovie?.backdrop_path}
         movieTitle={movieTitle}
       />
-      <main className="relative z-10 mx-auto mb-20 mt-32 md:w-1/2">
+      <main className="relative z-10 mx-auto mb-20 mt-8 md:w-1/2">
         {/* TRAILER */}
         <div className="flex w-full items-center justify-center">
           {trailerKey ? (

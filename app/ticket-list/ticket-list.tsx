@@ -1,10 +1,10 @@
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { Review } from "app/ticket-list/page";
-import ReviewDetailsModal from "app/ui/reviewDetailsModal";
+import ReviewDetailsModal from "app/ui/review-details-modal";
 
 export default function TicketList({ reviews }: { reviews: Review[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);

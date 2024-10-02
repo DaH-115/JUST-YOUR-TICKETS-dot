@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Movie } from "app/page";
 import SwiperCard from "app/ui/swiper-card";
 import { fetchSearchMovies } from "api/fetchSearchMovies";
+import ScrollToTopButton from "app/ui/scroll-to-top-button";
 
 const searchSchema = z.object({
   query: z.string().min(1, "검색어를 입력해주세요."),
@@ -26,6 +27,12 @@ export default function Page() {
     resolver: zodResolver(searchSchema),
   });
 
+  useEffect(() => {
+    if (errors.query) {
+      setSearchResults([]);
+    }
+  }, [errors.query]);
+
   const onSubmit = async ({ query }: { query: string }) => {
     setIsLoading(true);
 
@@ -40,8 +47,8 @@ export default function Page() {
   };
 
   return (
-    <div className="mt-16 min-h-screen px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-md">
+    <div className="mt-8 min-h-screen px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto w-1/4">
         <form onSubmit={handleSubmit(onSubmit)} className="mb-8">
           <div className="flex items-center border-b border-black py-2">
             <input
@@ -51,11 +58,11 @@ export default function Page() {
               {...register("query")}
             />
             <button
-              className="flex-shrink-0 rounded bg-black px-2 py-1 text-sm text-white transition-colors duration-200 ease-in-out hover:bg-yellow-600"
+              className="flex-shrink-0 rounded-full bg-black px-4 py-2 text-sm text-white transition-colors duration-200 ease-in-out hover:bg-yellow-600"
               type="submit"
               disabled={isLoading}
             >
-              {isLoading ? "검색 중..." : "검색"}
+              검색
             </button>
           </div>
           {errors.query && (
@@ -84,6 +91,7 @@ export default function Page() {
           </div>
         )}
       </div>
+      <ScrollToTopButton />
     </div>
   );
 }

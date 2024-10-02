@@ -8,7 +8,7 @@ import { isAuth } from "firebase-config";
 import { useRouter } from "next/navigation";
 import { clearUserState } from "store/userSlice";
 import HeaderSearchBar from "app/ui/header-search-bar";
-import GlowingRedCircle from "app/ui/GlowingRedCircle";
+import GlowingCircle from "app/ui/glowing-circle";
 
 export default function Header() {
   const router = useRouter();
@@ -53,41 +53,36 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="relative z-50 flex w-full items-center justify-center px-8 pt-8">
+    <header className="relative z-50 flex w-full items-center justify-center pt-8">
       <div className="mr-4 flex items-center justify-center rounded-full border border-black bg-white px-4 py-2 shadow-md">
         {/* LOGO */}
         <div className="ml-2 font-bold">just your tickets.</div>
         {/* MENU */}
-        <ul className="mx-12 hidden items-center space-x-4 text-sm md:flex">
-          <li className="group relative">
+        <ul className="mx-12 flex text-sm">
+          <li className="group">
             <Link
               href="/"
-              className="transition-colors group-hover:text-orange-500"
+              className="rounded-full px-4 py-2 transition-all duration-300 ease-in-out hover:bg-gray-100"
             >
               Home
             </Link>
-            <span className="absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-orange-500 transition-transform group-hover:scale-x-100 group-focus:scale-x-100"></span>
           </li>
           <li className="group relative">
             <Link
               href="/search"
-              className="transition-colors group-hover:text-orange-500"
+              className="rounded-full px-4 py-2 transition-all duration-300 ease-in-out hover:bg-gray-100"
             >
               Search
             </Link>
-            <span className="absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-orange-500 transition-transform group-hover:scale-x-100 group-focus:scale-x-100"></span>
           </li>
-          <li className="group relative flex items-center">
+          <li className="group relative">
             <Link
               href="/ticket-list"
-              className={`whitespace-nowrap rounded-full transition-colors group-hover:text-orange-500`}
+              className="rounded-full px-4 py-2 transition-all duration-300 ease-in-out hover:bg-gray-100"
             >
               Ticket List
             </Link>
-            {newReviewAlertState && <GlowingRedCircle />}
-            {!newReviewAlertState && (
-              <span className="absolute bottom-0 left-0 h-0.5 w-full origin-left scale-x-0 bg-orange-500 transition-transform group-hover:scale-x-100 group-focus:scale-x-100"></span>
-            )}
+            {newReviewAlertState && <GlowingCircle />}
           </li>
         </ul>
         {/* MOBILE MENU */}
