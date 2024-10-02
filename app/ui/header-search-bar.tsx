@@ -71,49 +71,49 @@ export default function HeaderSearchBar() {
   };
 
   return (
-    <div className="mr-4 flex h-10" ref={dropdownRef}>
+    <div className="flex h-10" ref={dropdownRef}>
       <div className="relative flex h-full w-full items-center justify-end">
         <input
           {...register("search")}
           type="search"
           placeholder="Search..."
-          className={`h-full transition-all duration-300 ease-in-out ${
+          className={`h-full rounded-full border-2 border-black transition-all duration-300 ease-in-out ${
             isSearchOpen
-              ? "w-64 rounded-md border-2 border-black pl-4 pr-3 text-sm"
-              : "w-10 rounded-full border-2 border-black opacity-0"
+              ? "w-64 pl-4 pr-10 text-sm opacity-100"
+              : "w-10 opacity-0"
           }`}
           onFocus={inputFocusHandler}
         />
         <div
-          className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full ${isSearchOpen ? "border-none bg-none" : "border-2 border-black bg-white"} transition-all duration-300 ease-in-out`}
+          className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full ${isSearchOpen ? "border-none bg-none" : "border border-black bg-white"} transition-all duration-300 ease-in-out`}
           onClick={handleIconClick}
         >
-          <IoSearchOutline size={24} />
+          <IoSearchOutline size={20} color="black" />
         </div>
-      </div>
 
-      {isDropdownOpen && searchResults.length > 0 && (
-        <div className="absolute right-0 top-full z-10 mt-1 max-h-60 w-64 cursor-pointer overflow-auto rounded-md border border-gray-300 bg-white shadow-lg">
-          {searchResults.map((result, index) => (
-            <div
-              key={index}
-              className="px-3 py-2 hover:bg-gray-100"
-              onClick={() => {
-                setIsDropdownOpen(false);
-                setIsSearchOpen(false);
-                reset({ search: "" });
-              }}
-            >
-              <Link href={`/movie-detail/${result.id}`}>
-                <p>{result.title}</p>
-                <p className="text-sm text-gray-500">
-                  ({result.release_date.slice(0, 4)})
-                </p>
-              </Link>
-            </div>
-          ))}
-        </div>
-      )}
+        {isDropdownOpen && searchResults.length > 0 && (
+          <div className="absolute right-0 top-full z-10 mt-1 max-h-60 w-64 cursor-pointer overflow-auto rounded-md border border-gray-300 bg-white shadow-lg">
+            {searchResults.map((result, index) => (
+              <div
+                key={index}
+                className="px-3 py-2 hover:bg-gray-100"
+                onClick={() => {
+                  setIsDropdownOpen(false);
+                  setIsSearchOpen(false);
+                  reset({ search: "" });
+                }}
+              >
+                <Link href={`/movie-detail/${result.id}`}>
+                  <p>{result.title}</p>
+                  <p className="text-sm text-gray-500">
+                    ({result.release_date.slice(0, 4)})
+                  </p>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
