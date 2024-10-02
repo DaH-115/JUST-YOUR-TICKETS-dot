@@ -42,9 +42,14 @@ export default function SwiperCard({
       <div className="absolute bottom-5 left-0 w-full rounded-xl border-2 border-black bg-white shadow-lg">
         <div className="flex p-4 pb-0">
           <div className="truncate pb-4 text-xl font-bold">{movieTitle}</div>
-          <Link href={`/movie-detail/${id}`}>
-            <FaInfoCircle />
-          </Link>
+          <div className="group relative ml-2">
+            <Link href={`/movie-detail/${id}`}>
+              <FaInfoCircle />
+            </Link>
+            <div className="invisible absolute bottom-full right-0 z-50 mb-2 whitespace-nowrap rounded-lg bg-black px-3 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
+              더 자세한 정보 보기
+            </div>
+          </div>
         </div>
         <div className="flex w-full flex-wrap border-y border-black p-1">
           {genres.map((genre, idx) => (

@@ -50,9 +50,14 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         </h2>
         <div className="flex">
           <h1 className="text-4xl font-bold">{title}</h1>
-          <Link href={`/movie-detail/${id}`} className="ml-1">
-            <FaInfoCircle size={20} />
-          </Link>
+          <div className="group relative ml-2">
+            <Link href={`/movie-detail/${id}`}>
+              <FaInfoCircle size={20} />
+            </Link>
+            <div className="invisible absolute bottom-full left-1/2 mb-2 whitespace-nowrap rounded-lg bg-black px-3 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
+              더 자세한 정보 보기
+            </div>
+          </div>
         </div>
         <div className="ml-1 flex items-center">
           <p className="mr-2 text-lg text-gray-500">{original_title}</p>
