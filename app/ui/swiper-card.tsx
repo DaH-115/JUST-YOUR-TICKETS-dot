@@ -21,14 +21,14 @@ export default function SwiperCard({
 
   return (
     <div className="relative h-dvh py-6">
-      <div className="absolute left-0 top-5 w-full bg-gradient-to-t from-transparent to-black p-4 pt-5 text-6xl font-bold text-white">
+      <div className="absolute left-0 top-5 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 pt-5 text-6xl font-bold text-white">
         {idx + 1}.
       </div>
       {poster_path ? (
         <Image
           width={640}
           height={750}
-          className="h-full w-full object-cover object-center"
+          className="h-full w-full rounded-xl object-cover object-center"
           src={`https://image.tmdb.org/t/p/original/${poster_path}`}
           alt={movieTitle}
         />
@@ -39,14 +39,14 @@ export default function SwiperCard({
       )}
 
       {/* MOVIE INFO CARD */}
-      <div className="absolute bottom-5 left-0 w-full border-2 border-black bg-white">
+      <div className="absolute bottom-5 left-0 w-full rounded-xl border-2 border-black bg-white shadow-lg">
         <div className="flex p-4 pb-0">
           <div className="truncate pb-4 text-xl font-bold">{movieTitle}</div>
           <Link href={`/movie-detail/${id}`}>
             <FaInfoCircle />
           </Link>
         </div>
-        <div className="flex w-full flex-wrap border-t-2 border-black p-1">
+        <div className="flex w-full flex-wrap border-y border-black p-1">
           {genres.map((genre, idx) => (
             <p
               className="m-1 rounded-full border-2 border-black bg-white px-2 py-1 text-sm text-black"
@@ -56,7 +56,7 @@ export default function SwiperCard({
             </p>
           ))}
         </div>
-        <div className="flex w-full border-t-2 border-black text-center">
+        <div className="flex w-full text-center">
           <div className="flex items-center border-r-2 border-black px-2">
             <IoStar />
             <div className="text-xl font-bold">

@@ -8,7 +8,7 @@ export default function BackGround({
   movieTitle: string | undefined;
 }) {
   return (
-    <div className="absolute inset-0 w-full">
+    <div className="w-ful absolute inset-0 z-0">
       <Image
         src={`https://image.tmdb.org/t/p/original${imageUrl}`}
         alt={movieTitle || "background image"}

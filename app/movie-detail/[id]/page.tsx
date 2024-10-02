@@ -10,6 +10,7 @@ import useFormatDate from "hooks/useFormatDate";
 import { IoStar } from "react-icons/io5";
 import { FaArrowRight } from "react-icons/fa";
 import TicketSwiper from "app/ticket-swiper";
+import BackGround from "app/ui/back-ground";
 
 async function getMovies(id: number) {
   try {
@@ -82,22 +83,19 @@ export default async function MovieDetailPage({
   const movieDate = useFormatDate(release_date);
   const getYouTubeUrl = (key: string) => `https://www.youtube.com/embed/${key}`;
 
+  const convertRuntime = (runtime: number) => {
+    const hours = Math.floor(runtime / 60);
+    const minutes = runtime % 60;
+    return `${hours}시간 ${minutes}분`;
+  };
+
   return (
     <>
-      <div id="page-header-image" className="h-[300px] overflow-hidden">
-        <Image
-          src={`https://image.tmdb.org/t/p/original${backdrop_path}`}
-          alt={movieTitle}
-          width={1280}
-          height={720}
-          className="h-full w-full object-cover object-center"
-          priority
-        />
-      </div>
-      <div className="flex w-full items-center justify-center">
-        <div className="mb-12 mt-8 flex w-2/3 justify-center pl-8">
-          {/* LEFT SIDE */}
-          <div className="w-1/3">
+      <BackGround imageUrl={backdrop_path} movieTitle={movieTitle} />
+      <div className="relative flex w-full items-center justify-center">
+        <div className="mt-16 flex w-2/3 justify-center">
+          {/* POSTER */}
+          <div className="mr-8 w-2/3">
             <Image
               src={`https://image.tmdb.org/t/p/original${poster_path}`}
               alt={movieTitle}
@@ -106,17 +104,25 @@ export default async function MovieDetailPage({
               className="rounded-lg object-cover shadow-lg"
             />
           </div>
-          {/* RIGHT SIDE */}
-          <div className="mx-auto w-full bg-white px-12">
-            <div className="mb-4 font-bold">
-              <p>영화 정보</p>
-              <h1 className="text-4xl">{movieTitle}</h1>
+          {/* MOVIE INFO */}
+          <div className="mx-auto w-full rounded-xl border-2 border-black bg-white shadow-lg">
+            <div className="px-4 py-4">
+              <p className="mb-2 inline-block rounded-lg bg-black p-1 text-xs font-bold text-white">
+                영화 정보
+              </p>
+              <h1 className="text-4xl font-bold">{title}</h1>
+              <div className="ml-1 flex items-center">
+                <p className="mr-2 text-lg text-gray-500">{original_title}</p>
+                <p className="text-lg text-gray-500">
+                  {release_date.slice(0, 4)}
+                </p>
+              </div>
             </div>
-            <div className="mb-4">
-              <ul className="flex items-center space-x-2 text-xs">
+            <div className="border-y border-black p-4">
+              <ul className="flex items-center space-x-2">
                 {genres.map((genre) => (
                   <li
-                    className="rounded-full border-2 border-black bg-white p-2 px-2 py-1 text-sm text-black"
+                    className="rounded-full border-2 border-black bg-black p-2 px-2 py-1 text-white"
                     key={genre.id}
                   >
                     {genre.name}
@@ -124,51 +130,70 @@ export default async function MovieDetailPage({
                 ))}
               </ul>
             </div>
-            <div className="mb-4 font-bold">
+            <div className="p-4 font-bold">
               <div className="flex items-center">
                 <IoStar className="mr-2" size={48} />
                 <p className="text-4xl">{Math.round(vote_average * 10) / 10}</p>
               </div>
             </div>
-            <div className="flex items-center space-x-12">
-              <div className="mb-4">
-                <p className="font-bold">개봉일</p>
+            <div className="flex w-full items-center justify-between border-y border-black">
+              <div className="flex-1 p-2">
+                <p className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+                  개봉일
+                </p>
                 <p>{movieDate}</p>
               </div>
-              <div className="mb-4">
-                <p className="font-bold">러닝 타임</p>
-                <p>{runtime}</p>
+              <div className="flex-1 border-x-2 border-dotted border-gray-300 p-2">
+                <p className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+                  러닝 타임
+                </p>
+                <p>{convertRuntime(Number(runtime))}</p>
               </div>
-              <div className="mb-4">
-                <p className="font-bold">감독</p>
+              <div className="flex-1 p-2">
+                <p className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+                  감독
+                </p>
                 <p>{directorsName && directorsName[0].name}</p>
               </div>
             </div>
 
-            <div className="mb-4">
-              <div className="font-bold">배우</div>
-              <ul>
+            <div className="border-b border-black px-2 pt-2">
+              <div className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+                배우
+              </div>
+              <ul className="mb-4">
                 {castList?.map((cast, index) => (
                   <li key={index}>{cast.name}</li>
                 ))}
               </ul>
             </div>
-            <div className="mb-8">
-              <p className="font-bold">줄거리</p>
-              <p className="text-lg font-light">{overview}</p>
+            <div className="pt-2">
+              <p className="mb-2 ml-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+                줄거리
+              </p>
+              <p className="mb-12 break-keep px-4 text-lg font-light">
+                {overview}
+              </p>
             </div>
-            <div className="mb-8">
-              <p className="font-bold">제작사</p>
+            <div className="flex items-center border-y border-black p-2">
+              <p className="mr-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+                제작사
+              </p>
               <div className="flex space-x-4 text-sm">
                 {production_companies.map((company, index) => (
-                  <div key={index}>{company.name}</div>
+                  <div key={index}>
+                    {company.name}
+                    {index < production_companies.length - 1 && (
+                      <span className="ml-4">•</span>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
-            <div className="group flex w-full rounded-full border-t-2 border-black bg-black text-center text-white">
+            <div className="group flex w-full p-1 text-center text-white">
               <Link
                 href={`/post-create?id=${id}`}
-                className="relative flex w-full items-center justify-center p-8"
+                className="relative flex w-full items-center justify-center rounded-xl bg-black p-8"
               >
                 <p className="text-xl transition-colors duration-300 group-hover:text-gray-400">
                   리뷰 작성하기
@@ -183,7 +208,7 @@ export default async function MovieDetailPage({
         </div>
       </div>
       {movieTrailer && movieTrailer.length > 0 ? (
-        <div className="px-8 pb-12">
+        <div className="px-8 py-16">
           <h2 className="mb-4 text-2xl font-bold">영화 예고편</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {movieTrailer.map((trailer) => (

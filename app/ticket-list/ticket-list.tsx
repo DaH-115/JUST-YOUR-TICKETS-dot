@@ -43,12 +43,12 @@ export default function TicketList({ reviews }: { reviews: Review[] }) {
                 alt={post.movieTitle}
                 width={1280}
                 height={720}
-                className="h-full w-full object-cover"
+                className="h-full w-full rounded-xl object-cover"
               />
             </div>
             <div
               id="info-card"
-              className="absolute bottom-0 left-0 w-full border-2 border-black bg-white"
+              className="absolute bottom-0 left-0 w-full rounded-xl border-2 border-black bg-white"
             >
               <div className="flex items-center border-b-2 border-black">
                 <div className="flex items-center justify-center px-2">

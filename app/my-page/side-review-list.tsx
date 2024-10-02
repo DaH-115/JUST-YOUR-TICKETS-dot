@@ -40,7 +40,7 @@ export default function SideReviewList({ uid }: { uid: string }) {
       <div className="flex items-center">
         <div className="mr-4 text-2xl font-bold">TICKET LIST</div>
         <div className="mr-4">총 {userReviews.length}개</div>
-        <Link href={`/my-page/my-review-list?uid=${uid}`}>
+        <Link href={`/my-page/my-ticket-list?uid=${uid}`}>
           <div className="rounded-full border-2 border-gray-300 p-1 px-2 text-xs font-bold text-gray-500 transition-all duration-200 hover:bg-black hover:text-white focus:outline-none">
             전체보기
           </div>

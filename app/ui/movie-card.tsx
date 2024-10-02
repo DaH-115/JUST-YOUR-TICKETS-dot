@@ -43,53 +43,66 @@ export default function MovieCard({ movie }: { movie: Movie }) {
   }, [id]);
 
   return (
-    <div className="mx-auto mt-2 self-start border-2 border-black bg-white">
-      <div className="">
-        <div className="p-4">
-          <h2 className="text-xs font-bold md:text-base">추천 영화</h2>
-          <div className="flex">
-            <h1 className="mb-2 mr-1 text-4xl font-bold">{movieTitle}</h1>
-            <Link href={`/movie-detail/${id}`}>
-              <FaInfoCircle size={24} />
-            </Link>
-          </div>
+    <div className="mx-auto mt-2 self-start rounded-xl border-2 border-black bg-white">
+      <div className="p-4">
+        <h2 className="mb-2 inline-block rounded-lg bg-black p-1 text-xs font-bold text-white">
+          추천 영화
+        </h2>
+        <div className="flex">
+          <h1 className="text-4xl font-bold">{title}</h1>
+          <Link href={`/movie-detail/${id}`} className="ml-1">
+            <FaInfoCircle size={20} />
+          </Link>
         </div>
-        <ul className="flex items-center space-x-2 border-y-2 border-black px-4 py-2 text-xs">
-          {genres.map((genre, idx) => (
-            <li
-              className="rounded-full border-2 border-black bg-white p-2 px-2 py-1 text-sm text-black"
-              key={idx}
-            >
-              {genre}
-            </li>
-          ))}
-        </ul>
-        <AnimatedOverview overview={overview} />
-        <div className="flex justify-center text-center">
-          <div className="border-r border-gray-300 p-4">
-            <p className="font-bold">Release Date</p>
-            <p>{movieDate}</p>
+        <div className="ml-1 flex items-center">
+          <p className="mr-2 text-lg text-gray-500">{original_title}</p>
+          <p className="text-lg text-gray-500">{release_date.slice(0, 4)}</p>
+        </div>
+      </div>
+      <ul className="flex items-center space-x-2 border-y border-black px-4 py-2">
+        {genres.map((genre, idx) => (
+          <li
+            className="rounded-full border border-black bg-black p-2 px-2 py-1 text-white"
+            key={idx}
+          >
+            {genre}
+          </li>
+        ))}
+      </ul>
+      <AnimatedOverview overview={overview} />
+      <div className="flex">
+        <div className="flex-1 border-r-2 border-dotted border-gray-300 p-2">
+          <p className="mb-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+            개봉일
+          </p>
+          <p className="text-center">{movieDate}</p>
+        </div>
+        <div className="flex-1 border-r-2 border-dotted border-gray-300 p-2">
+          <p className="mb-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+            감독
+          </p>
+          <p className="text-center">{director}</p>
+        </div>
+        <div className="flex-1 border-r-2 border-dotted border-gray-300 pb-4 pl-2 pt-2">
+          <div className="mb-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+            배우
           </div>
-          <div className="border-r border-gray-300 p-4">
-            <p className="font-bold">Director</p>
-            <p>{director}</p>
-          </div>
-          <div className="border-r border-gray-300 p-4">
-            <div className="font-bold">Stars</div>
-            <ul>
-              {castList?.map((cast) => <li key={cast.id}>{cast.name}</li>)}
-            </ul>
-          </div>
-          <div className="flex-1 p-4 font-bold">
-            <p className="mb-2">Rated</p>
-            <div className="flex items-center justify-center">
-              <IoStar className="mr-2" size={24} />
-              <p className="text-4xl">{Math.round(vote_average * 10) / 10}</p>
-            </div>
+          <ul className="text-center">
+            {castList?.map((cast) => <li key={cast.id}>{cast.name}</li>)}
+          </ul>
+        </div>
+        <div className="flex-1 p-2">
+          <p className="mb-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+            평점
+          </p>
+          <div className="flex items-center justify-center">
+            <IoStar className="mr-1" size={24} />
+            <p className="text-4xl">{Math.round(vote_average * 10) / 10}</p>
           </div>
         </div>
       </div>
-      <div className="flex w-full border-t-2 border-black p-1 text-center text-white">
+
+      <div className="flex w-full border-t border-black p-1 text-center text-white">
         <Link
           href={`/post-create?id=${id}`}
           className="group relative flex w-full items-center justify-end rounded-2xl bg-black p-8"

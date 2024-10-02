@@ -52,13 +52,7 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
         imageUrl={currentMovie?.backdrop_path}
         movieTitle={movieTitle}
       />
-      <div
-        id="catchphrase"
-        className="fixed left-0 right-0 top-16 z-0 mx-auto hidden text-center font-bold md:top-20 md:block md:text-2xl"
-      >
-        Make a ticket for your own movie review.
-      </div>
-      <main className="relative z-10 mx-auto mb-10 mt-32 md:w-1/2">
+      <main className="relative z-10 mx-auto mb-20 mt-32 md:w-1/2">
         {/* TRAILER */}
         <div className="flex w-full items-center justify-center">
           {trailerKey ? (
@@ -89,7 +83,7 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
         {/* MOVIE CARD */}
         {currentMovie ? <MovieCard movie={currentMovie} /> : "Loading..."}
       </main>
-      <div className="relative z-10 px-6">
+      <div className="relative z-10 mb-20 px-6">
         <div className="mb-4 text-5xl font-bold">Now Playing</div>
         <p className="text-sm">현재 가장 인기 있는 영화들을 확인해 보세요</p>
         {/* POSTER SWIPER */}

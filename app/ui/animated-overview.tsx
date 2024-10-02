@@ -16,22 +16,24 @@ export default function AnimatedOverview({ overview }: { overview: string }) {
   };
 
   return (
-    <div className="border-b-2 border-black px-4 py-6">
+    <div className="border-b border-black px-4 py-6 text-lg">
       <div
         ref={contentRef}
-        style={{ maxHeight: isExpanded ? maxHeight : "3rem" }}
+        style={{ maxHeight: isExpanded ? maxHeight : "3.5rem" }}
         className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
       >
         <p>{overview}</p>
       </div>
 
       {overview.split(" ").length > 30 && (
-        <button
-          onClick={toggleExpandHandler}
-          className="mt-2 rounded-full border-2 border-gray-300 p-1 text-xs text-gray-500 transition-all duration-200 hover:bg-black hover:text-white focus:outline-none"
-        >
-          {isExpanded ? "접기" : "더 보기"}
-        </button>
+        <div className="flex justify-end">
+          <button
+            onClick={toggleExpandHandler}
+            className="mt-2 rounded-lg border-2 border-gray-300 p-1 text-xs text-gray-500 transition-all duration-200 hover:border-black hover:bg-black hover:text-white focus:outline-none"
+          >
+            {isExpanded ? "접기" : "더 보기"}
+          </button>
+        </div>
       )}
     </div>
   );
