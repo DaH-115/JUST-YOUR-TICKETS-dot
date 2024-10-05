@@ -9,7 +9,29 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        scroll: "scroll 40s linear infinite",
+      },
+      keyframes: {
+        scroll: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".mask-linear-gradient": {
+          "mask-image":
+            "linear-gradient(to bottom, black 60%, transparent 100%)",
+          "-webkit-mask-image":
+            "linear-gradient(to bottom, black 60%, transparent 100%)",
+        },
+      };
+      addUtilities(newUtilities);
+    },
+  ],
 };

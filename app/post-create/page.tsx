@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -11,6 +10,10 @@ import { fetchMovieDetails } from "api/fetchMovieDetails";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
 import useGetTitle from "hooks/useGetTitle";
+import BackGround from "app/ui/back-ground";
+import Catchphrase from "app/ui/catchphrase";
+import { MdDriveFileRenameOutline } from "react-icons/md";
+import { IoStar } from "react-icons/io5";
 
 type PostData = {
   date: string;
@@ -39,7 +42,9 @@ export default function Page() {
     const fetchMovieInfo = async () => {
       try {
         const res = await fetchMovieDetails(Number(movieId));
-        setMovieInfo(res);
+        if (res) {
+          setMovieInfo({ ...res, backdrop_path: res.backdrop_path || "" });
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -55,7 +60,6 @@ export default function Page() {
     formState: { errors, isDirty },
   } = useForm<PostData>({
     defaultValues: {
-      date: new Date().toLocaleDateString(),
       reviewTitle: "",
       rating: 0,
       review: "",
@@ -67,7 +71,7 @@ export default function Page() {
   const onSubmit = async (data: PostData) => {
     try {
       const { poster_path, release_date } = movieInfo;
-      const { reviewTitle, rating, review, date } = data;
+      const { reviewTitle, rating, review } = data;
       const { uid, displayName } = userState;
 
       await addDoc(collection(db, "movie-reviews"), {
@@ -76,7 +80,7 @@ export default function Page() {
         reviewTitle,
         rating,
         review,
-        date,
+        date: new Date().toLocaleDateString(),
         movieTitle,
         releaseYear: release_date.slice(0, 4),
         posterImage: poster_path,
@@ -113,71 +117,70 @@ export default function Page() {
   }, [isDirty]);
 
   return (
-    // TO DO: 반응형 디자인 적용
-    <div className="relative left-0 top-0 mt-16">
+    <>
       {movieInfo.backdrop_path && (
-        <div className="w-full">
-          <Image
-            src={`https://image.tmdb.org/t/p/original${movieInfo.backdrop_path}`}
-            alt="Backdrop"
-            width={1280}
-            height={720}
-            className="h-full w-full"
-          />
+        <BackGround
+          imageUrl={movieInfo.backdrop_path}
+          movieTitle={movieTitle}
+        />
+      )}
+
+      {/* POP UP */}
+      {showExitConfirmation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="w-full max-w-md rounded-lg border border-black bg-white p-4 drop-shadow-xl">
+            <div className="mb-4 border-b border-black">
+              <span className="font-bold">Alert</span>
+              <span className="ml-1">알림</span>
+            </div>
+            <div className="mb-6 text-lg">
+              현재 내용이 사라집니다. 정말로 나가시겠습니까?
+            </div>
+            <div className="flex justify-end">
+              <button
+                className="mr-2 rounded-xl bg-gray-200 px-4 py-2 transition-all duration-300 hover:bg-gray-300"
+                onClick={() => setShowExitConfirmation(false)}
+              >
+                아니오
+              </button>
+              <button
+                className="rounded-xl bg-red-500 px-4 py-2 text-white transition-all duration-300 hover:bg-red-600"
+                onClick={() => router.push("/")}
+              >
+                네
+              </button>
+            </div>
+          </div>
         </div>
       )}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-1/3 border-2 border-black bg-white">
-          {/* TOP SIDE */}
-          <div className="w-full border-b-2 border-black p-4">
-            <h1 className="text-4xl font-bold">Review 리뷰 작성</h1>
-          </div>
 
-          {/* POP UP */}
-          {showExitConfirmation && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center">
-              <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-                <h2 className="mb-4 text-lg font-bold">
-                  현재 내용이 사라집니다. 정말로 나가시겠습니까?
-                </h2>
-                <div className="flex justify-end">
-                  <button
-                    className="mr-2 rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
-                    onClick={() => setShowExitConfirmation(false)}
-                  >
-                    아니오
-                  </button>
-                  <button
-                    className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-                    onClick={() => router.push("/")}
-                  >
-                    네
-                  </button>
-                </div>
-              </div>
+      <div className="relative z-40 flex items-center justify-center py-16 drop-shadow-lg">
+        <div className="w-1/3 rounded-xl border-2 border-black bg-white">
+          <div className="w-full p-4">
+            <div className="flex items-end">
+              <h1 className="text-3xl font-bold">Write Your Review</h1>
             </div>
-          )}
-
-          {/* BOTTOM SIDE */}
+            <div className="text-gray-800">{`${movieTitle} (${movieInfo.release_date.slice(0, 4)})`}</div>
+          </div>
+          <div className="flex justify-between border-b border-black px-4 py-2 text-sm">
+            <span>{new Date().toLocaleDateString()}</span>
+            <div>
+              <span>작성자</span>
+              <span className="ml-1 font-bold">
+                {userState ? userState.displayName : "Guest"}
+              </span>
+            </div>
+          </div>
           <div className="w-full">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="px-4 py-6">
-                <div className="mb-4">
-                  <label htmlFor="date" className="mb-2 block font-bold">
-                    Date 날짜
-                  </label>
-                  <input
-                    type="text"
-                    id="date"
-                    {...register("date")}
-                    className="w-full rounded-lg border p-2"
-                    disabled
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="reviewTitle" className="mb-2 block font-bold">
-                    Title 제목
+              <div className="pt-2">
+                <div className="mb-2 border-b border-black px-2 pb-4">
+                  <label
+                    htmlFor="date"
+                    className="mb-2 inline-block rounded-lg p-1 text-sm font-bold"
+                  >
+                    <span className="font-bold">Title</span>
+                    <span className="ml-2">제목</span>
                   </label>
                   <input
                     type="text"
@@ -185,6 +188,7 @@ export default function Page() {
                     {...register("reviewTitle", {
                       required: "제목을 입력해주세요.",
                     })}
+                    placeholder="리뷰 제목"
                     className="w-full rounded-lg border p-2"
                   />
                   {errors.reviewTitle && (
@@ -194,9 +198,14 @@ export default function Page() {
                   )}
                 </div>
 
-                <div className="mb-4">
-                  <label htmlFor="rating" className="mb-2 block font-bold">
-                    Rating 평점
+                <div className="mb-2 border-b border-black px-2 pb-4">
+                  <label
+                    htmlFor="rating"
+                    className="mb-2 inline-block rounded-lg p-1 text-sm font-bold"
+                  >
+                    <span className="font-bold">Rating</span>
+
+                    <span className="ml-2">평점</span>
                   </label>
                   <input
                     type="range"
@@ -205,22 +214,33 @@ export default function Page() {
                     min="0"
                     max="10"
                     step="0.5"
-                    className="w-full"
+                    className="w-full accent-black"
                   />
-                  <div className="text-center">{watch("rating")} / 10</div>
+                  <div className="flex items-center justify-center text-center">
+                    <div>
+                      <IoStar className="mr-1" size={20} />
+                    </div>
+                    <div className="text-lg font-bold">{watch("rating")}</div>
+                    <div>/ 10</div>
+                  </div>
                 </div>
 
-                <div className="">
-                  <label htmlFor="review" className="mb-2 block font-bold">
-                    Review 리뷰
+                <div className="mb-4 px-2">
+                  <label
+                    htmlFor="review"
+                    className="mb-2 inline-block rounded-lg p-1 text-sm font-bold"
+                  >
+                    <span className="font-bold">Review</span>
+                    <span className="ml-2">감상</span>
                   </label>
                   <textarea
                     id="review"
                     {...register("review", {
                       required: "내용을 입력해주세요.",
                     })}
+                    placeholder="감상평을 작성해주세요."
                     className="h-32 w-full rounded-lg border p-2"
-                  ></textarea>
+                  />
                   {errors.review && (
                     <p className="mt-2 text-sm text-red-600">
                       {errors.review.message}
@@ -228,27 +248,27 @@ export default function Page() {
                   )}
                 </div>
               </div>
-
-              {/* BUTTON AREA */}
-              <div className="flex justify-end border-t-2 border-black bg-slate-100">
+              <div className="flex justify-end border-t border-black p-2">
                 <button
                   type="button"
-                  className="w-full bg-white px-6 py-4 hover:bg-gray-200"
+                  className="mr-2 w-full rounded-xl bg-gray-200 py-4 transition-all duration-300 hover:bg-white"
                   onClick={handlePageExit}
                 >
-                  Cancel
+                  취소
                 </button>
                 <button
                   type="submit"
-                  className="w-full bg-slate-800 px-6 py-4 text-white hover:bg-slate-900"
+                  className="group flex w-full items-center justify-center rounded-xl bg-black p-4 text-white transition-all duration-300 hover:font-bold"
                 >
-                  Save Post
+                  <div>작성</div>
+                  <MdDriveFileRenameOutline className="ml-1" size={18} />
                 </button>
               </div>
             </form>
           </div>
         </div>
       </div>
-    </div>
+      <Catchphrase />
+    </>
   );
 }
