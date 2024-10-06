@@ -12,6 +12,7 @@ export interface Review {
   date: string;
   id: string;
   movieTitle: string;
+  movieId: string;
   posterImage: string;
   rating: number;
   releaseYear: string;

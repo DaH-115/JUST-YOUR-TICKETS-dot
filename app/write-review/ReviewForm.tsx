@@ -1,97 +1,54 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { db } from "firebase-config";
-import { collection, addDoc } from "firebase/firestore";
-import { fetchMovieDetails } from "api/fetchMovieDetails";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "store/hooks";
+import { useReviewForm } from "app/write-review/useReviewForm";
 import useGetTitle from "hooks/useGetTitle";
 import BackGround from "app/ui/back-ground";
-import Catchphrase from "app/ui/catchphrase";
-import { MdDriveFileRenameOutline } from "react-icons/md";
 import { IoStar } from "react-icons/io5";
+import { MdDriveFileRenameOutline } from "react-icons/md";
+import { Movie } from "app/page";
 
-type PostData = {
-  date: string;
+export interface ReviewDate {
   reviewTitle: string;
   rating: number;
   review: string;
-};
+}
 
-export default function Page() {
+interface ReviewForm {
+  mode: "create" | "edit";
+  initialData?: ReviewDate;
+  movieInfo: Movie;
+  movieId: string;
+  reviewId?: string;
+}
+
+export default function ReviewForm({
+  mode,
+  initialData,
+  movieInfo,
+  reviewId,
+  movieId,
+}: ReviewForm) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const movieId = searchParams.get("id");
-  const userState = useAppSelector((state) => state.user.user);
-  const [movieInfo, setMovieInfo] = useState({
-    title: "",
-    release_date: "",
-    poster_path: "",
-    backdrop_path: "",
-    original_title: "",
-    vote_average: 0,
-  });
-  const movieTitle = useGetTitle(movieInfo.original_title, movieInfo.title);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const fetchMovieInfo = async () => {
-      try {
-        const res = await fetchMovieDetails(Number(movieId));
-        if (res) {
-          setMovieInfo({ ...res, backdrop_path: res.backdrop_path || "" });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchMovieInfo();
-  }, [movieId]);
-
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isDirty },
-  } = useForm<PostData>({
-    defaultValues: {
+    watch,
+  } = useForm({
+    defaultValues: initialData || {
       reviewTitle: "",
       rating: 0,
       review: "",
     },
   });
-
   const [showExitConfirmation, setShowExitConfirmation] = useState(false);
-
-  const onSubmit = async (data: PostData) => {
-    try {
-      const { poster_path, release_date } = movieInfo;
-      const { reviewTitle, rating, review } = data;
-      const { uid, displayName } = userState;
-
-      await addDoc(collection(db, "movie-reviews"), {
-        userUid: uid,
-        userName: displayName,
-        reviewTitle,
-        rating,
-        review,
-        date: new Date().toLocaleDateString(),
-        movieTitle,
-        releaseYear: release_date.slice(0, 4),
-        posterImage: poster_path,
-      });
-
-      dispatch(addNewReviewAlertHandler());
-      router.push("/");
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
+  const userState = useAppSelector((state) => state.user.user);
+  const movieTitle = useGetTitle(movieInfo.original_title, movieInfo.title);
+  const { onSubmit } = useReviewForm(mode, movieInfo, movieId, reviewId);
 
   const handlePageExit = useCallback(() => {
     if (isDirty) {
@@ -156,11 +113,13 @@ export default function Page() {
 
       <div className="relative z-40 flex items-center justify-center py-16 drop-shadow-lg">
         <div className="w-1/3 rounded-xl border-2 border-black bg-white">
-          <div className="w-full p-4">
-            <div className="flex items-end">
-              <h1 className="text-3xl font-bold">Write Your Review</h1>
+          <div className="w-full p-4 pb-2">
+            <div className="mb-2 flex items-end">
+              <h1 className="text-md font-bold">
+                {mode === "create" ? "Write Your Review" : "Edit Your Review"}
+              </h1>
             </div>
-            <div className="text-gray-800">{`${movieTitle} (${movieInfo.release_date.slice(0, 4)})`}</div>
+            <div className="text-3xl font-bold">{`${movieTitle} (${movieInfo.release_date?.slice(0, 4)})`}</div>
           </div>
           <div className="flex justify-between border-b border-black px-4 py-2 text-sm">
             <span>{new Date().toLocaleDateString()}</span>
@@ -171,6 +130,7 @@ export default function Page() {
               </span>
             </div>
           </div>
+
           <div className="w-full">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="pt-2">
@@ -193,7 +153,7 @@ export default function Page() {
                   />
                   {errors.reviewTitle && (
                     <p className="mt-2 text-sm text-red-600">
-                      {errors.reviewTitle.message}
+                      {errors.reviewTitle.message as string}
                     </p>
                   )}
                 </div>
@@ -243,7 +203,7 @@ export default function Page() {
                   />
                   {errors.review && (
                     <p className="mt-2 text-sm text-red-600">
-                      {errors.review.message}
+                      {errors.review.message as string}
                     </p>
                   )}
                 </div>
@@ -268,7 +228,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <Catchphrase />
     </>
   );
 }

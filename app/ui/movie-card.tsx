@@ -43,9 +43,9 @@ export default function MovieCard({ movie }: { movie: Movie }) {
   }, [id]);
 
   return (
-    <div className="mx-auto mt-2 self-start rounded-xl border-2 border-black bg-white">
+    <div className="rounded-xl border-2 border-black bg-white drop-shadow-xl">
       <div className="p-4">
-        <h2 className="mb-2 inline-block rounded-lg bg-black p-1 text-xs font-bold text-white">
+        <h2 className="mb-2 inline-block animate-bounce rounded-lg bg-black p-1 text-xs font-bold text-white">
           추천 영화
         </h2>
         <div className="flex">
@@ -64,7 +64,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           <p className="text-lg text-gray-500">{release_date.slice(0, 4)}</p>
         </div>
       </div>
-      <ul className="flex items-center space-x-2 border-y border-black px-4 py-2">
+      <ul className="flex items-center space-x-2 border-y border-black px-4 py-2 text-sm">
         {genres.map((genre, idx) => (
           <li
             className="rounded-full border border-black bg-black p-2 px-2 py-1 text-white"
@@ -77,19 +77,19 @@ export default function MovieCard({ movie }: { movie: Movie }) {
       <AnimatedOverview overview={overview} />
       <div className="flex">
         <div className="flex-1 border-r-2 border-dotted border-gray-300 p-2">
-          <p className="mb-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+          <p className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
             개봉일
           </p>
           <p className="text-center">{movieDate}</p>
         </div>
         <div className="flex-1 border-r-2 border-dotted border-gray-300 p-2">
-          <p className="mb-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+          <p className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
             감독
           </p>
           <p className="text-center">{director}</p>
         </div>
         <div className="flex-1 border-r-2 border-dotted border-gray-300 pb-4 pl-2 pt-2">
-          <div className="mb-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+          <div className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
             배우
           </div>
           <ul className="text-center">
@@ -97,22 +97,24 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           </ul>
         </div>
         <div className="flex-1 p-2">
-          <p className="mb-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+          <p className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
             평점
           </p>
           <div className="flex items-center justify-center">
             <IoStar className="mr-1" size={24} />
-            <p className="text-4xl">{Math.round(vote_average * 10) / 10}</p>
+            <p className="text-4xl font-bold">
+              {Math.round(vote_average * 10) / 10}
+            </p>
           </div>
         </div>
       </div>
 
       <div className="flex w-full border-t border-black p-1 text-center text-white">
         <Link
-          href={`/post-create?id=${id}`}
+          href={`/write-review/new?movieId=${id}`}
           className="group relative flex w-full items-center justify-end rounded-2xl bg-black p-8"
         >
-          <p className="text-xl transition-colors duration-300 group-hover:text-gray-400">
+          <p className="text-xl transition-colors duration-300 group-hover:font-bold">
             리뷰 작성하기
           </p>
           <FaArrowRight

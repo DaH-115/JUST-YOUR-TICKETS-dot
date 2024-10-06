@@ -20,8 +20,8 @@ export default function SwiperCard({
   const movieTitle = useGetTitle(original_title, title);
 
   return (
-    <div className="relative h-dvh py-6">
-      <div className="absolute left-0 top-5 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 pt-5 text-6xl font-bold text-white">
+    <div className="group/card relative mx-2 h-[600px]">
+      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 pt-5 text-6xl font-bold text-white">
         {idx + 1}.
       </div>
       {poster_path ? (
@@ -29,7 +29,7 @@ export default function SwiperCard({
           width={640}
           height={750}
           className="h-full w-full rounded-xl object-cover object-center"
-          src={`https://image.tmdb.org/t/p/original/${poster_path}`}
+          src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
           alt={movieTitle}
         />
       ) : (
@@ -39,7 +39,7 @@ export default function SwiperCard({
       )}
 
       {/* MOVIE INFO CARD */}
-      <div className="absolute bottom-5 left-0 w-full rounded-xl border-2 border-black bg-white shadow-lg">
+      <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white shadow-lg transition-all duration-300 group-hover/card:bottom-2 group-hover/card:right-2">
         <div className="flex p-4 pb-0">
           <div className="truncate pb-4 text-xl font-bold">{movieTitle}</div>
           <div className="group relative ml-2">
@@ -70,10 +70,10 @@ export default function SwiperCard({
           </div>
           <div className="flex-1 p-1">
             <Link
-              href={`/post-create?id=${id}`}
+              href={`/write-review/new?movieId=${id}`}
               className="group relative flex items-center justify-end rounded-xl bg-black p-4 text-white"
             >
-              <p className="text-sm transition-colors duration-300 group-hover:text-gray-400">
+              <p className="text-sm transition-all duration-300 group-hover:font-bold">
                 리뷰 작성하기
               </p>
               <FaArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-2" />

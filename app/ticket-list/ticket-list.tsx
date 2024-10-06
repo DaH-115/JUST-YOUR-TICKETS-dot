@@ -35,6 +35,16 @@ export default function TicketList({ reviews }: { reviews: Review[] }) {
               <p className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
                 {index + 1}
               </p>
+              <div className="flex items-center">
+                <Link href={`/write-review/${post.id}?movieId=${post.movieId}`}>
+                  <button className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
+                    수정
+                  </button>
+                </Link>
+                <button className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
+                  삭제
+                </button>
+              </div>
             </div>
 
             <div id="movie-poster" className="h-4/5">

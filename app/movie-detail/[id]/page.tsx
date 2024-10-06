@@ -92,7 +92,7 @@ export default async function MovieDetailPage({
   return (
     <>
       <BackGround imageUrl={backdrop_path} movieTitle={movieTitle} />
-      <div className="relative flex w-full items-center justify-center">
+      <div className="relative mb-16 flex w-full items-center justify-center">
         <div className="mt-16 flex w-2/3 justify-center">
           {/* POSTER */}
           <div className="mr-8 w-2/3">
@@ -192,7 +192,7 @@ export default async function MovieDetailPage({
             </div>
             <div className="group flex w-full p-1 text-center text-white">
               <Link
-                href={`/post-create?id=${id}`}
+                href={`/write-review/new?movieId=${id}`}
                 className="relative flex w-full items-center justify-center rounded-xl bg-black p-8"
               >
                 <p className="text-xl transition-colors duration-300 group-hover:text-gray-400">
@@ -208,7 +208,7 @@ export default async function MovieDetailPage({
         </div>
       </div>
       {movieTrailer && movieTrailer.length > 0 ? (
-        <div className="px-8 py-16">
+        <div className="px-8 pb-16">
           <h2 className="mb-4 text-2xl font-bold">영화 예고편</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {movieTrailer.map((trailer) => (
