@@ -71,13 +71,13 @@ export default function HeaderSearchBar() {
   };
 
   return (
-    <div className="flex h-10" ref={dropdownRef}>
+    <div className="flex h-10 px-4" ref={dropdownRef}>
       <div className="relative flex h-full w-full items-center justify-end">
         <input
           {...register("search")}
           type="search"
           placeholder="Search..."
-          className={`h-full rounded-full border-2 border-black transition-all duration-300 ease-in-out ${
+          className={`h-full rounded-full border-2 border-black shadow-md transition-all duration-300 ease-in-out ${
             isSearchOpen
               ? "w-64 pl-4 pr-10 text-sm opacity-100"
               : "w-10 opacity-0"
@@ -85,7 +85,7 @@ export default function HeaderSearchBar() {
           onFocus={inputFocusHandler}
         />
         <div
-          className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full ${isSearchOpen ? "border-none bg-none" : "border border-black bg-white"} transition-all duration-300 ease-in-out`}
+          className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full shadow-md ${isSearchOpen ? "border-none bg-none" : "border border-black bg-white"} transition-all duration-300 ease-in-out`}
           onClick={handleIconClick}
         >
           <IoSearchOutline size={20} color="black" />

@@ -76,7 +76,7 @@ export default function SwiperCard({
               <p className="text-sm transition-all duration-300 group-hover:font-bold">
                 리뷰 작성하기
               </p>
-              <FaArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-2" />
+              <FaArrowRight className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>
         </div>

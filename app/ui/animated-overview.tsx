@@ -3,11 +3,15 @@ import { useState, useRef, useEffect } from "react";
 export default function AnimatedOverview({ overview }: { overview: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [maxHeight, setMaxHeight] = useState("");
+  const [needsExpansion, setNeedsExpansion] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (contentRef.current) {
-      setMaxHeight(`${contentRef.current.scrollHeight}px`);
+      const scrollHeight = contentRef.current.scrollHeight;
+      const clientHeight = contentRef.current.clientHeight;
+      setMaxHeight(`${scrollHeight}px`);
+      setNeedsExpansion(scrollHeight > clientHeight);
     }
   }, [overview]);
 
@@ -17,19 +21,26 @@ export default function AnimatedOverview({ overview }: { overview: string }) {
 
   return (
     <div className="border-b border-black px-4 py-6 text-lg">
-      <div
-        ref={contentRef}
-        style={{ maxHeight: isExpanded ? maxHeight : "3.5rem" }}
-        className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-      >
-        <p>{overview}</p>
+      <div className="relative">
+        <div
+          ref={contentRef}
+          style={{ maxHeight: isExpanded ? maxHeight : "4rem" }}
+          className={`overflow-hidden transition-[max-height] duration-300 ease-in-out ${
+            !isExpanded && needsExpansion ? "mask-linear-gradient" : ""
+          }`}
+        >
+          <p>{overview}</p>
+        </div>
+        {!isExpanded && needsExpansion && (
+          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent"></div>
+        )}
       </div>
 
-      {overview.split(" ").length > 30 && (
+      {needsExpansion && (
         <div className="flex justify-end">
           <button
             onClick={toggleExpandHandler}
-            className="mt-2 rounded-lg border-2 border-gray-300 p-1 text-xs text-gray-500 transition-all duration-200 hover:border-black hover:bg-black hover:text-white focus:outline-none"
+            className="mt-2 rounded-lg p-1 text-sm font-bold text-gray-400 transition-all duration-200 hover:border-black hover:bg-black hover:text-white focus:outline-none"
           >
             {isExpanded ? "접기" : "더 보기"}
           </button>

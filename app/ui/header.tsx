@@ -8,7 +8,6 @@ import { isAuth } from "firebase-config";
 import { useRouter } from "next/navigation";
 import { clearUserState } from "store/userSlice";
 import HeaderSearchBar from "app/ui/header-search-bar";
-import GlowingCircle from "app/ui/glowing-circle";
 
 export default function Header() {
   const router = useRouter();
@@ -53,16 +52,16 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="relative z-50 flex w-full items-center justify-center pt-8">
-      <div className="mr-4 flex items-center justify-center rounded-full border border-black bg-white px-4 py-2 shadow-md">
+    <header className="relative z-50 flex w-full items-center justify-center px-8 pt-8">
+      <div className="flex items-center justify-center rounded-full border border-black bg-white px-4 py-2 shadow-md">
         {/* LOGO */}
-        <div className="ml-2 font-bold">just your tickets.</div>
+        <div className="mr-4 font-bold">just your tickets.</div>
         {/* MENU */}
-        <ul className="mx-12 flex text-sm">
+        <ul className="flex">
           <li className="group">
             <Link
               href="/"
-              className="rounded-full px-4 py-2 transition-all duration-300 ease-in-out hover:bg-gray-100"
+              className="rounded-full px-4 py-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
             >
               Home
             </Link>
@@ -70,7 +69,7 @@ export default function Header() {
           <li className="group relative">
             <Link
               href="/search"
-              className="rounded-full px-4 py-2 transition-all duration-300 ease-in-out hover:bg-gray-100"
+              className="rounded-full px-4 py-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
             >
               Search
             </Link>
@@ -78,11 +77,10 @@ export default function Header() {
           <li className="group relative">
             <Link
               href="/ticket-list"
-              className="rounded-full px-4 py-2 transition-all duration-300 ease-in-out hover:bg-gray-100"
+              className="rounded-full px-4 py-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
             >
               Ticket List
             </Link>
-            {newReviewAlertState && <GlowingCircle />}
           </li>
         </ul>
         {/* MOBILE MENU */}
@@ -90,8 +88,8 @@ export default function Header() {
           메뉴
         </div>
         {userDisplayName ? (
-          <div className="relative font-bold" ref={dropdownRef}>
-            <button onClick={dropDownHandler}>
+          <div className="relative" ref={dropdownRef}>
+            <button className="ml-4 font-bold" onClick={dropDownHandler}>
               {userDisplayName ? userDisplayName : "Guest"} 님
             </button>
 
@@ -105,7 +103,7 @@ export default function Header() {
             >
               <div className="w-full p-1">
                 <Link href="/my-page">
-                  <button className="w-full rounded-xl px-4 py-2 font-bold hover:bg-gray-100">
+                  <button className="w-full rounded-xl px-4 py-2 transition-all duration-300 hover:bg-gray-200 hover:font-bold">
                     My Page
                   </button>
                 </Link>
@@ -113,7 +111,7 @@ export default function Header() {
               <div className="w-full p-1">
                 <button
                   onClick={logoutHandler}
-                  className="w-full rounded-xl px-4 py-2 hover:bg-gray-100"
+                  className="w-full rounded-xl px-4 py-2 transition-all duration-300 hover:bg-gray-200 hover:font-bold"
                 >
                   Logout
                 </button>

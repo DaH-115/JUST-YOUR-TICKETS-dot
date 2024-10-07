@@ -5,8 +5,8 @@ import Header from "app/ui/header";
 import Footer from "app/ui/footer";
 
 export const metadata: Metadata = {
-  title: "My Home",
-  description: "Welcome to Next.js by FOLLO",
+  title: "Jsut Your Tickets",
+  description: "Make a ticket for your own movie ticket.",
 };
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <Header />
-          <div className="h-vh">{children}</div>
+          {children}
           <Footer />
         </Providers>
       </body>
