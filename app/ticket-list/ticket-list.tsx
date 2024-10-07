@@ -5,8 +5,16 @@ import { FaArrowRight } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { Review } from "app/ticket-list/page";
 import ReviewDetailsModal from "app/ui/review-details-modal";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "firebase-config";
 
-export default function TicketList({ reviews }: { reviews: Review[] }) {
+export default function TicketList({
+  reviews,
+  onReviewDeleted,
+}: {
+  reviews: Review[];
+  onReviewDeleted: () => void;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<Review>();
 
@@ -19,6 +27,18 @@ export default function TicketList({ reviews }: { reviews: Review[] }) {
     setIsModalOpen(false);
   };
 
+  const handleDelete = async (id: string) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      try {
+        await deleteDoc(doc(db, "movie-reviews", id));
+        onReviewDeleted();
+      } catch (error) {
+        console.error("리뷰 삭제 중 오류 발생:", error);
+        alert("리뷰 삭제에 실패했습니다. 다시 시도해 주세요.");
+      }
+    }
+  };
+
   return (
     <>
       <ReviewDetailsModal
@@ -29,7 +49,7 @@ export default function TicketList({ reviews }: { reviews: Review[] }) {
 
       {reviews.length > 0 &&
         reviews.map((post, index) => (
-          <div key={post.id} className="relative h-[600px]">
+          <div key={post.id} className="relative h-[600px] drop-shadow-lg">
             {/* CARD HEADER */}
             <div className="absolute left-0 top-0 flex w-full items-center justify-between p-2">
               <p className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
@@ -41,7 +61,10 @@ export default function TicketList({ reviews }: { reviews: Review[] }) {
                     수정
                   </button>
                 </Link>
-                <button className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
+                <button
+                  onClick={() => handleDelete(post.id)}
+                  className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold"
+                >
                   삭제
                 </button>
               </div>

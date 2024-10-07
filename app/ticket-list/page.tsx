@@ -29,29 +29,40 @@ export default function Page() {
   );
   const dispatch = useAppDispatch();
 
+  const fetchReviews = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "movie-reviews"));
+      const reviews = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Review[];
+      setReviews(reviews);
+    } catch (error) {
+      console.error("Error getting documents: ", error);
+    }
+  };
+
   useEffect(() => {
     newReviewAlertState && dispatch(addNewReviewAlertHandler());
   }, [newReviewAlertState]);
 
   useEffect(() => {
-    try {
-      const getPosts = async () => {
-        const querySnapshot = await getDocs(collection(db, "movie-reviews"));
-        const reviews = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Review[];
-        setReviews(reviews);
-      };
-      getPosts();
-    } catch (error) {
-      console.error("Error getting documents: ", error);
-    }
+    fetchReviews();
   }, []);
 
+  const handleReviewDeleted = () => {
+    fetchReviews();
+  };
+
   return (
-    <div className="mt-16 grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      <TicketList reviews={reviews} />
+    <div>
+      <div className="flex items-center p-6 pb-0">
+        <div className="mr-4 text-2xl font-bold">ALL TICKET LIST</div>
+        <div>총 {reviews.length}장</div>
+      </div>
+      <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <TicketList reviews={reviews} onReviewDeleted={handleReviewDeleted} />
+      </div>
     </div>
   );
 }
