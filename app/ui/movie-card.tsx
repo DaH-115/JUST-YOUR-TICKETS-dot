@@ -66,7 +66,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         <ul className="flex items-center space-x-2 border-y border-black px-4 py-2 text-sm">
           {genres.map((genre, idx) => (
             <li
-              className="rounded-full border border-black bg-black p-2 px-2 py-1 text-white"
+              className="rounded-full border border-black bg-black p-2 px-2 py-1 text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black"
               key={idx}
             >
               {genre}
@@ -112,7 +112,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             href={`/write-review/new?movieId=${id}`}
             className="group/button relative flex w-full items-center justify-end rounded-2xl bg-black p-8"
           >
-            <p className="text-xl transition-colors duration-300 group-hover/button:font-bold">
+            <p className="text-lg transition-all duration-300 group-hover/button:text-xl">
               리뷰 작성하기
             </p>
             <FaArrowRight
@@ -122,7 +122,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           </Link>
         </div>
       </div>
-      <div className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1"></div>
+      <div className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200"></div>
     </div>
   );
 }

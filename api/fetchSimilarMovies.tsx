@@ -12,7 +12,7 @@ export async function fetchSimilarMovies(id: number) {
     }
 
     const data = await res.json();
-    return data as Movie[];
+    return data.results as Movie[];
   } catch (error) {
     console.error("Error fetching now playing movies:", error);
     return;

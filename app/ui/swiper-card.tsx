@@ -33,7 +33,7 @@ export default function SwiperCard({
           alt={movieTitle}
         />
       ) : (
-        <div className="h-full w-full overflow-hidden bg-black text-4xl font-bold text-white">
+        <div className="h-full w-full overflow-hidden rounded-xl bg-black text-4xl font-bold text-white">
           Make a ticket for your own movie review.
         </div>
       )}
@@ -54,7 +54,7 @@ export default function SwiperCard({
         <div className="flex w-full flex-wrap border-y border-black p-1">
           {genres.map((genre, idx) => (
             <p
-              className="m-1 rounded-full border-2 border-black bg-white px-2 py-1 text-sm text-black"
+              className="m-1 rounded-full border-2 border-black bg-white px-2 py-1 text-sm text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white"
               key={idx}
             >
               {genre}
@@ -73,7 +73,7 @@ export default function SwiperCard({
               href={`/write-review/new?movieId=${id}`}
               className="group relative flex items-center justify-end rounded-xl bg-black p-4 text-white"
             >
-              <p className="text-sm transition-all duration-300 group-hover:font-bold">
+              <p className="text-sm transition-all duration-300 group-hover:text-base">
                 리뷰 작성하기
               </p>
               <FaArrowRight className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />

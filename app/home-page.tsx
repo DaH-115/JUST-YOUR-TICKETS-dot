@@ -125,7 +125,7 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
                   이 영화의 예고편을 확인해 보세요
                 </p>
               </div>
-              <div className="absolute left-1 top-1 -z-10 h-32 w-80 rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1"></div>
+              <div className="absolute left-1 top-1 -z-10 h-32 w-80 rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200"></div>
             </div>
             <div className="mx-auto aspect-video w-full max-w-6xl">
               <iframe
@@ -159,7 +159,7 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
               현재 상영 중인 영화들을 확인해 보세요
             </p>
           </div>
-          <div className="absolute left-1 top-1 -z-10 h-32 w-80 rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1"></div>
+          <div className="absolute left-1 top-1 -z-10 h-32 w-80 rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200"></div>
         </div>
         {/* POSTER SWIPER */}
         <TicketSwiper movieList={movieList} />

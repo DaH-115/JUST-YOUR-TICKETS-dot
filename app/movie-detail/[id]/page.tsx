@@ -11,57 +11,17 @@ import { IoStar } from "react-icons/io5";
 import { FaArrowRight } from "react-icons/fa";
 import TicketSwiper from "app/ticket-swiper";
 import BackGround from "app/ui/back-ground";
-
-async function getMovies(id: number) {
-  try {
-    const movieDetails = await fetchMovieDetails(id);
-    return movieDetails;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-}
-
-async function getMoviesCredits(id: number) {
-  try {
-    const movieCredits = await fetchMovieCredits(id);
-    return movieCredits;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-}
-
-async function getSimilarPosts(id: number) {
-  try {
-    const similarPosts = await fetchSimilarMovies(id);
-    return similarPosts;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-}
-
-async function getMovieTrailer(id: number) {
-  try {
-    const posts = await fetchVideosMovies(id);
-
-    if (posts && posts.length > 0) {
-      return posts;
-    } else {
-      return;
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-}
+import { RiMovieLine } from "react-icons/ri";
 
 export default async function MovieDetailPage({
   params,
 }: {
   params: { id: number };
 }) {
-  const movieDetails = await getMovies(params.id);
-  const similarPosts = await getSimilarPosts(params.id);
-  const movieCredits = await getMoviesCredits(params.id);
-  const movieTrailer = await getMovieTrailer(params.id);
+  const movieDetails = await fetchMovieDetails(params.id);
+  const similarPosts = await fetchSimilarMovies(params.id);
+  const movieCredits = await fetchMovieCredits(params.id);
+  const movieTrailer = await fetchVideosMovies(params.id);
   const castList = movieCredits?.cast.slice(0, 3);
   const directorsName = movieCredits?.crew.filter(
     (member) => member.job === "Director",
@@ -110,10 +70,11 @@ export default async function MovieDetailPage({
               <p className="mb-2 inline-block rounded-lg bg-black p-1 text-xs font-bold text-white">
                 영화 정보
               </p>
-              <h1 className="text-4xl font-bold">{title}</h1>
-              <div className="ml-1 flex items-center">
-                <p className="mr-2 text-lg text-gray-500">{original_title}</p>
+              <h1 className="mx-4 break-keep text-4xl font-bold">{title}</h1>
+              <div className="mx-1 flex items-center">
+                <p className="ml-4 text-lg text-gray-500">{original_title}</p>
                 <p className="text-lg text-gray-500">
+                  <span className="px-2">•</span>
                   {release_date.slice(0, 4)}
                 </p>
               </div>
@@ -122,7 +83,7 @@ export default async function MovieDetailPage({
               <ul className="flex items-center space-x-2">
                 {genres.map((genre) => (
                   <li
-                    className="rounded-full border-2 border-black bg-black p-2 px-2 py-1 text-white"
+                    className="rounded-full border-2 border-black bg-black p-2 px-2 py-1 text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black"
                     key={genre.id}
                   >
                     {genre.name}
@@ -161,14 +122,14 @@ export default async function MovieDetailPage({
               <div className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
                 배우
               </div>
-              <ul className="mb-4">
+              <ul className="mb-8 px-4 font-semibold">
                 {castList?.map((cast, index) => (
                   <li key={index}>{cast.name}</li>
                 ))}
               </ul>
             </div>
             <div className="pt-2">
-              <p className="mb-2 ml-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
+              <p className="mb-4 ml-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
                 줄거리
               </p>
               <p className="mb-12 break-keep px-4 text-lg font-light">
@@ -179,13 +140,10 @@ export default async function MovieDetailPage({
               <p className="mr-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
                 제작사
               </p>
-              <div className="flex space-x-4 text-sm">
+              <div className="text-sm font-semibold">
                 {production_companies.map((company, index) => (
                   <div key={index}>
-                    {company.name}
-                    {index < production_companies.length - 1 && (
-                      <span className="ml-4">•</span>
-                    )}
+                    <span>{company.name}</span>
                   </div>
                 ))}
               </div>
@@ -195,11 +153,11 @@ export default async function MovieDetailPage({
                 href={`/write-review/new?movieId=${id}`}
                 className="relative flex w-full items-center justify-center rounded-xl bg-black p-8"
               >
-                <p className="text-xl transition-colors duration-300 group-hover:text-gray-400">
+                <p className="text-lg transition-all duration-300 group-hover:text-xl">
                   리뷰 작성하기
                 </p>
                 <FaArrowRight
-                  className="ml-2 transition-transform duration-300 group-hover:translate-x-2"
+                  className="ml-1 transition-transform duration-300 group-hover:translate-x-1"
                   size={24}
                 />
               </Link>
@@ -208,8 +166,12 @@ export default async function MovieDetailPage({
         </div>
       </div>
       {movieTrailer && movieTrailer.length > 0 ? (
-        <div className="px-8 pb-16">
-          <h2 className="mb-4 text-2xl font-bold">영화 예고편</h2>
+        <div className="px-8 pb-8">
+          <div>
+            <p className="mb-6 text-2xl font-bold">
+              이 영화의 예고편을 확인 해보세요
+            </p>
+          </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {movieTrailer.map((trailer) => (
               <div key={trailer.id} className="aspect-video">
@@ -226,8 +188,8 @@ export default async function MovieDetailPage({
         </div>
       ) : null}
       {similarPosts && similarPosts.length > 0 ? (
-        <div className="px-8">
-          <p className="text-2xl font-bold">이런 영화는 어때요?</p>
+        <div className="p-8">
+          <p className="mb-6 text-2xl font-bold">이런 영화는 어때요?</p>
           <TicketSwiper movieList={similarPosts} />
         </div>
       ) : null}
