@@ -7,6 +7,7 @@ import { Review } from "app/ticket-list/page";
 import ReviewDetailsModal from "app/ui/review-details-modal";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "firebase-config";
+import { IoIosAddCircle } from "react-icons/io";
 
 export default function TicketList({
   reviews,
@@ -47,23 +48,30 @@ export default function TicketList({
         closeModalHandler={closeModalHandler}
       />
 
+      <div className="flex h-[600px] items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50">
+        <Link href="/search">
+          <button className="p-12 text-xl font-bold text-gray-300 transition-colors duration-300 hover:text-gray-800">
+            <IoIosAddCircle size={48} />
+          </button>
+        </Link>
+      </div>
       {reviews.length > 0 &&
         reviews.map((post, index) => (
-          <div key={post.id} className="relative h-[600px] drop-shadow-lg">
+          <div key={post.id} className="group/card relative h-[600px]">
             {/* CARD HEADER */}
-            <div className="absolute left-0 top-0 flex w-full items-center justify-between p-2">
+            <div className="absolute left-0 top-0 z-10 flex w-full items-center justify-between p-2">
               <p className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
                 {index + 1}
               </p>
               <div className="flex items-center">
                 <Link href={`/write-review/${post.id}?movieId=${post.movieId}`}>
-                  <button className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
+                  <button className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white">
                     수정
                   </button>
                 </Link>
                 <button
                   onClick={() => handleDelete(post.id)}
-                  className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold"
+                  className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white"
                 >
                   삭제
                 </button>
@@ -79,9 +87,10 @@ export default function TicketList({
                 className="h-full w-full rounded-xl object-cover"
               />
             </div>
+
             <div
               id="info-card"
-              className="absolute bottom-0 left-0 w-full rounded-xl border-2 border-black bg-white"
+              className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white drop-shadow-md transition-all duration-300 group-hover/card:bottom-2 group-hover/card:right-2"
             >
               <div className="flex items-center border-b-2 border-black">
                 <div className="flex items-center justify-center px-2">
@@ -106,7 +115,7 @@ export default function TicketList({
               </div>
               <div className="border-t-2 border-black">
                 <button
-                  className="flex w-full items-center justify-end p-2"
+                  className="group relative flex w-full items-center justify-end p-2"
                   onClick={() => openModalHandler(post)}
                 >
                   <div className="flex">
@@ -115,17 +124,15 @@ export default function TicketList({
                     </p>
                     님의 리뷰
                   </div>
-                  <FaArrowRight className="ml-2" size={18} />
+                  <FaArrowRight
+                    className="mx-1 transition-transform duration-300 group-hover:translate-x-1"
+                    size={12}
+                  />
                 </button>
               </div>
             </div>
           </div>
         ))}
-      <div className="flex h-[600px] items-center justify-center rounded-xl border-2 border-dotted border-gray-300 p-4">
-        <Link href="/search">
-          <button className="text-xl font-bold">리뷰 작성하기</button>
-        </Link>
-      </div>
     </>
   );
 }
