@@ -53,9 +53,9 @@ export default function Header() {
 
   return (
     <header className="relative z-50 flex w-full items-center justify-center px-8 pt-8">
-      <div className="flex items-center justify-center rounded-full border border-black bg-white px-4 py-2 shadow-md">
+      <div className="flex items-center justify-center rounded-full border-2 border-black bg-white px-4 py-3">
         {/* LOGO */}
-        <div className="mr-4 font-bold">just your tickets.</div>
+        <div className="mx-4 font-bold">just your tickets.</div>
         {/* MENU */}
         <ul className="flex">
           <li className="group">

@@ -71,24 +71,28 @@ export default function HeaderSearchBar() {
   };
 
   return (
-    <div className="flex h-10 px-4" ref={dropdownRef}>
-      <div className="relative flex h-full w-full items-center justify-end">
-        <input
-          {...register("search")}
-          type="search"
-          placeholder="Search..."
-          className={`h-full rounded-full border-2 border-black shadow-md transition-all duration-300 ease-in-out ${
-            isSearchOpen
-              ? "w-64 pl-4 pr-10 text-sm opacity-100"
-              : "w-10 opacity-0"
-          }`}
-          onFocus={inputFocusHandler}
-        />
+    <div className="ml-4 flex h-12" ref={dropdownRef}>
+      <div className="relative flex h-full items-center justify-end">
         <div
-          className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full shadow-md ${isSearchOpen ? "border-none bg-none" : "border border-black bg-white"} transition-all duration-300 ease-in-out`}
-          onClick={handleIconClick}
+          className={`relative flex items-center transition-all duration-300 ease-in-out ${
+            isSearchOpen ? "w-64" : "w-12"
+          }`}
         >
-          <IoSearchOutline size={20} color="black" />
+          <input
+            {...register("search")}
+            type="search"
+            placeholder="영화 검색"
+            className={`h-12 w-full rounded-full border-2 border-black pl-4 pr-12 text-sm transition-all duration-300 ease-in-out ${
+              isSearchOpen ? "opacity-100" : "opacity-0"
+            }`}
+            onFocus={inputFocusHandler}
+          />
+          <div
+            className={`${isSearchOpen ? "border-none" : "bg-white"} absolute right-0 top-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-2 border-black transition-all duration-300 ease-in-out`}
+            onClick={handleIconClick}
+          >
+            <IoSearchOutline size={20} color="black" />
+          </div>
         </div>
 
         {isDropdownOpen && searchResults.length > 0 && (
