@@ -4,10 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 import { db } from "firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import { useAppSelector, useAppDispatch } from "store/hooks";
-import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
-import TicketList from "app/ticket-list/ticket-list";
 import { useForm } from "react-hook-form";
 import { debounce } from "lodash";
+import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
+import TicketList from "app/ticket-list/ticket-list";
 import { IoSearchOutline } from "react-icons/io5";
 
 export interface Review {
@@ -27,18 +27,15 @@ export interface Review {
 export default function Page() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const newReviewAlertState = useAppSelector(
     (state) => state.newReviewAlert.newReviewAlertState,
   );
   const dispatch = useAppDispatch();
-
-  const { register, watch, reset } = useForm({
+  const { register, watch } = useForm({
     defaultValues: {
       search: "",
     },
   });
-
   const searchTerm = watch("search");
 
   const fetchReviews = async () => {
@@ -52,18 +49,6 @@ export default function Page() {
     } catch (error) {
       console.error("Error getting documents: ", error);
     }
-  };
-
-  useEffect(() => {
-    newReviewAlertState && dispatch(addNewReviewAlertHandler());
-  }, [newReviewAlertState, dispatch]);
-
-  useEffect(() => {
-    fetchReviews();
-  }, []);
-
-  const handleReviewDeleted = () => {
-    fetchReviews();
   };
 
   const debounceSearch = useCallback(
@@ -80,21 +65,26 @@ export default function Page() {
   );
 
   useEffect(() => {
+    if (newReviewAlertState) {
+      const timer = setTimeout(() => {
+        dispatch(addNewReviewAlertHandler());
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [newReviewAlertState, dispatch]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const handleReviewDeleted = () => {
+    fetchReviews();
+  };
+
+  useEffect(() => {
     debounceSearch(searchTerm);
   }, [searchTerm, debounceSearch]);
-
-  const handleIconClick = () => {
-    setIsSearchOpen((prev) => !prev);
-    if (!isSearchOpen) {
-      setTimeout(
-        () =>
-          (
-            document.querySelector('input[type="search"]') as HTMLInputElement
-          )?.focus(),
-        300,
-      );
-    }
-  };
 
   return (
     <div className="mt-6 px-6">
@@ -123,7 +113,6 @@ export default function Page() {
             />
             <div
               className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full border-none bg-none`}
-              onClick={handleIconClick}
             >
               <IoSearchOutline size={20} color="black" />
             </div>

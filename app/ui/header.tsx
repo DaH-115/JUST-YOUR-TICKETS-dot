@@ -77,9 +77,15 @@ export default function Header() {
           <li className="group relative">
             <Link
               href="/ticket-list"
-              className="rounded-full px-4 py-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+              className="group relative rounded-full px-4 py-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
             >
               Ticket List
+              {newReviewAlertState && (
+                <span className="absolute right-1 top-1 flex h-3 w-3">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                  <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+                </span>
+              )}
             </Link>
           </li>
         </ul>
