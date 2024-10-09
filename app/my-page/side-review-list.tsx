@@ -36,12 +36,12 @@ export default function SideReviewList({ uid }: { uid: string }) {
   }, [uid]);
 
   return (
-    <div className="w-full px-8">
+    <div className="w-3/4 px-8">
       <div className="flex items-center">
         <div className="mr-4 text-2xl font-bold">TICKET LIST</div>
         <div className="mr-4">총 {userReviews.length}개</div>
         <Link href={`/my-page/my-ticket-list?uid=${uid}`}>
-          <div className="rounded-full border-2 border-gray-300 p-1 px-2 text-xs font-bold text-gray-500 transition-all duration-200 hover:bg-black hover:text-white focus:outline-none">
+          <div className="rounded-full px-2 py-1 text-xs font-bold text-gray-500 transition-all duration-200 hover:bg-black hover:text-white focus:outline-none">
             전체보기
           </div>
         </Link>

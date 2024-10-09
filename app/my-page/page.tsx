@@ -106,63 +106,68 @@ export default function MyPage() {
   };
 
   return (
-    <div id="layout" className="mt-24 flex w-full px-8">
+    <div id="layout" className="mt-20 flex w-full px-8">
       <SideMenu uid={userState?.uid} />
 
       {/* Main */}
       <div className="flex w-full flex-col">
-        <div className="border-2 border-black px-8 pb-12 pt-8">
-          <form onSubmit={handleSubmit(onSubmitHandler)}>
-            <div className="flex border-b-2 border-black pb-4">
-              <h1 className="w-full text-2xl font-bold">프로필</h1>
-              {isEditing ? (
-                <button className="whitespace-nowrap text-sm">저장</button>
-              ) : (
-                <div
-                  onClick={editingHandler}
-                  className="flex items-center whitespace-nowrap text-sm"
-                >
-                  수정
-                </div>
-              )}
-            </div>
-            <div className="border-b-2 border-black pb-2 pt-4">
-              <div className="text-sm">이름</div>
-              <div className="flex w-full items-center">
+        <div className="group relative inline-block w-full">
+          <div className="relative z-10 rounded-xl border-2 border-black bg-white px-8 pb-12 pt-8 transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1">
+            <form onSubmit={handleSubmit(onSubmitHandler)}>
+              <div className="flex border-b-2 border-black pb-2 font-bold">
+                <h1 className="w-full text-2xl">프로필</h1>
                 {isEditing ? (
-                  <input
-                    {...register("displayName")}
-                    type="text"
-                    className="w-full bg-transparent text-2xl font-bold outline-none"
-                  />
+                  <div className="flex cursor-pointer items-center whitespace-nowrap rounded-full px-3 py-2 text-sm transition-colors duration-300 hover:bg-black hover:text-white">
+                    <button className="whitespace-nowrap text-sm">저장</button>
+                  </div>
                 ) : (
-                  <div className="w-full bg-transparent text-2xl font-bold outline-none">
-                    {userState?.displayName}
+                  <div
+                    onClick={editingHandler}
+                    className="flex cursor-pointer items-center whitespace-nowrap rounded-full px-3 py-2 text-sm transition-colors duration-300 hover:bg-black hover:text-white"
+                  >
+                    수정
                   </div>
                 )}
               </div>
-            </div>
-            <div className="border-b-2 border-black pb-2 pt-4">
-              <div className="text-sm">바이오</div>
-              <div className="flex w-full items-center">
-                {isEditing ? (
-                  <input
-                    {...register("biography")}
-                    type="text"
-                    className="w-full bg-transparent text-xl outline-none"
-                  />
-                ) : (
-                  <div className="w-full text-xl">{userDoc?.biography}</div>
-                )}
+              <div className="border-b border-black pb-2 pt-4">
+                <div className="text-sm">이름</div>
+                <div className="flex w-full items-center">
+                  {isEditing ? (
+                    <input
+                      {...register("displayName")}
+                      type="text"
+                      className="w-full bg-transparent text-2xl outline-none"
+                    />
+                  ) : (
+                    <div className="w-full bg-transparent text-2xl outline-none">
+                      {userState?.displayName}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="border-b border-black pb-2 pt-4">
+                <div className="text-sm">바이오</div>
+                <div className="flex w-full items-center">
+                  {isEditing ? (
+                    <input
+                      {...register("biography")}
+                      type="text"
+                      className="w-full bg-transparent text-xl outline-none"
+                    />
+                  ) : (
+                    <div className="w-full">{userDoc?.biography}</div>
+                  )}
+                </div>
+              </div>
+            </form>
+            <div className="border-b border-black pb-2 pt-4">
+              <div className="text-sm">이메일</div>
+              <div className="flex items-center">
+                <div className="mr-4 w-full text-xl">{userState?.email}</div>
               </div>
             </div>
-          </form>
-          <div className="border-b-2 border-black pb-2 pt-4">
-            <div className="text-sm">이메일</div>
-            <div className="flex items-center">
-              <div className="mr-4 w-full text-xl">{userState?.email}</div>
-            </div>
           </div>
+          <div className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200"></div>
         </div>
 
         {/* Change Password */}
