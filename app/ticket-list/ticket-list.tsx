@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { Review } from "app/ticket-list/page";
 import ReviewDetailsModal from "app/ui/review-details-modal";
@@ -33,6 +33,7 @@ export default function TicketList({
       try {
         await deleteDoc(doc(db, "movie-reviews", id));
         onReviewDeleted();
+        closeModalHandler();
       } catch (error) {
         console.error("리뷰 삭제 중 오류 발생:", error);
         alert("리뷰 삭제에 실패했습니다. 다시 시도해 주세요.");
@@ -46,6 +47,7 @@ export default function TicketList({
         selectedReview={selectedReview}
         isModalOpen={isModalOpen}
         closeModalHandler={closeModalHandler}
+        handleDeleteHandler={handleDelete}
       />
 
       <div className="flex h-[600px] items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50">
@@ -124,10 +126,7 @@ export default function TicketList({
                     </p>
                     님의 리뷰
                   </div>
-                  <FaArrowRight
-                    className="mx-1 transition-transform duration-300 group-hover:translate-x-1"
-                    size={12}
-                  />
+                  <FaExternalLinkAlt className="mx-1" size={12} />
                 </button>
               </div>
             </div>
