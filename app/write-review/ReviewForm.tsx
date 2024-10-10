@@ -111,7 +111,7 @@ export default function ReviewForm({
         </div>
       )}
 
-      <div className="relative z-40 flex items-center justify-center py-16 drop-shadow-lg">
+      <div className="relative z-40 mb-20 mt-16 flex items-center justify-center drop-shadow-lg">
         <div className="w-1/3 rounded-xl border-2 border-black bg-white">
           <div className="w-full p-4 pb-2">
             <div className="mb-2 flex items-end">
@@ -211,14 +211,14 @@ export default function ReviewForm({
               <div className="flex justify-end border-t border-black p-2">
                 <button
                   type="button"
-                  className="mr-2 w-full rounded-xl bg-gray-200 py-4 transition-all duration-300 hover:bg-white"
+                  className="mr-2 w-full rounded-xl bg-gray-200 py-4 transition-all duration-300 hover:bg-gray-300"
                   onClick={handlePageExit}
                 >
                   취소
                 </button>
                 <button
                   type="submit"
-                  className="group flex w-full items-center justify-center rounded-xl bg-black p-4 text-white transition-all duration-300 hover:font-bold"
+                  className="group flex w-full items-center justify-center rounded-xl bg-black p-4 text-white transition-all duration-300 hover:bg-gray-800"
                 >
                   <div>작성</div>
                   <MdDriveFileRenameOutline className="ml-1" size={18} />

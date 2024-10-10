@@ -21,7 +21,7 @@ export default function SwiperCard({
 
   return (
     <div className="group/card relative mx-2 h-[600px]">
-      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 pt-5 text-6xl font-bold text-white">
+      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 pt-5 text-5xl font-bold text-white">
         {idx + 1}.
       </div>
       {poster_path ? (

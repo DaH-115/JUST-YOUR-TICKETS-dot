@@ -11,7 +11,6 @@ import { IoStar } from "react-icons/io5";
 import { FaArrowRight } from "react-icons/fa";
 import TicketSwiper from "app/ticket-swiper";
 import BackGround from "app/ui/back-ground";
-import { RiMovieLine } from "react-icons/ri";
 
 export default async function MovieDetailPage({
   params,
@@ -140,7 +139,7 @@ export default async function MovieDetailPage({
               <p className="mr-4 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
                 제작사
               </p>
-              <div className="text-sm font-semibold">
+              <div className="space-y-1 text-sm font-semibold">
                 {production_companies.map((company, index) => (
                   <div key={index}>
                     <span>{company.name}</span>

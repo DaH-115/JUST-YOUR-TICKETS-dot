@@ -7,6 +7,7 @@ import { db } from "firebase-config";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
 import ReviewForm, { ReviewDate } from "app/write-review/ReviewForm";
 import { Movie } from "app/page";
+import Catchphrase from "app/ui/catchphrase";
 
 export default function ReviewPage() {
   const params = useParams();
@@ -65,6 +66,7 @@ export default function ReviewPage() {
           reviewId={id as string}
         />
       )}
+      <Catchphrase />
     </>
   );
 }

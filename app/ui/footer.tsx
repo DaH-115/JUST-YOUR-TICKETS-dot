@@ -15,7 +15,7 @@ export default function Footer() {
       const documentHeight = document.documentElement.scrollHeight;
       const scrollTop = document.documentElement.scrollTop;
 
-      if (windowHeight + scrollTop >= documentHeight) {
+      if (windowHeight + scrollTop >= documentHeight - 10) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
