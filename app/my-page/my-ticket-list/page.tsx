@@ -16,7 +16,6 @@ export default function MySideReviewList() {
   const uid = searchParams.get("uid");
   const [userReviews, setUserReviews] = useState<Review[]>([]);
   const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { register, watch } = useForm({
     defaultValues: {
       search: "",
@@ -40,15 +39,6 @@ export default function MySideReviewList() {
     }
   };
 
-  useEffect(() => {
-    if (!uid) return;
-    fetchUserReviews();
-  }, [uid]);
-
-  const handleReviewDeleted = () => {
-    fetchUserReviews();
-  };
-
   const debounceSearch = useCallback(
     debounce((searchTerm: string) => {
       const filtered = userReviews.filter(
@@ -67,21 +57,17 @@ export default function MySideReviewList() {
   );
 
   useEffect(() => {
+    if (!uid) return;
+    fetchUserReviews();
+  }, [uid]);
+
+  const handleReviewDeleted = () => {
+    fetchUserReviews();
+  };
+
+  useEffect(() => {
     debounceSearch(searchTerm);
   }, [searchTerm, debounceSearch]);
-
-  const handleIconClick = () => {
-    setIsSearchOpen((prev) => !prev);
-    if (!isSearchOpen) {
-      setTimeout(
-        () =>
-          (
-            document.querySelector('input[type="search"]') as HTMLInputElement
-          )?.focus(),
-        300,
-      );
-    }
-  };
 
   return (
     <div id="layout" className="mb-8 mt-24 flex w-full px-8">
@@ -112,7 +98,6 @@ export default function MySideReviewList() {
               />
               <div
                 className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full border-none bg-none`}
-                onClick={handleIconClick}
               >
                 <IoSearchOutline size={20} color="black" />
               </div>
