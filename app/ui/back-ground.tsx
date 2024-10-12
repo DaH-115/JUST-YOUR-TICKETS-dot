@@ -1,28 +1,25 @@
 import Image from "next/image";
 
-export default function BackGround({
-  imageUrl,
-  movieTitle,
-}: {
-  imageUrl: string | undefined;
-  movieTitle: string | undefined;
-}) {
+interface BackGroundProps {
+  imageUrl?: string;
+  movieTitle?: string;
+}
+
+export default function BackGround({ imageUrl, movieTitle }: BackGroundProps) {
   return (
-    <div className="absolute inset-0 z-0 h-screen w-full">
-      {imageUrl ? (
+    <div className="absolute inset-0 z-0 h-screen">
+      {imageUrl && (
         <>
           <Image
             src={`https://image.tmdb.org/t/p/original${imageUrl}`}
-            alt={movieTitle || "background image"}
+            alt={movieTitle || "Background Image"}
             width={1280}
             height={720}
             priority
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-white/100 to-transparent" />
+          <span className="absolute inset-0 bg-gradient-to-t from-white/100 to-transparent" />
         </>
-      ) : (
-        <div className="h-full w-full bg-gradient-to-t from-white/100 to-transparent" />
       )}
     </div>
   );

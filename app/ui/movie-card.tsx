@@ -42,7 +42,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
   return (
     <div className="group relative inline-block">
-      <div className="rounded-xl border-2 border-black bg-white transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1">
+      <div className="rounded-xl border-2 border-black bg-white lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
         <div className="p-4">
           <h2 className="mb-2 inline-block animate-bounce rounded-lg bg-black p-1 text-xs font-bold text-white">
             추천 영화
@@ -59,49 +59,51 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </div>
           </div>
           <div className="ml-1 flex items-center">
-            <p className="mr-2 text-lg text-gray-500">{original_title}</p>
-            <p className="text-lg text-gray-500">{release_date.slice(0, 4)}</p>
+            <p className="mr-2 text-lg text-gray-500">{`${original_title}(${release_date.slice(0, 4)})`}</p>
           </div>
         </div>
         <ul className="flex items-center space-x-2 border-y border-black px-4 py-2 text-sm">
           {genres.map((genre, idx) => (
             <li
-              className="rounded-full border border-black bg-black p-2 px-2 py-1 text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black"
+              className="rounded-full border border-black bg-white p-2 px-2 py-1 text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-white active:text-black"
               key={idx}
             >
               {genre}
             </li>
           ))}
         </ul>
+        <div className="flex flex-1 border-b border-black">
+          <ul className="flex-1 flex-col items-center justify-center py-4 text-center">
+            {castList?.map((cast) => <li key={cast.id}>{cast.name}</li>)}
+          </ul>
+        </div>
         <AnimatedOverview overview={overview} />
         <div className="flex">
-          <div className="flex-1 border-r-2 border-dotted border-gray-300 p-2">
-            <p className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
-              개봉일
-            </p>
-            <p className="text-center">{movieDate}</p>
-          </div>
-          <div className="flex-1 border-r-2 border-dotted border-gray-300 p-2">
-            <p className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
-              감독
-            </p>
-            <p className="text-center">{director}</p>
-          </div>
-          <div className="flex-1 border-r-2 border-dotted border-gray-300 pb-4 pl-2 pt-2">
-            <div className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
-              배우
+          <div className="flex-1 border-r-2 border-dotted border-gray-300">
+            <div className="border-b border-black p-1">
+              <div className="rounded-xl bg-black">
+                <p className="p-2 text-center text-xs text-white">개봉일</p>
+              </div>
             </div>
-            <ul className="text-center">
-              {castList?.map((cast) => <li key={cast.id}>{cast.name}</li>)}
-            </ul>
+            <p className="px-2 py-4 text-center">{movieDate}</p>
           </div>
-          <div className="flex-1 p-2">
-            <p className="mb-2 inline-block rounded-lg border-2 border-black p-1 text-xs font-bold">
-              평점
-            </p>
+          <div className="flex-1 border-r-2 border-dotted border-gray-300">
+            <div className="border-b border-black p-1">
+              <div className="rounded-xl bg-black">
+                <p className="p-2 text-center text-xs text-white">감독</p>
+              </div>
+            </div>
+            <p className="px-2 py-4 text-center">{director}</p>
+          </div>
+          <div className="flex-1">
+            <div className="border-b border-black p-1">
+              <div className="rounded-xl bg-black">
+                <p className="p-2 text-center text-xs text-white">평점</p>
+              </div>
+            </div>
             <div className="flex items-center justify-center">
               <IoStar className="mr-1" size={24} />
-              <p className="text-4xl font-bold">
+              <p className="py-4 text-4xl font-bold">
                 {Math.round(vote_average * 10) / 10}
               </p>
             </div>
@@ -110,19 +112,16 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         <div className="flex w-full border-t border-black p-1 text-center text-white">
           <Link
             href={`/write-review/new?movieId=${id}`}
-            className="group/button relative flex w-full items-center justify-end rounded-2xl bg-black p-8"
+            className="group/button relative flex w-full items-center justify-end rounded-2xl bg-black p-4"
           >
-            <p className="text-lg transition-all duration-300 group-hover/button:text-xl">
+            <p className="transition-all duration-300 group-hover/button:text-lg lg:text-lg lg:group-hover/button:text-xl">
               리뷰 작성하기
             </p>
-            <FaArrowRight
-              className="ml-1 transition-transform duration-300 group-hover/button:translate-x-1"
-              size={24}
-            />
+            <FaArrowRight className="ml-1 text-xl transition-transform duration-300 group-hover/button:translate-x-1" />
           </Link>
         </div>
       </div>
-      <div className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200"></div>
+      <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-gray-200 lg:bg-black lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1 lg:group-hover:bg-gray-200"></span>
     </div>
   );
 }

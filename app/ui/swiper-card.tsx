@@ -20,7 +20,7 @@ export default function SwiperCard({
   const movieTitle = useGetTitle(original_title, title);
 
   return (
-    <div className="group/card relative mx-2 h-[600px]">
+    <div className="group/card relative mx-2 h-[450px] lg:h-[600px]">
       <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 pt-5 text-5xl font-bold text-white">
         {idx + 1}.
       </div>
@@ -39,7 +39,7 @@ export default function SwiperCard({
       )}
 
       {/* MOVIE INFO CARD */}
-      <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white shadow-lg transition-all duration-300 group-hover/card:bottom-2 group-hover/card:right-2">
+      <div className="absolute bottom-2 right-2 w-full rounded-xl border-2 border-black bg-white shadow-lg drop-shadow-md transition-all duration-300 lg:bottom-0 lg:right-0 lg:group-hover/card:bottom-2 lg:group-hover/card:right-2">
         <div className="flex p-4 pb-0">
           <div className="truncate pb-4 text-xl font-bold">{movieTitle}</div>
           <div className="group relative ml-2">

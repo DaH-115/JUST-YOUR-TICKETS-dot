@@ -5,7 +5,7 @@ const ScrollToTopButton = () => {
 
   useEffect(() => {
     const scrollHandler = () => {
-      if (window.scrollY > 200) {
+      if (window.scrollY > 300) {
         setShowScrollTopButton(true);
       } else {
         setShowScrollTopButton(false);
@@ -26,13 +26,13 @@ const ScrollToTopButton = () => {
   return (
     <button
       onClick={scrollToTopHandler}
-      className={`fixed bottom-10 right-10 z-50 flex h-24 w-24 transform items-center justify-center rounded-full border border-white bg-black p-4 font-bold text-white shadow-lg transition-all duration-300 hover:bg-gray-500 ${
+      className={`fixed bottom-10 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-white bg-black text-xs font-bold text-white shadow-lg transition-all duration-300 hover:bg-gray-500 lg:right-10 lg:h-24 lg:w-24 lg:text-base ${
         showScrollTopButton
           ? "pointer-events-auto translate-y-0 opacity-100"
           : "pointer-events-none translate-y-5 opacity-0"
       }`}
     >
-      To Top
+      Top
     </button>
   );
 };

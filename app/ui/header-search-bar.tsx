@@ -71,7 +71,7 @@ export default function HeaderSearchBar() {
   };
 
   return (
-    <div className="ml-4 flex h-12" ref={dropdownRef}>
+    <div className="ml-4 hidden h-12 lg:flex" ref={dropdownRef}>
       <div className="relative flex h-full items-center justify-end">
         <div
           className={`relative flex items-center transition-all duration-300 ease-in-out ${

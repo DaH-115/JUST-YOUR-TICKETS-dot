@@ -29,9 +29,12 @@ export default function Footer() {
   }, []);
 
   return (
-    <div id="footer" className="w-full bg-black px-8 py-12 text-white">
+    <div
+      id="footer"
+      className="w-full bg-black px-8 pb-8 pt-12 text-white lg:py-12"
+    >
       <div className="pb-8">JUST YOUR TICKETS.</div>
-      <div className="flex justify-between space-x-2 text-sm">
+      <div className="flex justify-between space-x-2 text-xs lg:text-sm">
         <div className="w-full space-y-1 border-l-2 border-dotted border-gray-500 pl-4">
           <div className={`${borderStyle} ${"font-bold"}`}>Resume</div>
           <div className={borderStyle}>Github</div>
@@ -50,7 +53,9 @@ export default function Footer() {
             </li>
           </ul>
         </div>
-        <div className={`w-full border-l-2 border-dotted border-gray-500 pl-4`}>
+        <div
+          className={`hidden w-full border-l-2 border-dotted border-gray-500 pl-4 lg:block`}
+        >
           <div
             className={`font-bold transition-transform duration-700 ${
               isVisible ? "translate-y-0" : "translate-y-full"
@@ -59,6 +64,13 @@ export default function Footer() {
             ⓒGWAK DA HYUN 2024
           </div>
         </div>
+      </div>
+      <div
+        className={`mt-8 border-t border-white pt-4 text-xs font-bold transition-transform duration-500 lg:hidden ${
+          isVisible ? "translate-y-0" : "translate-y-10"
+        }`}
+      >
+        ⓒGWAK DA HYUN 2024
       </div>
     </div>
   );
