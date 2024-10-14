@@ -6,10 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Movie } from "app/page";
 import { fetchNowPlayingMovies } from "api/fetchNowPlayingMovies";
-import SwiperCard from "app/ui/swiper-card";
+import { IoSearchOutline } from "react-icons/io5";
 import { fetchSearchMovies } from "api/fetchSearchMovies";
-import ScrollToTopButton from "app/ui/scroll-to-top-button";
 import Catchphrase from "app/ui/catchphrase";
+import SwiperCard from "app/ui/swiper-card";
+import ScrollToTopButton from "app/ui/scroll-to-top-button";
 
 const searchSchema = z.object({
   query: z.string().min(1, "검색어를 입력해주세요."),
@@ -23,17 +24,17 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
+    setIsLoading(true);
 
+    const fetchData = async () => {
       try {
         const posts = await fetchNowPlayingMovies();
         setNowPlayingMovies(posts);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     };
 
     fetchData();
@@ -76,51 +77,57 @@ export default function Page() {
 
   return (
     <>
-      <div className="mt-8 min-h-screen px-8 py-12">
-        <div className="mx-auto w-2/4">
-          <form onSubmit={handleSubmit(onSubmit)} className="mb-8">
-            <div className="flex items-center border-b border-black py-2">
-              <input
-                className="mr-3 w-full appearance-none border-none bg-transparent px-2 py-1 text-4xl font-bold leading-tight text-gray-300 focus:outline-none"
-                type="text"
-                placeholder="검색어를 입력하세요"
-                {...register("query")}
-              />
-              <button
-                className="flex-shrink-0 rounded-full bg-black px-4 py-2 text-sm text-white transition-colors duration-300 ease-in-out hover:bg-gray-800"
-                type="submit"
-                disabled={isLoading}
-              >
-                검색
-              </button>
-            </div>
+      <main className="pt-6 lg:px-8 lg:pt-12">
+        <section className="mx-auto w-3/4 lg:w-2/4">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="mb-8 flex items-center border-b border-black py-2"
+          >
+            <label htmlFor="search-input" className="sr-only">
+              영화 검색
+            </label>
+            <input
+              id="search-input"
+              className="mr-3 w-full appearance-none border-none bg-transparent pl-1 text-lg font-bold leading-tight text-gray-800 focus:outline-none"
+              type="text"
+              placeholder="검색어를 입력하세요"
+              {...register("query")}
+            />
+            <button
+              className="flex cursor-pointer items-center justify-center rounded-full border-2 border-black bg-black p-2 text-white transition-colors duration-300 ease-in-out hover:bg-white hover:text-black"
+              type="submit"
+              disabled={isLoading}
+            >
+              <IoSearchOutline size={20} />
+            </button>
           </form>
-        </div>
+        </section>
 
         {isLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <p className="text-center text-4xl font-bold text-gray-300">
+          <div className="flex items-center justify-center py-8 lg:py-16">
+            <p className="text-center text-lg font-bold text-gray-300 lg:text-4xl">
               검색 중...
             </p>
           </div>
         ) : (
           <>
             {searchResults.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-                {searchResults.map((result, idx) => (
-                  <div className="py-4">
+              <>
+                <h1 className="pl-4 text-2xl font-bold">검색 결과</h1>
+                <section className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+                  {searchResults.map((result, idx) => (
                     <SwiperCard
                       key={result.id}
                       movie={result}
                       id={result.id}
                       idx={idx}
                     />
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </section>
+              </>
             ) : touchedFields.query ? (
-              <div className="flex items-center justify-center py-16">
-                <p className="text-center text-4xl font-bold text-gray-300">
+              <div className="flex items-center justify-center py-8 lg:py-16">
+                <p className="text-center text-lg font-bold text-gray-300 lg:text-2xl">
                   검색 결과가 없습니다.
                 </p>
               </div>
@@ -129,8 +136,8 @@ export default function Page() {
         )}
 
         {!searchResults.length ? (
-          <div className="mt-28">
-            <div className="text-2xl font-bold">추천 검색 영화</div>
+          <section className="mt-14 bg-gray-100 py-6 lg:mt-28 lg:py-12">
+            <h2 className="pl-4 text-2xl font-bold">추천 영화</h2>
             <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
               {nowPlayingMovies.map((movie, idx) => (
                 <SwiperCard
@@ -141,9 +148,9 @@ export default function Page() {
                 />
               ))}
             </div>
-          </div>
+          </section>
         ) : null}
-      </div>
+      </main>
       <ScrollToTopButton />
       <Catchphrase />
     </>
