@@ -41,7 +41,9 @@ export default function SwiperCard({
       {/* MOVIE INFO CARD */}
       <div className="absolute bottom-2 right-2 w-full rounded-xl border-2 border-black bg-white shadow-lg drop-shadow-md transition-all duration-300 lg:bottom-0 lg:right-0 lg:group-hover/card:bottom-2 lg:group-hover/card:right-2">
         <div className="flex p-4 pb-0">
-          <div className="truncate pb-4 text-xl font-bold">{movieTitle}</div>
+          <div className="truncate pb-4 text-lg font-bold lg:text-xl">
+            {movieTitle}
+          </div>
           <div className="group relative ml-2">
             <Link href={`/movie-detail/${id}`}>
               <FaInfoCircle />
@@ -54,7 +56,7 @@ export default function SwiperCard({
         <div className="flex w-full flex-wrap border-y border-black p-1">
           {genres.map((genre, idx) => (
             <p
-              className="m-1 rounded-full border-2 border-black bg-white px-2 py-1 text-sm text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white"
+              className="m-1 rounded-full border-2 border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white lg:text-sm"
               key={idx}
             >
               {genre}
