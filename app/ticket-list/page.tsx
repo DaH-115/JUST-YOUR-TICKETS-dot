@@ -88,28 +88,24 @@ export default function Page() {
 
   return (
     <div className="mt-6 px-6">
-      <div className="flex items-end justify-between">
-        <div className="group relative inline-block w-80">
-          <div className="relative z-10 h-20 w-80 rounded-xl border-2 border-black bg-white transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1">
-            <div className="flex h-20 items-center">
-              <h1 className="flex h-full flex-1 items-center justify-center border-r border-black text-2xl font-bold">
-                ALL TICKET LIST
-              </h1>
-              <span className="px-4 font-bold">
-                총 {filteredReviews.length}장
-              </span>
-            </div>
+      <div className="flex-col items-center justify-center md:flex-row md:items-end md:justify-between">
+        <div className="flex w-full flex-col md:flex-row">
+          <div className="mb-4 flex w-full items-center justify-between md:mb-0 lg:justify-normal">
+            <h1 className="text-2xl font-bold">ALL TICKET LIST</h1>
+            <span className="lg:px-4">
+              총 <span className="font-bold">{filteredReviews.length}</span>장
+            </span>
           </div>
-          <div className="absolute left-1 top-1 -z-10 h-20 w-80 rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200"></div>
-        </div>
-
-        <div className="flex h-10">
-          <div className="relative flex h-full w-full items-center justify-end">
+          <div className="relative flex h-10 w-full items-center justify-end">
+            <label htmlFor="review-search" className="sr-only">
+              리뷰 검색
+            </label>
             <input
               {...register("search")}
+              id="review-search"
               type="search"
               placeholder="리뷰 검색"
-              className="h-full w-64 rounded-full border-2 border-black pl-4 pr-10 text-sm opacity-100"
+              className="h-full w-full rounded-full border-2 border-black pl-4 pr-10 text-sm opacity-100 lg:w-64"
             />
             <div
               className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full border-none bg-none`}
@@ -120,12 +116,12 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 px-6 pb-12 pt-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <main className="grid grid-cols-2 gap-2 pb-12 pt-8 sm:grid-cols-2 md:grid-cols-3 md:gap-4 md:px-8 lg:grid-cols-4 xl:grid-cols-5">
         <TicketList
           reviews={searchTerm ? filteredReviews : reviews}
           onReviewDeleted={handleReviewDeleted}
         />
-      </div>
+      </main>
     </div>
   );
 }

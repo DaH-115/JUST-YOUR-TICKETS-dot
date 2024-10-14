@@ -1,13 +1,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "firebase-config";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { Review } from "app/ticket-list/page";
-import ReviewDetailsModal from "app/ui/review-details-modal";
-import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "firebase-config";
 import { IoIosAddCircle } from "react-icons/io";
+import ReviewDetailsModal from "app/ui/review-details-modal";
+import ReviewBtnGroup from "./review-btn-group";
 
 export default function TicketList({
   reviews,
@@ -50,7 +51,7 @@ export default function TicketList({
         handleDeleteHandler={handleDelete}
       />
 
-      <div className="flex h-[600px] items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50">
+      <div className="hidden h-[450px] items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 md:flex">
         <Link href="/search">
           <button className="p-12 text-xl font-bold text-gray-300 transition-colors duration-300 hover:text-gray-800">
             <IoIosAddCircle size={48} />
@@ -59,25 +60,21 @@ export default function TicketList({
       </div>
       {reviews.length > 0 &&
         reviews.map((post, index) => (
-          <div key={post.id} className="group/card relative h-[600px]">
+          <div
+            key={post.id}
+            className="group/card relative h-[300px] drop-shadow-md md:h-[450px]"
+          >
             {/* CARD HEADER */}
             <div className="absolute left-0 top-0 z-10 flex w-full items-center justify-between p-2">
-              <p className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold">
+              <p className="flex items-center justify-center rounded-full border-2 border-black bg-white px-2 py-1 text-xs font-bold md:text-base">
                 {index + 1}
               </p>
-              <div className="flex items-center">
-                <Link href={`/write-review/${post.id}?movieId=${post.movieId}`}>
-                  <button className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white">
-                    수정
-                  </button>
-                </Link>
-                <button
-                  onClick={() => handleDelete(post.id)}
-                  className="rounded-full border-2 border-black bg-white px-4 py-2 font-bold transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white"
-                >
-                  삭제
-                </button>
-              </div>
+              {/* DESKTOP ONLY */}
+              <ReviewBtnGroup
+                postId={post.id}
+                movieId={post.movieId}
+                onReviewDeleted={onReviewDeleted}
+              />
             </div>
 
             <div id="movie-poster" className="h-4/5">
@@ -89,44 +86,29 @@ export default function TicketList({
                 className="h-full w-full rounded-xl object-cover"
               />
             </div>
-
-            <div
-              id="info-card"
-              className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white drop-shadow-md transition-all duration-300 group-hover/card:bottom-2 group-hover/card:right-2"
-            >
-              <div className="flex items-center border-b-2 border-black">
-                <div className="flex items-center justify-center px-2">
-                  <IoStar className="mt-2" size={18} />
-                  <p className="text-4xl font-bold">{post.rating}</p>
+            <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white transition-all duration-300 group-hover/card:bottom-1 group-hover/card:right-1 md:group-hover/card:bottom-2 md:group-hover/card:right-2">
+              <div className="flex items-center justify-between border-b">
+                <div className="flex items-center justify-center px-2 py-1">
+                  <IoStar className="mr-1 text-sm" />
+                  <p className="text-sm font-bold lg:text-2xl">{post.rating}</p>
                 </div>
-                <div className="border-l-2 border-black p-2">
-                  <p className="text-sm">{post.date}</p>
-                  <p className="text-sm font-bold">{post.reviewTitle}</p>
-                  <div className="flex text-xs text-gray-500">
-                    <p>
-                      {post.movieTitle} - {post.releaseYear}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex-1 p-2">
-                <p className="text-xs font-bold">리뷰 내용</p>
-                <p id="review-post" className="truncate">
-                  {post.review}
+                <p className="px-3 py-1 text-xs font-bold lg:text-sm">
+                  {post.userName ? post.userName : "Guest"}
                 </p>
               </div>
-              <div className="border-t-2 border-black">
+              <div className="h-[4rem] overflow-y-scroll break-keep p-2 md:border-b">
+                <p className="text-sm font-bold">{post.reviewTitle}</p>
+                <div className="flex text-xs text-gray-500">
+                  {post.movieTitle} - {post.releaseYear}
+                </div>
+              </div>
+              <div className="flex items-center border-t px-3 py-2">
+                <p className="w-full text-xs">{post.date}</p>
                 <button
-                  className="group relative flex w-full items-center justify-end p-2"
+                  className="group relative flex items-center justify-end"
                   onClick={() => openModalHandler(post)}
                 >
-                  <div className="flex">
-                    <p className="mr-2 font-bold">
-                      {post.userName ? post.userName : "Guest"}
-                    </p>
-                    님의 리뷰
-                  </div>
-                  <FaExternalLinkAlt className="mx-1" size={12} />
+                  <FaExternalLinkAlt className="text-gray-400" size={12} />
                 </button>
               </div>
             </div>
