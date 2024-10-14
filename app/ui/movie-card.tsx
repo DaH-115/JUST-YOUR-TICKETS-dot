@@ -41,17 +41,17 @@ export default function MovieCard({ movie }: { movie: Movie }) {
   }, [id]);
 
   return (
-    <div className="group relative inline-block">
+    <div className="group relative inline-block break-keep">
       <div className="rounded-xl border-2 border-black bg-white lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
         <div className="p-4">
           <h2 className="mb-2 inline-block animate-bounce rounded-lg bg-black p-1 text-xs font-bold text-white">
             추천 영화
           </h2>
           <div className="flex">
-            <h1 className="text-4xl font-bold">{title}</h1>
+            <h1 className="text-3xl font-bold lg:ml-4 lg:text-4xl">{title}</h1>
             <div className="group/tooltip relative ml-2">
               <Link href={`/movie-detail/${id}`}>
-                <FaInfoCircle size={20} />
+                <FaInfoCircle className="text-base lg:text-lg" />
               </Link>
               <div className="invisible absolute bottom-full left-1/2 mb-2 whitespace-nowrap rounded-lg bg-black px-3 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover/tooltip:visible group-hover/tooltip:opacity-100">
                 더 자세한 정보 보기
@@ -65,21 +65,21 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         <ul className="flex items-center space-x-2 border-y border-black px-4 py-2 text-sm">
           {genres.map((genre, idx) => (
             <li
-              className="rounded-full border border-black bg-white p-2 px-2 py-1 text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-white active:text-black"
+              className="rounded-full border border-black bg-white p-2 px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-white active:text-black lg:text-sm"
               key={idx}
             >
               {genre}
             </li>
           ))}
         </ul>
+        <AnimatedOverview overview={overview} />
         <div className="flex flex-1 border-b border-black">
           <ul className="flex-1 flex-col items-center justify-center py-4 text-center">
             {castList?.map((cast) => <li key={cast.id}>{cast.name}</li>)}
           </ul>
         </div>
-        <AnimatedOverview overview={overview} />
         <div className="flex">
-          <div className="flex-1 border-r-2 border-dotted border-gray-300">
+          <div className="border-r-2 border-dotted border-gray-300">
             <div className="border-b border-black p-1">
               <div className="rounded-xl bg-black">
                 <p className="p-2 text-center text-xs text-white">개봉일</p>
@@ -87,7 +87,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </div>
             <p className="px-2 py-4 text-center">{movieDate}</p>
           </div>
-          <div className="flex-1 border-r-2 border-dotted border-gray-300">
+          <div className="border-r-2 border-dotted border-gray-300">
             <div className="border-b border-black p-1">
               <div className="rounded-xl bg-black">
                 <p className="p-2 text-center text-xs text-white">감독</p>
@@ -101,11 +101,11 @@ export default function MovieCard({ movie }: { movie: Movie }) {
                 <p className="p-2 text-center text-xs text-white">평점</p>
               </div>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center p-4">
               <IoStar className="mr-1" size={24} />
-              <p className="py-4 text-4xl font-bold">
+              <div className="text-2xl font-bold lg:text-4xl">
                 {Math.round(vote_average * 10) / 10}
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             <p className="transition-all duration-300 group-hover/button:text-lg lg:text-lg lg:group-hover/button:text-xl">
               리뷰 작성하기
             </p>
-            <FaArrowRight className="ml-1 text-xl transition-transform duration-300 group-hover/button:translate-x-1" />
+            <FaArrowRight className="ml-1 text-lg transition-transform duration-300 group-hover/button:translate-x-1 lg:text-xl" />
           </Link>
         </div>
       </div>

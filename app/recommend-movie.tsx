@@ -22,12 +22,12 @@ export default function RecommendMovie({
   );
 
   return (
-    <main className="relative z-10 mb-8 flex flex-col items-center justify-center lg:mx-32 lg:mb-12 lg:mt-16 lg:flex-row">
+    <main className="relative z-10 mb-8 flex flex-col items-center justify-center lg:mx-32 lg:mb-12 lg:mt-16 lg:flex-row lg:items-start">
       {/* MOVIE POSTER */}
       {currentMovie.poster_path && (
         <div className="group w-2/4 py-4 lg:w-1/3 lg:pr-8">
           <Image
-            className="h-full w-full transform object-cover drop-shadow-lg transition-transform duration-300 ease-in-out group-hover:scale-105"
+            className="relative z-10 h-full w-full transform rounded-lg object-cover drop-shadow-lg transition-all duration-300 ease-in-out group-hover:z-50 group-hover:scale-150 group-hover:rounded-none lg:group-hover:scale-125"
             src={imgageUrl}
             alt={movieTitle}
             width={640}

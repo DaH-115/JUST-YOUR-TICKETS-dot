@@ -53,7 +53,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="relative z-50 flex w-full items-center justify-center px-2 py-4 lg:px-8 lg:pt-8">
+    <header className="relative z-10 flex w-full items-center justify-center px-2 py-4 lg:px-8 lg:pt-8">
       <div className="flex w-full items-center justify-between rounded-full border border-black bg-white lg:w-auto lg:justify-center lg:border-2 lg:px-4 lg:py-3">
         {/* LOGO */}
         <h1 className="ml-1 px-4 py-2 text-sm font-bold text-gray-700 lg:px-4 lg:py-0">
