@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "store/hooks";
 import { useReviewForm } from "app/write-review/useReviewForm";
 import useGetTitle from "hooks/useGetTitle";
+import { Movie } from "app/page";
 import BackGround from "app/ui/back-ground";
 import { IoStar } from "react-icons/io5";
 import { MdDriveFileRenameOutline } from "react-icons/md";
-import { Movie } from "app/page";
 
 export interface ReviewDate {
   reviewTitle: string;
@@ -85,47 +85,46 @@ export default function ReviewForm({
       {/* POP UP */}
       {showExitConfirmation && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="w-full max-w-md rounded-lg border border-black bg-white p-4 drop-shadow-xl">
+          <div className="w-3/4 max-w-md rounded-xl border-2 border-black bg-white p-4 drop-shadow-lg">
             <div className="mb-4 border-b border-black">
-              <span className="font-bold">Alert</span>
-              <span className="ml-1">알림</span>
+              <strong className="font-bold">알림</strong>
             </div>
-            <div className="mb-6 text-lg">
-              현재 내용이 사라집니다. 정말로 나가시겠습니까?
+            <div className="mb-4 break-keep text-base lg:mb-6 lg:text-lg">
+              현재 내용이 사라집니다. 나가시겠습니까?
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end text-sm">
               <button
-                className="mr-2 rounded-xl bg-gray-200 px-4 py-2 transition-all duration-300 hover:bg-gray-300"
+                className="mr-2 rounded-lg bg-gray-200 px-3 py-2 transition-all duration-300 hover:bg-gray-300 lg:px-4 lg:py-2"
                 onClick={() => setShowExitConfirmation(false)}
               >
-                아니오
+                취소
               </button>
               <button
-                className="rounded-xl bg-red-500 px-4 py-2 text-white transition-all duration-300 hover:bg-red-600"
+                className="rounded-lg bg-red-500 px-3 py-2 text-white transition-all duration-300 hover:bg-red-600 lg:px-4 lg:py-2"
                 onClick={() => router.push("/")}
               >
-                네
+                확인
               </button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="relative z-40 mb-20 mt-16 flex items-center justify-center drop-shadow-lg">
-        <div className="w-1/3 rounded-xl border-2 border-black bg-white">
-          <div className="w-full p-4 pb-2">
-            <div className="mb-2 flex items-end">
-              <h1 className="text-md font-bold">
-                {mode === "create" ? "Write Your Review" : "Edit Your Review"}
+      <main className="relative z-40 mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
+        <div className="mx-auto w-11/12 rounded-xl border-2 border-black bg-white lg:w-1/3">
+          <div className="w-full p-4 pb-0">
+            <div className="mb-1 flex items-end lg:mb-2">
+              <h1 className="text-sm font-bold">
+                {mode === "create" ? "새로운 리뷰 작성" : "리뷰 수정"}
               </h1>
             </div>
-            <div className="text-3xl font-bold">{`${movieTitle} (${movieInfo.release_date?.slice(0, 4)})`}</div>
+            <h2 className="mb-2 text-xl font-bold lg:text-3xl">{`${movieTitle} (${movieInfo.release_date?.slice(0, 4)})`}</h2>
           </div>
-          <div className="flex justify-between border-b border-black px-4 py-2 text-sm">
+          <div className="flex justify-between border-b border-black px-4 py-2 text-xs lg:text-sm">
             <span>{new Date().toLocaleDateString()}</span>
             <div>
               <span>작성자</span>
-              <span className="ml-1 font-bold">
+              <span className="ml-1 text-sm font-bold">
                 {userState ? userState.displayName : "Guest"}
               </span>
             </div>
@@ -133,81 +132,76 @@ export default function ReviewForm({
 
           <div className="w-full">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="pt-2">
-                <div className="mb-2 border-b border-black px-2 pb-4">
-                  <label
-                    htmlFor="date"
-                    className="mb-2 inline-block rounded-lg p-1 text-sm font-bold"
-                  >
-                    <span className="font-bold">Title</span>
-                    <span className="ml-2">제목</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="reviewTitle"
-                    {...register("reviewTitle", {
-                      required: "제목을 입력해주세요.",
-                    })}
-                    placeholder="리뷰 제목"
-                    className="w-full rounded-lg border p-2"
-                  />
-                  {errors.reviewTitle && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {errors.reviewTitle.message as string}
-                    </p>
-                  )}
-                </div>
+              <div className="p-4">
+                <label
+                  htmlFor="date"
+                  className="mb-2 inline-block text-sm font-bold"
+                >
+                  제목
+                </label>
+                <input
+                  type="text"
+                  id="reviewTitle"
+                  {...register("reviewTitle", {
+                    required: "제목을 입력해주세요.",
+                  })}
+                  placeholder="리뷰 제목"
+                  className="w-full rounded-lg border p-2"
+                />
+                {errors.reviewTitle && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.reviewTitle.message as string}
+                  </p>
+                )}
+              </div>
 
-                <div className="mb-2 border-b border-black px-2 pb-4">
-                  <label
-                    htmlFor="rating"
-                    className="mb-2 inline-block rounded-lg p-1 text-sm font-bold"
-                  >
-                    <span className="font-bold">Rating</span>
-
-                    <span className="ml-2">평점</span>
-                  </label>
-                  <input
-                    type="range"
-                    id="rating"
-                    {...register("rating", { valueAsNumber: true })}
-                    min="0"
-                    max="10"
-                    step="0.5"
-                    className="w-full accent-black"
-                  />
-                  <div className="flex items-center justify-center text-center">
-                    <div>
-                      <IoStar className="mr-1" size={20} />
-                    </div>
-                    <div className="text-lg font-bold">{watch("rating")}</div>
-                    <div>/ 10</div>
+              <div className="p-4">
+                <label
+                  htmlFor="rating"
+                  className="mb-2 inline-block text-sm font-bold"
+                >
+                  평점
+                </label>
+                <input
+                  type="range"
+                  id="rating"
+                  {...register("rating", { valueAsNumber: true })}
+                  min="0"
+                  max="10"
+                  step="0.5"
+                  className="w-full accent-black"
+                />
+                <div className="flex items-center justify-center text-center">
+                  <div>
+                    <IoStar className="mr-1" size={20} />
                   </div>
-                </div>
-
-                <div className="mb-4 px-2">
-                  <label
-                    htmlFor="review"
-                    className="mb-2 inline-block rounded-lg p-1 text-sm font-bold"
-                  >
-                    <span className="font-bold">Review</span>
-                    <span className="ml-2">감상</span>
-                  </label>
-                  <textarea
-                    id="review"
-                    {...register("review", {
-                      required: "내용을 입력해주세요.",
-                    })}
-                    placeholder="감상평을 작성해주세요."
-                    className="h-32 w-full rounded-lg border p-2"
-                  />
-                  {errors.review && (
-                    <p className="mt-2 text-sm text-red-600">
-                      {errors.review.message as string}
-                    </p>
-                  )}
+                  <div className="text-lg font-bold">{watch("rating")}</div>
+                  <span className="text-gray-400">/ 10</span>
                 </div>
               </div>
+
+              <div className="p-4">
+                <label
+                  htmlFor="review"
+                  className="mb-2 inline-block text-sm font-bold"
+                >
+                  감상평
+                </label>
+                <textarea
+                  id="review"
+                  {...register("review", {
+                    required: "내용을 입력해주세요.",
+                  })}
+                  placeholder="감상평을 작성해주세요."
+                  className="h-32 w-full rounded-lg border p-2"
+                />
+                {errors.review && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.review.message as string}
+                  </p>
+                )}
+              </div>
+
               <div className="flex justify-end border-t border-black p-2">
                 <button
                   type="button"
@@ -227,7 +221,7 @@ export default function ReviewForm({
             </form>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

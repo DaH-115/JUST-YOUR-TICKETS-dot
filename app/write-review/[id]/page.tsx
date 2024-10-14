@@ -4,9 +4,9 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "firebase-config";
+import { Movie } from "app/page";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
 import ReviewForm, { ReviewDate } from "app/write-review/ReviewForm";
-import { Movie } from "app/page";
 import Catchphrase from "app/ui/catchphrase";
 
 export default function ReviewPage() {
@@ -29,7 +29,7 @@ export default function ReviewPage() {
 
       try {
         if (id !== "new" && movieId) {
-          // edit mode
+          // Edit Mode
           const docRef = doc(db, "movie-reviews", id as string);
           const docSnap = await getDoc(docRef);
 
@@ -40,7 +40,7 @@ export default function ReviewPage() {
 
           await fetchMovieInfo();
         } else if (id === "new" && movieId) {
-          // create mode
+          // Create Mode
           await fetchMovieInfo();
         }
       } catch (error) {
