@@ -70,31 +70,31 @@ export default function MySideReviewList() {
   }, [searchTerm, debounceSearch]);
 
   return (
-    <div id="layout" className="mb-8 mt-24 flex w-full px-8">
-      <SideMenu uid={uid as string} />
-      <div id="side-review-list" className="w-full px-8">
-        <div className="flex items-end justify-between">
-          <div className="group relative inline-block w-80">
-            <div className="relative z-10 h-20 w-80 rounded-xl border-2 border-black bg-white transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1">
-              <div className="flex h-20 items-center">
-                <h1 className="flex h-full flex-1 items-center justify-center border-r border-black text-2xl font-bold">
-                  MY TICKET LIST
-                </h1>
-                <span className="px-4 font-bold">
-                  총 {filteredReviews.length}장
-                </span>
-              </div>
+    <div className="flex w-full flex-col lg:my-8 lg:mb-8 lg:flex-row lg:px-8">
+      <div className="flex">
+        <SideMenu uid={uid as string} />
+      </div>
+      <main className="flex w-full flex-col">
+        <div className="mb-6 flex-col items-center justify-center px-8 md:flex-row md:items-end md:justify-between lg:px-0">
+          <div className="flex w-full flex-col md:flex-row">
+            <div className="mb-4 flex w-full items-center justify-between md:mb-0 lg:justify-normal">
+              <h1 className="hidden text-2xl font-bold md:block">
+                MY TICKET LIST
+              </h1>
+              <span className="lg:px-4">
+                총 <span className="font-bold">{filteredReviews.length}</span>장
+              </span>
             </div>
-            <div className="absolute left-1 top-1 -z-10 h-20 w-80 rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200"></div>
-          </div>
-
-          <div className="flex h-10">
-            <div className="relative flex h-full w-full items-center justify-end">
+            <div className="relative flex h-10 w-full items-center justify-end">
+              <label htmlFor="review-search" className="sr-only">
+                리뷰 검색
+              </label>
               <input
                 {...register("search")}
+                id="review-search"
                 type="search"
                 placeholder="리뷰 검색"
-                className="h-full w-64 rounded-full border-2 border-black pl-4 pr-10 text-sm opacity-100"
+                className="h-full w-full rounded-full border-2 border-black pl-4 pr-10 text-sm opacity-100 lg:w-64"
               />
               <div
                 className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full border-none bg-none`}
@@ -104,13 +104,15 @@ export default function MySideReviewList() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-4 p-6">
-          <TicketList
-            reviews={searchTerm ? filteredReviews : userReviews}
-            onReviewDeleted={handleReviewDeleted}
-          />
-        </div>
-      </div>
+        <section id="side-review-list" className="px-8 lg:px-0">
+          <div className="grid grid-cols-2 gap-2 pb-12 sm:grid-cols-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+            <TicketList
+              reviews={searchTerm ? filteredReviews : userReviews}
+              onReviewDeleted={handleReviewDeleted}
+            />
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

@@ -10,7 +10,6 @@ export default function SideMenu({ uid }: { uid: string }) {
 
   const getMenuStyle = (path: string) => {
     const isCurrentPath = pathname === path;
-
     let isActive = false;
 
     if (path === "/my-page" && isCurrentPath && !urlUid) {
@@ -19,21 +18,23 @@ export default function SideMenu({ uid }: { uid: string }) {
       isActive = true;
     }
 
-    return isActive
-      ? "text-4xl text-black md:text-8xl transition-all duration-300 ease-in-out"
-      : "text-2xl text-gray-300 hover:text-black md:text-8xl transition-all duration-300 ease-in-out";
+    return `w-full text-center lg:text-start ${
+      isActive
+        ? "text-lg text-black md:text-5xl font-bold"
+        : "text-lg text-gray-300 hover:text-black md:text-5xl"
+    } transition-all duration-300 ease-in-out`;
   };
 
   return (
-    <div className="w-full flex-1 pr-8">
-      <Link href="/my-page">
-        <div className={getMenuStyle("/my-page")}>PROFILE</div>
+    <nav className="mb-4 flex w-full flex-row lg:mb-0 lg:mr-6 lg:w-2/4 lg:flex-col">
+      <Link href="/my-page" className="w-full">
+        <div className={getMenuStyle("/my-page")}>MY PROFILE</div>
       </Link>
-      <Link href={`/my-page/my-ticket-list?uid=${uid}`}>
+      <Link href={`/my-page/my-ticket-list?uid=${uid}`} className="w-full">
         <div className={getMenuStyle("/my-page/my-ticket-list")}>
           MY TICKET LIST
         </div>
       </Link>
-    </div>
+    </nav>
   );
 }

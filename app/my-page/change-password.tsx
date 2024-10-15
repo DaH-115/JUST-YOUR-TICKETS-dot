@@ -24,9 +24,9 @@ const newPasswordSchema = z.object({
 type CurrentPasswordFormData = z.infer<typeof currentPasswordSchema>;
 type NewPasswordSchema = z.infer<typeof newPasswordSchema>;
 
-type User = {
+interface User {
   email: string;
-};
+}
 
 export default function ChangePassword({ user }: { user: User }) {
   const [isVerified, setIsVerified] = useState(false);
@@ -90,26 +90,26 @@ export default function ChangePassword({ user }: { user: User }) {
   }, [isEditing]);
 
   return (
-    <>
+    <div className="relative">
       <div
-        className="group relative inline-block cursor-pointer py-4 text-end text-sm after:absolute after:bottom-3 after:right-0 after:h-0.5 after:w-0 after:bg-black after:transition-all after:duration-300 after:content-[''] hover:after:w-full"
+        className="group relative cursor-pointer py-4 text-end text-xs text-gray-500"
         onClick={() => setIsEditing((prev) => !prev)}
       >
-        {!isEditing ? "비밀번호를 수정하고 싶나요?" : "취소"}
+        {!isEditing ? "비밀번호 변경" : "취소"}
       </div>
-      <div className="group relative mb-12 inline-block w-full">
-        <div
-          className={`relative z-10 rounded-xl border-2 border-black bg-white p-4 transition-all duration-300 ${
-            isEditing
-              ? "pointer-events-auto translate-y-0 opacity-100 group-hover:-translate-x-1 group-hover:-translate-y-1"
-              : "pointer-events-none translate-y-5 opacity-0"
-          }`}
-        >
-          <div>
+      <section
+        className={`transition-all duration-300 ease-in-out ${
+          isEditing ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="group relative mb-12 w-full">
+          <div
+            className={`relative z-10 rounded-xl border-2 border-black bg-white p-4 transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1`}
+          >
             <form onSubmit={handleSubmitCurrent(verifyCurrentPasswordHandler)}>
               <label
                 htmlFor="current-password"
-                className="mb-1 block text-xs font-medium text-gray-700"
+                className="mb-1 block text-xs font-bold text-gray-700"
               >
                 현재 비밀번호
               </label>
@@ -117,7 +117,7 @@ export default function ChangePassword({ user }: { user: User }) {
                 id="current-password"
                 {...registerCurrent("currentPassword")}
                 type="password"
-                className={`w-full border-b-2 border-black bg-transparent pb-2 text-xl outline-none ${isVerified ? "bg-gray-300" : ""}`}
+                className={`w-full border-b border-black bg-transparent pb-2 outline-none ${isVerified ? "bg-gray-300" : "border-b-2"}`}
                 placeholder={
                   !isVerified
                     ? "현재 비밀번호를 입력하세요."
@@ -128,7 +128,7 @@ export default function ChangePassword({ user }: { user: User }) {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="whitespace-nowrap pt-2 text-sm"
+                  className="mt-1 whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 hover:bg-black hover:text-white"
                 >
                   확인
                 </button>
@@ -139,13 +139,10 @@ export default function ChangePassword({ user }: { user: User }) {
                 </p>
               )}
             </form>
-          </div>
-
-          <div className="">
             <form onSubmit={handleSubmitNew(changePasswordHanlder)}>
               <label
                 htmlFor="new-password"
-                className="mb-1 block text-xs font-medium text-gray-700"
+                className="mb-1 block text-xs font-bold text-gray-700"
               >
                 새로운 비밀번호
               </label>
@@ -153,14 +150,14 @@ export default function ChangePassword({ user }: { user: User }) {
                 id="new-password"
                 {...registerNew("newPassword")}
                 type="password"
-                className={`w-full border-b-2 border-black bg-transparent pb-2 text-xl outline-none ${!isVerified ? "bg-gray-600" : ""}`}
+                className={`w-full border-b border-black bg-transparent pb-2 outline-none ${!isVerified ? "bg-slate-200" : "border-b-2"}`}
                 placeholder={`${!isVerified ? "현재 비밀번호를 먼저 확인하세요." : "새로운 비밀번호를 입력하세요."}`}
                 disabled={!isVerified}
               />
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="whitespace-nowrap pt-2 text-sm"
+                  className="mt-1 whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 hover:bg-black hover:text-white"
                 >
                   수정
                 </button>
@@ -172,15 +169,11 @@ export default function ChangePassword({ user }: { user: User }) {
               )}
             </form>
           </div>
+          <div
+            className={`absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black transition-all duration-500 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200`}
+          ></div>
         </div>
-        <div
-          className={`absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black transition-all duration-300 ${
-            isEditing
-              ? "opacity-100 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200"
-              : "opacity-0"
-          }`}
-        ></div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 }

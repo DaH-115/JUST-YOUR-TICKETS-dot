@@ -22,6 +22,7 @@ module.exports = {
     },
   },
   plugins: [
+    require("tailwind-scrollbar-hide"),
     function ({ addUtilities }) {
       const newUtilities = {
         ".mask-linear-gradient": {
