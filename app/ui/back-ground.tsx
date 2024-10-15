@@ -7,7 +7,7 @@ interface BackGroundProps {
 
 export default function BackGround({ imageUrl, movieTitle }: BackGroundProps) {
   return (
-    <div className="absolute inset-0 z-0 h-screen">
+    <div className="absolute inset-0 h-screen min-w-[320px]">
       {imageUrl && (
         <>
           <Image

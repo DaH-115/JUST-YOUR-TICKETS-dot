@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { clearUserState } from "store/userSlice";
 import HeaderSearchBar from "app/ui/header-search-bar";
 import { IoIosMenu } from "react-icons/io";
+import HeaderSideMenu from "app/ui/header-side-menu";
 
 export default function Header() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function Header() {
   );
   const dispatch = useAppDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
 
   const logoutHandler = async () => {
     try {
@@ -34,6 +36,10 @@ export default function Header() {
 
   const dropDownHandler = () => {
     setIsDropdownOpen((prev) => !prev);
+  };
+
+  const toggleSideMenu = () => {
+    setIsSideMenuOpen((prev) => !prev);
   };
 
   useEffect(() => {
@@ -52,9 +58,41 @@ export default function Header() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isSideMenuOpen) {
+      document.body.classList.add(
+        "overflow-hidden",
+        "h-full",
+        "pointer-events-none",
+      );
+    } else {
+      document.body.classList.remove(
+        "overflow-hidden",
+        "h-full",
+        "pointer-events-none",
+      );
+    }
+
+    return () => {
+      document.body.classList.remove(
+        "overflow-hidden",
+        "h-full",
+        "pointer-events-none",
+      );
+    };
+  }, [isSideMenuOpen]);
+
   return (
-    <header className="relative z-10 flex w-full items-center justify-center px-2 py-4 lg:px-8 lg:pt-8">
-      <div className="flex w-full items-center justify-between rounded-full border border-black bg-white lg:w-auto lg:justify-center lg:border-2 lg:px-4 lg:py-3">
+    <header
+      className={`relative z-10 flex w-screen items-center justify-center px-2 py-4 lg:px-8 lg:pt-8 ${
+        isSideMenuOpen ? "pointer-events-none" : ""
+      }`}
+    >
+      <div
+        className={`flex w-full items-center justify-between rounded-full border border-black bg-white lg:w-auto lg:justify-center lg:border-2 lg:px-4 lg:py-3 ${
+          isSideMenuOpen ? "pointer-events-auto" : ""
+        }`}
+      >
         {/* LOGO */}
         <h1 className="ml-1 px-4 py-2 text-sm font-bold text-gray-700 lg:px-4 lg:py-0">
           just your tickets.
@@ -93,7 +131,12 @@ export default function Header() {
           </li>
         </ul>
         {/* MOBILE/ HAMBURGER MENU */}
-        <div className="block rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200 lg:hidden">
+        <div
+          onClick={toggleSideMenu}
+          className={`block rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200 lg:hidden ${
+            isSideMenuOpen ? "pointer-events-auto" : ""
+          }`}
+        >
           <IoIosMenu size={34} />
         </div>
         {/* PROFILE MENU */}
@@ -143,6 +186,11 @@ export default function Header() {
       </div>
       {/* SEARCH BAR */}
       <HeaderSearchBar />
+      <HeaderSideMenu
+        newReviewAlertState={newReviewAlertState}
+        isOpen={isSideMenuOpen}
+        onClose={() => setIsSideMenuOpen(false)}
+      />
     </header>
   );
 }
