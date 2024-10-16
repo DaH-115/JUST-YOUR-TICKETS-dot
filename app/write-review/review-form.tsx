@@ -110,7 +110,7 @@ export default function ReviewForm({
         </div>
       )}
 
-      <main className="relative z-40 mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
+      <main className="relative mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
         <div className="mx-auto w-11/12 rounded-xl border-2 border-black bg-white lg:w-1/3">
           <div className="w-full p-4 pb-0">
             <div className="mb-1 flex items-end lg:mb-2">

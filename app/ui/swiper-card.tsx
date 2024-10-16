@@ -20,8 +20,8 @@ export default function SwiperCard({
   const movieTitle = useGetTitle(original_title, title);
 
   return (
-    <div className="group/card relative mx-2 h-[450px] lg:h-[600px]">
-      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 pt-5 text-5xl font-bold text-white">
+    <div className="group/card relative mx-2 h-[450px] lg:h-[550px]">
+      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 text-5xl font-bold text-white">
         {idx + 1}.
       </div>
       {poster_path ? (
