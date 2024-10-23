@@ -3,8 +3,9 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
+
 import { Navigation } from "swiper/modules";
-import { Movie } from "app/page";
+import { Movie } from "api/fetchNowPlayingMovies";
 import SwiperCard from "app/ui/swiper-card";
 
 export default function TicketSwiper({ movieList }: { movieList: Movie[] }) {

@@ -8,16 +8,16 @@ export default function MovieTrailer({
   movieTitle: string;
 }) {
   return (
-    <section id="movie-trailer" className="relative z-10 w-full">
-      <div className="mb-4 px-4 lg:mb-8">
+    <section id="movie-trailer" className="relative z-10 w-full py-12">
+      <div className="mb-4 px-4 lg:mb-8 lg:px-8">
         <div className="flex items-start justify-between lg:justify-start">
-          <h2 className="text-4xl font-black lg:text-6xl">
+          <h2 className="text-4xl font-black lg:text-5xl">
             Movie
             <br />
             Trailer
           </h2>
-          <div className="ml-2 rounded-full border-2 border-black bg-white p-3 transition-colors duration-300 hover:bg-gray-300 hover:text-white">
-            <RiMovieLine className="text-2xl lg:text-4xl" />
+          <div className="ml-2 rounded-full border-2 border-black bg-white p-2 transition-colors duration-300 hover:bg-gray-300 hover:text-white">
+            <RiMovieLine className="text-2xl lg:text-3xl" />
           </div>
         </div>
         <div>
@@ -27,7 +27,7 @@ export default function MovieTrailer({
         </div>
       </div>
 
-      <div className="mx-auto aspect-video w-full max-w-6xl">
+      <div className="mx-auto aspect-video w-full md:w-4/6">
         <iframe
           src={`https://www.youtube.com/embed/${trailerKey}`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

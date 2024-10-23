@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Movie } from "app/page";
+import { Movie } from "api/fetchNowPlayingMovies";
 import useGetTitle from "hooks/useGetTitle";
 import MovieCard from "app/ui/movie-card";
 import { RiMovieLine } from "react-icons/ri";
@@ -22,12 +22,12 @@ export default function RecommendMovie({
   );
 
   return (
-    <main className="relative z-10 mb-8 flex flex-col items-center justify-center lg:mx-32 lg:mb-12 lg:mt-16 lg:flex-row lg:items-start">
+    <main className="relative mx-auto flex flex-col items-center justify-center lg:my-16 lg:w-4/5 lg:flex-row lg:items-start">
       {/* MOVIE POSTER */}
       {currentMovie.poster_path && (
-        <div className="group w-2/4 py-4 lg:w-1/3 lg:pr-8">
+        <div className="group w-2/4 py-4 lg:w-1/3 lg:py-0 lg:pr-8">
           <Image
-            className="relative z-10 h-full w-full transform rounded-lg object-cover drop-shadow-lg transition-all duration-300 ease-in-out group-hover:z-50 group-hover:scale-150 group-hover:rounded-none lg:group-hover:scale-125"
+            className="relative h-full w-full transform rounded-xl object-cover drop-shadow-lg transition-all duration-300 ease-in-out hover:z-50 group-hover:scale-150 group-hover:rounded-none lg:group-hover:scale-110"
             src={imgageUrl}
             alt={movieTitle}
             width={640}

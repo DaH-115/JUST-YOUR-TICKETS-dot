@@ -2,53 +2,53 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CastMember, fetchMovieCredits } from "api/fetchMovieCredits";
+import { Movie } from "api/fetchNowPlayingMovies";
+import { fetchMovieCredits, MovieCredits } from "api/fetchMovieCredits";
+import { useError } from "store/error-context";
 import useGetGenres from "hooks/useGetGenres";
 import useFormatDate from "hooks/useFormatDate";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { FaArrowRight } from "react-icons/fa";
 import AnimatedOverview from "app/ui/animated-overview";
-import { Movie } from "app/page";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
-  const [castList, setCastList] = useState<CastMember[]>();
-  const [director, setDirector] = useState<string | string[]>();
-  const { id, original_title, overview, release_date, title, vote_average } =
+  const { id, title, original_title, release_date, vote_average, overview } =
     movie;
   const { genres } = useGetGenres(id);
   const movieDate = useFormatDate(release_date);
+  const { isShowError, isHideError } = useError();
+  const [credits, setCredits] = useState<MovieCredits | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetchMovieCredits(id);
+    const fetchMovieCreditsData = async (movieId: number) => {
+      const result = await fetchMovieCredits(movieId);
 
-        const castList = res?.cast.slice(0, 3);
-        const directorsName = res?.crew.filter(
-          (member) => member.job === "Director",
+      if ("cast" in result && "crew" in result) {
+        setCredits(result);
+        isHideError();
+      } else {
+        isShowError(
+          result.title || "오류",
+          result.errorMessage || "영화 정보를 불러오는 데 실패했습니다.",
+          result.status,
         );
-        setCastList(castList);
-        if (directorsName) {
-          setDirector(directorsName[0].name);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        setCredits(null);
       }
     };
 
-    fetchData();
-  }, [id]);
+    fetchMovieCreditsData(id);
+  }, [id, isShowError, isHideError]);
 
   return (
-    <div className="group relative inline-block break-keep">
-      <div className="rounded-xl border-2 border-black bg-white lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
+    <section className="group relative mx-auto w-full break-keep">
+      <div className="relative rounded-xl border-2 border-black bg-white lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
         <div className="p-4">
           <h2 className="mb-2 inline-block animate-bounce rounded-lg bg-black p-1 text-xs font-bold text-white">
             추천 영화
           </h2>
           <div className="flex">
-            <h1 className="text-3xl font-bold lg:ml-4 lg:text-4xl">{title}</h1>
+            <h1 className="text-3xl font-bold lg:text-4xl">{title}</h1>
             <div className="group/tooltip relative ml-2">
               <Link href={`/movie-detail/${id}`}>
                 <FaInfoCircle className="text-base lg:text-lg" />
@@ -59,7 +59,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </div>
           </div>
           <div className="ml-1 flex items-center">
-            <p className="mr-2 text-lg text-gray-500">{`${original_title}(${release_date.slice(0, 4)})`}</p>
+            <h3 className="mr-2 text-lg text-gray-500">{`${original_title}(${release_date.slice(0, 4)})`}</h3>
           </div>
         </div>
         <ul className="flex items-center space-x-2 border-y border-black px-4 py-2 text-sm">
@@ -72,14 +72,16 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </li>
           ))}
         </ul>
-        <AnimatedOverview overview={overview} />
+        {overview && <AnimatedOverview overview={overview} />}
         <div className="flex flex-1 border-b border-black">
           <ul className="flex-1 flex-col items-center justify-center py-4 text-center">
-            {castList?.map((cast) => <li key={cast.id}>{cast.name}</li>)}
+            {credits?.cast
+              ?.slice(0, 3)
+              .map((cast) => <li key={cast.id}>{cast.name}</li>)}
           </ul>
         </div>
         <div className="flex">
-          <div className="border-r-2 border-dotted border-gray-300">
+          <div className="flex-1 border-r-2 border-dotted border-gray-300">
             <div className="border-b border-black p-1">
               <div className="rounded-xl bg-black">
                 <p className="p-2 text-center text-xs text-white">개봉일</p>
@@ -87,13 +89,17 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </div>
             <p className="px-2 py-4 text-center">{movieDate}</p>
           </div>
-          <div className="border-r-2 border-dotted border-gray-300">
+          <div className="flex-1 border-r-2 border-dotted border-gray-300">
             <div className="border-b border-black p-1">
               <div className="rounded-xl bg-black">
                 <p className="p-2 text-center text-xs text-white">감독</p>
               </div>
             </div>
-            <p className="px-2 py-4 text-center">{director}</p>
+            <ul className="px-2 py-4 text-center">
+              {credits?.crew
+                .filter((crew) => crew.job === "Director")
+                .map((crew) => <li key={crew.id}>{crew.name}</li>)}
+            </ul>
           </div>
           <div className="flex-1">
             <div className="border-b border-black p-1">
@@ -121,7 +127,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           </Link>
         </div>
       </div>
-      <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-gray-200 lg:bg-black lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1 lg:group-hover:bg-gray-200"></span>
-    </div>
+      <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-gray-700 lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1 lg:group-hover:bg-gray-200" />
+    </section>
   );
 }
