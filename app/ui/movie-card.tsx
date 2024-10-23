@@ -9,8 +9,8 @@ import useGetGenres from "hooks/useGetGenres";
 import useFormatDate from "hooks/useFormatDate";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import { FaArrowRight } from "react-icons/fa";
 import AnimatedOverview from "app/ui/animated-overview";
+import NewWriteBtn from "app/ui/new-write-btn";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   const { id, title, original_title, release_date, vote_average, overview } =
@@ -107,7 +107,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
                 <p className="p-2 text-center text-xs text-white">평점</p>
               </div>
             </div>
-            <div className="flex items-center justify-center p-4">
+            <div className="flex flex-1 items-center justify-center p-4">
               <IoStar className="mr-1" size={24} />
               <div className="text-2xl font-bold lg:text-4xl">
                 {Math.round(vote_average * 10) / 10}
@@ -115,16 +115,8 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </div>
           </div>
         </div>
-        <div className="flex w-full border-t border-black p-1 text-center text-white">
-          <Link
-            href={`/write-review/new?movieId=${id}`}
-            className="group/button relative flex w-full items-center justify-end rounded-2xl bg-black p-4"
-          >
-            <p className="transition-all duration-300 group-hover/button:text-lg lg:text-lg lg:group-hover/button:text-xl">
-              리뷰 작성하기
-            </p>
-            <FaArrowRight className="ml-1 text-lg transition-transform duration-300 group-hover/button:translate-x-1 lg:text-xl" />
-          </Link>
+        <div className="flex w-full border-t border-black p-1">
+          <NewWriteBtn movieId={id} size="lg" />
         </div>
       </div>
       <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-gray-700 lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1 lg:group-hover:bg-gray-200" />

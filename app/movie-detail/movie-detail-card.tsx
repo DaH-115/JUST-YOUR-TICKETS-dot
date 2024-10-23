@@ -2,16 +2,15 @@
 
 import { useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Movie } from "api/fetchNowPlayingMovies";
 import { MovieCredits } from "api/fetchMovieCredits";
 import useFormatDate from "hooks/useFormatDate";
 import useGetTitle from "hooks/useGetTitle";
-import { FaArrowRight } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { ErrorResponse } from "api/error-type";
 import { useError } from "store/error-context";
 import MovieDetailCardSkeleton from "app/movie-detail/movie-detail-card-skeleton";
+import NewWriteBtn from "app/ui/new-write-btn";
 
 type MovieDetailCardProps = {
   movieDetails: Movie | ErrorResponse;
@@ -180,15 +179,7 @@ export default function MovieDetailCard({
             </div>
           </div>
           <div className="group flex w-full p-1 text-center text-white">
-            <Link
-              href={`/write-review/new?movieId=${movieDetails.id}`}
-              className="relative flex w-full items-center justify-center rounded-xl bg-black p-4 lg:p-8"
-            >
-              <p className="text-base transition-all duration-300 group-hover:text-lg lg:text-lg lg:group-hover:text-xl">
-                리뷰 작성하기
-              </p>
-              <FaArrowRight className="ml-1 text-lg lg:text-xl" />
-            </Link>
+            <NewWriteBtn movieId={movieDetails.id} size="lg" />
           </div>
         </section>
       </div>

@@ -1,10 +1,11 @@
-import { Movie } from "app/page";
+import { Movie } from "api/fetchNowPlayingMovies";
 import Image from "next/image";
 import Link from "next/link";
 import useGetGenres from "hooks/useGetGenres";
 import useGetTitle from "hooks/useGetTitle";
-import { FaArrowRight, FaInfoCircle } from "react-icons/fa";
+import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
+import NewWriteBtn from "app/ui/new-write-btn";
 
 export default function SwiperCard({
   idx,
@@ -21,7 +22,7 @@ export default function SwiperCard({
 
   return (
     <div className="group/card relative mx-2 h-[450px] lg:h-[550px]">
-      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 text-5xl font-bold text-white">
+      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 text-4xl font-bold text-white">
         {idx + 1}.
       </div>
       {poster_path ? (
@@ -56,7 +57,7 @@ export default function SwiperCard({
         <div className="flex w-full flex-wrap border-y border-black p-1">
           {genres.map((genre, idx) => (
             <p
-              className="m-1 rounded-full border-2 border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white lg:text-sm"
+              className="m-1 rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white lg:text-sm"
               key={idx}
             >
               {genre}
@@ -64,22 +65,14 @@ export default function SwiperCard({
           ))}
         </div>
         <div className="flex w-full text-center">
-          <div className="flex items-center border-r-2 border-black px-2">
+          <div className="flex items-center border-r-2 border-black p-4">
             <IoStar />
             <div className="text-xl font-bold">
               {Math.round(vote_average * 10) / 10}
             </div>
           </div>
-          <div className="flex-1 p-1">
-            <Link
-              href={`/write-review/new?movieId=${id}`}
-              className="group relative flex items-center justify-end rounded-xl bg-black p-4 text-white"
-            >
-              <p className="text-sm transition-all duration-300 group-hover:text-base">
-                리뷰 작성하기
-              </p>
-              <FaArrowRight className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+          <div className="flex w-full p-1">
+            <NewWriteBtn movieId={id} />
           </div>
         </div>
       </div>
