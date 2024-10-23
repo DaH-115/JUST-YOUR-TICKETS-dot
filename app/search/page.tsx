@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Movie } from "app/page";
+import { Movie } from "api/fetchNowPlayingMovies";
 import { fetchNowPlayingMovies } from "api/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
 import { fetchSearchMovies } from "api/fetchSearchMovies";
+import { useError } from "store/error-context";
+import ScrollToTopButton from "app/ui/scroll-to-top-button";
 import Catchphrase from "app/ui/catchphrase";
 import SwiperCard from "app/ui/swiper-card";
-import ScrollToTopButton from "app/ui/scroll-to-top-button";
+import SwiperCardSkeleton from "app/ui/swiper-card-skeleton";
 
 const searchSchema = z.object({
   query: z.string().min(1, "검색어를 입력해주세요."),
@@ -22,23 +24,23 @@ export default function Page() {
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { isShowError } = useError();
 
   useEffect(() => {
     setIsLoading(true);
 
     const fetchData = async () => {
-      try {
-        const posts = await fetchNowPlayingMovies();
+      const posts = await fetchNowPlayingMovies();
+      if ("errorMessage" in posts) {
+        isShowError(posts.title, posts.errorMessage, posts.status);
+      } else {
         setNowPlayingMovies(posts);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
 
     fetchData();
-  }, []);
+  }, [isShowError]);
 
   const {
     register,
@@ -57,22 +59,22 @@ export default function Page() {
   const onSubmit = async ({ query }: { query: string }) => {
     setIsLoading(true);
 
-    try {
-      // 쿼리 앞뒤의 모든 공백을 제거하고 연속된 공백을 하나의 공백으로 치환합니다.
-      const cleanedQuery = query.trim().replace(/\s+/g, " ");
+    // 쿼리 앞뒤의 모든 공백을 제거하고 연속된 공백을 하나의 공백으로 치환합니다.
+    const cleanedQuery = query.trim().replace(/\s+/g, " ");
 
-      if (cleanedQuery === "") {
-        setSearchResults([]);
-        return;
-      }
-
-      const posts = await fetchSearchMovies(cleanedQuery);
-      setSearchResults(posts);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setIsLoading(false);
+    if (cleanedQuery === "") {
+      setSearchResults([]);
+      return;
     }
+
+    const posts = await fetchSearchMovies(cleanedQuery);
+
+    if ("errorMessage" in posts) {
+      isShowError(posts.title, posts.errorMessage, posts.status);
+    } else {
+      setSearchResults(posts);
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -104,11 +106,9 @@ export default function Page() {
         </section>
 
         {isLoading ? (
-          <div className="flex items-center justify-center py-8 lg:py-16">
-            <p className="text-center text-lg font-bold text-gray-300 lg:text-4xl">
-              검색 중...
-            </p>
-          </div>
+          <section className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+            <SwiperCardSkeleton />
+          </section>
         ) : (
           <>
             {searchResults.length > 0 ? (
@@ -134,23 +134,22 @@ export default function Page() {
             ) : null}
           </>
         )}
-
-        {!searchResults.length ? (
-          <section className="mt-14 bg-gray-100 py-6 lg:mt-28 lg:py-12">
-            <h2 className="pl-4 text-2xl font-bold">추천 영화</h2>
-            <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-              {nowPlayingMovies.map((movie, idx) => (
-                <SwiperCard
-                  key={movie.id}
-                  movie={movie}
-                  idx={idx}
-                  id={movie.id}
-                />
-              ))}
-            </div>
-          </section>
-        ) : null}
       </main>
+      {!searchResults.length ? (
+        <section className="mt-14 bg-gray-100 px-2 py-6 lg:mt-28 lg:px-16 lg:py-12">
+          <h2 className="pl-4 text-2xl font-bold">추천 영화</h2>
+          <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+            {nowPlayingMovies.map((movie, idx) => (
+              <SwiperCard
+                key={movie.id}
+                movie={movie}
+                idx={idx}
+                id={movie.id}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
       <ScrollToTopButton />
       <Catchphrase />
     </>
