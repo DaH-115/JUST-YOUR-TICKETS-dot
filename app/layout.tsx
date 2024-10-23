@@ -3,6 +3,7 @@ import "app/globals.css";
 import Providers from "app/providers";
 import Header from "app/ui/header";
 import Footer from "app/ui/footer";
+import { ErrorProvider } from "store/error-context";
 
 export const metadata: Metadata = {
   title: "Jsut Your Tickets",
@@ -18,9 +19,11 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <Providers>
-          <Header />
-          {children}
-          <Footer />
+          <ErrorProvider>
+            <Header />
+            {children}
+            <Footer />
+          </ErrorProvider>
         </Providers>
       </body>
     </html>
