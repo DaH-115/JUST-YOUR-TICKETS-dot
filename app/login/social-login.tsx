@@ -1,4 +1,6 @@
-import { isAuth } from "firebase-config";
+"use client";
+
+import { db, isAuth } from "firebase-config";
 import {
   GithubAuthProvider,
   GoogleAuthProvider,
@@ -7,27 +9,66 @@ import {
 import { useRouter } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { useError } from "store/error-context";
+import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { useState } from "react";
+import SocialLoginButton from "app/login/social-login-button";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import onGenerateDisplayName from "app/sign-up/utils/onGenerateDisplayName";
+
+export type SocialProvider = "google" | "github";
 
 export default function SocialLogin() {
   const router = useRouter();
+  const { isShowError } = useError();
+  const [loadingProvider, setLoadingProvider] = useState<SocialProvider | null>(
+    null,
+  );
 
-  const handleGoogleLogin = async () => {
-    const provider = new GoogleAuthProvider();
+  const socialLoginHandler = async (provider: SocialProvider) => {
+    setLoadingProvider(provider);
     try {
-      await signInWithPopup(isAuth, provider);
-      router.push("/");
-    } catch (error) {
-      console.error("Google 로그인 에러:", error);
-    }
-  };
+      const authProvider =
+        provider === "google"
+          ? new GoogleAuthProvider()
+          : new GithubAuthProvider();
 
-  const handleGithubLogin = async () => {
-    const provider = new GithubAuthProvider();
-    try {
-      await signInWithPopup(isAuth, provider);
+      const { user } = await signInWithPopup(isAuth, authProvider);
+
+      // Firestore에서 사용자 확인
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (!userDoc.exists()) {
+        // 새 사용자인 경우
+        const generateDisplayName = await onGenerateDisplayName();
+
+        await setDoc(userRef, {
+          name: user.displayName,
+          displayName: user.displayName || generateDisplayName,
+          email: user.email,
+          profileImage: user.photoURL,
+          provider,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          biography: "Make a ticket for your own movie review.",
+          roll: "user",
+        });
+      } else {
+        await updateDoc(userRef, {
+          updatedAt: new Date().toISOString(),
+          lastLoginAt: new Date().toISOString(),
+        });
+      }
+
       router.push("/");
-    } catch (error) {
-      console.error("GitHub 로그인 에러:", error);
+    } catch (error: any) {
+      if (error.code === "auth/popup-closed-by-user") return;
+
+      const { title, message } = firebaseErrorHandler(error);
+      isShowError(title, message);
+    } finally {
+      setLoadingProvider(null);
     }
   };
 
@@ -40,18 +81,20 @@ export default function SocialLogin() {
       </div>
       <div className="flex items-center justify-center">
         <div className="flex space-x-2">
-          <button
-            onClick={handleGoogleLogin}
-            className="flex items-center justify-start rounded-full border-2 border-gray-300 p-4 transition-colors duration-300 hover:border-gray-400 hover:bg-gray-100"
-          >
-            <FcGoogle size={24} />
-          </button>
-          <button
-            onClick={handleGithubLogin}
-            className="flex items-center justify-start rounded-full border-2 border-gray-300 p-4 transition-colors duration-300 hover:border-gray-400 hover:bg-gray-100"
-          >
-            <FaGithub size={24} />
-          </button>
+          <SocialLoginButton
+            provider="google"
+            icon={<FcGoogle size={24} />}
+            label="Google"
+            onSocialLogin={socialLoginHandler}
+            isLoading={loadingProvider === "google"}
+          />
+          <SocialLoginButton
+            provider="github"
+            icon={<FaGithub size={24} />}
+            label="GitHub"
+            onSocialLogin={socialLoginHandler}
+            isLoading={loadingProvider === "github"}
+          />
         </div>
       </div>
     </>

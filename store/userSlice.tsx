@@ -1,11 +1,18 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Auth, onAuthStateChanged, User } from "firebase/auth";
 
-interface UserState {
-  user: any | null;
+interface SerializableUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+}
+
+type UserState = {
+  user: SerializableUser | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
-}
+};
 
 const initialState: UserState = {
   user: null,
@@ -13,7 +20,14 @@ const initialState: UserState = {
   error: null,
 };
 
-export const fetchUser = createAsyncThunk<User | null, Auth>(
+const serializeUser = (user: User) => ({
+  uid: user.uid,
+  email: user.email,
+  displayName: user.displayName,
+  photoURL: user.photoURL,
+});
+
+export const fetchUser = createAsyncThunk<SerializableUser | null, Auth>(
   "user/fetchUser",
   async (auth, { rejectWithValue }) => {
     try {
@@ -27,7 +41,7 @@ export const fetchUser = createAsyncThunk<User | null, Auth>(
         return rejectWithValue("No user found");
       }
 
-      return user;
+      return serializeUser(user);
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : "An unknown error occurred",
@@ -45,16 +59,35 @@ const userSlice = createSlice({
       state.status = "idle";
       state.error = null;
     },
+    onUpdateUserProfile(state, action: PayloadAction<{ displayName: string }>) {
+      if (state.user) {
+        state.user = {
+          ...state.user,
+          displayName: action.payload.displayName,
+        };
+      }
+    },
+    onUpdateUserEmail(state, action: PayloadAction<{ email: string }>) {
+      if (state.user) {
+        state.user = {
+          ...state.user,
+          email: action.payload.email,
+        };
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUser.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<any>) => {
-        state.status = "succeeded";
-        state.user = action.payload;
-      })
+      .addCase(
+        fetchUser.fulfilled,
+        (state, action: PayloadAction<SerializableUser | null>) => {
+          state.status = "succeeded";
+          state.user = action.payload;
+        },
+      )
       .addCase(fetchUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "Failed to fetch user";
@@ -63,4 +96,5 @@ const userSlice = createSlice({
 });
 
 export default userSlice;
-export const { clearUserState } = userSlice.actions;
+export const { clearUserState, onUpdateUserProfile, onUpdateUserEmail } =
+  userSlice.actions;

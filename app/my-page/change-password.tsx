@@ -6,6 +6,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { isAuth } from "firebase-config";
+import useFirebaseUser from "hooks/useFirebaseUser";
+import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { useError } from "store/error-context";
 
 const currentPasswordSchema = z.object({
   currentPassword: z.string().min(8, "비밀번호는 최소 8자 이상이어야 합니다."),
@@ -21,23 +24,24 @@ const newPasswordSchema = z.object({
     ),
 });
 
-type CurrentPasswordFormData = z.infer<typeof currentPasswordSchema>;
+type CurrentPasswordSchema = z.infer<typeof currentPasswordSchema>;
 type NewPasswordSchema = z.infer<typeof newPasswordSchema>;
 
-interface User {
-  email: string;
-}
-
-export default function ChangePassword({ user }: { user: User }) {
+export default function ChangePassword() {
   const [isVerified, setIsVerified] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { serializedUser, currentUser } = useFirebaseUser();
+  const { isShowError, isShowSuccess } = useError();
+
   const {
     register: registerCurrent,
     handleSubmit: handleSubmitCurrent,
     formState: { errors: errorsCurrent },
-  } = useForm<CurrentPasswordFormData>({
+  } = useForm<CurrentPasswordSchema>({
     resolver: zodResolver(currentPasswordSchema),
   });
+
   const {
     register: registerNew,
     handleSubmit: handleSubmitNew,
@@ -46,18 +50,25 @@ export default function ChangePassword({ user }: { user: User }) {
     resolver: zodResolver(newPasswordSchema),
   });
 
-  const verifyCurrentPasswordHandler = async (
-    data: CurrentPasswordFormData,
-  ) => {
+  const verifyCurrentPasswordHandler = async (data: CurrentPasswordSchema) => {
+    if (!serializedUser?.email) {
+      isShowError("오류", "사용자의 이메일을 찾을 수 없습니다.");
+      return;
+    }
+
+    setIsLoading(true);
     try {
       await signInWithEmailAndPassword(
         isAuth,
-        user.email,
+        serializedUser.email,
         data.currentPassword,
       );
       setIsVerified(true);
-    } catch (error) {
-      console.error("현재 비밀번호 확인 실패:", error);
+    } catch (error: any) {
+      const { title, message } = firebaseErrorHandler(error);
+      isShowError(title, message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -66,16 +77,22 @@ export default function ChangePassword({ user }: { user: User }) {
   }: {
     newPassword: string;
   }) => {
-    if (!isAuth.currentUser) {
-      throw new Error("사용자가 로그인되어 있지 않습니다.");
+    if (!currentUser) {
+      isShowError("인증 오류", "사용자가 로그인되어 있지 않습니다.");
+      return;
     }
 
+    setIsLoading(true);
     try {
-      await updatePassword(isAuth.currentUser, newPassword);
-      console.log("비밀번호가 성공적으로 변경되었습니다.");
-    } catch (error) {
-      console.error("비밀번호 변경 중 오류 발생:", error);
-      throw error;
+      await updatePassword(currentUser, newPassword);
+      setIsVerified(false);
+      setIsEditing(false);
+      isShowSuccess("비밀번호 변경", "비밀번호가 성공적으로 변경되었습니다.");
+    } catch (error: any) {
+      const { title, message } = firebaseErrorHandler(error);
+      isShowError(title, message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -117,20 +134,26 @@ export default function ChangePassword({ user }: { user: User }) {
                 id="current-password"
                 {...registerCurrent("currentPassword")}
                 type="password"
-                className={`w-full border-b border-black bg-transparent pb-2 outline-none ${isVerified ? "bg-gray-300" : "border-b-2"}`}
+                className={`w-full border-b border-black bg-transparent pb-2 ${isVerified ? "bg-gray-300" : "border-b-2"} ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
                 placeholder={
                   !isVerified
                     ? "현재 비밀번호를 입력하세요."
                     : "확인되었습니다."
                 }
                 autoComplete="off"
+                disabled={isLoading || isVerified}
               />
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="mt-1 whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 hover:bg-black hover:text-white"
+                  className={`mt-1 whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 ${
+                    isLoading || isVerified
+                      ? "cursor-not-allowed bg-gray-300"
+                      : "hover:bg-black hover:text-white"
+                  }`}
+                  disabled={isLoading || isVerified}
                 >
-                  확인
+                  {isLoading ? "확인 중..." : "확인"}
                 </button>
               </div>
               {errorsCurrent.currentPassword && (
@@ -150,16 +173,17 @@ export default function ChangePassword({ user }: { user: User }) {
                 id="new-password"
                 {...registerNew("newPassword")}
                 type="password"
-                className={`w-full border-b border-black bg-transparent pb-2 outline-none ${!isVerified ? "bg-slate-200" : "border-b-2"}`}
+                className={`w-full border-b border-black bg-transparent pb-2 ${!isVerified ? "bg-slate-200" : "border-b-2"} ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
                 placeholder={`${!isVerified ? "현재 비밀번호를 먼저 확인하세요." : "새로운 비밀번호를 입력하세요."}`}
-                disabled={!isVerified}
+                disabled={!isVerified || isLoading}
               />
               <div className="flex justify-end">
                 <button
                   type="submit"
                   className="mt-1 whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 hover:bg-black hover:text-white"
+                  disabled={!isVerified || isLoading}
                 >
-                  수정
+                  {isLoading ? "변경 중..." : "수정"}
                 </button>
               </div>
               {errorsNew.newPassword && (
@@ -169,9 +193,9 @@ export default function ChangePassword({ user }: { user: User }) {
               )}
             </form>
           </div>
-          <div
+          <span
             className={`absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black transition-all duration-500 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200`}
-          ></div>
+          />
         </div>
       </section>
     </div>

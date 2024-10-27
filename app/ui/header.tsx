@@ -17,9 +17,8 @@ export default function Header() {
     (state) => state.newReviewAlert.newReviewAlertState,
   );
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const userDisplayName = useAppSelector(
-    (state) => state.user.user?.displayName,
-  );
+  const users = useAppSelector((state) => state.user.user);
+  const userDisplayName = users?.displayName;
   const dispatch = useAppDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
@@ -84,7 +83,7 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-10 flex w-screen items-center justify-center px-2 py-4 lg:px-8 lg:pt-8 ${
+      className={`relative z-10 flex w-full items-center justify-center px-2 py-4 lg:px-8 lg:pt-8 ${
         isSideMenuOpen ? "pointer-events-none" : ""
       }`}
     >
@@ -149,7 +148,7 @@ export default function Header() {
 
               <div
                 onClick={dropDownHandler}
-                className={`absolute -right-10 top-full z-10 flex w-[150px] cursor-pointer flex-col items-center justify-center whitespace-nowrap rounded-xl border border-gray-300 bg-white shadow-lg transition-all duration-300 ${
+                className={`absolute -right-10 top-full z-10 flex w-[150px] cursor-pointer flex-col items-center justify-center whitespace-nowrap rounded-xl border-2 border-black bg-white shadow-lg transition-all duration-300 ${
                   isDropdownOpen
                     ? "pointer-events-auto translate-y-5 opacity-100"
                     : "pointer-events-none translate-y-0 opacity-0"
@@ -174,10 +173,7 @@ export default function Header() {
             </div>
           ) : (
             <Link href="/login">
-              <button
-                type="button"
-                className="rounded-full bg-black px-3 py-2 text-sm font-bold text-white transition-colors duration-200 ease-in-out hover:bg-yellow-600"
-              >
+              <button type="button" className="font-bold">
                 로그인
               </button>
             </Link>
