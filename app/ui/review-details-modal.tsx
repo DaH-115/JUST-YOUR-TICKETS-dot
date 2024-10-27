@@ -1,17 +1,17 @@
 import Link from "next/link";
-import { Review } from "app/ticket-list/page";
+import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
 
 type ReviewDetailsModalProps = {
   closeModalHandler: () => void;
-  handleDeleteHandler: (id: string) => void;
+  onReviewDeleted: (id: string) => void;
   isModalOpen: boolean;
-  selectedReview?: Review;
+  selectedReview?: MovieReview;
 };
 
 export default function ReviewDetailsModal({
   closeModalHandler,
-  handleDeleteHandler,
+  onReviewDeleted,
   isModalOpen,
   selectedReview,
 }: ReviewDetailsModalProps) {
@@ -58,7 +58,7 @@ export default function ReviewDetailsModal({
         <div className="flex items-center justify-between rounded-b-xl bg-black p-2">
           <div className="flex items-center justify-center whitespace-nowrap text-xs">
             <button
-              onClick={() => handleDeleteHandler(selectedReview?.id || "")}
+              onClick={() => onReviewDeleted(selectedReview?.id || "")}
               className="rounded-full border-2 border-black bg-white px-2 py-1 transition-colors duration-300 hover:bg-gray-200 active:bg-black active:text-white"
             >
               삭제

@@ -1,5 +1,3 @@
-import { db } from "firebase-config";
-import { deleteDoc, doc } from "firebase/firestore";
 import Link from "next/link";
 
 interface ReviewBtnGroupProps {

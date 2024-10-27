@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "firebase-config";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import { Review } from "app/ticket-list/page";
+import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoIosAddCircle } from "react-icons/io";
 import ReviewDetailsModal from "app/ui/review-details-modal";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
@@ -13,35 +13,38 @@ import ReviewListSkeleton from "app/ticket-list/review-list-skeleton";
 
 export default function TicketList({
   reviews,
-  onReviewDeleted,
+  onReviewUpdated,
 }: {
-  reviews: Review[];
-  onReviewDeleted: () => void;
+  reviews: MovieReview[];
+  onReviewUpdated: () => void;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedReview, setSelectedReview] = useState<Review>();
+  const [selectedReview, setSelectedReview] = useState<MovieReview>();
 
-  const openModalHandler = (content: Review) => {
+  const openModalHandler = useCallback((content: MovieReview) => {
     setSelectedReview(content);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const closeModalHandler = () => {
+  const closeModalHandler = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const handleDelete = async (id: string) => {
+  const onReviewDeleteHanlder = useCallback(async (id: string) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
       try {
         await deleteDoc(doc(db, "movie-reviews", id));
-        onReviewDeleted();
+        onReviewUpdated();
         closeModalHandler();
       } catch (error) {
-        console.error("리뷰 삭제 중 오류 발생:", error);
         alert("리뷰 삭제에 실패했습니다. 다시 시도해 주세요.");
       }
     }
-  };
+  }, []);
+
+  if (!reviews) {
+    return <ReviewListSkeleton />;
+  }
 
   return (
     <>
@@ -49,19 +52,19 @@ export default function TicketList({
         selectedReview={selectedReview}
         isModalOpen={isModalOpen}
         closeModalHandler={closeModalHandler}
-        handleDeleteHandler={handleDelete}
+        onReviewDeleted={onReviewDeleteHanlder}
       />
 
       <>
-        {reviews.length > 0 ? (
+        <div className="hidden h-[450px] items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 md:flex">
+          <Link href="/search">
+            <button className="p-12 text-xl font-bold text-gray-300 transition-colors duration-300 hover:text-gray-800">
+              <IoIosAddCircle size={48} />
+            </button>
+          </Link>
+        </div>
+        {reviews.length > 0 && (
           <>
-            <div className="hidden h-[450px] items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 md:flex">
-              <Link href="/search">
-                <button className="p-12 text-xl font-bold text-gray-300 transition-colors duration-300 hover:text-gray-800">
-                  <IoIosAddCircle size={48} />
-                </button>
-              </Link>
-            </div>
             {reviews.map((post, index) => (
               <div
                 key={post.id}
@@ -76,7 +79,7 @@ export default function TicketList({
                   <ReviewBtnGroup
                     postId={post.id}
                     movieId={post.movieId}
-                    onReviewDeleted={onReviewDeleted}
+                    onReviewDeleted={onReviewDeleteHanlder}
                   />
                 </div>
 
@@ -101,7 +104,7 @@ export default function TicketList({
                       {post.userName ? post.userName : "Guest"}
                     </p>
                   </div>
-                  <div className="h-[4rem] overflow-y-scroll break-keep p-2 md:border-b">
+                  <div className="h-[4rem] overflow-y-scroll break-keep p-2 scrollbar-hide md:border-b">
                     <p className="text-sm font-bold">{post.reviewTitle}</p>
                     <div className="flex text-xs text-gray-500">
                       {post.movieTitle} - {post.releaseYear}
@@ -120,8 +123,6 @@ export default function TicketList({
               </div>
             ))}
           </>
-        ) : (
-          <ReviewListSkeleton />
         )}
       </>
     </>

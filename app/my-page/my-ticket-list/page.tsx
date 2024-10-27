@@ -5,23 +5,25 @@ import { db } from "firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useSearchParams } from "next/navigation";
 import SideMenu from "app/my-page/side-menu";
-import { Review } from "app/ticket-list/page";
+import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import TicketList from "app/ticket-list/ticket-list";
 import { useForm } from "react-hook-form";
 import { debounce } from "lodash";
 import { IoSearchOutline } from "react-icons/io5";
+import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { useError } from "store/error-context";
 
 export default function MySideReviewList() {
   const searchParams = useSearchParams();
   const uid = searchParams.get("uid");
-  const [userReviews, setUserReviews] = useState<Review[]>([]);
-  const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
+  const [userReviews, setUserReviews] = useState<MovieReview[]>([]);
+  const [filteredReviews, setFilteredReviews] = useState<MovieReview[]>([]);
+  const { isShowError } = useError();
   const { register, watch } = useForm({
     defaultValues: {
       search: "",
     },
   });
-
   const searchTerm = watch("search");
 
   const fetchUserReviews = async () => {
@@ -32,10 +34,11 @@ export default function MySideReviewList() {
       const reviews = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-      })) as Review[];
+      })) as MovieReview[];
       setUserReviews(reviews);
-    } catch (error) {
-      console.error("Error getting documents:", error);
+    } catch (error: any) {
+      const { title, message } = firebaseErrorHandler(error);
+      isShowError(title, message);
     }
   };
 
@@ -61,17 +64,13 @@ export default function MySideReviewList() {
     fetchUserReviews();
   }, [uid]);
 
-  const handleReviewDeleted = () => {
-    fetchUserReviews();
-  };
-
   useEffect(() => {
     debounceSearch(searchTerm);
   }, [searchTerm, debounceSearch]);
 
   return (
     <div className="flex w-full flex-col lg:my-8 lg:mb-8 lg:flex-row lg:px-8">
-      <div className="flex">
+      <div className="w-1/3">
         <SideMenu uid={uid as string} />
       </div>
       <main className="flex w-full flex-col">
@@ -104,11 +103,11 @@ export default function MySideReviewList() {
             </div>
           </div>
         </div>
-        <section id="side-review-list" className="px-8 lg:px-0">
-          <div className="grid grid-cols-2 gap-2 pb-12 sm:grid-cols-2 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+        <section className="px-8 lg:px-0">
+          <div className="grid grid-cols-2 gap-2 pb-12 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
             <TicketList
               reviews={searchTerm ? filteredReviews : userReviews}
-              onReviewDeleted={handleReviewDeleted}
+              onReviewUpdated={fetchUserReviews}
             />
           </div>
         </section>
