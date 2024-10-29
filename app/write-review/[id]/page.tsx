@@ -4,50 +4,54 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "firebase-config";
-import { Movie } from "app/page";
+import { Movie } from "api/fetchNowPlayingMovies";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
-import ReviewForm, { ReviewDate } from "app/write-review/ReviewForm";
+import ReviewForm, { ReviewData } from "app/write-review/review-form";
 import Catchphrase from "app/ui/catchphrase";
+import ReviewFormSkeleton from "app/write-review/review-form-skeleton";
+import { useError } from "store/error-context";
+import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
 
 export default function ReviewPage() {
   const params = useParams();
   const searchParams = useSearchParams();
-  const id = params.id;
+  const id = Array.isArray(params.id) ? params.id[0] : params.id;
   const movieId = searchParams.get("movieId");
   const [isLoading, setIsLoading] = useState(true);
-  const [initialData, setInitialData] = useState<ReviewDate>();
+  const [initialData, setInitialData] = useState<ReviewData>();
   const [movieInfo, setMovieInfo] = useState<Movie>();
+  const { isShowError } = useError();
 
   useEffect(() => {
+    if (!movieId) return;
+    setIsLoading(true);
+
     const fetchData = async () => {
-      setIsLoading(true);
+      const movieData = await fetchMovieDetails(Number(movieId));
 
-      const fetchMovieInfo = async () => {
-        const movieData = await fetchMovieDetails(Number(movieId));
+      if ("errorMessage" in movieData) {
+        isShowError(movieData.title, movieData.errorMessage);
+      } else {
         setMovieInfo(movieData);
-      };
+      }
 
-      try {
-        if (id !== "new" && movieId) {
-          // Edit Mode
+      if (id !== "new") {
+        // Edit Mode
+        try {
           const docRef = doc(db, "movie-reviews", id as string);
           const docSnap = await getDoc(docRef);
 
           if (docSnap.exists()) {
             const data = docSnap.data();
-            setInitialData(data as ReviewDate);
+            setInitialData(data as ReviewData);
           }
-
-          await fetchMovieInfo();
-        } else if (id === "new" && movieId) {
-          // Create Mode
-          await fetchMovieInfo();
+        } catch (error) {
+          const { title, message } = firebaseErrorHandler(error);
+          isShowError(title, message);
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
       }
+
+      setIsLoading(false);
     };
 
     fetchData();
@@ -56,14 +60,14 @@ export default function ReviewPage() {
   return (
     <>
       {isLoading ? (
-        <div>Loading...</div>
+        <ReviewFormSkeleton />
       ) : (
         <ReviewForm
           mode={id === "new" ? "create" : "edit"}
           initialData={initialData}
           movieInfo={movieInfo as Movie}
           movieId={movieId as string}
-          reviewId={id as string}
+          reviewId={id}
         />
       )}
       <Catchphrase />

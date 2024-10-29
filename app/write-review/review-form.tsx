@@ -6,24 +6,25 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "store/hooks";
 import { useReviewForm } from "app/write-review/useReviewForm";
 import useGetTitle from "hooks/useGetTitle";
-import { Movie } from "app/page";
+import { Movie } from "api/fetchNowPlayingMovies";
 import BackGround from "app/ui/back-ground";
 import { IoStar } from "react-icons/io5";
 import { MdDriveFileRenameOutline } from "react-icons/md";
+import ModalAlert from "app/ui/alert/modal-alert";
 
-export interface ReviewDate {
+export interface ReviewData {
   reviewTitle: string;
   rating: number;
   review: string;
 }
 
-interface ReviewForm {
+type ReviewFormProps = {
   mode: "create" | "edit";
-  initialData?: ReviewDate;
+  initialData?: ReviewData;
   movieInfo: Movie;
   movieId: string;
   reviewId?: string;
-}
+};
 
 export default function ReviewForm({
   mode,
@@ -31,7 +32,7 @@ export default function ReviewForm({
   movieInfo,
   reviewId,
   movieId,
-}: ReviewForm) {
+}: ReviewFormProps) {
   const router = useRouter();
   const {
     register,
@@ -48,7 +49,7 @@ export default function ReviewForm({
   const [showExitConfirmation, setShowExitConfirmation] = useState(false);
   const userState = useAppSelector((state) => state.user.user);
   const movieTitle = useGetTitle(movieInfo.original_title, movieInfo.title);
-  const { onSubmit } = useReviewForm(mode, movieInfo, movieId, reviewId);
+  const { onSubmitHandler } = useReviewForm(mode, movieInfo, movieId, reviewId);
 
   const handlePageExit = useCallback(() => {
     if (isDirty) {
@@ -67,11 +68,13 @@ export default function ReviewForm({
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [isDirty]);
+
+  const rating = watch("rating");
+  const isFormValid = !errors.reviewTitle && !errors.review && rating >= 0;
 
   return (
     <>
@@ -82,34 +85,6 @@ export default function ReviewForm({
         />
       )}
 
-      {/* POP UP */}
-      {showExitConfirmation && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="w-3/4 max-w-md rounded-xl border-2 border-black bg-white p-4 drop-shadow-lg">
-            <div className="mb-4 border-b border-black">
-              <strong className="font-bold">알림</strong>
-            </div>
-            <div className="mb-4 break-keep text-base lg:mb-6 lg:text-lg">
-              현재 내용이 사라집니다. 나가시겠습니까?
-            </div>
-            <div className="flex justify-end text-sm">
-              <button
-                className="mr-2 rounded-lg bg-gray-200 px-3 py-2 transition-all duration-300 hover:bg-gray-300 lg:px-4 lg:py-2"
-                onClick={() => setShowExitConfirmation(false)}
-              >
-                취소
-              </button>
-              <button
-                className="rounded-lg bg-red-500 px-3 py-2 text-white transition-all duration-300 hover:bg-red-600 lg:px-4 lg:py-2"
-                onClick={() => router.push("/")}
-              >
-                확인
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <main className="relative mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
         <div className="mx-auto w-11/12 rounded-xl border-2 border-black bg-white lg:w-1/3">
           <div className="w-full p-4 pb-0">
@@ -118,7 +93,7 @@ export default function ReviewForm({
                 {mode === "create" ? "새로운 리뷰 작성" : "리뷰 수정"}
               </h1>
             </div>
-            <h2 className="mb-2 text-xl font-bold lg:text-3xl">{`${movieTitle} (${movieInfo.release_date?.slice(0, 4)})`}</h2>
+            <h2 className="mb-2 text-xl font-bold lg:text-3xl">{`${movieTitle} (${movieInfo.release_date.slice(0, 4)})`}</h2>
           </div>
           <div className="flex justify-between border-b border-black px-4 py-2 text-xs lg:text-sm">
             <span>{new Date().toLocaleDateString()}</span>
@@ -131,7 +106,7 @@ export default function ReviewForm({
           </div>
 
           <div className="w-full">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmitHandler)}>
               <div className="p-4">
                 <label
                   htmlFor="date"
@@ -175,7 +150,7 @@ export default function ReviewForm({
                   <div>
                     <IoStar className="mr-1" size={20} />
                   </div>
-                  <div className="text-lg font-bold">{watch("rating")}</div>
+                  <div className="text-lg font-bold">{rating}</div>
                   <span className="text-gray-400">/ 10</span>
                 </div>
               </div>
@@ -212,7 +187,8 @@ export default function ReviewForm({
                 </button>
                 <button
                   type="submit"
-                  className="group flex w-full items-center justify-center rounded-xl bg-black p-4 text-white transition-all duration-300 hover:bg-gray-800"
+                  disabled={!isFormValid}
+                  className="group flex w-full items-center justify-center rounded-xl bg-black p-4 text-white transition-all duration-300 hover:bg-gray-800 disabled:text-gray-500"
                 >
                   <div>작성</div>
                   <MdDriveFileRenameOutline className="ml-1" size={18} />
@@ -221,6 +197,17 @@ export default function ReviewForm({
             </form>
           </div>
         </div>
+
+        {/* Modal Alert */}
+        {showExitConfirmation && (
+          <ModalAlert
+            title="알림"
+            description="현재 내용이 사라집니다. 나가시겠습니까?"
+            onConfirm={() => router.push("/")}
+            onClose={() => setShowExitConfirmation(false)}
+            variant="destructive"
+          />
+        )}
       </main>
     </>
   );

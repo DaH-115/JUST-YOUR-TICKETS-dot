@@ -3,8 +3,10 @@ import { db } from "firebase-config";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
-import { Movie } from "app/page";
-import { ReviewDate } from "./ReviewForm";
+import { Movie } from "api/fetchNowPlayingMovies";
+import { ReviewData } from "app/write-review/review-form";
+import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { useError } from "store/error-context";
 
 export const useReviewForm = (
   mode: "create" | "edit",
@@ -14,17 +16,19 @@ export const useReviewForm = (
 ) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const userState = useAppSelector((state) => state.user.user);
+  const serializedUser = useAppSelector((state) => state.user.user);
+  const { isShowError } = useError();
 
-  const onSubmit = async (data: ReviewDate) => {
+  const onSubmitHandler = async (data: ReviewData) => {
+    if (!serializedUser) return;
+
     try {
       const { reviewTitle, rating, review } = data;
-      const { uid, displayName } = userState;
 
       if (mode === "create") {
         await addDoc(collection(db, "movie-reviews"), {
-          userUid: uid,
-          userName: displayName,
+          userUid: serializedUser.uid,
+          userName: serializedUser.displayName,
           movieId,
           reviewTitle,
           rating,
@@ -45,10 +49,11 @@ export const useReviewForm = (
 
       dispatch(addNewReviewAlertHandler());
       router.push("/");
-    } catch (e) {
-      console.error("Error processing review: ", e);
+    } catch (error) {
+      const { title, message } = firebaseErrorHandler(error);
+      isShowError(title, message);
     }
   };
 
-  return { onSubmit };
+  return { onSubmitHandler };
 };

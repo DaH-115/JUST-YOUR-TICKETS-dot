@@ -49,6 +49,8 @@ export default function Page() {
             movieReviews.errorMessage,
             movieReviews.status,
           );
+    } else {
+      setUserReviews(movieReviews);
     }
   }, [isShowError]);
 
