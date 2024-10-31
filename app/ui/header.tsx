@@ -184,6 +184,7 @@ export default function Header() {
       <HeaderSearchBar />
       <HeaderSideMenu
         newReviewAlertState={newReviewAlertState}
+        userDisplayName={userDisplayName || ""}
         isOpen={isSideMenuOpen}
         onClose={() => setIsSideMenuOpen(false)}
       />
