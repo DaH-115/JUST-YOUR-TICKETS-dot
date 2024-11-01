@@ -52,8 +52,8 @@ export default function Page() {
   };
 
   return (
-    <div className="mt-16 min-h-screen w-full bg-white md:flex md:justify-center">
-      <section className="mb-3 w-full border-t-2 border-gray-200 pl-3 pt-4 text-4xl font-bold md:mb-0 md:ml-8 md:min-h-screen md:w-1/3 md:border-r-2 md:border-t-0 md:pl-0 md:pt-0 md:text-8xl">
+    <div className="mb-8 w-full bg-white md:my-8 md:flex md:justify-center">
+      <section className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:border-gray-200 md:pl-0 md:pt-0 lg:text-8xl">
         <h1>LOG IN</h1>
       </section>
       <main className="md:w-2/3">
@@ -83,13 +83,13 @@ export default function Page() {
             disabled={isLoading}
           />
 
-          <div className="font-bold">
+          <div className="">
             <button
               type="submit"
-              className={`mb-3 w-full rounded-xl bg-black p-4 text-sm text-white transition-colors duration-300 ease-in-out ${
+              className={`mb-2 w-full rounded-xl border border-black bg-black p-2 text-sm text-white transition-colors duration-300 ease-in-out ${
                 isLoading
                   ? "cursor-not-allowed opacity-50"
-                  : "hover:bg-yellow-600"
+                  : "hover:bg-white hover:text-black"
               } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
               disabled={isLoading}
             >
@@ -98,10 +98,10 @@ export default function Page() {
             <Link href="/sign-up">
               <button
                 type="button"
-                className={`w-full rounded-xl bg-black p-4 text-sm text-white transition-colors duration-200 ease-in-out ${
+                className={`w-full rounded-xl border border-black bg-white p-2 text-sm text-black transition-colors duration-300 ease-in-out ${
                   isLoading
                     ? "cursor-not-allowed opacity-50"
-                    : "hover:bg-yellow-600"
+                    : "hover:bg-black hover:text-white"
                 } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
                 disabled={isLoading}
               >
