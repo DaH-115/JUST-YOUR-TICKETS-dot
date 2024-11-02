@@ -7,18 +7,21 @@ import SideReviewList from "app/my-page/side-review-list";
 
 export default function MyPage() {
   const userState = useAppSelector((state) => state.user.user);
+
   if (!userState) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-96 w-full items-center justify-center">
+        <p className="animate-pulse text-xl font-bold">Loading...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="flex w-full flex-col px-4 py-8 lg:my-8 lg:flex-row lg:px-8 lg:py-16">
-      <div className="w-1/3">
-        <SideMenu uid={userState.uid} />
-      </div>
+    <section className="flex w-full flex-col px-4 py-4 md:h-96 md:py-8 lg:flex-row lg:px-8">
+      <SideMenu uid={userState.uid} />
       {/* Main */}
       <ProfileForm />
       <SideReviewList uid={userState.uid} />
-    </div>
+    </section>
   );
 }

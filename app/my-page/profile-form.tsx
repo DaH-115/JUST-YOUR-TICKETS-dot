@@ -186,9 +186,9 @@ export default function ProfileForm() {
   }, [isEditing, reset]);
 
   return (
-    <main className="flex w-full flex-col">
-      <div className="group relative">
-        <div className="relative rounded-xl border-2 border-black bg-white px-8 pb-10 pt-6 transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1">
+    <main className="w-full">
+      <section className="group relative">
+        <div className="rounded-xl border-2 border-black bg-white px-8 pb-10 pt-6 transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1">
           <form onSubmit={handleSubmit(onSubmitHandler)}>
             <div className="flex items-center border-b-2 border-black pb-1">
               <h1 className="w-full text-2xl font-bold">PROFILE</h1>
@@ -277,7 +277,7 @@ export default function ProfileForm() {
           id="animation-part"
           className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200"
         />
-      </div>
+      </section>
 
       {/* Change Password */}
       {userDoc?.provider === "email" && <ChangePassword />}
