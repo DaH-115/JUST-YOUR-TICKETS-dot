@@ -11,7 +11,7 @@ export default function BackGround({ imageUrl, movieTitle }: BackGroundProps) {
       {imageUrl && (
         <>
           <Image
-            src={`https://image.tmdb.org/t/p/original${imageUrl}`}
+            src={`https://image.tmdb.org/t/p/original/${imageUrl}`}
             alt={movieTitle || "Background Image"}
             width={1280}
             height={720}

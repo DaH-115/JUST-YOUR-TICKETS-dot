@@ -69,7 +69,7 @@ export default function MovieDetailCard({
         <section className="mx-auto w-3/4 py-4 lg:mr-8 lg:w-2/3 lg:py-0">
           {movieDetails.poster_path ? (
             <Image
-              src={`https://image.tmdb.org/t/p/original${movieDetails.poster_path}`}
+              src={`https://image.tmdb.org/t/p/original/${movieDetails.poster_path}`}
               alt={movieTitle}
               width={1280}
               height={720}

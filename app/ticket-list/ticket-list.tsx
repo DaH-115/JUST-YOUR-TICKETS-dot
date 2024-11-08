@@ -85,7 +85,7 @@ export default function TicketList({
 
                 <div id="movie-poster" className="h-4/5">
                   <Image
-                    src={`https://image.tmdb.org/t/p/original${post.posterImage}`}
+                    src={`https://image.tmdb.org/t/p/w500/${post.posterImage}`}
                     alt={post.movieTitle}
                     width={1280}
                     height={720}
@@ -106,8 +106,15 @@ export default function TicketList({
                   </div>
                   <div className="h-[4rem] overflow-y-scroll break-keep p-2 scrollbar-hide md:border-b">
                     <p className="text-sm font-bold">{post.reviewTitle}</p>
-                    <div className="flex text-xs text-gray-500">
-                      {post.movieTitle} - {post.releaseYear}
+                    {/* 영화 상세 정보로 이동 */}
+                    <div className="text-xs text-gray-500">
+                      <Link
+                        href={`/movie-detail/${post.movieId}`}
+                        className="border-gray-500 transition-all hover:border-b"
+                      >
+                        {post.movieTitle}
+                      </Link>
+                      - {post.releaseYear}
                     </div>
                   </div>
                   <div className="flex items-center border-t px-3 py-2">
@@ -116,7 +123,7 @@ export default function TicketList({
                       className="group relative flex items-center justify-end"
                       onClick={() => openModalHandler(post)}
                     >
-                      <FaExternalLinkAlt className="text-gray-400" size={12} />
+                      <FaExternalLinkAlt className="text-xs text-gray-400" />
                     </button>
                   </div>
                 </div>

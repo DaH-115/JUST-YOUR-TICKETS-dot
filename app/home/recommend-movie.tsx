@@ -15,7 +15,7 @@ export default function RecommendMovie({
   currentMovie,
   trailerKey,
 }: RecommendMovieProps) {
-  const imgageUrl = `https://image.tmdb.org/t/p/original${currentMovie.poster_path}`;
+  const imgageUrl = `https://image.tmdb.org/t/p/original/${currentMovie.poster_path}`;
   const movieTitle = useGetTitle(
     currentMovie.original_title,
     currentMovie.title,
