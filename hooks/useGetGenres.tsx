@@ -6,24 +6,24 @@ const useGetGenres = (movieId: number) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchGenres = async () => {
+    setLoading(true);
+    setError(null);
+
+    const response = await fetchMovieDetails(movieId);
+
+    if ("errorMessage" in response) {
+      setError(response.errorMessage);
+    } else {
+      setGenres(response.genres.map((genre) => genre.name));
+    }
+
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchGenres = async () => {
-      setLoading(true);
-      try {
-        const res = await fetchMovieDetails(movieId);
-        const result = res.genres.map(
-          (item: { id: number; name: string }) => item.name,
-        );
-
-        setGenres(result);
-      } catch (error) {
-        setError("Error fetching genres");
-      }
-      setLoading(false);
-    };
-
     fetchGenres();
-  }, [movieId]);
+  }, [fetchGenres]);
 
   return { genres, loading, error };
 };

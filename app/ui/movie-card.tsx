@@ -15,7 +15,11 @@ import NewWriteBtn from "app/ui/new-write-btn";
 export default function MovieCard({ movie }: { movie: Movie }) {
   const { id, title, original_title, release_date, vote_average, overview } =
     movie;
-  const { genres } = useGetGenres(id);
+  const {
+    genres,
+    loading: genresLoading,
+    error: genresError,
+  } = useGetGenres(id);
   const movieDate = useFormatDate(release_date);
   const { isShowError, isHideError } = useError();
   const [credits, setCredits] = useState<MovieCredits | null>(null);
@@ -63,14 +67,25 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           </div>
         </div>
         <ul className="flex items-center space-x-2 border-y border-black px-4 py-2 text-sm">
-          {genres.map((genre, idx) => (
-            <li
-              className="rounded-full border border-black bg-white p-2 px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-white active:text-black lg:text-sm"
-              key={idx}
-            >
-              {genre}
+          {genresLoading ? (
+            <li className="text-xs text-gray-300 lg:text-sm">
+              장르를 불러 오는 중..
             </li>
-          ))}
+          ) : (
+            genres.map((genre, idx) => (
+              <li
+                className="rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-white active:text-black lg:text-sm"
+                key={idx}
+              >
+                {genre}
+              </li>
+            ))
+          )}
+          {!genresError && (
+            <li className="text-xs text-gray-300 lg:text-sm">
+              장르 정보가 없습니다.
+            </li>
+          )}
         </ul>
         {overview && <AnimatedOverview overview={overview} />}
         <div className="flex flex-1 border-b border-black">

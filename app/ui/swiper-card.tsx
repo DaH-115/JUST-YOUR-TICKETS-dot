@@ -16,7 +16,11 @@ export default function SwiperCard({
   idx: number;
   id: number;
 }) {
-  const { genres } = useGetGenres(id);
+  const {
+    genres,
+    loading: genresLoading,
+    error: genresError,
+  } = useGetGenres(id);
   const { original_title, poster_path, title, vote_average } = movie;
   const movieTitle = useGetTitle(original_title, title);
 
@@ -54,16 +58,27 @@ export default function SwiperCard({
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-wrap border-y border-black p-1">
-          {genres.map((genre, idx) => (
-            <p
-              className="m-1 rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white lg:text-sm"
-              key={idx}
-            >
-              {genre}
-            </p>
-          ))}
-        </div>
+        <ul className="flex w-full flex-wrap border-y border-black p-1">
+          {genresLoading ? (
+            <li className="text-xs text-gray-300 lg:text-sm">
+              장르를 불러 오는 중..
+            </li>
+          ) : (
+            genres.map((genre, idx) => (
+              <li
+                className="m-1 rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white lg:text-sm"
+                key={idx}
+              >
+                {genre}
+              </li>
+            ))
+          )}
+          {!genresError && (
+            <li className="text-xs text-gray-300 lg:text-sm">
+              장르 정보가 없습니다.
+            </li>
+          )}
+        </ul>
         <div className="flex w-full text-center">
           <div className="flex items-center border-r-2 border-black p-4">
             <IoStar />
