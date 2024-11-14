@@ -6,8 +6,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { isAuth } from "firebase-config";
-import useFirebaseUser from "hooks/useFirebaseUser";
 import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { useAppSelector } from "store/hooks";
 import { useError } from "store/error-context";
 
 const currentPasswordSchema = z.object({
@@ -31,7 +31,8 @@ export default function ChangePassword() {
   const [isVerified, setIsVerified] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { serializedUser, currentUser } = useFirebaseUser();
+  const currentUser = isAuth.currentUser;
+  const serializedUser = useAppSelector((state) => state.user.user);
   const { isShowError, isShowSuccess } = useError();
 
   const {
