@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Metadata } from "next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -12,7 +13,10 @@ import { useError } from "store/error-context";
 import ScrollToTopButton from "app/ui/scroll-to-top-button";
 import Catchphrase from "app/ui/catchphrase";
 import SwiperCard from "app/ui/swiper-card";
-import SwiperCardSkeleton from "app/ui/swiper-card-skeleton";
+
+export const metadata: Metadata = {
+  title: "Search",
+};
 
 const searchSchema = z.object({
   query: z.string().min(1, "검색어를 입력해주세요."),

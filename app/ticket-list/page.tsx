@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { Metadata } from "next";
 import { useAppSelector, useAppDispatch } from "store/hooks";
 import { useForm } from "react-hook-form";
 import fetchMovieReviews, {
@@ -11,6 +12,10 @@ import TicketList from "app/ticket-list/ticket-list";
 import { IoSearchOutline } from "react-icons/io5";
 import { useError } from "store/error-context";
 import useReviewSearch from "app/ticket-list/utils/useReviewSearch";
+
+export const metadata: Metadata = {
+  title: "Ticket List",
+};
 
 export default function Page() {
   const newReviewAlertState = useAppSelector(

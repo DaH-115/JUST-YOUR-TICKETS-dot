@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Metadata } from "next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,6 +21,10 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
+
+export const metadata: Metadata = {
+  title: "Sign Up",
+};
 
 const signupSchema = z
   .object({

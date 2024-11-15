@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -12,6 +13,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import SocialLogin from "app/login/social-login";
 import InputField from "app/ui/input-field";
+
+export const metadata: Metadata = {
+  title: "Login",
+};
 
 const loginSchema = z.object({
   email: z

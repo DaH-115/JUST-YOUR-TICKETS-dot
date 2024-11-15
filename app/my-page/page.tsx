@@ -1,9 +1,14 @@
 "use client";
 
+import { Metadata } from "next";
 import { useAppSelector } from "store/hooks";
 import SideMenu from "app/my-page/side-menu";
 import ProfileForm from "app/my-page/profile-form";
 import SideReviewList from "app/my-page/side-review-list";
+
+export const metadata: Metadata = {
+  title: "My Page",
+};
 
 export default function MyPage() {
   const userState = useAppSelector((state) => state.user.user);

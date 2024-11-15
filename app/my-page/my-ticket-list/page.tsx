@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { Metadata } from "next";
 import { db } from "firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useSearchParams } from "next/navigation";
@@ -12,6 +13,10 @@ import { debounce } from "lodash";
 import { IoSearchOutline } from "react-icons/io5";
 import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
 import { useError } from "store/error-context";
+
+export const metadata: Metadata = {
+  title: "My Ticket List",
+};
 
 export default function MySideReviewList() {
   const searchParams = useSearchParams();

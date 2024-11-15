@@ -6,8 +6,35 @@ import Footer from "app/ui/footer";
 import { ErrorProvider } from "store/error-context";
 
 export const metadata: Metadata = {
-  title: "Jsut Your Tickets",
+  metadataBase: new URL("https://just-movie-tickets.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
+  title: {
+    template: "%s | Just Your Tickets",
+    default: "Just Your Tickets",
+  },
   description: "Make a ticket for your own movie ticket.",
+  keywords: ["movie", "ticket", "booking"],
+  openGraph: {
+    title: "Just Your Tickets",
+    description: "Make a ticket for your own movie ticket.",
+    url: "/",
+    siteName: "Just Your Tickets",
+    images: [
+      {
+        url: "/images/og-card.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Just Your Tickets Preview",
+      },
+    ],
+  },
+  icons: {
+    icon: "/images/favicon.ico",
+    shortcut: "/images/favicon.ico",
+    apple: "/images/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
