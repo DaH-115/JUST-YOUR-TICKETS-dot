@@ -102,44 +102,38 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         </div>
         <div className="flex">
           <div className="flex-1 border-r-2 border-dotted border-gray-300">
-            <div className="border-b border-black p-1">
-              <div className="rounded-xl bg-black">
-                <p className="p-2 text-center text-xs text-white">개봉일</p>
-              </div>
+            <div className="p-2">
+              <p className="text-sm font-bold text-black">개봉일</p>
             </div>
-            <p className="px-2 py-4 text-center">{movieDate}</p>
+            <p className="p-2 text-center text-sm">{movieDate}</p>
           </div>
           <div className="flex-1 border-r-2 border-dotted border-gray-300">
-            <div className="border-b border-black p-1">
-              <div className="rounded-xl bg-black">
-                <p className="p-2 text-center text-xs text-white">감독</p>
-              </div>
+            <div className="p-2">
+              <p className="text-sm font-bold text-black">감독</p>
             </div>
-            <ul className="px-2 py-4 text-center">
+            <ul className="p-2 text-center text-sm">
               {credits?.crew
                 .filter((crew) => crew.job === "Director")
                 .map((crew) => <li key={crew.id}>{crew.name}</li>)}
             </ul>
           </div>
           <div className="flex-1">
-            <div className="border-b border-black p-1">
-              <div className="rounded-xl bg-black">
-                <p className="p-2 text-center text-xs text-white">평점</p>
-              </div>
+            <div className="p-2">
+              <p className="text-sm font-bold text-black">평점</p>
             </div>
-            <div className="flex flex-1 items-center justify-center p-4">
+            <div className="flex flex-1 items-center justify-center p-2 pb-4">
               <IoStar className="mr-1" size={24} />
-              <div className="text-2xl font-bold lg:text-4xl">
+              <div className="text-2xl font-bold">
                 {Math.round(vote_average * 10) / 10}
               </div>
             </div>
           </div>
         </div>
         <div className="flex w-full border-t border-black p-1">
-          <NewWriteBtn movieId={id} size="lg" />
+          <NewWriteBtn movieId={id} />
         </div>
       </div>
-      <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-gray-700 lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1 lg:group-hover:bg-gray-200" />
+      <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border border-black bg-gray-700 lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1 lg:group-hover:border-gray-400 lg:group-hover:bg-gray-200" />
     </section>
   );
 }

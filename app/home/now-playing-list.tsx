@@ -15,15 +15,13 @@ export default function NowPlayingList({ movieList }: { movieList: Movie[] }) {
             <br />
             Playing
           </h2>
-          <div className="ml-2 rounded-full border-2 border-black bg-white p-2 transition-colors duration-300 hover:bg-gray-300 hover:text-white">
+          <div className="ml-2 rounded-full border border-black bg-white p-2 transition-colors duration-300 hover:bg-black hover:text-white">
             <MdLocalMovies className="text-2xl lg:text-3xl" />
           </div>
         </div>
-        <div>
-          <p className="pt-2 text-base text-black lg:pt-6 lg:text-xl">
-            현재 상영 중인 영화들을 확인해 보세요
-          </p>
-        </div>
+        <p className="pt-2 text-base text-black lg:pt-6 lg:text-xl">
+          현재 상영 중인 영화들을 확인해 보세요
+        </p>
       </div>
       <div className="px-4">
         <TicketSwiper movieList={movieList.slice(0, 10)} />

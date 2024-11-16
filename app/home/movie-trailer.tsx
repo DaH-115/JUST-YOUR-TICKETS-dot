@@ -16,15 +16,13 @@ export default function MovieTrailer({
             <br />
             Trailer
           </h2>
-          <div className="ml-2 rounded-full border-2 border-black bg-white p-2 transition-colors duration-300 hover:bg-gray-300 hover:text-white">
+          <div className="ml-2 rounded-full border border-black bg-white p-2 transition-colors duration-300 hover:bg-black hover:text-white">
             <RiMovieLine className="text-2xl lg:text-3xl" />
           </div>
         </div>
-        <div>
-          <p className="pt-2 text-base text-black lg:pt-6 lg:text-xl">
-            이 영화의 예고편을 확인해 보세요
-          </p>
-        </div>
+        <p className="pt-1 text-base text-black lg:pt-6 lg:text-xl">
+          이 영화의 예고편을 확인해 보세요
+        </p>
       </div>
 
       <div className="mx-auto aspect-video w-full md:w-4/6">
