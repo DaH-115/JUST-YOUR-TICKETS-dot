@@ -59,11 +59,17 @@ export default function SwiperCard({
           </div>
         </div>
         <ul className="flex w-full flex-wrap border-y border-black p-1">
-          {genresLoading ? (
+          {genresLoading && (
             <li className="text-xs text-gray-300 lg:text-sm">
-              장르를 불러 오는 중..
+              장르를 불러 오는 중
             </li>
-          ) : (
+          )}
+          {genresError && (
+            <li className="text-xs text-gray-300 lg:text-sm">
+              장르 정보를 불러올 수 없습니다
+            </li>
+          )}
+          {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li
                 className="m-1 rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white lg:text-sm"
@@ -72,10 +78,9 @@ export default function SwiperCard({
                 {genre}
               </li>
             ))
-          )}
-          {!genresError && (
+          ) : (
             <li className="text-xs text-gray-300 lg:text-sm">
-              장르 정보가 없습니다.
+              장르 정보가 없습니다
             </li>
           )}
         </ul>

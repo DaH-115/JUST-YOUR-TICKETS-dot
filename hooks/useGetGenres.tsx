@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
 
 const useGetGenres = (movieId: number) => {
@@ -6,7 +6,7 @@ const useGetGenres = (movieId: number) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchGenres = async () => {
+  const fetchGenres = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -19,7 +19,7 @@ const useGetGenres = (movieId: number) => {
     }
 
     setLoading(false);
-  };
+  }, [movieId]);
 
   useEffect(() => {
     fetchGenres();

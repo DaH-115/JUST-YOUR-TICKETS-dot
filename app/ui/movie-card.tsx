@@ -67,11 +67,17 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           </div>
         </div>
         <ul className="flex items-center space-x-2 border-y border-black px-4 py-2 text-sm">
-          {genresLoading ? (
+          {genresLoading && (
             <li className="text-xs text-gray-300 lg:text-sm">
-              장르를 불러 오는 중..
+              장르를 불러 오는 중
             </li>
-          ) : (
+          )}
+          {genresError && (
+            <li className="text-xs text-gray-300 lg:text-sm">
+              장르 정보를 불러올 수 없습니다
+            </li>
+          )}
+          {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li
                 className="rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-white active:text-black lg:text-sm"
@@ -80,10 +86,9 @@ export default function MovieCard({ movie }: { movie: Movie }) {
                 {genre}
               </li>
             ))
-          )}
-          {!genresError && (
+          ) : (
             <li className="text-xs text-gray-300 lg:text-sm">
-              장르 정보가 없습니다.
+              장르 정보가 없습니다
             </li>
           )}
         </ul>
