@@ -109,7 +109,7 @@ export default function TicketList({
                     {/* 영화 상세 정보로 이동 */}
                     <div className="text-xs text-gray-500">
                       <Link
-                        href={`/movie-detail/${post.movieId}`}
+                        href={`/movie-details/${post.movieId}`}
                         className="border-gray-500 transition-all hover:border-b"
                       >
                         {post.movieTitle}

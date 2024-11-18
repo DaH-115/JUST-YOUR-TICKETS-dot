@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Movie } from "api/fetchNowPlayingMovies";
 import { fetchMovieCredits, MovieCredits } from "api/fetchMovieCredits";
-import { useError } from "store/error-context";
 import useGetGenres from "hooks/useGetGenres";
 import useFormatDate from "hooks/useFormatDate";
 import { FaInfoCircle } from "react-icons/fa";
@@ -21,28 +20,23 @@ export default function MovieCard({ movie }: { movie: Movie }) {
     error: genresError,
   } = useGetGenres(id);
   const movieDate = useFormatDate(release_date);
-  const { isShowError, isHideError } = useError();
   const [credits, setCredits] = useState<MovieCredits | null>(null);
+  const [isError, setIsError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMovieCreditsData = async (movieId: number) => {
-      const result = await fetchMovieCredits(movieId);
-
-      if ("cast" in result && "crew" in result) {
+      try {
+        const result = await fetchMovieCredits(movieId);
         setCredits(result);
-        isHideError();
-      } else {
-        isShowError(
-          result.title || "오류",
-          result.errorMessage || "영화 정보를 불러오는 데 실패했습니다.",
-          result.status,
-        );
+      } catch (error) {
+        console.log(error);
         setCredits(null);
+        setIsError("정보를 불러오는데 실패했습니다.");
       }
     };
 
     fetchMovieCreditsData(id);
-  }, [id, isShowError, isHideError]);
+  }, [id]);
 
   return (
     <section className="group relative mx-auto w-full break-keep">
@@ -54,7 +48,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           <div className="flex">
             <h1 className="text-3xl font-bold lg:text-4xl">{title}</h1>
             <div className="group/tooltip relative ml-2">
-              <Link href={`/movie-detail/${id}`}>
+              <Link href={`/movie-details/${id}`}>
                 <FaInfoCircle className="text-base lg:text-lg" />
               </Link>
               <div className="invisible absolute bottom-full left-1/2 mb-2 whitespace-nowrap rounded-lg bg-black px-3 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover/tooltip:visible group-hover/tooltip:opacity-100">
@@ -95,9 +89,13 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         {overview && <AnimatedOverview overview={overview} />}
         <div className="flex flex-1 border-b border-black">
           <ul className="flex-1 flex-col items-center justify-center py-4 text-center">
-            {credits?.cast
-              ?.slice(0, 3)
-              .map((cast) => <li key={cast.id}>{cast.name}</li>)}
+            {credits ? (
+              credits.cast
+                ?.slice(0, 3)
+                .map((cast) => <li key={cast.id}>{cast.name}</li>)
+            ) : (
+              <li>{isError}</li>
+            )}
           </ul>
         </div>
         <div className="flex">
@@ -105,16 +103,20 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             <div className="p-2">
               <p className="text-sm font-bold text-black">개봉일</p>
             </div>
-            <p className="p-2 text-center text-sm">{movieDate}</p>
+            <p className="p-2 pb-4 text-center text-sm">{movieDate}</p>
           </div>
           <div className="flex-1 border-r-2 border-dotted border-gray-300">
             <div className="p-2">
               <p className="text-sm font-bold text-black">감독</p>
             </div>
-            <ul className="p-2 text-center text-sm">
-              {credits?.crew
-                .filter((crew) => crew.job === "Director")
-                .map((crew) => <li key={crew.id}>{crew.name}</li>)}
+            <ul className="p-2 pb-4 text-center text-sm">
+              {credits ? (
+                credits.crew
+                  ?.slice(0, 3)
+                  .map((crew) => <li key={crew.id}>{crew.name}</li>)
+              ) : (
+                <li>{isError}</li>
+              )}
             </ul>
           </div>
           <div className="flex-1">

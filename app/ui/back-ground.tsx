@@ -1,18 +1,21 @@
 import Image from "next/image";
 
 interface BackGroundProps {
-  imageUrl?: string;
-  movieTitle?: string;
+  imageUrl: string | null;
+  movieTitle: string;
 }
 
-export default function BackGround({ imageUrl, movieTitle }: BackGroundProps) {
+export default function BackGround({
+  imageUrl,
+  movieTitle = "Background Image",
+}: BackGroundProps) {
   return (
     <div className="absolute inset-0 -z-10 h-screen w-full min-w-[320px]">
       {imageUrl && (
         <>
           <Image
             src={`https://image.tmdb.org/t/p/original/${imageUrl}`}
-            alt={movieTitle || "Background Image"}
+            alt={movieTitle}
             width={1280}
             height={720}
             priority

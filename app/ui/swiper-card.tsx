@@ -50,7 +50,7 @@ export default function SwiperCard({
             {movieTitle}
           </div>
           <div className="group relative ml-2">
-            <Link href={`/movie-detail/${id}`}>
+            <Link href={`/movie-details/${id}`}>
               <FaInfoCircle />
             </Link>
             <div className="invisible absolute bottom-full right-0 z-50 mb-2 whitespace-nowrap rounded-lg bg-black px-3 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
