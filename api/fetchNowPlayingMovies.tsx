@@ -1,5 +1,3 @@
-import { ErrorResponse } from "api/error-type";
-
 export interface Movie {
   genre_ids: number[];
   id: number;
@@ -15,30 +13,25 @@ export interface Movie {
   backdrop_path?: string;
 }
 
-type FetchNowPlayingMoviesResult = Movie[] | ErrorResponse;
+interface MoviesResult {
+  results: Movie[];
+}
 
-export async function fetchNowPlayingMovies(): Promise<FetchNowPlayingMoviesResult> {
-  const nowPlayingMoviesUrl = `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&include_adult=true&language=ko-KR`;
+export async function fetchNowPlayingMovies(): Promise<MoviesResult> {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&include_adult=true&language=ko-KR`,
+  );
 
-  try {
-    const res = await fetch(nowPlayingMoviesUrl);
-
-    if (!res.ok) {
-      return {
-        title: `API 오류 (${res.status})`,
-        errorMessage: `영화를 불러오는 데 실패했습니다: ${res.statusText}`,
-        status: res.status,
-      };
-    }
-
-    const data = await res.json();
-    return data.results;
-  } catch (error) {
-    console.error("Fetch error:", error);
-    return {
-      title: "네트워크 오류",
-      errorMessage:
-        "서버와의 연결에 문제가 발생했습니다. 인터넷 연결을 확인해 주세요.",
+  if (!res.ok) {
+    throw {
+      status: res.status,
+      message:
+        res.status === 404
+          ? "상영 중인 영화를 찾을 수 없습니다."
+          : "상영 중인 영화 정보를 불러오는데 실패했습니다.",
     };
   }
+
+  const data = await res.json();
+  return { results: data.results };
 }

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { fetchSearchMovies } from "api/fetchSearchMovies";
 import { debounce } from "lodash";
-import { Movie } from "app/page";
+import { Movie } from "api/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
 
 export default function HeaderSearchBar() {
@@ -19,9 +19,13 @@ export default function HeaderSearchBar() {
   const debounceHandler = useCallback(
     debounce(async (query: string) => {
       if (query.trim()) {
-        const results = await fetchSearchMovies(query);
-        setSearchResults(results);
-        setIsDropdownOpen(true);
+        try {
+          const { results } = await fetchSearchMovies(query);
+          setSearchResults(results);
+          setIsDropdownOpen(true);
+        } catch (error) {
+          setSearchResults([]);
+        }
       } else {
         setSearchResults([]);
         setIsDropdownOpen(false);
@@ -107,7 +111,7 @@ export default function HeaderSearchBar() {
                   reset({ search: "" });
                 }}
               >
-                <Link href={`/movie-detail/${result.id}`}>
+                <Link href={`/movie-details/${result.id}`}>
                   <p>{result.title}</p>
                   <p className="text-sm text-gray-500">
                     ({result.release_date.slice(0, 4)})
