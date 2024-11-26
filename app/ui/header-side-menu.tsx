@@ -3,16 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { IoIosArrowDown, IoMdClose } from "react-icons/io";
-import { signOut } from "firebase/auth";
-import { isAuth } from "firebase-config";
-import { clearUserState } from "store/userSlice";
-import { useAppDispatch } from "store/hooks";
-import { useRouter } from "next/navigation";
 
 interface HeaderSideMenuProps {
   newReviewAlertState: boolean;
-  userDisplayName?: string;
+  userDisplayName: string;
   isOpen: boolean;
+  onLogout: () => void;
   onClose: () => void;
 }
 
@@ -20,10 +16,9 @@ export default function HeaderSideMenu({
   newReviewAlertState,
   userDisplayName,
   isOpen,
+  onLogout,
   onClose,
 }: HeaderSideMenuProps) {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
   const sideMenuRef = useRef<HTMLDivElement>(null);
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
@@ -45,17 +40,6 @@ export default function HeaderSideMenu({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen, onClose]);
-
-  const logoutHandler = async () => {
-    try {
-      await signOut(isAuth);
-      dispatch(clearUserState());
-      router.push("/");
-      setMenuIsOpen(false);
-    } catch (error) {
-      console.error("로그아웃 에러:", error);
-    }
-  };
 
   return (
     <div
@@ -105,7 +89,7 @@ export default function HeaderSideMenu({
                 </Link>
                 <button
                   className="rounded-xl border border-white px-2 py-1 text-xs transition-colors duration-300 hover:bg-white hover:text-black"
-                  onClick={logoutHandler}
+                  onClick={onLogout}
                 >
                   Logout
                 </button>

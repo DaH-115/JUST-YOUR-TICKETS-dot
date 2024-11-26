@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { signOut } from "firebase/auth";
@@ -23,23 +23,24 @@ export default function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
 
-  const logoutHandler = async () => {
+  const logoutHandler = useCallback(async () => {
     try {
       await signOut(isAuth);
       dispatch(clearUserState());
       router.push("/");
     } catch (error) {
-      console.error("로그아웃 에러:", error);
+      console.log("로그아웃 에러:", error);
+      window.alert("로그아웃 중 오류가 발생했습니다.");
     }
-  };
+  }, [dispatch, router]);
 
-  const dropDownHandler = () => {
+  const dropDownHandler = useCallback(() => {
     setIsDropdownOpen((prev) => !prev);
-  };
+  }, []);
 
-  const toggleSideMenu = () => {
+  const toggleSideMenu = useCallback(() => {
     setIsSideMenuOpen((prev) => !prev);
-  };
+  }, []);
 
   useEffect(() => {
     const clickOutsideHandler = (event: MouseEvent) => {
@@ -182,9 +183,11 @@ export default function Header() {
       </div>
       {/* SEARCH BAR */}
       <HeaderSearchBar />
+      {/* MOBILE SIDE MENU */}
       <HeaderSideMenu
         newReviewAlertState={newReviewAlertState}
         userDisplayName={userDisplayName || ""}
+        onLogout={logoutHandler}
         isOpen={isSideMenuOpen}
         onClose={() => setIsSideMenuOpen(false)}
       />
