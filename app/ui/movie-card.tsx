@@ -88,7 +88,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         </ul>
         {overview && <AnimatedOverview overview={overview} />}
         <div className="flex flex-1 border-b border-black">
-          <ul className="flex-1 flex-col items-center justify-center py-4 text-center">
+          <ul className="flex-1 flex-col items-center justify-center py-4 text-center text-sm">
             {credits ? (
               credits.cast
                 ?.slice(0, 3)

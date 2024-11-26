@@ -9,7 +9,7 @@ export default function NowPlayingList({ movieList }: { movieList: Movie[] }) {
       className="relative z-10 mb-12 w-full px-4 pt-8 lg:px-8 lg:py-12"
     >
       <div className="mb-4 lg:mb-8">
-        <div className="flex items-start justify-between lg:justify-start">
+        <div className="flex items-start justify-between md:justify-start">
           <h2 className="text-4xl font-black lg:text-5xl">
             Now
             <br />
