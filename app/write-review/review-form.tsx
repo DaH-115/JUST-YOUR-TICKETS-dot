@@ -86,7 +86,7 @@ export default function ReviewForm({
       )}
 
       <main className="relative mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
-        <div className="mx-auto w-11/12 rounded-xl border-2 border-black bg-white lg:w-1/3">
+        <div className="mx-auto w-11/12 rounded-xl border-2 border-black bg-white md:w-2/3">
           <div className="w-full p-4 pb-0">
             <div className="mb-1 flex items-end lg:mb-2">
               <h1 className="text-sm font-bold">
@@ -137,15 +137,17 @@ export default function ReviewForm({
                 >
                   평점
                 </label>
-                <input
-                  type="range"
-                  id="rating"
-                  {...register("rating", { valueAsNumber: true })}
-                  min="0"
-                  max="10"
-                  step="0.5"
-                  className="w-full accent-black"
-                />
+                <div className="px-8">
+                  <input
+                    type="range"
+                    id="rating"
+                    {...register("rating", { valueAsNumber: true })}
+                    min="0"
+                    max="10"
+                    step="0.5"
+                    className="w-full accent-black"
+                  />
+                </div>
                 <div className="flex items-center justify-center text-center">
                   <div>
                     <IoStar className="mr-1" size={20} />
