@@ -25,7 +25,7 @@ export default function SimilarMovies({ movieId }: { movieId: number }) {
   }, [movieId]);
 
   return (
-    <section className="p-4 lg:p-8">
+    <section className="px-8 py-4 lg:p-8">
       <h2 className="mb-6 text-2xl font-bold">이런 영화는 어때요?</h2>
       {similarMovies.length > 0 ? (
         <TicketSwiper movieList={similarMovies} />

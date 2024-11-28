@@ -62,7 +62,7 @@ export default function HeaderSideMenu({
           <div className="cursor-pointer">
             <button
               onClick={() => setMenuIsOpen(!menuIsOpen)}
-              className="mb-2 flex w-full items-center border-b border-white pb-2"
+              className="mb-2 flex w-full items-center border-b border-white pb-2 text-sm"
             >
               <span>{userDisplayName} 님</span>
               <div
@@ -77,18 +77,16 @@ export default function HeaderSideMenu({
               className={`w-full overflow-hidden transition-all duration-300 ${menuIsOpen ? "mb-6 max-h-24 opacity-100" : "mb-0 max-h-0 opacity-0"} `}
             >
               <div className="flex items-center justify-between">
-                <Link href="my-page">
+                <Link href="/my-page">
                   <button
-                    className="rounded-xl border border-white px-2 py-1 text-xs transition-colors duration-300 hover:bg-white hover:text-black"
-                    onClick={() => {
-                      setMenuIsOpen(false);
-                    }}
+                    className="w-24 rounded-2xl border border-white bg-white px-4 py-2 text-xs text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
+                    onClick={onClose}
                   >
                     My Page
                   </button>
                 </Link>
                 <button
-                  className="rounded-xl border border-white px-2 py-1 text-xs transition-colors duration-300 hover:bg-white hover:text-black"
+                  className="w-24 rounded-2xl border border-white px-4 py-2 text-xs transition-all duration-300 hover:bg-white hover:font-bold hover:text-black"
                   onClick={onLogout}
                 >
                   Logout
@@ -108,13 +106,16 @@ export default function HeaderSideMenu({
       </div>
       <nav className="cursor-pointer px-4">
         <ul onClick={onClose} className="flex flex-col space-y-2">
-          <li className="inline-block rounded-xl border border-white px-2 py-1 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4">
-            <Link href="/">Home</Link>
-          </li>
-          <li className="inline-block rounded-xl border border-white px-2 py-1 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4">
+          <Link
+            href="/"
+            className="inline-block rounded-2xl border border-white px-4 py-2 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4"
+          >
+            <li>Home</li>
+          </Link>
+          <li className="inline-block rounded-2xl border border-white px-4 py-2 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4">
             <Link href="/search">Search</Link>
           </li>
-          <li className="inline-block rounded-xl border border-white px-2 py-1 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4">
+          <li className="inline-block rounded-2xl border border-white px-4 py-2 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4">
             <Link href="/ticket-list">
               Ticket List
               {newReviewAlertState && (
