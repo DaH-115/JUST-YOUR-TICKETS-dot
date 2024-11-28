@@ -18,15 +18,13 @@ export default function SideMenu({ uid }: { uid: string }) {
       isActive = true;
     }
 
-    return `w-full text-center lg:text-start ${
-      isActive
-        ? "text-lg text-black md:text-5xl font-bold"
-        : "text-lg text-gray-300 hover:text-black md:text-5xl"
+    return `text-lg w-full text-center lg:text-start md:text-2xl lg:text-5xl ${
+      isActive ? " text-black  font-bold" : " text-gray-300 hover:text-black "
     } transition-all duration-300 ease-in-out`;
   };
 
   return (
-    <nav className="mb-4 flex w-full flex-row lg:mb-0 lg:mr-6 lg:w-2/4 lg:flex-col">
+    <nav className="my-2 flex w-full flex-row md:mb-8 md:mt-2 lg:mb-0 lg:mr-6 lg:w-2/4 lg:flex-col">
       <Link href="/my-page" className="w-full">
         <div className={getMenuStyle("/my-page")}>MY PROFILE</div>
       </Link>

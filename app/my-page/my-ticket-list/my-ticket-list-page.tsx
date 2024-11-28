@@ -70,17 +70,15 @@ export default function MyTicktListPage() {
 
   return (
     <div className="flex w-full flex-col lg:my-8 lg:mb-8 lg:flex-row lg:px-8">
-      <div className="w-1/3">
-        <SideMenu uid={uid as string} />
-      </div>
+      <SideMenu uid={uid as string} />
       <main className="flex w-full flex-col">
         <div className="mb-6 flex-col items-center justify-center px-8 md:flex-row md:items-end md:justify-between lg:px-0">
           <div className="flex w-full flex-col md:flex-row">
-            <div className="mb-4 flex w-full items-center justify-between md:mb-0 lg:justify-normal">
+            <div className="flex w-full items-center">
               <h1 className="hidden text-2xl font-bold md:block">
                 MY TICKET LIST
               </h1>
-              <span className="lg:px-4">
+              <span className="py-2 text-sm md:px-4">
                 총 <span className="font-bold">{filteredReviews.length}</span>장
               </span>
             </div>
@@ -93,7 +91,7 @@ export default function MyTicktListPage() {
                 id="review-search"
                 type="search"
                 placeholder="리뷰 검색"
-                className="h-full w-full rounded-full border-2 border-black pl-4 pr-10 text-sm opacity-100 lg:w-64"
+                className="h-full w-full rounded-full border-2 border-black pl-4 pr-10 text-sm opacity-100 md:w-64"
               />
               <div
                 className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full border-none bg-none`}
