@@ -79,11 +79,11 @@ export default function SearchPage() {
 
   return (
     <>
-      <main className="pt-6 lg:px-8 lg:pt-12">
-        <section className="mx-auto w-3/4 lg:w-2/4">
+      <main className="pt-8">
+        <section className="mx-auto w-3/4 pb-16 lg:w-2/4">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="mb-8 flex items-center border-b border-black py-2"
+            className="flex items-center border-b border-black p-2"
           >
             <label htmlFor="search-input" className="sr-only">
               영화 검색
@@ -105,7 +105,6 @@ export default function SearchPage() {
           </form>
         </section>
 
-        <h1 className="pl-4 text-2xl font-bold">검색 결과</h1>
         {isLoading && (
           <div className="flex items-center justify-center py-8 lg:py-16">
             <p className="animate-pulse text-center text-lg font-bold text-gray-300 lg:text-2xl">
@@ -121,15 +120,18 @@ export default function SearchPage() {
           </div>
         )}
         {searchResults.length > 0 ? (
-          <section className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-            {searchResults.map((result, idx) => (
-              <SwiperCard
-                key={result.id}
-                movie={result}
-                id={result.id}
-                idx={idx}
-              />
-            ))}
+          <section className="pt-0 md:p-8">
+            <h1 className="mb-8 ml-8 text-4xl font-bold md:ml-0">검색 결과</h1>
+            <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+              {searchResults.map((result, idx) => (
+                <SwiperCard
+                  key={result.id}
+                  movie={result}
+                  id={result.id}
+                  idx={idx}
+                />
+              ))}
+            </div>
           </section>
         ) : touchedFields.query ? (
           <div className="flex items-center justify-center py-8 lg:py-16">
@@ -154,8 +156,8 @@ export default function SearchPage() {
         </div>
       )}
       {!searchResults.length && (
-        <section className="mt-14 bg-gray-100 px-2 py-6 lg:mt-28 lg:px-16 lg:py-12">
-          <h2 className="pl-4 text-2xl font-bold">추천 영화</h2>
+        <section className="bg-gray-100 pt-8 md:p-8">
+          <h2 className="mb-8 ml-8 text-4xl font-bold md:ml-0">추천 영화</h2>
           <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
             {nowPlayingMovies.map((movie, idx) => (
               <SwiperCard
