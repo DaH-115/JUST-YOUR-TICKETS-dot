@@ -99,7 +99,7 @@ export default function HeaderSideMenu({
         ) : (
           <Link
             href="/login"
-            className="my-2 block rounded-xl border border-white bg-white px-2 py-1 text-sm text-black transition-colors duration-300 hover:bg-black hover:text-gray-100"
+            className="my-2 block rounded-xl border border-white bg-white px-2 py-1 text-sm text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-gray-100 md:rounded-2xl md:px-6 md:py-4"
             onClick={onClose}
           >
             Login
@@ -108,13 +108,13 @@ export default function HeaderSideMenu({
       </div>
       <nav className="cursor-pointer px-4">
         <ul onClick={onClose} className="flex flex-col space-y-2">
-          <li className="inline-block rounded-xl border border-white px-2 py-1 text-sm transition-colors duration-300 hover:bg-white hover:text-black">
+          <li className="inline-block rounded-xl border border-white px-2 py-1 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4">
             <Link href="/">Home</Link>
           </li>
-          <li className="inline-block rounded-xl border border-white px-2 py-1 text-sm transition-colors duration-300 hover:bg-white hover:text-black">
+          <li className="inline-block rounded-xl border border-white px-2 py-1 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4">
             <Link href="/search">Search</Link>
           </li>
-          <li className="inline-block rounded-xl border border-white px-2 py-1 text-sm transition-colors duration-300 hover:bg-white hover:text-black">
+          <li className="inline-block rounded-xl border border-white px-2 py-1 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4">
             <Link href="/ticket-list">
               Ticket List
               {newReviewAlertState && (
