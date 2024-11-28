@@ -24,6 +24,8 @@ export default function MovieCard({ movie }: { movie: Movie }) {
   const [isError, setIsError] = useState<string | null>(null);
 
   useEffect(() => {
+    setCredits(null);
+
     const fetchMovieCreditsData = async (movieId: number) => {
       try {
         const result = await fetchMovieCredits(movieId);
