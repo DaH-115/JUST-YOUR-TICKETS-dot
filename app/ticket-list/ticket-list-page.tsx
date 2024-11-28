@@ -63,35 +63,33 @@ export default function TicketListPage() {
   }, [searchTerm, searchReviewsHandler]);
 
   return (
-    <div className="px-6 lg:mt-6">
-      <section className="flex-col items-center justify-center md:flex-row md:items-end md:justify-between">
-        <div className="flex w-full flex-col md:flex-row">
-          <div className="mb-4 mt-8 flex w-full items-center justify-between md:mb-0 lg:justify-normal">
-            <h1 className="text-2xl font-bold">ALL TICKET LIST</h1>
-            <span className="lg:px-4">
-              총 <span className="font-bold">{filteredUserReviews.length}</span>
-              장
-            </span>
-          </div>
-          <div className="relative flex h-10 w-full items-center justify-end">
-            <label htmlFor="review-search" className="sr-only">
-              리뷰 검색
-            </label>
-            <input
-              {...register("search")}
-              id="review-search"
-              type="search"
-              placeholder="리뷰 검색"
-              className="h-full w-full rounded-full border-2 border-black pl-4 pr-10 text-sm opacity-100 lg:w-64"
-            />
-            <div
-              className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full border-none bg-none`}
-            >
-              <IoSearchOutline size={20} color="black" />
-            </div>
+    <div className="px-8 md:mt-6">
+      <section className="flex w-full flex-col items-center md:flex-row">
+        <div className="mb-4 mt-8 flex w-full items-center justify-between md:mb-0 md:mt-0 md:justify-normal">
+          <h1 className="text-2xl font-bold">ALL TICKET LIST</h1>
+          <span className="md:px-4">
+            총 <span className="font-bold">{filteredUserReviews.length}</span>장
+          </span>
+        </div>
+        <div className="relative flex h-10 w-full items-center justify-end">
+          <label htmlFor="review-search" className="sr-only">
+            리뷰 검색
+          </label>
+          <input
+            {...register("search")}
+            id="review-search"
+            type="search"
+            placeholder="리뷰 검색"
+            className="h-full w-full rounded-full border-2 border-black pl-4 pr-10 text-sm opacity-100 md:w-64"
+          />
+          <div
+            className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full`}
+          >
+            <IoSearchOutline size={20} color="black" />
           </div>
         </div>
       </section>
+
       <main className="grid grid-cols-2 gap-2 pb-12 pt-8 sm:grid-cols-2 md:grid-cols-3 md:gap-4 md:px-8 lg:grid-cols-4 xl:grid-cols-5">
         <TicketList
           reviews={filteredUserReviews}
