@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { IoIosArrowDown, IoMdClose } from "react-icons/io";
 import HeaderSideMenuLi from "app/ui/header/header-side-menu-li";
+import { FaArrowRight } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
 interface HeaderSideMenuProps {
   newReviewAlertState: boolean;
@@ -21,6 +23,7 @@ export default function HeaderSideMenu({
   onClose,
 }: HeaderSideMenuProps) {
   const sideMenuRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
   useEffect(() => {
@@ -52,7 +55,7 @@ export default function HeaderSideMenu({
       <div className="flex justify-end p-4">
         <button
           onClick={onClose}
-          className="text-gray-100 transition-colors hover:text-gray-500"
+          className="transition-colors hover:text-gray-500"
         >
           <IoMdClose size={24} />
         </button>
@@ -64,11 +67,11 @@ export default function HeaderSideMenu({
           <div className="cursor-pointer">
             <button
               onClick={() => setMenuIsOpen(!menuIsOpen)}
-              className="mb-2 flex w-full items-center border-b border-white pb-2 text-sm"
+              className="mb-2 flex w-full items-center justify-between border-b border-white pb-2 text-xs"
             >
               <span>{userDisplayName} 님</span>
               <div
-                className={`px-2 text-gray-100 transition-all duration-200 hover:text-gray-500 ${menuIsOpen ? "rotate-180" : ""}`}
+                className={`px-1 transition-all duration-200 hover:text-gray-500 ${menuIsOpen ? "rotate-180" : ""}`}
               >
                 <IoIosArrowDown size={16} />
               </div>
@@ -76,33 +79,36 @@ export default function HeaderSideMenu({
 
             {/* Dropdown Menu */}
             <div
-              className={`w-full overflow-hidden transition-all duration-300 ${menuIsOpen ? "mb-6 max-h-24 opacity-100" : "mb-0 max-h-0 opacity-0"} `}
+              className={`w-full overflow-hidden transition-all duration-300 ${menuIsOpen ? "mb-4 max-h-24 opacity-100" : "mb-2 max-h-0 opacity-0"} `}
             >
               <div className="flex items-center justify-between">
+                <button
+                  className="rounded-2xl border border-white px-4 py-2 text-xs transition-all duration-300 hover:bg-white hover:text-black"
+                  onClick={onLogout}
+                >
+                  Logout
+                </button>
                 <Link href="/my-page">
                   <button
-                    className="w-24 rounded-2xl border border-white bg-white px-4 py-2 text-xs text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
+                    className="rounded-2xl border border-white bg-white px-4 py-2 text-xs font-bold text-black transition-all duration-300 hover:bg-black hover:text-white"
                     onClick={onClose}
                   >
                     My Page
                   </button>
                 </Link>
-                <button
-                  className="w-24 rounded-2xl border border-white px-4 py-2 text-xs transition-all duration-300 hover:bg-white hover:font-bold hover:text-black"
-                  onClick={onLogout}
-                >
-                  Logout
-                </button>
               </div>
             </div>
           </div>
         ) : (
           // 로그인 되어 있지 않은 경우 로그인 버튼 표시
-          <Link
-            href="/login"
-            className="rounded-2xl border border-white px-4 py-2 text-xs transition-all duration-300 hover:bg-white hover:font-bold hover:text-black"
-          >
-            Login
+          <Link href="/login">
+            <div
+              onClick={onClose}
+              className="mb-2 flex w-full items-center justify-between rounded-2xl border border-white bg-white px-4 py-2 text-sm text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
+            >
+              Login
+              {pathname !== "/login" && <FaArrowRight />}
+            </div>
           </Link>
         )}
       </div>

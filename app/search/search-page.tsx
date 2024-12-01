@@ -80,7 +80,7 @@ export default function SearchPage() {
   return (
     <>
       <main className="pt-8">
-        <section className="mx-auto w-3/4 pb-16 lg:w-2/4">
+        <section className="mx-auto w-3/4 pb-8 md:pb-16 lg:w-2/4">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex items-center border-b border-black p-2"
@@ -90,13 +90,13 @@ export default function SearchPage() {
             </label>
             <input
               id="search-input"
-              className="mr-3 w-full appearance-none border-none bg-transparent pl-1 text-lg font-bold leading-tight text-gray-800 focus:outline-none"
+              className="mr-3 w-full appearance-none border-none bg-transparent pl-1 leading-tight text-gray-800 focus:outline-none"
               type="text"
               placeholder="검색어를 입력하세요"
               {...register("query")}
             />
             <button
-              className="flex cursor-pointer items-center justify-center rounded-full border-2 border-black bg-black p-2 text-white transition-colors duration-300 ease-in-out hover:bg-white hover:text-black"
+              className="flex cursor-pointer items-center justify-center rounded-full border border-black bg-black p-2 text-white transition-colors duration-300 ease-in-out hover:bg-white hover:text-black"
               type="submit"
               disabled={isLoading}
             >
@@ -156,8 +156,8 @@ export default function SearchPage() {
         </div>
       )}
       {!searchResults.length && (
-        <section className="bg-gray-100 pt-8 md:p-8">
-          <h2 className="ml-8 text-4xl font-bold md:ml-0">추천 영화</h2>
+        <section className="bg-gray-100 p-4 md:p-8">
+          <h2 className="text-2xl font-bold md:text-4xl">추천 영화</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
             {nowPlayingMovies.map((movie, idx) => (
               <SwiperCard

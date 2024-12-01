@@ -44,7 +44,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body>
+      <body className="w-full min-w-[320px]">
         <Providers>
           <ErrorProvider>
             <Header />

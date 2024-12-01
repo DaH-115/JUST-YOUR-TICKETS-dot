@@ -172,17 +172,16 @@ export default function SignUpPage() {
 
           <button
             type="submit"
-            className={`mb-2 w-full rounded-xl border border-black bg-black p-4 text-sm text-white transition-all duration-300 ease-in-out hover:font-bold ${
+            className={`mb-2 w-full rounded-full border border-black bg-black p-4 text-sm text-white transition-all duration-300 ease-in-out hover:font-bold ${
               isLoading
                 ? "cursor-not-allowed opacity-50"
                 : "hover:bg-white hover:text-black"
-            } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+            }`}
             disabled={isLoading}
           >
             {isLoading ? "가입 중..." : "회원가입"}
           </button>
         </form>
-
         {/* Social Login */}
         <SocialLogin />
       </main>

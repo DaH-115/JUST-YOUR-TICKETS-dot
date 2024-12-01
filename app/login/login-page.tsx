@@ -14,6 +14,7 @@ import SocialLogin from "app/login/social-login";
 import InputField from "app/ui/input-field";
 import { useAppDispatch } from "store/hooks";
 import { onUpdateUserProfile } from "store/userSlice";
+import { FaArrowRight } from "react-icons/fa";
 
 const loginSchema = z.object({
   email: z
@@ -102,11 +103,11 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className={`w-full rounded-xl border border-black bg-black p-4 text-sm text-white transition-all duration-300 ease-in-out hover:font-bold ${
+            className={`w-full rounded-full border border-black bg-black p-4 text-sm text-white transition-all duration-300 ease-in-out hover:font-bold ${
               isLoading
                 ? "cursor-not-allowed opacity-50"
                 : "hover:bg-white hover:text-black"
-            } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+            }`}
             disabled={isLoading}
           >
             {isLoading ? "로그인 중..." : "로그인"}
@@ -115,14 +116,15 @@ export default function LoginPage() {
           <Link href="/sign-up">
             <button
               type="button"
-              className={`mt-2 w-full rounded-xl border border-black bg-white p-4 text-sm text-black transition-all duration-300 ease-in-out hover:font-bold ${
+              className={`mt-2 flex w-full items-center justify-between rounded-full border border-black bg-white p-4 text-sm text-black transition-all duration-300 ease-in-out hover:font-bold ${
                 isLoading
                   ? "cursor-not-allowed opacity-50"
                   : "hover:bg-black hover:text-white"
-              } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+              }`}
               disabled={isLoading}
             >
               회원가입
+              <FaArrowRight size={16} />
             </button>
           </Link>
         </form>
