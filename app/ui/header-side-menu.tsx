@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { IoIosArrowDown, IoMdClose } from "react-icons/io";
+import HeaderSideMenuLi from "app/ui/header/header-side-menu-li";
 
 interface HeaderSideMenuProps {
   newReviewAlertState: boolean;
@@ -48,7 +49,7 @@ export default function HeaderSideMenu({
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
-      <div className="flex justify-end p-4 pb-0">
+      <div className="flex justify-end p-4">
         <button
           onClick={onClose}
           className="text-gray-100 transition-colors hover:text-gray-500"
@@ -57,6 +58,7 @@ export default function HeaderSideMenu({
         </button>
       </div>
 
+      {/* My Page 메뉴 */}
       <div className="px-4">
         {userDisplayName ? (
           <div className="cursor-pointer">
@@ -95,10 +97,10 @@ export default function HeaderSideMenu({
             </div>
           </div>
         ) : (
+          // 로그인 되어 있지 않은 경우 로그인 버튼 표시
           <Link
             href="/login"
-            className="my-2 block rounded-xl border border-white bg-white px-2 py-1 text-sm text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-gray-100 md:rounded-2xl md:px-6 md:py-4"
-            onClick={onClose}
+            className="rounded-2xl border border-white px-4 py-2 text-xs transition-all duration-300 hover:bg-white hover:font-bold hover:text-black"
           >
             Login
           </Link>
@@ -106,26 +108,11 @@ export default function HeaderSideMenu({
       </div>
       <nav className="cursor-pointer px-4">
         <ul onClick={onClose} className="flex flex-col space-y-2">
-          <Link
-            href="/"
-            className="inline-block rounded-2xl border border-white px-4 py-2 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4"
-          >
-            <li>Home</li>
-          </Link>
-          <li className="inline-block rounded-2xl border border-white px-4 py-2 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4">
-            <Link href="/search">Search</Link>
-          </li>
-          <li className="inline-block rounded-2xl border border-white px-4 py-2 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black md:rounded-2xl md:px-6 md:py-4">
-            <Link href="/ticket-list">
-              Ticket List
-              {newReviewAlertState && (
-                <span className="absolute right-2 top-2 flex h-3 w-3">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                  <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
-                </span>
-              )}
-            </Link>
-          </li>
+          <HeaderSideMenuLi href="/">Home</HeaderSideMenuLi>
+          <HeaderSideMenuLi href="/search">Search</HeaderSideMenuLi>
+          <HeaderSideMenuLi href="/ticket-list" showAlert={newReviewAlertState}>
+            Ticket List
+          </HeaderSideMenuLi>
         </ul>
       </nav>
     </div>
