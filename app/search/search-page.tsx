@@ -157,8 +157,8 @@ export default function SearchPage() {
       )}
       {!searchResults.length && (
         <section className="bg-gray-100 pt-8 md:p-8">
-          <h2 className="mb-8 ml-8 text-4xl font-bold md:ml-0">추천 영화</h2>
-          <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+          <h2 className="ml-8 text-4xl font-bold md:ml-0">추천 영화</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
             {nowPlayingMovies.map((movie, idx) => (
               <SwiperCard
                 key={movie.id}
