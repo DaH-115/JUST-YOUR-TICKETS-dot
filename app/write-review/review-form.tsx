@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "store/hooks";
 import { useReviewForm } from "app/write-review/useReviewForm";
 import useGetTitle from "hooks/useGetTitle";
-import { Movie } from "api/fetchNowPlayingMovies";
 import BackGround from "app/ui/back-ground";
 import { IoStar } from "react-icons/io5";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import ModalAlert from "app/ui/alert/modal-alert";
+import { MovieDetails } from "api/fetchMovieDetails";
 
 export interface ReviewData {
   reviewTitle: string;
@@ -21,7 +21,7 @@ export interface ReviewData {
 type ReviewFormProps = {
   mode: "create" | "edit";
   initialData?: ReviewData;
-  movieInfo: Movie;
+  movieInfo: MovieDetails;
   movieId: string;
   reviewId?: string;
 };

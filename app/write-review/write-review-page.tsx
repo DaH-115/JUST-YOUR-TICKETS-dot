@@ -4,13 +4,11 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "firebase-config";
-import { Movie } from "api/fetchNowPlayingMovies";
-import { fetchMovieDetails } from "api/fetchMovieDetails";
+import { fetchMovieDetails, MovieDetails } from "api/fetchMovieDetails";
 import ReviewForm, { ReviewData } from "app/write-review/review-form";
 import Catchphrase from "app/ui/catchphrase";
 import ReviewFormSkeleton from "app/write-review/review-form-skeleton";
-import { useError } from "store/error-context";
-import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { firebaseErrorHandler } from "app/utils/firebase-error";
 
 export default function WriteReviewPage() {
   const params = useParams();
@@ -19,20 +17,19 @@ export default function WriteReviewPage() {
   const movieId = searchParams.get("movieId");
   const [isLoading, setIsLoading] = useState(true);
   const [initialData, setInitialData] = useState<ReviewData>();
-  const [movieInfo, setMovieInfo] = useState<Movie>();
-  const { isShowError } = useError();
+  const [movieInfo, setMovieInfo] = useState<MovieDetails>();
 
   useEffect(() => {
     if (!movieId) return;
     setIsLoading(true);
 
     const fetchData = async () => {
-      const movieData = await fetchMovieDetails(Number(movieId));
-
-      if ("errorMessage" in movieData) {
-        isShowError(movieData.title, movieData.errorMessage);
-      } else {
+      try {
+        const movieData = await fetchMovieDetails(Number(movieId));
         setMovieInfo(movieData);
+      } catch (error) {
+        const { title, message } = firebaseErrorHandler(error);
+        window.alert(`${title}: ${message}`);
       }
 
       if (id !== "new") {
@@ -47,7 +44,7 @@ export default function WriteReviewPage() {
           }
         } catch (error) {
           const { title, message } = firebaseErrorHandler(error);
-          isShowError(title, message);
+          window.alert(`${title}: ${message}`);
         }
       }
 
@@ -65,7 +62,7 @@ export default function WriteReviewPage() {
         <ReviewForm
           mode={id === "new" ? "create" : "edit"}
           initialData={initialData}
-          movieInfo={movieInfo as Movie}
+          movieInfo={movieInfo as MovieDetails}
           movieId={movieId as string}
           reviewId={id}
         />

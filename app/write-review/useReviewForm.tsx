@@ -3,21 +3,21 @@ import { db } from "firebase-config";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
-import { Movie } from "api/fetchNowPlayingMovies";
 import { ReviewData } from "app/write-review/review-form";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useError } from "store/error-context";
+import { MovieDetails } from "api/fetchMovieDetails";
 
 export const useReviewForm = (
   mode: "create" | "edit",
-  movieInfo: Movie,
+  movieInfo: MovieDetails,
   movieId: string,
   reviewId?: string,
 ) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const serializedUser = useAppSelector((state) => state.user.user);
-  const { isShowError } = useError();
+  const { isShowError, isShowSuccess } = useError();
 
   const onSubmitHandler = async (data: ReviewData) => {
     if (!serializedUser) return;
@@ -48,7 +48,9 @@ export const useReviewForm = (
       }
 
       dispatch(addNewReviewAlertHandler());
-      router.push("/");
+      isShowSuccess("알림", "리뷰가 성공적으로 저장되었습니다.", () =>
+        router.push("/"),
+      );
     } catch (error) {
       const { title, message } = firebaseErrorHandler(error);
       isShowError(title, message);
