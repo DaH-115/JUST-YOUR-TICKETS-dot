@@ -6,6 +6,7 @@ import useGetTitle from "hooks/useGetTitle";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import NewWriteBtn from "app/ui/new-write-btn";
+import Tooltip from "app/ui/tooltip";
 
 export default function SwiperCard({
   idx,
@@ -25,8 +26,8 @@ export default function SwiperCard({
   const movieTitle = useGetTitle(original_title, title);
 
   return (
-    <div className="group/card relative mx-2 h-[450px] lg:h-[550px]">
-      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black p-4 text-4xl font-bold text-white">
+    <div className="group/card relative mx-2 my-8 h-[450px] drop-shadow-lg lg:h-[550px]">
+      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black px-4 py-2 text-4xl font-bold text-white">
         {idx + 1}.
       </div>
       {poster_path ? (
@@ -44,18 +45,16 @@ export default function SwiperCard({
       )}
 
       {/* MOVIE INFO CARD */}
-      <div className="absolute bottom-2 right-2 w-full rounded-xl border-2 border-black bg-white shadow-lg drop-shadow-md transition-all duration-300 lg:bottom-0 lg:right-0 lg:group-hover/card:bottom-2 lg:group-hover/card:right-2">
+      <div className="absolute bottom-2 right-2 w-full rounded-xl border-2 border-black bg-white transition-all duration-300 lg:bottom-0 lg:right-0 lg:group-hover/card:bottom-2 lg:group-hover/card:right-2">
         <div className="flex p-4 pb-0">
           <div className="truncate pb-4 text-lg font-bold lg:text-xl">
             {movieTitle}
           </div>
-          <div className="group relative ml-2">
+          <div className="group/tooltip relative ml-2">
             <Link href={`/movie-details/${id}`}>
               <FaInfoCircle />
             </Link>
-            <div className="invisible absolute bottom-full right-0 z-50 mb-2 whitespace-nowrap rounded-lg bg-black px-3 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
-              더 자세한 정보 보기
-            </div>
+            <Tooltip>더 자세한 정보 보기</Tooltip>
           </div>
         </div>
         <ul className="flex w-full flex-wrap border-y border-black p-1">
@@ -85,7 +84,7 @@ export default function SwiperCard({
           )}
         </ul>
         <div className="flex w-full text-center">
-          <div className="flex items-center border-r-2 border-black p-4">
+          <div className="flex items-center border-r border-black p-4">
             <IoStar />
             <div className="text-xl font-bold">
               {Math.round(vote_average * 10) / 10}

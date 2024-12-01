@@ -5,6 +5,7 @@ import MovieCard from "app/ui/movie-card";
 import { RiMovieLine } from "react-icons/ri";
 import { MdLocalMovies } from "react-icons/md";
 import ScrollButton from "app/ui/scroll-button";
+import Tooltip from "app/ui/tooltip";
 
 interface RecommendMovieProps {
   currentMovie: Movie;
@@ -41,22 +42,18 @@ export default function RecommendMovie({
         <MovieCard movie={currentMovie} />
         <div className="absolute -right-20 top-0 hidden flex-row lg:block">
           {trailerKey && (
-            <div className="group relative">
+            <div className="group/tooltip relative">
               <ScrollButton targetId="movie-trailer">
                 <RiMovieLine size={18} />
               </ScrollButton>
-              <div className="invisible absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg bg-black px-3 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
-                영화 예고편 보기
-              </div>
+              <Tooltip>영화 예고편 보기</Tooltip>
             </div>
           )}
-          <div className="group relative">
+          <div className="group/tooltip relative">
             <ScrollButton targetId="now-playing">
               <MdLocalMovies size={18} />
             </ScrollButton>
-            <div className="invisible absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg bg-black px-3 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
-              현재 상영하는 영화 보기
-            </div>
+            <Tooltip>현재 상영하는 영화 보기</Tooltip>
           </div>
         </div>
       </div>

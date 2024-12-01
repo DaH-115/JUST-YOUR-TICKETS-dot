@@ -6,7 +6,7 @@ export default function NowPlayingList({ movieList }: { movieList: Movie[] }) {
   return (
     <section
       id="now-playing"
-      className="relative z-10 mb-12 w-full px-4 pt-8 lg:px-8 lg:py-12"
+      className="relative z-10 mb-12 w-full px-4 pt-8 lg:px-8"
     >
       <div className="mb-4 lg:mb-8">
         <div className="flex items-start justify-between md:justify-start">
@@ -23,9 +23,7 @@ export default function NowPlayingList({ movieList }: { movieList: Movie[] }) {
           현재 상영 중인 영화들을 확인해 보세요
         </p>
       </div>
-      <div className="px-4">
-        <TicketSwiper movieList={movieList.slice(0, 10)} />
-      </div>
+      <TicketSwiper movieList={movieList.slice(0, 10)} />
     </section>
   );
 }

@@ -10,6 +10,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import AnimatedOverview from "app/ui/animated-overview";
 import NewWriteBtn from "app/ui/new-write-btn";
+import Tooltip from "app/ui/tooltip";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   const { id, title, original_title, release_date, vote_average, overview } =
@@ -41,7 +42,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
   }, [id]);
 
   return (
-    <section className="group relative mx-auto w-full break-keep">
+    <section className="relative mx-auto w-full break-keep">
       <div className="relative rounded-xl border-2 border-black bg-white lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
         <div className="p-4">
           <h2 className="mb-2 inline-block animate-bounce rounded-lg bg-black p-1 text-xs font-bold text-white">
@@ -51,11 +52,9 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             <h1 className="text-3xl font-bold lg:text-4xl">{title}</h1>
             <div className="group/tooltip relative ml-2">
               <Link href={`/movie-details/${id}`}>
-                <FaInfoCircle className="text-base lg:text-lg" />
+                <FaInfoCircle className="relative text-base lg:text-lg" />
               </Link>
-              <div className="invisible absolute bottom-full left-1/2 mb-2 whitespace-nowrap rounded-lg bg-black px-3 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity duration-300 group-hover/tooltip:visible group-hover/tooltip:opacity-100">
-                더 자세한 정보 보기
-              </div>
+              <Tooltip>더 자세한 정보 보기</Tooltip>
             </div>
           </div>
           <div className="ml-1 flex items-center">
