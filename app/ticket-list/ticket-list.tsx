@@ -68,7 +68,7 @@ export default function TicketList({
             {reviews.map((post, index) => (
               <div
                 key={post.id}
-                className="group/card relative h-[300px] drop-shadow-md md:h-[450px]"
+                className="group/card relative h-[450px] drop-shadow-md"
               >
                 {/* CARD HEADER */}
                 <div className="absolute left-0 top-0 z-10 flex w-full items-center justify-between p-2">

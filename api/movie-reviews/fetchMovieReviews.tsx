@@ -1,7 +1,5 @@
 import { db } from "firebase-config";
 import { collection, getDocs } from "firebase/firestore";
-import { ErrorResponse } from "api/error-type";
-import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
 
 export interface MovieReview {
   date: string;
@@ -17,31 +15,17 @@ export interface MovieReview {
   userName: string;
 }
 
-type FetchMovieReviewsResult = MovieReview[] | ErrorResponse;
+export default async function fetchMovieReviews(): Promise<MovieReview[]> {
+  const querySnapshot = await getDocs(collection(db, "movie-reviews"));
 
-export default async function fetchMovieReviews(): Promise<FetchMovieReviewsResult> {
-  try {
-    const querySnapshot = await getDocs(collection(db, "movie-reviews"));
-
-    if (!querySnapshot.empty) {
-      const reviews = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as MovieReview[];
-
-      return reviews;
-    } else {
-      return {
-        title: "데이터 없음",
-        errorMessage: "등록된 리뷰가 없습니다.",
-        status: 404,
-      };
-    }
-  } catch (error) {
-    const { title, message } = firebaseErrorHandler(error);
-    return {
-      title,
-      errorMessage: message,
-    };
+  if (querySnapshot.empty) {
+    return [];
   }
+
+  const reviews = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as MovieReview[];
+
+  return reviews;
 }
