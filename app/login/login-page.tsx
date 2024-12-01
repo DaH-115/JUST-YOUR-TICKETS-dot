@@ -12,6 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import SocialLogin from "app/login/social-login";
 import InputField from "app/ui/input-field";
+import { useAppDispatch } from "store/hooks";
+import { onUpdateUserProfile } from "store/userSlice";
 
 const loginSchema = z.object({
   email: z
@@ -28,6 +30,7 @@ type LoginInputs = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { isShowError } = useError();
   const {
@@ -36,12 +39,26 @@ export default function LoginPage() {
     formState: { errors, touchedFields },
   } = useForm<LoginInputs>({
     resolver: zodResolver(loginSchema),
+    mode: "onTouched",
   });
 
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     setIsLoading(true);
     try {
-      await signInWithEmailAndPassword(isAuth, data.email, data.password);
+      const userCredential = await signInWithEmailAndPassword(
+        isAuth,
+        data.email,
+        data.password,
+      );
+
+      if (userCredential.user.displayName) {
+        dispatch(
+          onUpdateUserProfile({
+            displayName: userCredential.user.displayName,
+          }),
+        );
+      }
+
       router.push("/");
     } catch (error: any) {
       const { title, message } = firebaseErrorHandler(error);
@@ -59,13 +76,13 @@ export default function LoginPage() {
       <main className="md:w-2/3">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mx-auto w-2/3 space-y-6 md:mt-24"
+          className="mx-auto space-y-6 px-8 md:mt-16 md:w-2/3 md:px-0"
         >
           <InputField
             id="email"
             label="이메일"
             type="email"
-            placeholder="you@example.com"
+            placeholder="이메일을 입력해 주세요"
             register={register}
             error={errors.email?.message}
             touched={touchedFields.email}
@@ -76,39 +93,38 @@ export default function LoginPage() {
             id="password"
             label="비밀번호"
             type="password"
-            placeholder="••••••••"
+            placeholder="비밀번호를 입력해 주세요"
             register={register}
             error={errors.password?.message}
             touched={touchedFields.password}
             disabled={isLoading}
           />
 
-          <div className="">
+          <button
+            type="submit"
+            className={`w-full rounded-xl border border-black bg-black p-4 text-sm text-white transition-all duration-300 ease-in-out hover:font-bold ${
+              isLoading
+                ? "cursor-not-allowed opacity-50"
+                : "hover:bg-white hover:text-black"
+            } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+            disabled={isLoading}
+          >
+            {isLoading ? "로그인 중..." : "로그인"}
+          </button>
+
+          <Link href="/sign-up">
             <button
-              type="submit"
-              className={`mb-2 w-full rounded-xl border border-black bg-black p-2 text-sm text-white transition-colors duration-300 ease-in-out md:p-4 ${
+              type="button"
+              className={`mt-2 w-full rounded-xl border border-black bg-white p-4 text-sm text-black transition-all duration-300 ease-in-out hover:font-bold ${
                 isLoading
                   ? "cursor-not-allowed opacity-50"
-                  : "hover:bg-white hover:text-black"
+                  : "hover:bg-black hover:text-white"
               } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
               disabled={isLoading}
             >
-              {isLoading ? "로그인 중..." : "로그인"}
+              회원가입
             </button>
-            <Link href="/sign-up">
-              <button
-                type="button"
-                className={`w-full rounded-xl border border-black bg-white p-2 text-sm text-black transition-colors duration-300 ease-in-out md:p-4 ${
-                  isLoading
-                    ? "cursor-not-allowed opacity-50"
-                    : "hover:bg-black hover:text-white"
-                } focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
-                disabled={isLoading}
-              >
-                회원가입
-              </button>
-            </Link>
-          </div>
+          </Link>
         </form>
 
         {/* Social Login */}

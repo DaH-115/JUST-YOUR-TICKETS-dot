@@ -1,7 +1,5 @@
-import { SignupSchema } from "app/sign-up/page";
-
 interface InputFieldProps {
-  id: keyof SignupSchema;
+  id: string;
   label: string;
   type: string;
   placeholder: string;
@@ -23,7 +21,7 @@ export default function InputField({
 }: InputFieldProps) {
   return (
     <div className="border-b border-black py-2">
-      <label htmlFor={id} className="block text-xs font-medium text-gray-700">
+      <label htmlFor={id} className="block text-xs font-bold text-gray-700">
         {label}
       </label>
       <input
@@ -32,9 +30,9 @@ export default function InputField({
         placeholder={placeholder}
         disabled={disabled}
         {...register(id)}
-        className={`mt-1 w-full appearance-none border-none bg-transparent px-2 py-1 leading-tight text-gray-700 focus:outline-none ${disabled ? "cursor-not-allowed opacity-50" : ""} ${touched && error ? "border-red-500" : ""}`}
+        className={`mt-1 w-full appearance-none border-none bg-transparent px-1 py-1 leading-tight text-gray-700 focus:outline-none ${disabled ? "cursor-not-allowed opacity-50" : ""} ${touched && error ? "border-red-500" : ""}`}
       />
-      {touched && error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {touched && error && <p className="mt-2 text-xs text-red-600">{error}</p>}
     </div>
   );
 }

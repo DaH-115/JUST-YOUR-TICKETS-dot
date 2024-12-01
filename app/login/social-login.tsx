@@ -15,11 +15,14 @@ import { useState } from "react";
 import SocialLoginButton from "app/login/social-login-button";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import onGenerateDisplayName from "app/sign-up/utils/onGenerateDisplayName";
+import { useAppDispatch } from "store/hooks";
+import { onUpdateUserProfile } from "store/userSlice";
 
 export type SocialProvider = "google" | "github";
 
 export default function SocialLogin() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { isShowError } = useError();
   const [loadingProvider, setLoadingProvider] = useState<SocialProvider | null>(
     null,
@@ -38,10 +41,12 @@ export default function SocialLogin() {
       // Firestore에서 사용자 확인
       const userRef = doc(db, "users", user.uid);
       const userDoc = await getDoc(userRef);
+      let userDisplayName = user.displayName;
 
       if (!userDoc.exists()) {
         // 새 사용자인 경우
         const generateDisplayName = await onGenerateDisplayName();
+        userDisplayName = user.displayName || generateDisplayName;
 
         await setDoc(userRef, {
           name: user.displayName,
@@ -55,10 +60,15 @@ export default function SocialLogin() {
           roll: "user",
         });
       } else {
+        userDisplayName = userDoc.data().displayName;
         await updateDoc(userRef, {
           updatedAt: new Date().toISOString(),
           lastLoginAt: new Date().toISOString(),
         });
+      }
+
+      if (userDisplayName) {
+        dispatch(onUpdateUserProfile({ displayName: userDisplayName }));
       }
 
       router.push("/");

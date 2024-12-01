@@ -24,7 +24,7 @@ import {
 const signupSchema = z
   .object({
     name: z.string().min(2, "이름은 최소 2글자 이상이어야 합니다."),
-    displayName: z.string().min(2, "이름은 최소 2글자 이상이어야 합니다."),
+    displayName: z.string().min(2, "닉네임은 최소 2글자 이상이어야 합니다."),
     email: z
       .string()
       .email("올바른 이메일 형식이 아닙니다.")
@@ -49,7 +49,6 @@ export default function SignUpPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { isShowError, isShowSuccess } = useError();
-
   const {
     register,
     handleSubmit,
@@ -61,7 +60,6 @@ export default function SignUpPage() {
 
   const onSubmit = async (data: SignupSchema) => {
     setIsLoading(true);
-
     const { name, displayName, email, password } = data;
 
     // 1. 닉네임 중복 체크
@@ -115,13 +113,13 @@ export default function SignUpPage() {
       <main className="md:w-2/3">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mx-auto w-2/3 space-y-6 md:mt-16"
+          className="mx-auto space-y-6 px-8 md:mt-16 md:w-2/3 md:px-0"
         >
           <InputField
             id="name"
             label="이름"
             type="text"
-            placeholder="홍길동"
+            placeholder="이름을 입력해 주세요"
             register={register}
             error={errors.name?.message}
             touched={touchedFields.name}
@@ -132,7 +130,7 @@ export default function SignUpPage() {
             id="displayName"
             label="닉네임"
             type="text"
-            placeholder="닉네임"
+            placeholder="사용하실 닉네임을 입력해 주세요"
             register={register}
             error={errors.displayName?.message}
             touched={touchedFields.displayName}
@@ -143,7 +141,7 @@ export default function SignUpPage() {
             id="email"
             label="이메일"
             type="email"
-            placeholder="you@example.com"
+            placeholder="이메일을 입력해 주세요"
             register={register}
             error={errors.email?.message}
             touched={touchedFields.email}
@@ -154,7 +152,7 @@ export default function SignUpPage() {
             id="password"
             label="비밀번호"
             type="password"
-            placeholder="••••••••"
+            placeholder="비밀번호를 입력해 주세요"
             register={register}
             error={errors.password?.message}
             touched={touchedFields.password}
@@ -165,7 +163,7 @@ export default function SignUpPage() {
             id="confirmPassword"
             label="비밀번호 확인"
             type="password"
-            placeholder="••••••••"
+            placeholder="비밀번호를 입력해 주세요"
             register={register}
             error={errors.confirmPassword?.message}
             touched={touchedFields.confirmPassword}
@@ -174,7 +172,7 @@ export default function SignUpPage() {
 
           <button
             type="submit"
-            className={`mb-2 w-full rounded-xl border border-black bg-black p-2 text-sm text-white transition-colors duration-300 ease-in-out md:p-4 ${
+            className={`mb-2 w-full rounded-xl border border-black bg-black p-4 text-sm text-white transition-all duration-300 ease-in-out hover:font-bold ${
               isLoading
                 ? "cursor-not-allowed opacity-50"
                 : "hover:bg-white hover:text-black"
