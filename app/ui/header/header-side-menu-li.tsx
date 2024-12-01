@@ -21,11 +21,11 @@ export default function HeaderSideMenuLi({
   return (
     <li className="inline-block rounded-2xl border border-white px-4 py-2 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black">
       <Link href={href}>
-        <div className="flex items-center justify-between">
+        <div className="relative flex items-center justify-between">
           {children}
           {/* 리뷰가 새롭게 추가 되면 알림 표시 */}
           {showAlert && (
-            <span className="absolute right-2 top-2 flex h-3 w-3">
+            <span className="absolute right-24 top-0 flex h-3 w-3">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
               <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
             </span>
