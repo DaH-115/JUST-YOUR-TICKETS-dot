@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
 import { Movie } from "api/fetchNowPlayingMovies";
 import { ReviewData } from "app/write-review/review-form";
-import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useError } from "store/error-context";
 
 export const useReviewForm = (

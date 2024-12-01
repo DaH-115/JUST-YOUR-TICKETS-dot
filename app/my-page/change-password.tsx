@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { isAuth } from "firebase-config";
-import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useAppSelector } from "store/hooks";
 import { useError } from "store/error-context";
 

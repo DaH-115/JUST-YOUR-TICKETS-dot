@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { firebaseErrorHandler } from "./utils/firebase-error";
+import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useError } from "store/error-context";
 import { z } from "zod";

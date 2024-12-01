@@ -5,7 +5,7 @@ import Link from "next/link";
 import { db } from "firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
-import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { IoStar } from "react-icons/io5";
 import { useError } from "store/error-context";
 
@@ -42,7 +42,7 @@ export default function SideReviewList({ uid }: { uid: string }) {
     <section className="group relative hidden lg:ml-8 lg:block lg:w-3/5">
       <div className="absolute inset-0 overflow-y-auto rounded-xl border-2 border-black bg-white p-4 px-8 transition-all duration-300 scrollbar-hide group-hover:-translate-x-1 group-hover:-translate-y-1">
         <div className="flex items-center justify-between border-b-2 border-black pb-2">
-          <h2 className="text-lg font-bold">MY TICKET LIST</h2>
+          <h2 className="text-lg font-bold">MY TICKETS</h2>
           <div className="text-nowrap text-xs">
             총 <span className="font-bold">{userReviews.length}</span>개
           </div>

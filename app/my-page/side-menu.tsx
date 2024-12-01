@@ -30,7 +30,7 @@ export default function SideMenu({ uid }: { uid: string }) {
       </Link>
       <Link href={`/my-page/my-ticket-list?uid=${uid}`} className="w-full">
         <div className={getMenuStyle("/my-page/my-ticket-list")}>
-          MY TICKET LIST
+          MY TICKETS
         </div>
       </Link>
     </nav>

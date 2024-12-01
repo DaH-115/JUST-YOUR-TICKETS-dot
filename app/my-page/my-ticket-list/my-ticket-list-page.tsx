@@ -1,24 +1,24 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { FirebaseError } from "firebase/app";
 import { db } from "firebase-config";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useSearchParams } from "next/navigation";
 import SideMenu from "app/my-page/side-menu";
 import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
-import TicketList from "app/ticket-list/ticket-list";
 import { useForm } from "react-hook-form";
-import { debounce } from "lodash";
-import { IoSearchOutline } from "react-icons/io5";
-import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
-import { useError } from "store/error-context";
+import { firebaseErrorHandler } from "app/utils/firebase-error";
+import ReviewSearchInputregister from "app/ui/reviewTicketList/review-search-Input";
+import ReviewTicket from "app/ui/reviewTicketList/review-ticket";
+import useReviewSearch from "app/utils/useReviewSearch";
 
 export default function MyTicktListPage() {
   const searchParams = useSearchParams();
   const uid = searchParams.get("uid");
   const [userReviews, setUserReviews] = useState<MovieReview[]>([]);
-  const [filteredReviews, setFilteredReviews] = useState<MovieReview[]>([]);
-  const { isShowError } = useError();
+  const { filteredUserReviews, searchReviewsHandler } =
+    useReviewSearch(userReviews);
   const { register, watch } = useForm({
     defaultValues: {
       search: "",
@@ -26,7 +26,7 @@ export default function MyTicktListPage() {
   });
   const searchTerm = watch("search");
 
-  const fetchUserReviews = async () => {
+  const fetchUserReviews = useCallback(async () => {
     try {
       const reviewsRef = collection(db, "movie-reviews");
       const userReviewsQuery = query(reviewsRef, where("userUid", "==", uid));
@@ -37,27 +37,14 @@ export default function MyTicktListPage() {
       })) as MovieReview[];
       setUserReviews(reviews);
     } catch (error: any) {
-      const { title, message } = firebaseErrorHandler(error);
-      isShowError(title, message);
+      if (error instanceof FirebaseError) {
+        const errorInfo = firebaseErrorHandler(error);
+        window.alert(`${errorInfo.title}: ${errorInfo.message}`);
+      } else {
+        window.alert("티켓을 불러오는 중 오류가 발생했습니다.");
+      }
     }
-  };
-
-  const debounceSearch = useCallback(
-    debounce((searchTerm: string) => {
-      const filtered = userReviews.filter(
-        (userReview) =>
-          userReview.review.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          userReview.reviewTitle
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          userReview.movieTitle
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()),
-      );
-      setFilteredReviews(filtered);
-    }, 300),
-    [userReviews],
-  );
+  }, [uid]);
 
   useEffect(() => {
     if (!uid) return;
@@ -65,49 +52,37 @@ export default function MyTicktListPage() {
   }, [uid]);
 
   useEffect(() => {
-    debounceSearch(searchTerm);
-  }, [searchTerm, debounceSearch]);
+    searchReviewsHandler(searchTerm);
+  }, [searchTerm, searchReviewsHandler]);
 
   return (
     <div className="flex w-full flex-col lg:my-8 lg:mb-8 lg:flex-row lg:px-8">
       <SideMenu uid={uid as string} />
       <main className="flex w-full flex-col">
-        <div className="mb-6 flex-col items-center justify-center px-8 md:flex-row md:items-end md:justify-between lg:px-0">
+        <section className="mb-6 flex-col items-center justify-center px-8 md:flex-row md:items-end md:justify-between lg:px-0">
           <div className="flex w-full flex-col md:flex-row">
             <div className="flex w-full items-center">
-              <h1 className="hidden text-2xl font-bold md:block">
-                MY TICKET LIST
-              </h1>
+              <h1 className="hidden text-2xl font-bold md:block">MY TICKETS</h1>
               <span className="py-2 text-sm md:px-4">
-                총 <span className="font-bold">{filteredReviews.length}</span>장
+                총
+                <span className="font-bold">{filteredUserReviews.length}</span>
+                장
               </span>
             </div>
-            <div className="relative flex h-10 w-full items-center justify-end">
-              <label htmlFor="review-search" className="sr-only">
-                리뷰 검색
-              </label>
-              <input
-                {...register("search")}
-                id="review-search"
-                type="search"
-                placeholder="리뷰 검색"
-                className="h-full w-full rounded-full border-2 border-black pl-4 pr-10 text-sm opacity-100 md:w-64"
-              />
-              <div
-                className={`absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full border-none bg-none`}
-              >
-                <IoSearchOutline size={20} color="black" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <section className="px-8 lg:px-0">
-          <div className="grid grid-cols-2 gap-2 pb-12 sm:grid-cols-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
-            <TicketList
-              reviews={searchTerm ? filteredReviews : userReviews}
-              onReviewUpdated={fetchUserReviews}
+            {/* 티켓 검색 */}
+            <ReviewSearchInputregister
+              label="티켓 검색"
+              register={register}
+              placeholder="티켓 검색"
             />
           </div>
+        </section>
+        {/* 티켓 목록 */}
+        <section className="px-8 lg:px-0">
+          <ReviewTicket
+            reviews={filteredUserReviews}
+            onReviewUpdated={fetchUserReviews}
+          />
         </section>
       </main>
     </div>

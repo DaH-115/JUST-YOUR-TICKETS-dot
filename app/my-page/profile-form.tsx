@@ -16,9 +16,9 @@ import {
 import { useForm } from "react-hook-form";
 import ChangePassword from "app/my-page/change-password";
 import { useError } from "store/error-context";
-import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import ChangeEmail from "./change-email";
+import ChangeEmail from "app/my-page/change-email";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { onUpdateUserProfile } from "store/userSlice";

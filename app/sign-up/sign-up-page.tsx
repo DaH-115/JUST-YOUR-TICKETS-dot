@@ -7,7 +7,7 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import SocialLogin from "app/login/social-login";
 import { useError } from "store/error-context";
-import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { firebaseErrorHandler } from "app/utils/firebase-error";
 import InputField from "app/ui/input-field";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { db, isAuth } from "firebase-config";

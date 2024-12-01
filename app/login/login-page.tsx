@@ -7,7 +7,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { isAuth } from "firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useError } from "store/error-context";
-import { firebaseErrorHandler } from "app/my-page/utils/firebase-error";
+import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import SocialLogin from "app/login/social-login";
