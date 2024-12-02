@@ -12,6 +12,7 @@ import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
 import useReviewSearch from "app/utils/useReviewSearch";
 import ReviewTicket from "app/ui/reviewTicketList/review-ticket";
 import ReviewSearchInputregister from "app/ui/reviewTicketList/review-search-Input";
+import ReviewListSkeleton from "./review-list-skeleton";
 
 export default function TicketListPage() {
   const newReviewAlertState = useAppSelector(
@@ -25,6 +26,7 @@ export default function TicketListPage() {
   });
   const searchTerm = watch("search");
   const [userReviews, setUserReviews] = useState<MovieReview[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { filteredUserReviews, searchReviewsHandler } =
     useReviewSearch(userReviews);
 
@@ -39,6 +41,8 @@ export default function TicketListPage() {
   }, [newReviewAlertState, dispatch]);
 
   const fetchReviews = useCallback(async () => {
+    setIsLoading(true);
+
     try {
       const movieReviews = await fetchMovieReviews();
       setUserReviews(movieReviews);
@@ -49,6 +53,8 @@ export default function TicketListPage() {
       } else {
         window.alert("티켓을 불러오는 중 오류가 발생했습니다.");
       }
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -77,13 +83,14 @@ export default function TicketListPage() {
         />
       </section>
       {/* 티켓 목록 */}
-      {filteredUserReviews ? (
+      {filteredUserReviews.length > 0 ? (
         <ReviewTicket
+          isLoading={isLoading}
           reviews={filteredUserReviews}
           onReviewUpdated={fetchReviews}
         />
       ) : (
-        <div className="p-8 text-center text-sm font-bold text-gray-300 md:pt-60 md:text-xl">
+        <div className="p-8 text-center text-sm font-bold text-gray-300 md:py-60 md:text-xl">
           리뷰가 없습니다
         </div>
       )}

@@ -12,11 +12,13 @@ import { firebaseErrorHandler } from "app/utils/firebase-error";
 import ReviewSearchInputregister from "app/ui/reviewTicketList/review-search-Input";
 import ReviewTicket from "app/ui/reviewTicketList/review-ticket";
 import useReviewSearch from "app/utils/useReviewSearch";
+import ReviewListSkeleton from "app/ticket-list/review-list-skeleton";
 
 export default function MyTicktListPage() {
   const searchParams = useSearchParams();
   const uid = searchParams.get("uid");
   const [userReviews, setUserReviews] = useState<MovieReview[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { filteredUserReviews, searchReviewsHandler } =
     useReviewSearch(userReviews);
   const { register, watch } = useForm({
@@ -27,6 +29,8 @@ export default function MyTicktListPage() {
   const searchTerm = watch("search");
 
   const fetchUserReviews = useCallback(async () => {
+    setIsLoading(true);
+
     try {
       const reviewsRef = collection(db, "movie-reviews");
       const userReviewsQuery = query(reviewsRef, where("userUid", "==", uid));
@@ -43,6 +47,8 @@ export default function MyTicktListPage() {
       } else {
         window.alert("티켓을 불러오는 중 오류가 발생했습니다.");
       }
+    } finally {
+      setIsLoading(false);
     }
   }, [uid]);
 
@@ -80,6 +86,7 @@ export default function MyTicktListPage() {
         {/* 티켓 목록 */}
         <section className="px-8 lg:px-0">
           <ReviewTicket
+            isLoading={isLoading}
             reviews={filteredUserReviews}
             onReviewUpdated={fetchUserReviews}
           />

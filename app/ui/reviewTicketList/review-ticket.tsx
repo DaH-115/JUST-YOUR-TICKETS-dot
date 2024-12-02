@@ -9,12 +9,15 @@ import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoIosAddCircle } from "react-icons/io";
 import ReviewDetailsModal from "app/ui/reviewTicketList/review-details-modal";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
+import ReviewListSkeleton from "app/ticket-list/review-list-skeleton";
 
 export default function ReviewTicket({
   reviews,
   onReviewUpdated,
+  isLoading,
 }: {
   reviews: MovieReview[];
+  isLoading: boolean;
   onReviewUpdated: () => void;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,8 +44,16 @@ export default function ReviewTicket({
     }
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 gap-2 pb-8 md:grid-cols-3 lg:grid-cols-5">
+        <ReviewListSkeleton />
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 gap-2 pb-8 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-2 pb-8 md:grid-cols-3 lg:grid-cols-5">
       <ReviewDetailsModal
         selectedReview={selectedReview}
         isModalOpen={isModalOpen}

@@ -1,7 +1,7 @@
 export default function ReviewListSkeleton() {
   return (
     <>
-      {[...Array(4)].map((_, index) => (
+      {[...Array(5)].map((_, index) => (
         <div
           key={index}
           className="group/card relative h-[300px] animate-pulse drop-shadow-md md:h-[450px]"
