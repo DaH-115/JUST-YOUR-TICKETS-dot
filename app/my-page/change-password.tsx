@@ -88,7 +88,7 @@ export default function ChangePassword() {
       await updatePassword(currentUser, newPassword);
       setIsVerified(false);
       setIsEditing(false);
-      isShowSuccess("비밀번호 변경", "비밀번호가 성공적으로 변경되었습니다.");
+      isShowSuccess("성공", "비밀번호가 성공적으로 변경되었습니다.");
     } catch (error: any) {
       const { title, message } = firebaseErrorHandler(error);
       isShowError(title, message);

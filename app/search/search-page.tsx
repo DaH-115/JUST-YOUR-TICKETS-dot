@@ -23,7 +23,7 @@ export default function SearchPage() {
   const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [nowPlayingMovieLoading, setNowPlayingMovieLoading] = useState(false);
-  const [isError, setIsError] = useState<string>("");
+  const [isError, setIsError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -40,7 +40,7 @@ export default function SearchPage() {
         const { results } = await fetchNowPlayingMovies();
         setNowPlayingMovies(results);
       } catch (error) {
-        setIsError("상영 중인 영화 정보를 불러오는데 실패했습니다.");
+        setIsError("영화 정보를 불러오는데 실패했습니다.");
       } finally {
         setNowPlayingMovieLoading(false);
       }
