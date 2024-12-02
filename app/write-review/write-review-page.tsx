@@ -6,7 +6,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "firebase-config";
 import { fetchMovieDetails, MovieDetails } from "api/fetchMovieDetails";
 import ReviewForm, { ReviewData } from "app/write-review/review-form";
-import Catchphrase from "app/ui/catchphrase";
+import Catchphrase from "app/ui/layout/catchphrase";
 import ReviewFormSkeleton from "app/write-review/review-form-skeleton";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 

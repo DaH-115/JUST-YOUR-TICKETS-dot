@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import "app/globals.css";
 import Providers from "app/providers";
-import Header from "app/ui/header";
-import Footer from "app/ui/footer";
+import Header from "app/ui/layout/header/header";
+import Footer from "app/ui/layout/footer";
 import { ErrorProvider } from "store/error-context";
 
 export const metadata: Metadata = {

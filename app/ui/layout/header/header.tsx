@@ -7,9 +7,9 @@ import { signOut } from "firebase/auth";
 import { isAuth } from "firebase-config";
 import { useRouter } from "next/navigation";
 import { clearUserState } from "store/userSlice";
-import HeaderSearchBar from "app/ui/header-search-bar";
+import HeaderSearchBar from "app/ui/layout/header/header-search-bar";
 import { IoIosMenu } from "react-icons/io";
-import HeaderSideMenu from "app/ui/header-side-menu";
+import HeaderSideMenu from "app/ui/layout/header/header-side-menu";
 
 export default function Header() {
   const router = useRouter();

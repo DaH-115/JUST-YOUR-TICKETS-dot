@@ -4,7 +4,7 @@ import { ApiError } from "api/error-type";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
 import { fetchMovieCredits } from "api/fetchMovieCredits";
 import useGetTitle from "hooks/useGetTitle";
-import BackGround from "app/ui/back-ground";
+import BackGround from "app/ui/layout/back-ground";
 import SimilarMovies from "app/movie-details/similar-movies";
 import AllMovieTrailers from "app/movie-details/all-movie-trailers";
 import MovieDetailCard from "app/movie-details/movie-detail-card";

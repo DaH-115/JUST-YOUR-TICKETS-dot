@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { fetchVideosMovies } from "api/fetchVideosMovies";
 import { Movie } from "api/fetchNowPlayingMovies";
 import useGetTitle from "hooks/useGetTitle";
-import BackGround from "app/ui/back-ground";
+import BackGround from "app/ui/layout/back-ground";
 import RecommendMovie from "app/home/recommend-movie";
 import RecommendMovieSkeleton from "app/home/recommend-movie-skeleton";
 import MovieTrailer from "app/home/movie-trailer";
 import NowPlayingList from "app/home/now-playing-list";
 import ScrollToTopButton from "app/ui/scroll-to-top-button";
-import Catchphrase from "app/ui/catchphrase";
+import Catchphrase from "app/ui/layout/catchphrase";
 
 export default function HomePage({ movieList }: { movieList: Movie[] }) {
   const [trailerKey, setTrailerKey] = useState<string>("");

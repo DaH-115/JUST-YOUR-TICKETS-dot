@@ -9,7 +9,7 @@ import { fetchNowPlayingMovies } from "api/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
 import { fetchSearchMovies } from "api/fetchSearchMovies";
 import ScrollToTopButton from "app/ui/scroll-to-top-button";
-import Catchphrase from "app/ui/catchphrase";
+import Catchphrase from "app/ui/layout/catchphrase";
 import SwiperCard from "app/ui/swiper-card";
 
 const searchSchema = z.object({

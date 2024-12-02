@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Movie } from "api/fetchNowPlayingMovies";
 import useGetTitle from "hooks/useGetTitle";
-import MovieCard from "app/ui/movie-card";
+import MovieCard from "app/home/movie-card";
 import { RiMovieLine } from "react-icons/ri";
 import { MdLocalMovies } from "react-icons/md";
 import ScrollButton from "app/ui/scroll-button";

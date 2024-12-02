@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "store/hooks";
 import { useReviewForm } from "app/write-review/useReviewForm";
 import useGetTitle from "hooks/useGetTitle";
-import BackGround from "app/ui/back-ground";
+import BackGround from "app/ui/layout/back-ground";
 import { IoStar } from "react-icons/io5";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import ModalAlert from "app/ui/alert/modal-alert";
