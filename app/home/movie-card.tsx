@@ -42,8 +42,8 @@ export default function MovieCard({ movie }: { movie: Movie }) {
   }, [id]);
 
   return (
-    <section className="relative mx-auto w-full break-keep">
-      <div className="relative rounded-xl border-2 border-black bg-white lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
+    <section className="group relative mx-auto w-full break-keep">
+      <div className="relative rounded-xl border-2 border-black bg-white p-2 lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
         <div className="p-4">
           <h2 className="mb-2 inline-block animate-bounce rounded-lg bg-black p-1 text-xs font-bold text-white">
             추천 영화
@@ -61,7 +61,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             <h3 className="mr-2 text-lg text-gray-500">{`${original_title}(${release_date.slice(0, 4)})`}</h3>
           </div>
         </div>
-        <ul className="flex items-center space-x-2 border-y border-black px-4 py-2 text-sm">
+        <ul className="flex items-center space-x-2 border-y-4 border-dotted border-gray-200 p-4 text-sm">
           {genresLoading && (
             <li className="text-xs text-gray-300 lg:text-sm">
               장르를 불러 오는 중
@@ -88,7 +88,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           )}
         </ul>
         {overview && <AnimatedOverview overview={overview} />}
-        <div className="flex flex-1 border-b border-black">
+        <div className="flex flex-1 border-b-4 border-dotted border-gray-200">
           <ul className="flex-1 flex-col items-center justify-center py-4 text-center text-sm">
             {credits ? (
               credits.cast
@@ -99,17 +99,13 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             )}
           </ul>
         </div>
-        <div className="flex">
-          <div className="flex-1 border-r-2 border-dotted border-gray-300">
-            <div className="p-2">
-              <p className="text-sm font-bold text-black">개봉일</p>
-            </div>
+        <div className="flex p-2">
+          <div className="flex-1 border-r-4 border-dotted border-gray-200">
+            <p className="pr-2 text-sm font-bold text-black">개봉일</p>
             <p className="p-2 pb-4 text-center text-sm">{movieDate}</p>
           </div>
-          <div className="flex-1 border-r-2 border-dotted border-gray-300">
-            <div className="p-2">
-              <p className="text-sm font-bold text-black">감독</p>
-            </div>
+          <div className="flex-1 border-r-4 border-dotted border-gray-200">
+            <p className="px-2 text-sm font-bold text-black">감독</p>
             <ul className="p-2 pb-4 text-center text-sm">
               {credits ? (
                 credits.crew
@@ -121,9 +117,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </ul>
           </div>
           <div className="flex-1">
-            <div className="p-2">
-              <p className="text-sm font-bold text-black">평점</p>
-            </div>
+            <p className="px-2 text-sm font-bold text-black">평점</p>
             <div className="flex flex-1 items-center justify-center p-2 pb-4">
               <IoStar className="mr-1" size={24} />
               <div className="text-2xl font-bold">
@@ -132,11 +126,11 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </div>
           </div>
         </div>
-        <div className="flex w-full border-t border-black p-1">
+        <div className="flex w-full border-t-4 border-dotted border-gray-200 pt-4">
           <NewWriteBtn movieId={id} />
         </div>
       </div>
-      <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border border-black bg-gray-700 lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1 lg:group-hover:border-gray-400 lg:group-hover:bg-gray-200" />
+      <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black group-hover:bg-gray-200 lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1" />
     </section>
   );
 }
