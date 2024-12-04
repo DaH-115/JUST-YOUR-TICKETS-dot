@@ -9,6 +9,7 @@ import { isAuth } from "firebase-config";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useAppSelector } from "store/hooks";
 import { useError } from "store/error-context";
+import { useRouter } from "next/navigation";
 
 const currentPasswordSchema = z.object({
   currentPassword: z.string().min(8, "비밀번호는 최소 8자 이상이어야 합니다."),
@@ -31,6 +32,7 @@ export default function ChangePassword() {
   const [isVerified, setIsVerified] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const currentUser = isAuth.currentUser;
   const serializedUser = useAppSelector((state) => state.user.user);
   const { isShowError, isShowSuccess } = useError();
@@ -58,6 +60,7 @@ export default function ChangePassword() {
     }
 
     setIsLoading(true);
+
     try {
       await signInWithEmailAndPassword(
         isAuth,
@@ -65,9 +68,16 @@ export default function ChangePassword() {
         data.currentPassword,
       );
       setIsVerified(true);
-    } catch (error: any) {
-      const { title, message } = firebaseErrorHandler(error);
-      isShowError(title, message);
+    } catch (error) {
+      if (error instanceof Error) {
+        isShowError(
+          "오류",
+          "현재 비밀번호가 일치하지 않습니다. 다시 시도해 주세요.",
+        );
+      } else {
+        const { title, message } = firebaseErrorHandler(error);
+        isShowError(title, message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -79,19 +89,28 @@ export default function ChangePassword() {
     newPassword: string;
   }) => {
     if (!currentUser) {
-      isShowError("인증 오류", "사용자가 로그인되어 있지 않습니다.");
+      window.alert("사용자가 로그인되어 있지 않습니다.");
+      router.push("/login");
       return;
     }
 
     setIsLoading(true);
+
     try {
       await updatePassword(currentUser, newPassword);
       setIsVerified(false);
       setIsEditing(false);
       isShowSuccess("성공", "비밀번호가 성공적으로 변경되었습니다.");
-    } catch (error: any) {
-      const { title, message } = firebaseErrorHandler(error);
-      isShowError(title, message);
+    } catch (error) {
+      if (error instanceof Error) {
+        isShowError(
+          "오류",
+          "비밀번호 변경에 실패했습니다. 다시 시도해 주세요.",
+        );
+      } else {
+        const { title, message } = firebaseErrorHandler(error);
+        isShowError(title, message);
+      }
     } finally {
       setIsLoading(false);
     }

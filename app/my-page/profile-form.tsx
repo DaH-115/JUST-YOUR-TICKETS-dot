@@ -82,9 +82,13 @@ export default function ProfileForm() {
         } else {
           isShowError("데이터 없음", "사용자 정보를 찾을 수 없습니다.");
         }
-      } catch (err) {
-        const { title, message } = firebaseErrorHandler(err);
-        isShowError(title, message);
+      } catch (error) {
+        if (error instanceof Error) {
+          window.alert("사용자 정보를 불러오는 중 오류가 발생했습니다.");
+        } else {
+          const { title, message } = firebaseErrorHandler(error);
+          isShowError(title, message);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -268,9 +272,7 @@ export default function ProfileForm() {
           </form>
           <div className="w-full border-b border-black pb-2 pt-4">
             <h2 className="text-xs font-bold">이메일</h2>
-            <div className="mr-4 w-full">
-              {serializedUser?.email ? serializedUser?.email : <ChangeEmail />}
-            </div>
+            <div className="mr-4 w-full">{serializedUser?.email}</div>
           </div>
         </div>
         <span
