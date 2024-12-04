@@ -51,6 +51,8 @@ export default function LoginPage() {
         data.email,
         data.password,
       );
+      const token = await userCredential.user.getIdToken();
+      document.cookie = `firebase-session-token=${token}; path=/;max-age=86400`;
 
       if (userCredential.user.displayName) {
         dispatch(

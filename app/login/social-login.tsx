@@ -37,6 +37,8 @@ export default function SocialLogin() {
           : new GithubAuthProvider();
 
       const { user } = await signInWithPopup(isAuth, authProvider);
+      const token = await user.getIdToken();
+      document.cookie = `firebase-session-token=${token}; path=/;max-age=86400`;
 
       // Firestore에서 사용자 확인
       const userRef = doc(db, "users", user.uid);
