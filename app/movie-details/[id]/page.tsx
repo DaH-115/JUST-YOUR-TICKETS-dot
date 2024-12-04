@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ApiError } from "api/error-type";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
 import { fetchMovieCredits } from "api/fetchMovieCredits";
 import useGetTitle from "hooks/useGetTitle";
@@ -36,11 +35,9 @@ export async function generateMetadata({
       },
     };
   } catch (error) {
-    const apiError = error as ApiError;
     return {
-      title: "영화 정보를 찾을 수 없습니다",
-      description:
-        apiError.message || "요청하신 영화 정보를 불러오는데 실패했습니다.",
+      title: "오류",
+      description: "요청하신 영화 정보를 불러오는데 실패했습니다.",
     };
   }
 }
