@@ -57,7 +57,7 @@ export default function SwiperCard({
             <Tooltip>더 자세한 정보 보기</Tooltip>
           </div>
         </div>
-        <ul className="flex w-full flex-wrap border-y border-black p-1">
+        <ul className="flex w-full flex-wrap border-y-4 border-dotted border-gray-200 p-1">
           {genresLoading && (
             <li className="text-xs text-gray-300 lg:text-sm">
               장르를 불러 오는 중
@@ -84,7 +84,7 @@ export default function SwiperCard({
           )}
         </ul>
         <div className="flex w-full text-center">
-          <div className="flex items-center border-r border-black p-4">
+          <div className="flex items-center border-r-4 border-dotted border-gray-200 p-4">
             <IoStar />
             <div className="text-xl font-bold">
               {Math.round(vote_average * 10) / 10}

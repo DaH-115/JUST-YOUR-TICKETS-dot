@@ -49,7 +49,7 @@ export default function MovieDetailCard({
         </section>
 
         {/* MOVIE INFO */}
-        <section className="mx-auto w-full rounded-xl border-2 border-black bg-white shadow-lg">
+        <section className="mx-auto w-full rounded-xl border-2 border-black bg-white p-2 shadow-lg">
           {/* 기본 정보 영역 */}
           <div className="p-4 pb-2">
             <h1 className="mb-2 inline-block rounded-lg bg-black p-1 text-xs font-bold text-white">
@@ -70,12 +70,12 @@ export default function MovieDetailCard({
           </div>
 
           {/* 장르 영역 */}
-          <div className="border-y border-black p-2">
+          <div className="border-y-4 border-dotted border-gray-200 p-2">
             <ul className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide">
               {movieDetails.genres.map((genre) => (
                 <li
                   key={genre.id}
-                  className="rounded-full border-2 border-black bg-black px-2 py-1 text-xs text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black lg:text-xs"
+                  className="rounded-full border border-black bg-black px-2 py-1 text-xs text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black lg:text-xs"
                 >
                   {genre.name}
                 </li>
@@ -106,7 +106,7 @@ export default function MovieDetailCard({
           )}
 
           {/* 출연진 영역 */}
-          <div className="border-t border-black p-2">
+          <div className="border-t-4 border-dotted border-gray-200 p-2">
             <h3 className="text-xs font-bold md:text-sm">출연진</h3>
             {casts.length > 0 ? (
               <ul className="space-y-1 p-4">
@@ -124,14 +124,14 @@ export default function MovieDetailCard({
           </div>
 
           {/* 기타 정보 영역 */}
-          <div className="flex w-full items-stretch justify-between border-t border-black text-xs md:text-sm">
+          <div className="flex w-full items-stretch justify-between border-t-4 border-dotted border-gray-200 text-xs md:text-sm">
             <div className="flex flex-1 flex-col">
               <h3 className="p-2 pb-0 font-bold">개봉일</h3>
               <div className="overflow-y-auto p-2 pb-4 text-center">
                 <p className="break-keep">{movieDate}</p>
               </div>
             </div>
-            <div className="flex flex-1 flex-col border-x-2 border-dotted border-gray-300">
+            <div className="flex flex-1 flex-col border-x-4 border-dotted border-gray-200">
               <h3 className="p-2 pb-0 font-bold">러닝 타임</h3>
               <p className="overflow-y-auto p-2 pb-4 text-center">
                 {convertedRuntime}
@@ -158,7 +158,7 @@ export default function MovieDetailCard({
           </div>
 
           {/* 제작사 정보 */}
-          <div className="flex items-center border-y border-black p-4">
+          <div className="flex items-center border-y-4 border-dotted border-gray-200 p-4">
             <h3 className="text-xs font-bold md:text-sm">제작</h3>
             <div className="ml-4 space-y-1 text-sm">
               {movieDetails.production_companies.map((company, index) => (
@@ -170,7 +170,7 @@ export default function MovieDetailCard({
           </div>
 
           {/* 작성 버튼 */}
-          <div className="group flex w-full p-1 text-center text-white">
+          <div className="group flex w-full pt-4 text-center text-white">
             <NewWriteBtn movieId={movieDetails.id} />
           </div>
         </section>

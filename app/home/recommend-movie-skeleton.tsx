@@ -1,6 +1,6 @@
 export default function RecommendMovieSkeleton() {
   return (
-    <main className="relative z-10 mb-8 flex flex-col items-center justify-center lg:mx-32 lg:mb-12 lg:mt-16 lg:flex-row">
+    <main className="mx-auto flex flex-col items-center justify-center lg:mt-16 lg:w-4/5 lg:flex-row lg:items-start">
       {/* MOVIE POSTER SKELETON */}
       <div className="group w-2/4 py-4 lg:w-1/3 lg:pr-8">
         <div className="aspect-[2/3] w-full animate-pulse bg-gray-300"></div>

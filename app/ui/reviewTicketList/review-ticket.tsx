@@ -97,19 +97,17 @@ export default function ReviewTicket({
                   className="h-full w-full rounded-xl object-cover"
                 />
               </div>
-              <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white transition-all duration-300 group-hover/card:bottom-1 group-hover/card:right-1 md:group-hover/card:bottom-2 md:group-hover/card:right-2">
-                <div className="flex items-center justify-between border-b">
-                  <div className="flex items-center justify-center px-2 py-1">
-                    <IoStar className="mr-1 text-sm" />
-                    <p className="text-sm font-bold lg:text-2xl">
-                      {post.rating}
-                    </p>
+              <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white p-2 transition-all duration-300 group-hover/card:bottom-1 group-hover/card:right-1 md:group-hover/card:bottom-2 md:group-hover/card:right-2">
+                <div className="flex items-center justify-between pb-1">
+                  <div className="flex items-center justify-center px-2">
+                    <IoStar className="mr-1" />
+                    <p className="font-bold lg:text-2xl">{post.rating}</p>
                   </div>
-                  <p className="px-3 py-1 text-xs font-bold lg:text-sm">
+                  <p className="px-2 text-xs font-bold lg:text-sm">
                     {post.userName ? post.userName : "Guest"}
                   </p>
                 </div>
-                <div className="h-[4rem] overflow-y-scroll break-keep p-2 scrollbar-hide md:border-b">
+                <div className="mb-2 h-[4rem] overflow-y-scroll break-keep border-y-4 border-dotted border-gray-200 py-2 scrollbar-hide">
                   <p className="text-sm font-bold">{post.reviewTitle}</p>
                   {/* 영화 상세 정보로 이동 */}
                   <div className="text-xs text-gray-500">
@@ -122,13 +120,15 @@ export default function ReviewTicket({
                     - {post.releaseYear}
                   </div>
                 </div>
-                <div className="flex items-center border-t px-3 py-2">
-                  <p className="w-full text-xs">{post.date}</p>
+                <div className="rounded-lg bg-black px-3 py-2">
                   <button
-                    className="group relative flex items-center justify-end"
+                    className="group relative flex w-full items-center justify-end"
                     onClick={() => openModalHandler(post)}
                   >
-                    <FaExternalLinkAlt className="text-xs text-gray-400" />
+                    <div className="flex items-center justify-center">
+                      <p className="mr-1 text-xs text-white">내용 보기</p>
+                      <FaExternalLinkAlt className="text-xs text-gray-200" />
+                    </div>
                   </button>
                 </div>
               </div>
