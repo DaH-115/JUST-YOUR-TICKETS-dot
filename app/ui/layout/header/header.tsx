@@ -26,6 +26,8 @@ export default function Header() {
   const logoutHandler = useCallback(async () => {
     try {
       await signOut(isAuth);
+      document.cookie =
+        "firebase-session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
       dispatch(clearUserState());
       router.push("/");
     } catch (error) {
