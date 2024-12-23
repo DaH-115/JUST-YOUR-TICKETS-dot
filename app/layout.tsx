@@ -4,6 +4,7 @@ import Providers from "app/providers";
 import Header from "app/ui/layout/header/header";
 import Footer from "app/ui/layout/footer";
 import { ErrorProvider } from "store/error-context";
+import { AuthProvider } from "store/auth-context";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://just-movie-tickets.vercel.app"),
@@ -43,15 +44,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
-      <body className="w-full min-w-[320px]">
-        <Providers>
+    <html lang="ko" className="trancy-und h-full">
+      <body className="h-full w-full min-w-[320px]">
+        <AuthProvider>
           <ErrorProvider>
-            <Header />
-            {children}
-            <Footer />
+            <Providers>
+              <Header />
+              {children}
+              <Footer />
+            </Providers>
           </ErrorProvider>
-        </Providers>
+        </AuthProvider>
       </body>
     </html>
   );
