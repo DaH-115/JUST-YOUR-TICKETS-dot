@@ -31,17 +31,10 @@ export default function RecommendMovieSkeleton() {
               ></div>
             ))}
           </div>
-
-          {/* Additional Info */}
-          <div className="flex flex-wrap gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-6 w-32 animate-pulse bg-gray-300"></div>
-            ))}
-          </div>
         </div>
 
         {/* Hidden buttons skeleton */}
-        <div className="absolute -right-24 top-0 hidden flex-row lg:flex">
+        <div className="absolute -right-24 top-0 hidden flex-row">
           {[1, 2].map((i) => (
             <div
               key={i}

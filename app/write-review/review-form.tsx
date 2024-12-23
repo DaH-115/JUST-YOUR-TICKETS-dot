@@ -190,9 +190,9 @@ export default function ReviewForm({
                 <button
                   type="submit"
                   disabled={!isFormValid}
-                  className="group flex w-full items-center justify-center rounded-xl bg-black p-4 text-white transition-all duration-300 hover:bg-gray-800 disabled:text-gray-500"
+                  className="group flex w-full items-center justify-center rounded-xl bg-black p-4 text-white disabled:text-gray-500"
                 >
-                  <div>작성</div>
+                  작성
                   <MdDriveFileRenameOutline className="ml-1" size={18} />
                 </button>
               </div>
