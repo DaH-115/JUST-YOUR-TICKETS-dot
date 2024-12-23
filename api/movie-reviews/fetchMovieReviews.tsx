@@ -1,5 +1,5 @@
 import { db } from "firebase-config";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 
 export interface MovieReview {
   date: string;
@@ -16,7 +16,12 @@ export interface MovieReview {
 }
 
 export default async function fetchMovieReviews(): Promise<MovieReview[]> {
-  const querySnapshot = await getDocs(collection(db, "movie-reviews"));
+  const movieReviewQuery = query(
+    collection(db, "movie-reviews"),
+    orderBy("date", "asc"),
+  );
+
+  const querySnapshot = await getDocs(movieReviewQuery);
 
   if (querySnapshot.empty) {
     return [];
