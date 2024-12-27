@@ -15,6 +15,7 @@ import InputField from "app/ui/input-field";
 import { useAppDispatch } from "store/hooks";
 import { onUpdateUserProfile } from "store/userSlice";
 import { FaArrowRight } from "react-icons/fa";
+import { setSessionCookie } from "actions/set-cookie";
 
 const loginSchema = z.object({
   email: z
@@ -52,7 +53,7 @@ export default function LoginPage() {
         data.password,
       );
       const token = await userCredential.user.getIdToken();
-      document.cookie = `firebase-session-token=${token}; path=/;max-age=86400`;
+      await setSessionCookie(token);
 
       if (userCredential.user.displayName) {
         dispatch(

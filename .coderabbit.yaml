@@ -1,0 +1,22 @@
+# 기본 설정
+language: "ko" # 리뷰 언어를 한국어로 설정
+
+# 리뷰 설정
+reviews:
+  high_level_summary: true # 전체적인 코드 변경 요약 제공
+  review_status: true # 리뷰 상태 표시
+  request_changes_workflow: false # 변경 요청 워크플로우 비활성화
+  poem_summary: false # 시 형식의 요약 비활성화
+  collapse_walkthrough: false # 설명을 펼친 상태로 유지
+
+  # 코드 품질 검사 수준 설정
+  quality:
+    strict: true # 엄격한 코드 품질 검사
+    conventions: true # 코딩 컨벤션 검사
+    complexity: true # 코드 복잡도 검사
+
+  # 무시할 파일/디렉토리 설정
+  path_filters:
+    - "!**/test/**" # 테스트 파일 제외
+    - "!**/docs/**" # 문서 파일 제외
+    - "!**/dist/**" # 빌드 결과물 제외
