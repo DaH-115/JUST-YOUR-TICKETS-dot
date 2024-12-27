@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { Movie } from "api/fetchNowPlayingMovies";
 import SwiperCard from "app/ui/swiper-card";
+import SliderButton from "./slider-button";
 
 export default function TicketSwiper({ movieList }: { movieList: Movie[] }) {
   return (
@@ -15,7 +16,7 @@ export default function TicketSwiper({ movieList }: { movieList: Movie[] }) {
       spaceBetween={10}
       speed={600}
       loop={true}
-      navigation={true}
+      navigation={false}
       modules={[Navigation]}
       breakpoints={{
         // 640px
@@ -45,6 +46,8 @@ export default function TicketSwiper({ movieList }: { movieList: Movie[] }) {
           <SwiperCard id={movie.id} idx={idx} movie={movie} />
         </SwiperSlide>
       ))}
+      <SliderButton direction="prev" />
+      <SliderButton direction="next" />
     </Swiper>
   );
 }

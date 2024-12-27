@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Movie } from "api/fetchNowPlayingMovies";
 import { fetchSimilarMovies } from "api/fetchSimilarMovies";
-import TicketSwiper from "app/ticket-swiper";
+import TicketSwiper from "app/ui/ticket-swiper";
 
 export default function SimilarMovies({ movieId }: { movieId: number }) {
   const [similarMovies, setSimilarMovies] = useState<Movie[]>([]);

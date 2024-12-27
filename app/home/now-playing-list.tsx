@@ -1,6 +1,6 @@
 import { Movie } from "api/fetchNowPlayingMovies";
 import { MdLocalMovies } from "react-icons/md";
-import TicketSwiper from "app/ticket-swiper";
+import TicketSwiper from "app/ui/ticket-swiper";
 
 export default function NowPlayingList({ movieList }: { movieList: Movie[] }) {
   return (
