@@ -7,18 +7,23 @@ const useGetGenres = (movieId: number) => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchGenres = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    try {
+      setLoading(true);
+      setError(null);
 
-    const response = await fetchMovieDetails(movieId);
-
-    if ("errorMessage" in response) {
-      setError(response.errorMessage);
-    } else {
+      const response = await fetchMovieDetails(movieId);
       setGenres(response.genres.map((genre) => genre.name));
-    }
+    } catch (error) {
+      setGenres([]);
 
-    setLoading(false);
+      if (error && typeof error === "object" && "message" in error) {
+        setError(error.message as string);
+      } else {
+        setError("장르 정보를 불러오는데 실패했습니다.");
+      }
+    } finally {
+      setLoading(false);
+    }
   }, [movieId]);
 
   useEffect(() => {
