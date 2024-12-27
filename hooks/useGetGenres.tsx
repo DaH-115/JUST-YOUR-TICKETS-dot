@@ -15,12 +15,7 @@ const useGetGenres = (movieId: number) => {
       setGenres(response.genres.map((genre) => genre.name));
     } catch (error) {
       setGenres([]);
-
-      if (error && typeof error === "object" && "message" in error) {
-        setError(error.message as string);
-      } else {
-        setError("장르 정보를 불러오는데 실패했습니다.");
-      }
+      setError("장르 정보를 불러오는데 실패했습니다.");
     } finally {
       setLoading(false);
     }
