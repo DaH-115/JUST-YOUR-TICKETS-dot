@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { fetchSearchMovies } from "api/fetchSearchMovies";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { Movie } from "api/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
 

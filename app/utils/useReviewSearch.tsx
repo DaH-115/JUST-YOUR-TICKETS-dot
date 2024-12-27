@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 
 type SearchField = "review" | "reviewTitle" | "movieTitle";
