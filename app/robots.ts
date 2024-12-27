@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/"],
+      disallow: ["/api/", "/auth/", "/my-page/"],
     },
     sitemap: "https://just-movie-tickets.vercel.app/sitemap.xml",
   };
