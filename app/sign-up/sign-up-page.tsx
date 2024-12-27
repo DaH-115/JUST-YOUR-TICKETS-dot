@@ -72,6 +72,7 @@ export default function SignUpPage() {
 
     if (!displayNameSnapshot.empty) {
       isShowError("알림", "이미 사용 중인 닉네임입니다.");
+      return;
     }
 
     // 2. 사용자 계정 생성
