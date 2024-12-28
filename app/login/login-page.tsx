@@ -4,18 +4,16 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { isAuth } from "firebase-config";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { db, isAuth } from "firebase-config";
+import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useError } from "store/error-context";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import SocialLogin from "app/login/social-login";
 import InputField from "app/ui/input-field";
-import { useAppDispatch } from "store/hooks";
-import { onUpdateUserProfile } from "store/userSlice";
 import { FaArrowRight } from "react-icons/fa";
-import { setSessionCookie } from "actions/set-cookie";
+import { doc, getDoc } from "firebase/firestore";
 
 const loginSchema = z.object({
   email: z
@@ -32,7 +30,6 @@ type LoginInputs = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { isShowError } = useError();
   const {
@@ -47,24 +44,28 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     setIsLoading(true);
     try {
+      // 기본적인 Firebase 인증만 수행
       const userCredential = await signInWithEmailAndPassword(
         isAuth,
         data.email,
         data.password,
       );
-      const token = await userCredential.user.getIdToken();
-      await setSessionCookie(token);
 
-      if (userCredential.user.displayName) {
-        dispatch(
-          onUpdateUserProfile({
-            displayName: userCredential.user.displayName,
-          }),
-        );
+      console.log("로그인 성공:", userCredential.user);
+
+      if (!userCredential.user.displayName) {
+        const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+        if (userDoc.exists()) {
+          const { displayName } = userDoc.data();
+          await updateProfile(userCredential.user, {
+            displayName,
+          });
+        }
       }
 
       router.push("/");
     } catch (error: any) {
+      console.error("로그인 에러:", error);
       const { title, message } = firebaseErrorHandler(error);
       isShowError(title, message);
     } finally {

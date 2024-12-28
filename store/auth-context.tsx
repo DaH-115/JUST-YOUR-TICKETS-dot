@@ -9,35 +9,62 @@ import {
   useRef,
 } from "react";
 import { useRouter } from "next/navigation";
+import { initializeAuth } from "store/userSlice";
+import { isAuth } from "firebase-config";
+import { useAppDispatch } from "store/hooks";
 
-type AuthContextType = {
+interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
-};
+}
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const dispatch = useAppDispatch();
   const [authState, setAuthState] = useState<AuthContextType>({
     isAuthenticated: false,
     isLoading: true,
   });
 
   useEffect(() => {
+    // 1. 쿠키 확인
     const getCookie = (name: string) => {
-      const value = `; ${document.cookie}`;
+      const value = `${document.cookie}`;
       const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop()?.split(";").shift();
+      if (parts.length === 2) {
+        return parts.pop()?.split(";").shift();
+      }
       return null;
     };
-
     const session = getCookie("firebase-session-token");
+    console.log("현재 세션:", session);
+
+    // 2. Firebase 인증 설정
+    let unsubscribe: () => void;
+
+    console.log("세션 존재 무시, initializeAuth 호출 시도");
+    const setupAuth = async () => {
+      const result = await dispatch(initializeAuth(isAuth));
+      if (initializeAuth.fulfilled.match(result)) {
+        unsubscribe = result.payload;
+        console.log("initializeAuth 성공, 리스너 설정됨");
+      }
+    };
+    setupAuth();
 
     setAuthState({
       isAuthenticated: !!session,
       isLoading: false,
     });
-  }, []);
+
+    return () => {
+      if (unsubscribe) {
+        console.log("리스너 정리됨");
+        unsubscribe();
+      }
+    };
+  }, [dispatch, document.cookie]);
 
   return (
     <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>

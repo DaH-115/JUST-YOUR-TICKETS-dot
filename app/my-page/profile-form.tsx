@@ -18,10 +18,9 @@ import ChangePassword from "app/my-page/change-password";
 import { useError } from "store/error-context";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import ChangeEmail from "app/my-page/change-email";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { onUpdateUserProfile } from "store/userSlice";
+import { onUpdateUserDisplayName } from "store/userSlice";
 
 interface UserDoc {
   displayName: string;
@@ -128,7 +127,7 @@ export default function ProfileForm() {
       if (dirtyFields.displayName) {
         const nicknameQuery = query(
           collection(db, "users"),
-          where("nickname", "==", data.displayName),
+          where("displayName", "==", data.displayName),
           limit(1),
         );
         const nicknameSnapshot = await getDocs(nicknameQuery);
@@ -154,20 +153,18 @@ export default function ProfileForm() {
       }
 
       // 3. Firestore와 Auth 업데이트
-      // 닉네임이 변경된 경우 Auth 업데이트도 추가
       if (dirtyFields.displayName) {
-        const currentUser = isAuth.currentUser;
-
-        if (currentUser) {
-          await updateProfile(currentUser, {
+        if (isAuth.currentUser) {
+          // 3-1. Auth 업데이트
+          await updateProfile(isAuth.currentUser, {
             displayName: data.displayName,
           });
-          dispatch(onUpdateUserProfile({ displayName: data.displayName }));
+          dispatch(onUpdateUserDisplayName({ displayName: data.displayName }));
+
+          // 3-2.Firestore 업데이트
+          await updateDoc(userRef, updateData);
         }
       }
-
-      // Firestore 업데이트
-      await updateDoc(userRef, updateData);
 
       // 4. userDoc 상태 업데이트
       setUserDoc((prev) => (prev ? { ...prev, ...updateData } : prev));

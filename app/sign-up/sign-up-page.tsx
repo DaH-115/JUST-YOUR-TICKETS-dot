@@ -9,7 +9,7 @@ import SocialLogin from "app/login/social-login";
 import { useError } from "store/error-context";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import InputField from "app/ui/input-field";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { db, isAuth } from "firebase-config";
 import {
   collection,
@@ -17,9 +17,11 @@ import {
   getDocs,
   limit,
   query,
+  serverTimestamp,
   setDoc,
   where,
 } from "firebase/firestore";
+import { useAppDispatch } from "store/hooks";
 
 const signupSchema = z
   .object({
@@ -59,6 +61,7 @@ export type SignupSchema = z.infer<typeof signupSchema>;
 
 export default function SignUpPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { isShowError, isShowSuccess } = useError();
   const {
@@ -72,47 +75,63 @@ export default function SignUpPage() {
 
   const onSubmit = async (data: SignupSchema) => {
     setIsLoading(true);
-    const { name, displayName, email, password } = data;
 
-    // 1. 닉네임 중복 체크
-    const displayNameQuery = query(
-      collection(db, "users"),
-      where("displayName", "==", displayName),
-      limit(1),
-    );
-    const displayNameSnapshot = await getDocs(displayNameQuery);
-
-    if (!displayNameSnapshot.empty) {
-      isShowError("알림", "이미 사용 중인 닉네임입니다.");
-      return;
-    }
-
-    // 2. 사용자 계정 생성
     try {
+      const { name, displayName, email, password } = data;
+
+      // 1. 닉네임 중복 체크
+      const displayNameQuery = query(
+        collection(db, "users"),
+        where("displayName", "==", displayName),
+        limit(1),
+      );
+      const displayNameSnapshot = await getDocs(displayNameQuery);
+      console.log("1. 닉네임 중복 체크 완료");
+
+      if (!displayNameSnapshot.empty) {
+        isShowError("알림", "이미 사용 중인 닉네임입니다.");
+        return;
+      }
+
+      // 2. 사용자 계정 생성
       const { user } = await createUserWithEmailAndPassword(
         isAuth,
         email,
         password,
       );
+      console.log("2. 계정 생성 완료", user);
 
-      // 3. Firestore 문서 생성
+      // 3. Auth Profile 업데이트
+      await updateProfile(user, {
+        displayName: displayName,
+      });
+      console.log("3. Auth Profile 업데이트 완료");
+
+      // 4. Firestore 문서 생성
       const userRef = doc(db, "users", user.uid);
       await setDoc(userRef, {
         name,
         displayName,
         email,
+        profileImage: null,
         provider: "email",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
         biography: "Make a ticket for your own movie review.",
         role: "user",
       });
+      console.log("4. Firestore 문서 생성 완료");
 
       isShowSuccess("회원가입 완료", "환영합니다!");
       router.push("/");
     } catch (error) {
       const { title, message } = firebaseErrorHandler(error);
       isShowError(title, message);
+
+      // Error 상황에서 Auth 계정이 생성된 경우 삭제
+      if (isAuth.currentUser) {
+        await isAuth.currentUser.delete();
+      }
     } finally {
       setIsLoading(false);
     }

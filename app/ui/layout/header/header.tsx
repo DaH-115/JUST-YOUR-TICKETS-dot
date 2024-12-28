@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { RootState } from "store";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { signOut } from "firebase/auth";
 import { isAuth } from "firebase-config";
@@ -17,7 +18,7 @@ export default function Header() {
     (state) => state.newReviewAlert.newReviewAlertState,
   );
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const users = useAppSelector((state) => state.user.user);
+  const users = useAppSelector((state: RootState) => state.user.user);
   const userDisplayName = users?.displayName;
   const dispatch = useAppDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -31,7 +32,6 @@ export default function Header() {
       dispatch(clearUserState());
       router.push("/");
     } catch (error) {
-      console.log("로그아웃 에러:", error);
       window.alert("로그아웃 중 오류가 발생했습니다.");
     }
   }, [dispatch, router]);

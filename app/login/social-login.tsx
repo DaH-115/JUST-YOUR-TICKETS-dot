@@ -13,10 +13,16 @@ import { useError } from "store/error-context";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useState } from "react";
 import SocialLoginButton from "app/login/social-login-button";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import onGenerateDisplayName from "app/sign-up/utils/onGenerateDisplayName";
 import { useAppDispatch } from "store/hooks";
-import { onUpdateUserProfile } from "store/userSlice";
+import { onUpdateUserDisplayName } from "store/userSlice";
 
 export type SocialProvider = "google" | "github";
 
@@ -31,22 +37,24 @@ export default function SocialLogin() {
   const socialLoginHandler = async (provider: SocialProvider) => {
     setLoadingProvider(provider);
     try {
+      // 1. 소셜 로그인
       const authProvider =
         provider === "google"
           ? new GoogleAuthProvider()
           : new GithubAuthProvider();
-
       const { user } = await signInWithPopup(isAuth, authProvider);
+
+      // 2. 토큰 생성
       const token = await user.getIdToken();
       document.cookie = `firebase-session-token=${token}; path=/;max-age=86400`;
 
-      // Firestore에서 사용자 확인
+      // 3. Firestore 사용자 정보 확인
       const userRef = doc(db, "users", user.uid);
       const userDoc = await getDoc(userRef);
       let userDisplayName = user.displayName;
 
       if (!userDoc.exists()) {
-        // 새 사용자인 경우
+        // 3-1. 첫 로그인일 경우 Firestore에 사용자 정보 생성
         const generateDisplayName = await onGenerateDisplayName();
         userDisplayName = user.displayName || generateDisplayName;
 
@@ -56,27 +64,27 @@ export default function SocialLogin() {
           email: user.email,
           profileImage: user.photoURL,
           provider,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
           biography: "Make a ticket for your own movie review.",
           roll: "user",
         });
       } else {
+        // 3-2. Firestore에 사용자 정보 업데이트
         userDisplayName = userDoc.data().displayName;
         await updateDoc(userRef, {
-          updatedAt: new Date().toISOString(),
-          lastLoginAt: new Date().toISOString(),
+          updatedAt: serverTimestamp(),
         });
       }
 
+      // 4. Redux 사용자 정보 업데이트
       if (userDisplayName) {
-        dispatch(onUpdateUserProfile({ displayName: userDisplayName }));
+        dispatch(onUpdateUserDisplayName({ displayName: userDisplayName }));
       }
 
       router.push("/");
     } catch (error: any) {
       if (error.code === "auth/popup-closed-by-user") return;
-
       const { title, message } = firebaseErrorHandler(error);
       isShowError(title, message);
     } finally {
