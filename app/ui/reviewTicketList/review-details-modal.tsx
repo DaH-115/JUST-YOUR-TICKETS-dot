@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
+import ReviewBtnGroup from "app/ticket-list/review-btn-group";
 
 type ReviewDetailsModalProps = {
   closeModalHandler: () => void;
@@ -57,19 +58,11 @@ export default function ReviewDetailsModal({
         </div>
         <div className="flex items-center justify-between rounded-b-xl bg-black p-2">
           <div className="flex items-center justify-center whitespace-nowrap text-xs">
-            <button
-              onClick={() => onReviewDeleted(selectedReview?.id || "")}
-              className="rounded-full border-2 border-black bg-white px-2 py-1 transition-colors duration-300 hover:bg-gray-200 active:bg-black active:text-white"
-            >
-              삭제
-            </button>
-            <Link
-              href={`/write-review/${selectedReview?.id}?movieId=${selectedReview?.movieId}`}
-            >
-              <button className="rounded-full border-2 border-black bg-white px-2 py-1 transition-colors duration-300 hover:bg-gray-200 active:bg-black active:text-white">
-                수정
-              </button>
-            </Link>
+            <ReviewBtnGroup
+              movieId={selectedReview?.id || ""}
+              postId={selectedReview?.movieId || ""}
+              onReviewDeleted={onReviewDeleted}
+            />
           </div>
           <IoCloseOutline
             onClick={closeModalHandler}

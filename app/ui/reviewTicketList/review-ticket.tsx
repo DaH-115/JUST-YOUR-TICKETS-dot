@@ -80,7 +80,7 @@ export default function ReviewTicket({
                 <p className="flex items-center justify-center rounded-full border-2 border-black bg-white px-2 py-1 text-xs font-bold md:text-base">
                   {index + 1}
                 </p>
-                {/* DESKTOP ONLY */}
+
                 <ReviewBtnGroup
                   postId={post.id}
                   movieId={post.movieId}
