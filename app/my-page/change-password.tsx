@@ -196,6 +196,7 @@ export default function ChangePassword() {
                 className={`w-full border-b border-black bg-transparent pb-2 ${!isVerified ? "bg-slate-200" : "border-b-2"} ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
                 placeholder={`${!isVerified ? "현재 비밀번호를 먼저 확인하세요." : "새로운 비밀번호를 입력하세요."}`}
                 disabled={!isVerified || isLoading}
+                autoComplete="off"
               />
               <div className="flex justify-end">
                 <button
