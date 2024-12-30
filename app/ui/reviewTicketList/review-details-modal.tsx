@@ -1,13 +1,12 @@
-import Link from "next/link";
 import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
 
 type ReviewDetailsModalProps = {
-  closeModalHandler: () => void;
-  onReviewDeleted: (id: string) => void;
   isModalOpen: boolean;
   selectedReview?: MovieReview;
+  closeModalHandler: () => void;
+  onReviewDeleted: (id: string) => void;
 };
 
 export default function ReviewDetailsModal({
@@ -59,8 +58,8 @@ export default function ReviewDetailsModal({
         <div className="flex items-center justify-between rounded-b-xl bg-black p-2">
           <div className="flex items-center justify-center whitespace-nowrap text-xs">
             <ReviewBtnGroup
-              movieId={selectedReview?.id || ""}
-              postId={selectedReview?.movieId || ""}
+              movieId={selectedReview?.movieId || ""}
+              postId={selectedReview?.id || ""}
               onReviewDeleted={onReviewDeleted}
             />
           </div>
