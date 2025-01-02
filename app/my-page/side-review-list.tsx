@@ -8,7 +8,7 @@ import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { IoStar } from "react-icons/io5";
 import { useError } from "store/error-context";
-import { formatDate } from "app/utils/format-date";
+import formatDate from "app/utils/format-date";
 import { BackAnimation } from "app/ui/back-animation";
 
 export default function SideReviewList({ uid }: { uid: string }) {

@@ -1,4 +1,4 @@
-export default function useGetTitle(
+export default function getMovieTitle(
   original_title: string = "Movie Title",
   title: string = "영화 제목",
 ) {

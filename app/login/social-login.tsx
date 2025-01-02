@@ -20,7 +20,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import onGenerateDisplayName from "app/sign-up/utils/onGenerateDisplayName";
+import generateDisplayName from "app/utils/generate-displayName";
 import { setCookie } from "app/utils/cookie-utils";
 
 export type SocialProvider = "google" | "github";
@@ -57,11 +57,11 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
 
       if (!userDoc.exists()) {
         // 3-1. 첫 로그인일 경우 Firestore에 사용자 정보 생성
-        const generateDisplayName = await onGenerateDisplayName();
+        const generatedDisplayName = await generateDisplayName();
 
         await setDoc(userRef, {
           name: user.displayName,
-          displayName: user.displayName || generateDisplayName,
+          displayName: user.displayName || generatedDisplayName,
           email: user.email,
           profileImage: user.photoURL,
           provider,

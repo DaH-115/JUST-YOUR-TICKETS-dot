@@ -1,7 +1,7 @@
 import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
-import { formatDate } from "app/utils/format-date";
+import formatDate from "app/utils/format-date";
 
 type ReviewDetailsModalProps = {
   isModalOpen: boolean;

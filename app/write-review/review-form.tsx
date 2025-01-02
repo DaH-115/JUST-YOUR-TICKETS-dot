@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "store/hooks";
 import { useReviewForm } from "app/write-review/useReviewForm";
-import useGetTitle from "hooks/useGetTitle";
+import getMovieTitle from "app/utils/get-movie-title";
 import BackGround from "app/ui/layout/back-ground";
 import { IoStar } from "react-icons/io5";
 import { MdDriveFileRenameOutline } from "react-icons/md";
@@ -48,7 +48,7 @@ export default function ReviewForm({
   });
   const [showExitConfirmation, setShowExitConfirmation] = useState(false);
   const userState = useAppSelector((state) => state.user.user);
-  const movieTitle = useGetTitle(movieInfo.original_title, movieInfo.title);
+  const movieTitle = getMovieTitle(movieInfo.original_title, movieInfo.title);
   const { onSubmitHandler } = useReviewForm(mode, movieInfo, movieId, reviewId);
 
   const handlePageExit = useCallback(() => {

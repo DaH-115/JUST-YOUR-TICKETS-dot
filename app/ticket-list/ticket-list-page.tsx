@@ -9,7 +9,7 @@ import fetchMovieReviews, {
 } from "api/movie-reviews/fetchMovieReviews";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
-import useReviewSearch from "app/utils/useReviewSearch";
+import useReviewSearch from "hooks/useReviewSearch";
 import ReviewTicket from "app/ui/reviewTicketList/review-ticket";
 import ReviewSearchInputregister from "app/ui/reviewTicketList/review-search-Input";
 import ReviewListSkeleton from "app/ticket-list/review-list-skeleton";

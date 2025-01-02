@@ -1,4 +1,4 @@
-export default function useFormatDate(dateString: string | undefined) {
+export default function formatMovieDate(dateString: string | undefined) {
   if (dateString) {
     const [year, month, day] = dateString.split("-");
     const monthNames = [

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
 import { fetchMovieCredits } from "api/fetchMovieCredits";
-import useGetTitle from "hooks/useGetTitle";
+import getMovieTitle from "app/utils/get-movie-title";
 import BackGround from "app/ui/layout/back-ground";
 import SimilarMovies from "app/movie-details/similar-movies";
 import AllMovieTrailers from "app/movie-details/all-movie-trailers";
@@ -16,7 +16,7 @@ export async function generateMetadata({
   try {
     const movieDetails = await fetchMovieDetails(params.id);
     const { original_title, title, backdrop_path, overview } = movieDetails;
-    const movieTitle = useGetTitle(original_title, title);
+    const movieTitle = getMovieTitle(original_title, title);
 
     return {
       alternates: {
@@ -55,7 +55,7 @@ export default async function MovieDetailPage({
   }
 
   const { original_title, title, backdrop_path } = movieDetails;
-  const movieTitle = useGetTitle(original_title, title);
+  const movieTitle = getMovieTitle(original_title, title);
 
   return (
     <>
