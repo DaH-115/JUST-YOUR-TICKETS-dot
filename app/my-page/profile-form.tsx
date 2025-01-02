@@ -134,8 +134,7 @@ export default function ProfileForm() {
 
         if (!nicknameSnapshot.empty) {
           isShowError("알림", "이미 사용 중인 닉네임입니다.");
-          setIsLoading(false);
-          return;
+          return; // 여기서 early return
         }
       }
 
@@ -152,30 +151,30 @@ export default function ProfileForm() {
         };
       }
 
-      // 3. Firestore와 Auth 업데이트
-      if (dirtyFields.displayName) {
-        if (isAuth.currentUser) {
-          // 3-1. Auth 업데이트
-          await updateProfile(isAuth.currentUser, {
-            displayName: data.displayName,
-          });
-          dispatch(onUpdateUserDisplayName({ displayName: data.displayName }));
-
-          // 3-2.Firestore 업데이트
-          await updateDoc(userRef, updateData);
-        }
+      // 3. Auth 업데이트 (displayName이 변경된 경우에만)
+      if (dirtyFields.displayName && isAuth.currentUser) {
+        await updateProfile(isAuth.currentUser, {
+          displayName: data.displayName,
+        });
+        dispatch(onUpdateUserDisplayName({ displayName: data.displayName }));
       }
 
-      // 4. userDoc 상태 업데이트
-      setUserDoc((prev) => (prev ? { ...prev, ...updateData } : prev));
+      // 4. Firestore 업데이트
+      await updateDoc(userRef, updateData);
+
+      // 5. userDoc 상태 즉시 업데이트
+      setUserDoc((prev) => ({
+        ...prev!,
+        ...updateData,
+      }));
+
       setIsEditing(false);
       isShowSuccess("성공", "프로필 정보가 업데이트되었습니다.");
     } catch (error) {
       const { title, message } = firebaseErrorHandler(error);
       isShowError(title, message);
     } finally {
-      setIsEditing(false);
-      setIsLoading(false);
+      setIsLoading(false); // 모든 작업이 완료된 후 로딩 상태 해제
     }
   };
 
@@ -213,16 +212,16 @@ export default function ProfileForm() {
               )}
             </div>
             <div className="border-b border-black pb-2 pt-4">
-              <h2 className="text-xs font-bold">이름</h2>
+              <h2 className="text-xs font-bold">닉네임</h2>
               <div className="flex w-full items-center">
                 {isEditing ? (
                   <>
                     <input
                       {...register("displayName")}
                       type="text"
-                      className={`w-full bg-transparent text-lg ${
+                      className={`w-full bg-transparent text-lg text-gray-300 ${
                         isLoading ? "cursor-not-allowed opacity-50" : ""
-                      } ${errors.displayName ? "border-red-500" : ""}`}
+                      }`}
                       disabled={isLoading}
                     />
                     {errors.displayName && (
@@ -241,14 +240,18 @@ export default function ProfileForm() {
             <div className="border-b border-black pb-2 pt-4">
               <h2 className="text-xs font-bold">바이오</h2>
               <div className="flex w-full items-center">
-                {isEditing ? (
+                {isLoading ? (
+                  <div className="w-full text-sm text-gray-400">
+                    바이오를 불러오는 중
+                  </div>
+                ) : isEditing ? (
                   <>
                     <input
                       {...register("biography")}
                       type="text"
-                      className={`w-full bg-transparent text-lg ${
+                      className={`w-full bg-transparent text-lg text-gray-300 ${
                         isLoading ? "cursor-not-allowed opacity-50" : ""
-                      } ${errors.biography ? "border-red-500" : ""}`}
+                      }`}
                       disabled={isLoading}
                     />
                     {errors.biography && (
@@ -274,7 +277,7 @@ export default function ProfileForm() {
         </div>
         <span
           id="animation-part"
-          className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200"
+          className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl bg-[#701832] transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-[#8B1E3F]"
         />
       </section>
 

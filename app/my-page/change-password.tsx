@@ -129,17 +129,17 @@ export default function ChangePassword() {
   return (
     <div className="relative">
       <div
-        className="group relative cursor-pointer py-4 text-end text-xs text-gray-500"
+        className="group relative cursor-pointer py-4 text-end text-xs text-gray-400"
         onClick={() => setIsEditing((prev) => !prev)}
       >
         {!isEditing ? "비밀번호 변경" : "취소"}
       </div>
       <section
-        className={`transition-all duration-300 ease-in-out ${
+        className={`group relative bg-transparent transition-all duration-300 ease-in-out ${
           isEditing ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="group relative mb-12 w-full">
+        <div className="group relative z-20 mb-12 w-full">
           <div
             className={`relative z-10 rounded-xl border-2 border-black bg-white p-4 transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1`}
           >
@@ -215,7 +215,7 @@ export default function ChangePassword() {
             </form>
           </div>
           <span
-            className={`absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black transition-all duration-500 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-gray-200`}
+            className={`absolute left-1 top-1 -z-10 h-full w-full rounded-xl bg-[#701832] transition-colors duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-[#8B1E3F]`}
           />
         </div>
       </section>

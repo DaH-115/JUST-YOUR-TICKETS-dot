@@ -9,15 +9,11 @@ export default function MyPagePage() {
   const userState = useAppSelector((state) => state.user.user);
 
   if (!userState) {
-    return (
-      <div className="flex h-96 w-full items-center justify-center">
-        <p className="animate-pulse text-xl font-bold">Loading...</p>
-      </div>
-    );
+    return null;
   }
 
   return (
-    <section className="flex w-full flex-col px-4 py-4 md:h-96 md:py-8 lg:flex-row lg:px-8">
+    <section className="flex w-full flex-col px-4 py-4 md:h-96 md:py-8 lg:min-h-screen lg:flex-row lg:px-8">
       <SideMenu uid={userState.uid} />
       {/* Main */}
       <ProfileForm />
