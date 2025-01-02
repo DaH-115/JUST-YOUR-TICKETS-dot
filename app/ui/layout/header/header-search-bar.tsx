@@ -86,7 +86,7 @@ export default function HeaderSearchBar() {
             {...register("search")}
             type="search"
             placeholder="영화 검색"
-            className={`h-12 w-full rounded-full border-2 border-black pl-4 pr-12 text-sm transition-all duration-300 ease-in-out ${
+            className={`h-12 w-full rounded-full border-2 border-black pl-4 pr-12 text-sm transition-all duration-300 ease-in-out focus:border-none focus:outline-none focus:ring-2 focus:ring-[#D4AF37] ${
               isSearchOpen ? "opacity-100" : "opacity-0"
             }`}
             onFocus={inputFocusHandler}
