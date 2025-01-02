@@ -31,8 +31,8 @@ export default function RecommendMovie({
             className="relative h-full w-full transform rounded-xl object-cover drop-shadow-lg transition-all duration-300 ease-in-out hover:z-50 group-hover:scale-110 group-hover:rounded-none"
             src={imgageUrl}
             alt={movieTitle}
-            width={640}
-            height={960}
+            width={500}
+            height={750}
             priority
           />
         </div>

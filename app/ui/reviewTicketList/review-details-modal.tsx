@@ -1,10 +1,11 @@
 import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
+import { formatDate } from "app/utils/format-date";
 
 type ReviewDetailsModalProps = {
   isModalOpen: boolean;
-  selectedReview?: MovieReview;
+  selectedReview: MovieReview;
   closeModalHandler: () => void;
   onReviewDeleted: (id: string) => void;
 };
@@ -32,32 +33,32 @@ export default function ReviewDetailsModal({
           <div className="flex h-full items-center justify-center border-r border-black px-4 py-2">
             <IoStar className="mt-1 text-[#D4AF37]" size={18} />
             <p className="text-2xl font-bold md:text-3xl">
-              {selectedReview?.rating}
+              {selectedReview.rating}
             </p>
           </div>
           <div className="flex w-full items-center justify-between p-2">
             <div className="w-full">
               <h1 className="font-bold">{selectedReview?.reviewTitle}</h1>
               <div className="flex text-xs text-gray-500">
-                {selectedReview?.movieTitle} - {selectedReview?.releaseYear}
+                {selectedReview.movieTitle} - {selectedReview.releaseYear}
               </div>
             </div>
             <ReviewBtnGroup
-              movieId={selectedReview?.movieId || ""}
-              postId={selectedReview?.id || ""}
+              movieId={selectedReview.movieId}
+              postId={selectedReview.id}
               onReviewDeleted={onReviewDeleted}
             />
           </div>
         </div>
         <div className="h-64 flex-1 overflow-y-scroll border-y border-black px-4 pb-8 pt-2 lg:h-96">
           <h2 className="mb-1 text-xs font-bold">리뷰 내용</h2>
-          <p className="break-keep">{selectedReview?.review}</p>
+          <p className="break-keep">{selectedReview.review}</p>
         </div>
         <div className="flex items-center justify-between px-4 py-2 text-sm">
-          <p className="text-xs">{selectedReview?.date}</p>
+          <p className="text-xs">{formatDate(selectedReview.date)}</p>
           <div className="flex items-center">
             <span className="mr-1 font-bold">
-              {selectedReview?.userName ? selectedReview?.userName : "Guest"}
+              {selectedReview.userName ? selectedReview.userName : "Guest"}
             </span>
             님의 리뷰
           </div>

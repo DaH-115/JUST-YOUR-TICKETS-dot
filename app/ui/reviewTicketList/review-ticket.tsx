@@ -43,12 +43,14 @@ export default function ReviewTicket({
 
   return (
     <div className="grid grid-cols-1 gap-4 pb-8 md:grid-cols-3 lg:grid-cols-4">
-      <ReviewDetailsModal
-        selectedReview={selectedReview}
-        isModalOpen={isModalOpen}
-        closeModalHandler={closeModalHandler}
-        onReviewDeleted={onReviewDeleteHanlder}
-      />
+      {selectedReview && (
+        <ReviewDetailsModal
+          selectedReview={selectedReview}
+          isModalOpen={isModalOpen}
+          closeModalHandler={closeModalHandler}
+          onReviewDeleted={onReviewDeleteHanlder}
+        />
+      )}
 
       <div className="hidden h-[450px] items-center justify-center rounded-xl border-2 border-dashed border-gray-500 md:flex">
         <Link href="/search">
@@ -77,9 +79,10 @@ export default function ReviewTicket({
                 <Image
                   src={`https://image.tmdb.org/t/p/w500/${post.posterImage}`}
                   alt={post.movieTitle}
-                  width={1280}
-                  height={720}
+                  width={500}
+                  height={750}
                   className="h-full w-full rounded-xl object-cover"
+                  priority
                 />
               </div>
               <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white p-2 transition-all duration-300 group-hover/card:bottom-1 group-hover/card:right-1 md:group-hover/card:bottom-2 md:group-hover/card:right-2">

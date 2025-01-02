@@ -32,7 +32,7 @@ export default function SwiperCard({
       </div>
       {poster_path ? (
         <Image
-          width={640}
+          width={500}
           height={750}
           className="h-full w-full rounded-xl object-cover object-center"
           src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
@@ -85,7 +85,7 @@ export default function SwiperCard({
         </ul>
         <div className="flex w-full text-center">
           <div className="flex items-center border-r-4 border-dotted border-gray-200 p-4">
-            <IoStar />
+            <IoStar className="mr-1 text-[#D4AF37]" />
             <div className="text-xl font-bold">
               {Math.round(vote_average * 10) / 10}
             </div>
