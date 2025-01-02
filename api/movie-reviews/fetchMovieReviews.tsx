@@ -1,8 +1,14 @@
 import { db } from "firebase-config";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  Timestamp,
+} from "firebase/firestore";
 
 export interface MovieReview {
-  date: string;
+  date: Timestamp;
   id: string;
   number: number;
   movieTitle: string;
@@ -29,11 +35,15 @@ export default async function fetchMovieReviews(): Promise<MovieReview[]> {
   }
 
   const totalCount = querySnapshot.size;
-  const reviews = querySnapshot.docs.map((doc, idx) => ({
-    id: doc.id,
-    number: totalCount - idx,
-    ...doc.data(),
-  })) as MovieReview[];
+  const reviews = querySnapshot.docs.map((doc, idx) => {
+    const data = doc.data();
+
+    return {
+      id: doc.id,
+      number: totalCount - idx,
+      ...data,
+    };
+  }) as MovieReview[];
 
   return reviews;
 }
