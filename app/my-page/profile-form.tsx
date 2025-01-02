@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { onUpdateUserDisplayName } from "store/userSlice";
+import { BackAnimation } from "app/ui/back-animation";
 
 interface UserDoc {
   displayName: string;
@@ -275,10 +276,7 @@ export default function ProfileForm() {
             <div className="mr-4 w-full">{serializedUser?.email}</div>
           </div>
         </div>
-        <span
-          id="animation-part"
-          className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl bg-[#701832] transition-all duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-[#8B1E3F]"
-        />
+        <BackAnimation />
       </section>
 
       {/* Change Password */}

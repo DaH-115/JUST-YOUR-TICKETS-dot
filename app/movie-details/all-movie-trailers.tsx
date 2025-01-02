@@ -28,7 +28,9 @@ export default function AllMovieTrailers({ movieId }: { movieId: number }) {
 
   return (
     <section className="px-8 py-4 lg:p-8">
-      <h2 className="mb-4 text-2xl font-bold lg:mb-6">이 영화의 예고편</h2>
+      <h2 className="mb-4 text-2xl font-bold text-white lg:mb-6">
+        이 영화의 예고편
+      </h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {movieTrailer.length > 0 ? (
           movieTrailer.map((trailer) => (

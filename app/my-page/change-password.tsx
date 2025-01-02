@@ -10,6 +10,7 @@ import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useAppSelector } from "store/hooks";
 import { useError } from "store/error-context";
 import { useRouter } from "next/navigation";
+import { BackAnimation } from "app/ui/back-animation";
 
 const currentPasswordSchema = z.object({
   currentPassword: z.string().min(8, "비밀번호는 최소 8자 이상이어야 합니다."),
@@ -214,9 +215,7 @@ export default function ChangePassword() {
               )}
             </form>
           </div>
-          <span
-            className={`absolute left-1 top-1 -z-10 h-full w-full rounded-xl bg-[#701832] transition-colors duration-300 group-hover:translate-x-1 group-hover:translate-y-1 group-hover:bg-[#8B1E3F]`}
-          />
+          <BackAnimation />
         </div>
       </section>
     </div>

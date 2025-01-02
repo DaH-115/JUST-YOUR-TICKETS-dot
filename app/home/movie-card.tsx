@@ -16,6 +16,7 @@ import { IoStar } from "react-icons/io5";
 import AnimatedOverview from "app/ui/animated-overview";
 import NewWriteBtn from "app/ui/new-write-btn";
 import Tooltip from "app/ui/tooltip";
+import { BackAnimation } from "app/ui/back-animation";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   const { id, title, original_title, release_date, vote_average, overview } =
@@ -158,7 +159,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           <NewWriteBtn movieId={id} />
         </div>
       </div>
-      <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl bg-[#701832] lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1" />
+      <BackAnimation />
     </section>
   );
 }
