@@ -1,9 +1,0 @@
-export { default as MovieDetailPage } from 'components/movie-detail/MovieDetail';
-export { default as MovieDetailWrapper } from 'components/movie-detail/MovieDetailWrapper';
-export { default as DetailTextWrapper } from 'components/movie-detail/DetailTextWrapper';
-export { default as StyledLabel } from 'components/movie-detail/StyledLabel';
-export { default as PageTitle } from 'components/movie-detail/PageTitle';
-export { default as MovieTitle } from 'components/movie-detail/MovieTitle';
-export { default as ContentText } from 'components/movie-detail/ContentText';
-export { default as OverviweText } from 'components/movie-detail/OverviweText';
-export { default as RatingNumber } from 'components/movie-detail/RatingNumber';

@@ -6,14 +6,19 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
-    domains: ['image.tmdb.org'],
-    loader: 'akamai',
-    path: '/',
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "image.tmdb.org",
+        port: "",
+        pathname: "/**",
+      },
+    ],
   },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
-      use: ['@svgr/webpack'],
+      use: ["@svgr/webpack"],
     });
 
     return config;

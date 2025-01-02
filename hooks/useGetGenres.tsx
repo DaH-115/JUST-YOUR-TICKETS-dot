@@ -1,25 +1,31 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect, useCallback } from "react";
+import { fetchMovieDetails } from "api/fetchMovieDetails";
 
 const useGetGenres = (movieId: number) => {
   const [genres, setGenres] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      const res = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}`
-      );
-      const data = await res.data;
+  const fetchGenres = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-      const result = data.genres.map(
-        (item: { id: number; name: string }) => item.name
-      );
-
-      setGenres(result);
-    })();
+      const response = await fetchMovieDetails(movieId);
+      setGenres(response.genres.map((genre) => genre.name));
+    } catch (error) {
+      setGenres([]);
+      setError("장르 정보를 불러오는데 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
   }, [movieId]);
 
-  return genres;
+  useEffect(() => {
+    fetchGenres();
+  }, [fetchGenres]);
+
+  return { genres, loading, error };
 };
 
 export default useGetGenres;
