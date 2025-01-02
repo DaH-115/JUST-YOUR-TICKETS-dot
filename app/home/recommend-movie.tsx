@@ -23,7 +23,7 @@ export default function RecommendMovie({
   );
 
   return (
-    <main className="mx-auto flex flex-col items-center justify-center lg:mt-16 lg:w-4/5 lg:flex-row lg:items-start">
+    <main className="mx-auto flex flex-col items-center justify-center pb-8 lg:mt-16 lg:w-4/5 lg:flex-row lg:items-start">
       {/* MOVIE POSTER */}
       {currentMovie.poster_path && (
         <div className="group w-2/4 py-4 md:w-1/3 lg:py-0 lg:pr-6">
@@ -44,14 +44,14 @@ export default function RecommendMovie({
           {trailerKey && (
             <div className="group/tooltip relative">
               <ScrollButton targetId="movie-trailer">
-                <RiMovieLine size={18} />
+                <RiMovieLine size={24} />
               </ScrollButton>
               <Tooltip>영화 예고편 보기</Tooltip>
             </div>
           )}
           <div className="group/tooltip relative">
             <ScrollButton targetId="now-playing">
-              <MdLocalMovies size={18} />
+              <MdLocalMovies className="text-2xl" />
             </ScrollButton>
             <Tooltip>현재 상영하는 영화 보기</Tooltip>
           </div>

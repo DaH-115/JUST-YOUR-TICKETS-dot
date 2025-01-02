@@ -19,7 +19,7 @@ export default function BackGround({
         priority
         className="h-full w-full object-cover"
       />
-      <span className="absolute inset-0 bg-gradient-to-t from-white/100 to-transparent" />
+      <span className="absolute inset-0 bg-gradient-to-t from-[#121212]/100 to-transparent" />
     </div>
   );
 }
