@@ -10,7 +10,7 @@ import {
   MovieCredits,
 } from "api/fetchMovieCredits";
 import useGetGenres from "hooks/useGetGenres";
-import useFormatDate from "hooks/useFormatDate";
+import formatMovieDate from "app/utils/format-movie-date";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import AnimatedOverview from "app/ui/animated-overview";
@@ -26,7 +26,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
     loading: genresLoading,
     error: genresError,
   } = useGetGenres(id);
-  const movieDate = useFormatDate(release_date);
+  const movieDate = formatMovieDate(release_date);
   const [isError, setIsError] = useState<string | null>(null);
   const [cast, setCast] = useState<CastMember[]>([]);
   const [directors, setDirectors] = useState<CrewMember[]>([]);

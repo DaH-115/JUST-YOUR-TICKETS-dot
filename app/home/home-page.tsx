@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchVideosMovies } from "api/fetchVideosMovies";
 import { Movie } from "api/fetchNowPlayingMovies";
-import useGetTitle from "hooks/useGetTitle";
+import getMovieTitle from "app/utils/get-movie-title";
 import BackGround from "app/ui/layout/back-ground";
 import RecommendMovie from "app/home/recommend-movie";
 import RecommendMovieSkeleton from "app/home/recommend-movie-skeleton";
@@ -15,7 +15,7 @@ import Catchphrase from "app/ui/layout/catchphrase";
 export default function HomePage({ movieList }: { movieList: Movie[] }) {
   const [trailerKey, setTrailerKey] = useState<string>("");
   const [currentMovie, setCurrentMovie] = useState<Movie>();
-  const movieTitle = useGetTitle(
+  const movieTitle = getMovieTitle(
     currentMovie?.original_title,
     currentMovie?.title,
   );
@@ -41,10 +41,10 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
   }, [currentMovie]);
 
   return (
-    <div className="min-w-[320px]">
+    <>
       {currentMovie?.backdrop_path && (
         <BackGround
-          imageUrl={currentMovie?.backdrop_path}
+          imageUrl={currentMovie.backdrop_path}
           movieTitle={movieTitle}
         />
       )}
@@ -64,6 +64,6 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
       <Catchphrase />
       {/* Scroll to Top Button */}
       <ScrollToTopButton />
-    </div>
+    </>
   );
 }

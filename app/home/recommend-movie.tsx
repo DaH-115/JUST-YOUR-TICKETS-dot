@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Movie } from "api/fetchNowPlayingMovies";
-import useGetTitle from "hooks/useGetTitle";
+import getMovieTitle from "app/utils/get-movie-title";
 import MovieCard from "app/home/movie-card";
 import { RiMovieLine } from "react-icons/ri";
 import { MdLocalMovies } from "react-icons/md";
@@ -17,7 +17,7 @@ export default function RecommendMovie({
   trailerKey,
 }: RecommendMovieProps) {
   const imgageUrl = `https://image.tmdb.org/t/p/original/${currentMovie.poster_path}`;
-  const movieTitle = useGetTitle(
+  const movieTitle = getMovieTitle(
     currentMovie.original_title,
     currentMovie.title,
   );

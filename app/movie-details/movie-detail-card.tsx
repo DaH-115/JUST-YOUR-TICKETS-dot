@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { MovieDetails } from "api/fetchMovieDetails";
 import { MovieCredits } from "api/fetchMovieCredits";
-import useFormatDate from "hooks/useFormatDate";
-import useGetTitle from "hooks/useGetTitle";
-import useConvertRuntime from "app/movie-details/utils/useConvertRuntime";
+import formatMovieDate from "app/utils/format-movie-date";
+import getMovieTitle from "app/utils/get-movie-title";
+import convertRuntime from "app/utils/convert-runtime";
 import { IoStar } from "react-icons/io5";
 import NewWriteBtn from "app/ui/new-write-btn";
 
@@ -18,12 +18,12 @@ export default function MovieDetailCard({
   movieDetails,
   movieCredits,
 }: MovieDetailCardProps) {
-  const movieTitle = useGetTitle(
+  const movieTitle = getMovieTitle(
     movieDetails.original_title,
     movieDetails.title,
   );
-  const movieDate = useFormatDate(movieDetails.release_date);
-  const convertedRuntime = useConvertRuntime(movieDetails.runtime);
+  const movieDate = formatMovieDate(movieDetails.release_date);
+  const convertedRuntime = convertRuntime(movieDetails.runtime);
   const casts = movieCredits?.cast || [];
   const crews = movieCredits?.crew || [];
 

@@ -2,7 +2,7 @@ import { Movie } from "api/fetchNowPlayingMovies";
 import Image from "next/image";
 import Link from "next/link";
 import useGetGenres from "hooks/useGetGenres";
-import useGetTitle from "hooks/useGetTitle";
+import getMovieTitle from "app/utils/get-movie-title";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import NewWriteBtn from "app/ui/new-write-btn";
@@ -23,7 +23,7 @@ export default function SwiperCard({
     error: genresError,
   } = useGetGenres(id);
   const { original_title, poster_path, title, vote_average } = movie;
-  const movieTitle = useGetTitle(original_title, title);
+  const movieTitle = getMovieTitle(original_title, title);
 
   return (
     <div className="group/card relative mx-2 my-8 h-[450px] drop-shadow-lg lg:h-[550px]">
