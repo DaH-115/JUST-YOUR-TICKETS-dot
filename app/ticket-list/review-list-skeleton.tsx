@@ -1,7 +1,7 @@
 export default function ReviewListSkeleton() {
   return (
-    <>
-      {[...Array(5)].map((_, index) => (
+    <div className="grid grid-cols-1 gap-2 pb-8 md:grid-cols-3 lg:grid-cols-4">
+      {[...Array(8)].map((_, index) => (
         <div
           key={index}
           className="group/card relative h-[300px] animate-pulse drop-shadow-md md:h-[450px]"
@@ -36,6 +36,6 @@ export default function ReviewListSkeleton() {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 }

@@ -9,9 +9,12 @@ import {
   useRef,
 } from "react";
 import { useRouter } from "next/navigation";
-import { initializeAuth } from "store/userSlice";
 import { isAuth } from "firebase-config";
 import { useAppDispatch } from "store/hooks";
+import { getCookie, removeCookie, setCookie } from "app/utils/cookie-utils";
+import { onAuthStateChanged } from "firebase/auth";
+import { serializeUser } from "app/utils/firebase-utils";
+import { clearUserState, setUser } from "store/userSlice";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -28,43 +31,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    // 1. 쿠키 확인
-    const getCookie = (name: string) => {
-      const value = `${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) {
-        return parts.pop()?.split(";").shift();
+    const unsubscribe = onAuthStateChanged(isAuth, async (user) => {
+      try {
+        if (user) {
+          // a. 사용자가 인증된 경우
+          const savedToken = getCookie();
+          const isRemembered = localStorage.getItem("rememberMe") === "true";
+
+          // 토큰이 없다면 새로 발급
+          if (!savedToken) {
+            const token = await user.getIdToken();
+            setCookie(token, isRemembered);
+          }
+
+          // Redux에 사용자 정보 저장
+          dispatch(setUser(serializeUser(user)));
+
+          setAuthState({ isAuthenticated: true, isLoading: false });
+        } else {
+          // b. 사용자가 인증 되지 않은 경우
+
+          // 쿠키와 로컬 스토리지 정리
+          removeCookie();
+          localStorage.removeItem("rememberMe");
+
+          // Redux 사용자 정보 초기화
+          dispatch(clearUserState());
+
+          setAuthState({ isAuthenticated: false, isLoading: false });
+        }
+      } catch (error) {
+        // 에러가 발생한 경우 안전하게 처리합니다
+        console.error("인증 상태 확인 중 오류:", error);
+
+        // 모든 인증 관련 데이터를 정리합니다
+        removeCookie();
+        localStorage.removeItem("rememberMe");
+        dispatch(clearUserState());
+
+        // 에러 상태를 설정합니다
+        setAuthState({
+          isAuthenticated: false,
+          isLoading: false,
+        });
       }
-      return null;
-    };
-    const session = getCookie("firebase-session-token");
-    console.log("현재 세션:", session);
-
-    // 2. Firebase 인증 설정
-    let unsubscribe: () => void;
-
-    console.log("세션 존재 무시, initializeAuth 호출 시도");
-    const setupAuth = async () => {
-      const result = await dispatch(initializeAuth(isAuth));
-      if (initializeAuth.fulfilled.match(result)) {
-        unsubscribe = result.payload;
-        console.log("initializeAuth 성공, 리스너 설정됨");
-      }
-    };
-    setupAuth();
-
-    setAuthState({
-      isAuthenticated: !!session,
-      isLoading: false,
     });
 
-    return () => {
-      if (unsubscribe) {
-        console.log("리스너 정리됨");
-        unsubscribe();
-      }
-    };
-  }, [dispatch, document.cookie]);
+    return () => unsubscribe();
+  }, [dispatch]);
 
   return (
     <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>

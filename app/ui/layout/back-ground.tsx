@@ -16,10 +16,10 @@ export default function BackGround({
         alt={movieTitle}
         width={1280}
         height={720}
-        priority
         className="h-full w-full object-cover"
+        priority
       />
-      <span className="absolute inset-0 bg-gradient-to-t from-white/100 to-transparent" />
+      <span className="absolute inset-0 bg-gradient-to-t from-[#121212]/100 to-transparent" />
     </div>
   );
 }

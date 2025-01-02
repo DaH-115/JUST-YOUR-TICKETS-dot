@@ -21,21 +21,18 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import onGenerateDisplayName from "app/sign-up/utils/onGenerateDisplayName";
-import { useAppDispatch } from "store/hooks";
-import { onUpdateUserDisplayName } from "store/userSlice";
+import { setCookie } from "app/utils/cookie-utils";
 
 export type SocialProvider = "google" | "github";
 
-export default function SocialLogin() {
+export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const { isShowError } = useError();
-  const [loadingProvider, setLoadingProvider] = useState<SocialProvider | null>(
-    null,
-  );
+  const [isLoadingProvider, setIsLoadingProvider] =
+    useState<SocialProvider | null>(null);
 
   const socialLoginHandler = async (provider: SocialProvider) => {
-    setLoadingProvider(provider);
+    setIsLoadingProvider(provider);
     try {
       // 1. 소셜 로그인
       const authProvider =
@@ -46,17 +43,21 @@ export default function SocialLogin() {
 
       // 2. 토큰 생성
       const token = await user.getIdToken();
-      document.cookie = `firebase-session-token=${token}; path=/;max-age=86400`;
+      setCookie(token, rememberMe);
+
+      if (rememberMe) {
+        localStorage.setItem("rememberMe", "true");
+      } else {
+        localStorage.removeItem("rememberMe");
+      }
 
       // 3. Firestore 사용자 정보 확인
       const userRef = doc(db, "users", user.uid);
       const userDoc = await getDoc(userRef);
-      let userDisplayName = user.displayName;
 
       if (!userDoc.exists()) {
         // 3-1. 첫 로그인일 경우 Firestore에 사용자 정보 생성
         const generateDisplayName = await onGenerateDisplayName();
-        userDisplayName = user.displayName || generateDisplayName;
 
         await setDoc(userRef, {
           name: user.displayName,
@@ -70,16 +71,10 @@ export default function SocialLogin() {
           roll: "user",
         });
       } else {
-        // 3-2. Firestore에 사용자 정보 업데이트
-        userDisplayName = userDoc.data().displayName;
+        // 3-2. 기존 사용자의 경우 최종 접속 시간만 업데이트
         await updateDoc(userRef, {
           updatedAt: serverTimestamp(),
         });
-      }
-
-      // 4. Redux 사용자 정보 업데이트
-      if (userDisplayName) {
-        dispatch(onUpdateUserDisplayName({ displayName: userDisplayName }));
       }
 
       router.push("/");
@@ -88,7 +83,7 @@ export default function SocialLogin() {
       const { title, message } = firebaseErrorHandler(error);
       isShowError(title, message);
     } finally {
-      setLoadingProvider(null);
+      setIsLoadingProvider(null);
     }
   };
 
@@ -106,14 +101,14 @@ export default function SocialLogin() {
             icon={<FcGoogle size={24} />}
             label="Google"
             onSocialLogin={socialLoginHandler}
-            isLoading={loadingProvider === "google"}
+            isLoading={isLoadingProvider === "google"}
           />
           <SocialLoginButton
             provider="github"
             icon={<FaGithub size={24} />}
             label="GitHub"
             onSocialLogin={socialLoginHandler}
-            isLoading={loadingProvider === "github"}
+            isLoading={isLoadingProvider === "github"}
           />
         </div>
       </div>
