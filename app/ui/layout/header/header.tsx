@@ -11,6 +11,7 @@ import { clearUserState } from "store/userSlice";
 import HeaderSearchBar from "app/ui/layout/header/header-search-bar";
 import { IoIosMenu } from "react-icons/io";
 import HeaderSideMenu from "app/ui/layout/header/header-side-menu";
+import { removeCookie } from "app/utils/cookie-utils";
 
 export default function Header() {
   const router = useRouter();
@@ -26,11 +27,18 @@ export default function Header() {
 
   const logoutHandler = useCallback(async () => {
     try {
+      // 1. Firebase 로그아웃
       await signOut(isAuth);
-      document.cookie =
-        "firebase-session-token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+
+      // 2. 모든 인증 관련 데이터 정리
+      removeCookie();
+      localStorage.removeItem("rememberMe");
+
+      // 3. Redux 상태 초기화
       dispatch(clearUserState());
-      router.push("/");
+
+      // 4. 로그인 페이지로 이동
+      router.push("/login");
     } catch (error) {
       window.alert("로그아웃 중 오류가 발생했습니다.");
     }
