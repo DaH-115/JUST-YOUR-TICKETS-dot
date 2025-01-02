@@ -20,6 +20,9 @@ interface MoviesResult {
 export async function fetchNowPlayingMovies(): Promise<MoviesResult> {
   const res = await fetch(
     `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&include_adult=true&language=ko-KR`,
+    {
+      next: { revalidate: 86400 }, // 24시간(86400초) 간격으로 재검증
+    },
   );
 
   if (!res.ok) {
