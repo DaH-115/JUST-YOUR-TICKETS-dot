@@ -45,16 +45,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className="trancy-und h-full">
-      <body className="h-full w-full min-w-[320px]">
-        <AuthProvider>
-          <ErrorProvider>
-            <Providers>
+      <body className="h-full w-full min-w-[320px] bg-[#121212]">
+        <Providers>
+          <AuthProvider>
+            <ErrorProvider>
               <Header />
               {children}
               <Footer />
-            </Providers>
-          </ErrorProvider>
-        </AuthProvider>
+            </ErrorProvider>
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   );

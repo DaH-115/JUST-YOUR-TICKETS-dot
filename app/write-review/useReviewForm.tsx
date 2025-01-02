@@ -1,6 +1,12 @@
 import { useRouter } from "next/navigation";
 import { db } from "firebase-config";
-import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
 import { ReviewData } from "app/write-review/review-form";
@@ -33,7 +39,7 @@ export const useReviewForm = (
           reviewTitle,
           rating,
           review,
-          date: new Date().toLocaleDateString(),
+          date: serverTimestamp(),
           movieTitle: movieInfo.title,
           releaseYear: movieInfo.release_date.slice(0, 4),
           posterImage: movieInfo.poster_path,
@@ -43,7 +49,7 @@ export const useReviewForm = (
           reviewTitle,
           rating,
           review,
-          date: new Date().toLocaleDateString(),
+          date: serverTimestamp(),
         });
       }
 

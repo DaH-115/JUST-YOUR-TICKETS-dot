@@ -27,12 +27,12 @@ export default function SwiperCard({
 
   return (
     <div className="group/card relative mx-2 my-8 h-[450px] drop-shadow-lg lg:h-[550px]">
-      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-black px-4 py-2 text-4xl font-bold text-white">
+      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-gray-700 px-4 py-2 text-4xl font-bold text-white">
         {idx + 1}.
       </div>
       {poster_path ? (
         <Image
-          width={640}
+          width={500}
           height={750}
           className="h-full w-full rounded-xl object-cover object-center"
           src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
@@ -85,7 +85,7 @@ export default function SwiperCard({
         </ul>
         <div className="flex w-full text-center">
           <div className="flex items-center border-r-4 border-dotted border-gray-200 p-4">
-            <IoStar />
+            <IoStar className="mr-1 text-[#D4AF37]" />
             <div className="text-xl font-bold">
               {Math.round(vote_average * 10) / 10}
             </div>

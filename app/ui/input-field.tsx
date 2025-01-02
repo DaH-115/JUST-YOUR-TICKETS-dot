@@ -31,6 +31,7 @@ export default function InputField({
         disabled={disabled}
         {...register(id)}
         className={`mt-1 w-full appearance-none border-none bg-transparent px-1 py-1 leading-tight text-gray-700 focus:outline-none ${disabled ? "cursor-not-allowed opacity-50" : ""} ${touched && error ? "border-red-500" : ""}`}
+        autoComplete="on"
       />
       {touched && error && <p className="mt-2 text-xs text-red-600">{error}</p>}
     </div>

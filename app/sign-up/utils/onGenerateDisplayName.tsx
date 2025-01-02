@@ -9,15 +9,15 @@ export default async function onGenerateNickname(): Promise<string> {
   // 혹시 모를 중복 체크
   const nicknameQuery = query(
     collection(db, "users"),
-    where("nickname", "==", baseNickname),
+    where("displayName", "==", baseNickname),
     limit(1),
   );
   const nicknameSnapshot = await getDocs(nicknameQuery);
 
   if (nicknameSnapshot.empty) {
     return baseNickname;
+  } else {
+    // 중복이면 랜덤 문자 추가
+    return `${baseNickname}_${Math.random().toString(36).slice(2, 5)}`;
   }
-
-  // 중복이면 랜덤 문자 추가
-  return `${baseNickname}_${Math.random().toString(36).slice(2, 5)}`;
 }

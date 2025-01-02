@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Movie } from "api/fetchNowPlayingMovies";
-import { fetchMovieCredits, MovieCredits } from "api/fetchMovieCredits";
+import {
+  CastMember,
+  CrewMember,
+  fetchMovieCredits,
+  MovieCredits,
+} from "api/fetchMovieCredits";
 import useGetGenres from "hooks/useGetGenres";
 import useFormatDate from "hooks/useFormatDate";
 import { FaInfoCircle } from "react-icons/fa";
@@ -21,19 +26,45 @@ export default function MovieCard({ movie }: { movie: Movie }) {
     error: genresError,
   } = useGetGenres(id);
   const movieDate = useFormatDate(release_date);
-  const [credits, setCredits] = useState<MovieCredits | null>(null);
   const [isError, setIsError] = useState<string | null>(null);
+  const [cast, setCast] = useState<CastMember[]>([]);
+  const [directors, setDirectors] = useState<CrewMember[]>([]);
 
   useEffect(() => {
-    setCredits(null);
+    setCast([]);
+    setDirectors([]);
 
     const fetchMovieCreditsData = async (movieId: number) => {
       try {
         const result = await fetchMovieCredits(movieId);
-        setCredits(result);
+
+        // 배우 정보 처리
+        // 중복된 배우가 있을 경우를 대비해 이름 기준으로 중복 제거
+        const uniqueCast = result.cast.reduce(
+          (unique: CastMember[], person) => {
+            const isNameExist = unique.some((p) => p.name === person.name);
+            if (!isNameExist) {
+              unique.push(person);
+            }
+            return unique;
+          },
+          [],
+        );
+        setCast(uniqueCast);
+
+        // 감독 정보 처리
+        // job이 'Director'인 제작진만 필터링하고 중복 제거
+        const uniqueDirectors = result.crew
+          .filter((person) => person.job === "Director")
+          .reduce((unique: CrewMember[], person) => {
+            const isNameExist = unique.some((p) => p.name === person.name);
+            if (!isNameExist) {
+              unique.push(person);
+            }
+            return unique;
+          }, []);
+        setDirectors(uniqueDirectors);
       } catch (error) {
-        console.log(error);
-        setCredits(null);
         setIsError("정보를 불러오는데 실패했습니다.");
       }
     };
@@ -45,7 +76,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
     <section className="group relative mx-auto w-full break-keep">
       <div className="relative rounded-xl border-2 border-black bg-white p-2 lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
         <div className="p-4">
-          <h2 className="mb-2 inline-block animate-bounce rounded-lg bg-black p-1 text-xs font-bold text-white">
+          <h2 className="mb-2 inline-block animate-bounce rounded-lg bg-[#701832] p-1 text-xs font-bold text-white">
             추천 영화
           </h2>
           <div className="flex">
@@ -90,13 +121,14 @@ export default function MovieCard({ movie }: { movie: Movie }) {
         {overview && <AnimatedOverview overview={overview} />}
         <div className="flex flex-1 border-b-4 border-dotted border-gray-200">
           <ul className="flex-1 flex-col items-center justify-center py-4 text-center text-sm">
-            {credits ? (
-              credits.cast
-                ?.slice(0, 3)
-                .map((cast) => <li key={cast.id}>{cast.name}</li>)
-            ) : (
-              <li>{isError}</li>
-            )}
+            {cast.slice(0, 3).map((actor) => (
+              <li key={actor.id}>
+                {actor.name}
+                <span className="block text-xs text-gray-500">
+                  {actor.character}
+                </span>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="flex p-2">
@@ -107,19 +139,15 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           <div className="flex-1 border-r-4 border-dotted border-gray-200">
             <p className="px-2 text-sm font-bold text-black">감독</p>
             <ul className="p-2 pb-4 text-center text-sm">
-              {credits ? (
-                credits.crew
-                  ?.slice(0, 3)
-                  .map((crew) => <li key={crew.id}>{crew.name}</li>)
-              ) : (
-                <li>{isError}</li>
-              )}
+              {directors.map((director) => (
+                <li key={`director-${director.id}`}>{director.name}</li>
+              ))}
             </ul>
           </div>
           <div className="flex-1">
             <p className="px-2 text-sm font-bold text-black">평점</p>
             <div className="flex flex-1 items-center justify-center p-2 pb-4">
-              <IoStar className="mr-1" size={24} />
+              <IoStar className="mr-1 text-[#D4AF37]" size={24} />
               <div className="text-2xl font-bold">
                 {Math.round(vote_average * 10) / 10}
               </div>
@@ -130,7 +158,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           <NewWriteBtn movieId={id} />
         </div>
       </div>
-      <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl border-2 border-black bg-black group-hover:bg-gray-200 lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1" />
+      <span className="absolute left-1 top-1 -z-10 h-full w-full rounded-xl bg-[#701832] lg:transition-all lg:duration-300 lg:group-hover:translate-x-1 lg:group-hover:translate-y-1" />
     </section>
   );
 }

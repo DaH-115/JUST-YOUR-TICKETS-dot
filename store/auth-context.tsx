@@ -9,35 +9,76 @@ import {
   useRef,
 } from "react";
 import { useRouter } from "next/navigation";
+import { isAuth } from "firebase-config";
+import { useAppDispatch } from "store/hooks";
+import { getCookie, removeCookie, setCookie } from "app/utils/cookie-utils";
+import { onAuthStateChanged } from "firebase/auth";
+import { serializeUser } from "app/utils/firebase-utils";
+import { clearUserState, setUser } from "store/userSlice";
 
-type AuthContextType = {
+interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
-};
+}
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const dispatch = useAppDispatch();
   const [authState, setAuthState] = useState<AuthContextType>({
     isAuthenticated: false,
     isLoading: true,
   });
 
   useEffect(() => {
-    const getCookie = (name: string) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop()?.split(";").shift();
-      return null;
-    };
+    const unsubscribe = onAuthStateChanged(isAuth, async (user) => {
+      try {
+        if (user) {
+          // a. 사용자가 인증된 경우
+          const savedToken = getCookie();
+          const isRemembered = localStorage.getItem("rememberMe") === "true";
 
-    const session = getCookie("firebase-session-token");
+          // 토큰이 없다면 새로 발급
+          if (!savedToken) {
+            const token = await user.getIdToken();
+            setCookie(token, isRemembered);
+          }
 
-    setAuthState({
-      isAuthenticated: !!session,
-      isLoading: false,
+          // Redux에 사용자 정보 저장
+          dispatch(setUser(serializeUser(user)));
+
+          setAuthState({ isAuthenticated: true, isLoading: false });
+        } else {
+          // b. 사용자가 인증 되지 않은 경우
+
+          // 쿠키와 로컬 스토리지 정리
+          removeCookie();
+          localStorage.removeItem("rememberMe");
+
+          // Redux 사용자 정보 초기화
+          dispatch(clearUserState());
+
+          setAuthState({ isAuthenticated: false, isLoading: false });
+        }
+      } catch (error) {
+        // 에러가 발생한 경우 안전하게 처리합니다
+        console.error("인증 상태 확인 중 오류:", error);
+
+        // 모든 인증 관련 데이터를 정리합니다
+        removeCookie();
+        localStorage.removeItem("rememberMe");
+        dispatch(clearUserState());
+
+        // 에러 상태를 설정합니다
+        setAuthState({
+          isAuthenticated: false,
+          isLoading: false,
+        });
+      }
     });
-  }, []);
+
+    return () => unsubscribe();
+  }, [dispatch]);
 
   return (
     <AuthContext.Provider value={authState}>{children}</AuthContext.Provider>

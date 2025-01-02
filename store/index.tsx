@@ -1,7 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import newReviewAlertSlice from "store/newReviewAlertSlice";
-import userSlice, { fetchUser } from "store/userSlice";
-import { isAuth } from "firebase-config";
+import userSlice from "store/userSlice";
 
 const rootReducers = combineReducers({
   newReviewAlert: newReviewAlertSlice.reducer,
@@ -11,8 +10,6 @@ const rootReducers = combineReducers({
 const store = configureStore({
   reducer: rootReducers,
 });
-
-store.dispatch(fetchUser(isAuth));
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

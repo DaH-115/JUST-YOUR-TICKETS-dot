@@ -36,15 +36,15 @@ export default function MovieDetailCard({
             <Image
               src={`https://image.tmdb.org/t/p/original/${movieDetails.poster_path}`}
               alt={movieTitle}
-              width={1280}
-              height={720}
+              width={500}
+              height={750}
               className="rounded-lg object-cover shadow-lg"
+              placeholder="blur"
+              blurDataURL={`https://image.tmdb.org/t/p/w92/${movieDetails.poster_path}`}
+              priority
             />
           ) : (
-            <div
-              className="h-full w-full animate-pulse rounded-lg bg-gray-300 shadow-lg"
-              style={{ aspectRatio: "2/3" }}
-            />
+            <div className="aspect-[2/3] h-full w-full animate-pulse rounded-lg bg-gray-300 shadow-lg" />
           )}
         </section>
 
@@ -113,6 +113,9 @@ export default function MovieDetailCard({
                 {casts.slice(0, 5).map((cast) => (
                   <li key={cast.id} className="text-sm">
                     {cast.name}
+                    <span className="block text-sm text-gray-500">
+                      {cast.character}
+                    </span>
                   </li>
                 ))}
               </ul>

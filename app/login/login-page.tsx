@@ -4,18 +4,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { isAuth } from "firebase-config";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { db, isAuth } from "firebase-config";
+import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { useError } from "store/error-context";
+import { setCookie } from "app/utils/cookie-utils";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import SocialLogin from "app/login/social-login";
 import InputField from "app/ui/input-field";
-import { useAppDispatch } from "store/hooks";
-import { onUpdateUserProfile } from "store/userSlice";
 import { FaArrowRight } from "react-icons/fa";
-import { setSessionCookie } from "actions/set-cookie";
 
 const loginSchema = z.object({
   email: z
@@ -26,43 +25,60 @@ const loginSchema = z.object({
     .string()
     .min(1, "비밀번호를 입력해주세요.")
     .min(8, "비밀번호는 최소 8자 이상이어야 합니다."),
+  rememberMe: z.boolean().default(false),
 });
 
 type LoginInputs = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { isShowError } = useError();
   const {
     register,
+    watch,
     handleSubmit,
     formState: { errors, touchedFields },
   } = useForm<LoginInputs>({
     resolver: zodResolver(loginSchema),
     mode: "onTouched",
   });
+  const isRememberMe = watch("rememberMe");
 
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     setIsLoading(true);
+
     try {
+      // 1. 이메일/비밀번호로 Firebase 로그인
       const userCredential = await signInWithEmailAndPassword(
         isAuth,
         data.email,
         data.password,
       );
-      const token = await userCredential.user.getIdToken();
-      await setSessionCookie(token);
 
-      if (userCredential.user.displayName) {
-        dispatch(
-          onUpdateUserProfile({
-            displayName: userCredential.user.displayName,
-          }),
-        );
+      // 2. 사용자 이름이 없다면 Firestore에서 가져와서 설정
+      if (!userCredential.user.displayName) {
+        const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+        if (userDoc.exists()) {
+          const { displayName } = userDoc.data();
+          await updateProfile(userCredential.user, {
+            displayName,
+          });
+        }
       }
 
+      // 3. 로그인 성공 후 토큰을 받아와서 저장
+      const token = await userCredential.user.getIdToken();
+      setCookie(token, data.rememberMe);
+
+      // Remember Me 선택 여부를 localStorage에 저장
+      if (data.rememberMe) {
+        localStorage.setItem("rememberMe", "true");
+      } else {
+        localStorage.removeItem("rememberMe");
+      }
+
+      // 4. 로그인 성공 후 메인 페이지로 이동
       router.push("/");
     } catch (error: any) {
       const { title, message } = firebaseErrorHandler(error);
@@ -73,7 +89,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mb-8 w-full bg-white md:my-8 md:flex md:justify-center">
+    <div className="w-full bg-white pb-8 md:flex md:justify-center md:py-10">
       <section className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:border-gray-200 md:pl-0 md:pt-0 md:text-8xl">
         <h1>LOG IN</h1>
       </section>
@@ -104,25 +120,37 @@ export default function LoginPage() {
             disabled={isLoading}
           />
 
+          {/* Remember Me */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              {...register("rememberMe")}
+              className="h-4 w-4"
+              disabled={isLoading}
+            />
+            <label htmlFor="rememberMe" className="text-sm text-gray-600">
+              로그인 상태 유지
+            </label>
+          </div>
+
           <button
             type="submit"
-            className={`w-full rounded-full border border-black bg-black p-4 text-sm text-white transition-all duration-300 ease-in-out hover:font-bold ${
-              isLoading
-                ? "cursor-not-allowed opacity-50"
-                : "hover:bg-white hover:text-black"
+            className={`w-full rounded-full bg-[#8B1E3F] p-4 text-sm text-white transition-colors duration-300 ease-in-out ${
+              isLoading ? "cursor-not-allowed opacity-50" : "hover:bg-[#551226]"
             }`}
             disabled={isLoading}
           >
-            {isLoading ? "로그인 중..." : "로그인"}
+            {isLoading ? "로그인 중" : "로그인"}
           </button>
 
           <Link href="/sign-up">
             <button
               type="button"
-              className={`mt-2 flex w-full items-center justify-between rounded-full border border-black bg-white p-4 text-sm text-black transition-all duration-300 ease-in-out hover:font-bold ${
+              className={`mt-2 flex w-full items-center justify-between rounded-full border border-[#8B1E3F] bg-white p-4 text-sm text-black transition-colors duration-300 ease-in-out ${
                 isLoading
                   ? "cursor-not-allowed opacity-50"
-                  : "hover:bg-black hover:text-white"
+                  : "hover:bg-[#8B1E3F] hover:text-white"
               }`}
               disabled={isLoading}
             >
@@ -133,7 +161,7 @@ export default function LoginPage() {
         </form>
 
         {/* Social Login */}
-        <SocialLogin />
+        <SocialLogin rememberMe={isRememberMe} />
       </main>
     </div>
   );
