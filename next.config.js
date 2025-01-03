@@ -6,10 +6,16 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
-    domains: ["image.tmdb.org"],
-    deviceSizes: [320, 640, 750, 828, 1080, 1200],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 3600,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "image.tmdb.org",
+        pathname: "/t/p/**", // TMDB의 이미지 경로 패턴을 지정
+      },
+    ],
+    deviceSizes: [320, 480, 640, 750, 828, 1080],
+    imageSizes: [16, 32, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 86400,
     formats: ["image/webp"],
   },
   webpack(config) {
