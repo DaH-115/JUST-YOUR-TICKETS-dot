@@ -16,7 +16,7 @@ export default function RecommendMovie({
   currentMovie,
   trailerKey,
 }: RecommendMovieProps) {
-  const imgageUrl = `https://image.tmdb.org/t/p/original/${currentMovie.poster_path}`;
+  const imgageUrl = `https://image.tmdb.org/t/p/w500/${currentMovie.poster_path}`;
   const movieTitle = getMovieTitle(
     currentMovie.original_title,
     currentMovie.title,
@@ -26,15 +26,19 @@ export default function RecommendMovie({
     <main className="mx-auto flex flex-col items-center justify-center pb-8 lg:mt-16 lg:w-4/5 lg:flex-row lg:items-start">
       {/* MOVIE POSTER */}
       {currentMovie.poster_path && (
-        <div className="group w-2/4 py-4 md:w-1/3 lg:py-0 lg:pr-6">
-          <Image
-            className="relative h-full w-full transform rounded-xl object-cover drop-shadow-lg transition-all duration-300 ease-in-out hover:z-50 group-hover:scale-110 group-hover:rounded-none"
-            src={imgageUrl}
-            alt={movieTitle}
-            width={500}
-            height={750}
-            priority
-          />
+        <div className="group relative w-2/4 py-4 md:w-1/3 lg:py-0 lg:pr-6">
+          <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl">
+            <Image
+              className="absolute h-full w-full transform object-cover transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:rounded-none"
+              src={imgageUrl}
+              alt={movieTitle}
+              width={500}
+              height={750}
+              quality={75}
+              priority
+              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 500px"
+            />
+          </div>
         </div>
       )}
       {/* MOVIE CARD */}

@@ -31,13 +31,18 @@ export default function SwiperCard({
         {idx + 1}.
       </div>
       {poster_path ? (
-        <Image
-          width={500}
-          height={750}
-          className="h-full w-full rounded-xl object-cover object-center"
-          src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-          alt={movieTitle}
-        />
+        <div className="aspect-[2/3] w-full overflow-hidden rounded-xl">
+          <Image
+            width={500}
+            height={750}
+            className="h-full w-full rounded-xl object-cover object-center"
+            src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+            alt={movieTitle}
+            quality={50}
+            priority
+            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 500px"
+          />
+        </div>
       ) : (
         <div className="h-full w-full overflow-hidden rounded-xl bg-black text-4xl font-bold text-white">
           Make a ticket for your own movie review.
