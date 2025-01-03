@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Movie } from "api/fetchNowPlayingMovies";
 import getMovieTitle from "app/utils/get-movie-title";
 import MovieCard from "app/home/movie-card";

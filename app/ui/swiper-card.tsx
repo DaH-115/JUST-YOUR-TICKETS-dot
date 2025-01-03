@@ -1,5 +1,4 @@
 import { Movie } from "api/fetchNowPlayingMovies";
-import Image from "next/image";
 import Link from "next/link";
 import useGetGenres from "hooks/useGetGenres";
 import getMovieTitle from "app/utils/get-movie-title";
