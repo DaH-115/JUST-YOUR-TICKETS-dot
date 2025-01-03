@@ -9,6 +9,7 @@ import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoIosAddCircle } from "react-icons/io";
 import ReviewDetailsModal from "app/ui/reviewTicketList/review-details-modal";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
+import MoviePoster from "../movie-poster";
 
 export default function ReviewTicket({
   reviews,
@@ -74,8 +75,7 @@ export default function ReviewTicket({
                   onReviewDeleted={onReviewDeleteHanlder}
                 />
               </div>
-
-              <div id="movie-poster" className="h-4/5">
+              <div id="movie-poster" className="aspect-[2/3] h-full w-full">
                 <Image
                   src={`https://image.tmdb.org/t/p/w500/${post.posterImage}`}
                   alt={post.movieTitle}
@@ -83,6 +83,8 @@ export default function ReviewTicket({
                   height={750}
                   className="h-full w-full rounded-xl object-cover"
                   priority
+                  quality={50}
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 500px"
                 />
               </div>
               <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white p-2 transition-all duration-300 group-hover/card:bottom-1 group-hover/card:right-1 md:group-hover/card:bottom-2 md:group-hover/card:right-2">

@@ -6,14 +6,11 @@ const nextConfig = {
     styledComponents: true,
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "image.tmdb.org",
-        port: "",
-        pathname: "/**",
-      },
-    ],
+    domains: ["image.tmdb.org"],
+    deviceSizes: [320, 640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 3600,
+    formats: ["image/webp"],
   },
   webpack(config) {
     config.module.rules.push({

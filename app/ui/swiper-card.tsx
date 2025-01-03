@@ -7,6 +7,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import NewWriteBtn from "app/ui/new-write-btn";
 import Tooltip from "app/ui/tooltip";
+import MoviePoster from "./movie-poster";
 
 export default function SwiperCard({
   idx,
@@ -31,13 +32,7 @@ export default function SwiperCard({
         {idx + 1}.
       </div>
       {poster_path ? (
-        <Image
-          width={500}
-          height={750}
-          className="h-full w-full rounded-xl object-cover object-center"
-          src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-          alt={movieTitle}
-        />
+        <MoviePoster posterPath={poster_path} title={movieTitle} />
       ) : (
         <div className="h-full w-full overflow-hidden rounded-xl bg-black text-4xl font-bold text-white">
           Make a ticket for your own movie review.

@@ -33,16 +33,18 @@ export default function MovieDetailCard({
         {/* MOVIE POSTER */}
         <section className="mx-auto w-3/4 py-4 lg:mr-8 lg:w-2/3 lg:py-0">
           {movieDetails.poster_path ? (
-            <Image
-              src={`https://image.tmdb.org/t/p/original/${movieDetails.poster_path}`}
-              alt={movieTitle}
-              width={500}
-              height={750}
-              className="rounded-lg object-cover shadow-lg"
-              placeholder="blur"
-              blurDataURL={`https://image.tmdb.org/t/p/w92/${movieDetails.poster_path}`}
-              priority
-            />
+            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl">
+              <Image
+                src={`https://image.tmdb.org/t/p/w500/${movieDetails.poster_path}`}
+                alt={movieTitle}
+                width={500}
+                height={750}
+                className="rounded-lg object-cover shadow-lg"
+                quality={50}
+                priority
+                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 500px"
+              />
+            </div>
           ) : (
             <div className="aspect-[2/3] h-full w-full animate-pulse rounded-lg bg-gray-300 shadow-lg" />
           )}
