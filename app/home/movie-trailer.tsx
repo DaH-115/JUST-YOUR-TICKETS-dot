@@ -1,4 +1,5 @@
 import { RiMovieLine } from "react-icons/ri";
+import VideoPlayer from "app/video-palyer";
 
 export default function MovieTrailer({
   trailerKey,
@@ -29,12 +30,9 @@ export default function MovieTrailer({
       </div>
 
       <div className="mx-auto aspect-video w-full md:w-4/6">
-        <iframe
-          src={`https://www.youtube.com/embed/${trailerKey}`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
+        <VideoPlayer
+          url={`https://www.youtube.com/embed/${trailerKey}`}
           className="h-full w-full"
-          title={movieTitle}
         />
       </div>
     </section>

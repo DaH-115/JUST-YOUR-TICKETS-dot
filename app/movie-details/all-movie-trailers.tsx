@@ -1,4 +1,5 @@
 import { MovieTrailer } from "api/fetchVideosMovies";
+import VideoPlayer from "app/video-palyer";
 
 export default function AllMovieTrailers({
   movieTrailer,
@@ -14,12 +15,9 @@ export default function AllMovieTrailers({
         {movieTrailer.length > 0 ? (
           movieTrailer.map((trailer) => (
             <div key={trailer.id} className="aspect-video">
-              <iframe
-                src={`https://www.youtube.com/embed/${trailer.key}`}
-                title={trailer.name}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="h-full w-full rounded-lg shadow-lg"
+              <VideoPlayer
+                url={`https://www.youtube.com/embed/${trailer.key}`}
+                className="h-full w-full"
               />
             </div>
           ))
