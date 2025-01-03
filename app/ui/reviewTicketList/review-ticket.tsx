@@ -9,7 +9,6 @@ import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoIosAddCircle } from "react-icons/io";
 import ReviewDetailsModal from "app/ui/reviewTicketList/review-details-modal";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
-import MoviePoster from "../movie-poster";
 
 export default function ReviewTicket({
   reviews,
@@ -82,7 +81,7 @@ export default function ReviewTicket({
                   width={500}
                   height={750}
                   className="h-full w-full rounded-xl object-cover"
-                  priority
+                  loading="lazy"
                   quality={50}
                   sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 500px"
                 />

@@ -4,8 +4,18 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "store/hooks";
 import SideMenu from "app/my-page/side-menu";
-import ProfileForm from "app/my-page/profile-form";
-import SideReviewList from "app/my-page/side-review-list";
+import dynamic from "next/dynamic";
+import Loading from "app/loading";
+
+const ProfileForm = dynamic(() => import("app/my-page/profile-form"), {
+  loading: () => <Loading />,
+  ssr: false,
+});
+
+const SideReviewList = dynamic(() => import("app/my-page/side-review-list"), {
+  loading: () => <Loading />,
+  ssr: false,
+});
 
 export default function MyPagePage() {
   const router = useRouter();
@@ -38,11 +48,11 @@ export default function MyPagePage() {
   }
 
   return (
-    <section className="flex w-full flex-col px-4 py-4 md:h-96 md:py-8 lg:min-h-screen lg:flex-row lg:px-8">
+    <>
       <SideMenu uid={userState.uid} />
       {/* Main */}
       <ProfileForm />
       <SideReviewList uid={userState.uid} />
-    </section>
+    </>
   );
 }

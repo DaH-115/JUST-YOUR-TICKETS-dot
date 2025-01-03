@@ -1,29 +1,37 @@
 "use client";
 
+import React, { useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
-export default function SideMenu({ uid }: { uid: string }) {
+const SideMenu = React.memo(function SideMenu({ uid }: { uid: string }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const urlUid = searchParams.get("uid");
 
-  const getMenuStyle = (path: string) => {
-    const isCurrentPath = pathname === path;
-    let isActive = false;
+  const getMenuStyle = useCallback(
+    (path: string) => {
+      const isCurrentPath = pathname === path;
+      let isActive = false;
 
-    if (path === "/my-page" && isCurrentPath && !urlUid) {
-      isActive = true;
-    } else if (path === "/my-page/my-ticket-list" && isCurrentPath && urlUid) {
-      isActive = true;
-    }
+      if (path === "/my-page" && isCurrentPath && !urlUid) {
+        isActive = true;
+      } else if (
+        path === "/my-page/my-ticket-list" &&
+        isCurrentPath &&
+        urlUid
+      ) {
+        isActive = true;
+      }
 
-    return `text-lg w-full text-center lg:text-start md:text-2xl lg:text-5xl ${
-      isActive
-        ? "text-[#D4AF37]  font-bold"
-        : "text-gray-300 hover:text-[#BD9C31]"
-    } transition-all duration-300 ease-in-out`;
-  };
+      return `text-lg w-full text-center lg:text-start md:text-2xl lg:text-5xl ${
+        isActive
+          ? "text-[#D4AF37]  font-bold"
+          : "text-gray-300 hover:text-[#BD9C31]"
+      } transition-all duration-300 ease-in-out`;
+    },
+    [pathname, urlUid],
+  );
 
   return (
     <nav className="my-2 flex w-full flex-row md:mb-8 md:mt-2 lg:mb-0 lg:mr-6 lg:w-2/4 lg:flex-col">
@@ -37,4 +45,6 @@ export default function SideMenu({ uid }: { uid: string }) {
       </Link>
     </nav>
   );
-}
+});
+
+export default SideMenu;

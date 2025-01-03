@@ -108,76 +108,79 @@ export default function ProfileForm() {
     }
   }, [userDoc, reset]);
 
-  const onSubmitHandler = async (data: FormData) => {
-    if (!serializedUser) {
-      isShowError("오류", "로그인이 필요합니다.");
-      return;
-    }
+  const onSubmitHandler = useCallback(
+    async (data: FormData) => {
+      if (!serializedUser) {
+        isShowError("오류", "로그인이 필요합니다.");
+        return;
+      }
 
-    if (Object.keys(dirtyFields).length === 0) {
-      setIsEditing(false);
-      return;
-    }
+      if (Object.keys(dirtyFields).length === 0) {
+        setIsEditing(false);
+        return;
+      }
 
-    setIsLoading(true);
+      setIsLoading(true);
 
-    try {
-      const userRef = doc(db, "users", serializedUser.uid);
+      try {
+        const userRef = doc(db, "users", serializedUser.uid);
 
-      // 1. 닉네임 중복 체크(닉네임이 변경된 경우에만)
-      if (dirtyFields.displayName) {
-        const nicknameQuery = query(
-          collection(db, "users"),
-          where("displayName", "==", data.displayName),
-          limit(1),
-        );
-        const nicknameSnapshot = await getDocs(nicknameQuery);
+        // 1. 닉네임 중복 체크(닉네임이 변경된 경우에만)
+        if (dirtyFields.displayName) {
+          const nicknameQuery = query(
+            collection(db, "users"),
+            where("displayName", "==", data.displayName),
+            limit(1),
+          );
+          const nicknameSnapshot = await getDocs(nicknameQuery);
 
-        if (!nicknameSnapshot.empty) {
-          isShowError("알림", "이미 사용 중인 닉네임입니다.");
-          return; // 여기서 early return
+          if (!nicknameSnapshot.empty) {
+            isShowError("알림", "이미 사용 중인 닉네임입니다.");
+            return; // 여기서 early return
+          }
         }
-      }
 
-      // 2. 사용자 정보 수정
-      let updateData: Partial<UserDoc> = {
-        updatedAt: new Date().toISOString(),
-      };
-
-      if (dirtyFields.displayName || dirtyFields.biography) {
-        updateData = {
-          ...updateData,
-          displayName: data.displayName,
-          biography: data.biography,
+        // 2. 사용자 정보 수정
+        let updateData: Partial<UserDoc> = {
+          updatedAt: new Date().toISOString(),
         };
+
+        if (dirtyFields.displayName || dirtyFields.biography) {
+          updateData = {
+            ...updateData,
+            displayName: data.displayName,
+            biography: data.biography,
+          };
+        }
+
+        // 3. Auth 업데이트 (displayName이 변경된 경우에만)
+        if (dirtyFields.displayName && isAuth.currentUser) {
+          await updateProfile(isAuth.currentUser, {
+            displayName: data.displayName,
+          });
+          dispatch(onUpdateUserDisplayName({ displayName: data.displayName }));
+        }
+
+        // 4. Firestore 업데이트
+        await updateDoc(userRef, updateData);
+
+        // 5. userDoc 상태 즉시 업데이트
+        setUserDoc((prev) => ({
+          ...prev!,
+          ...updateData,
+        }));
+
+        setIsEditing(false);
+        isShowSuccess("성공", "프로필 정보가 업데이트되었습니다.");
+      } catch (error) {
+        const { title, message } = firebaseErrorHandler(error);
+        isShowError(title, message);
+      } finally {
+        setIsLoading(false); // 모든 작업이 완료된 후 로딩 상태 해제
       }
-
-      // 3. Auth 업데이트 (displayName이 변경된 경우에만)
-      if (dirtyFields.displayName && isAuth.currentUser) {
-        await updateProfile(isAuth.currentUser, {
-          displayName: data.displayName,
-        });
-        dispatch(onUpdateUserDisplayName({ displayName: data.displayName }));
-      }
-
-      // 4. Firestore 업데이트
-      await updateDoc(userRef, updateData);
-
-      // 5. userDoc 상태 즉시 업데이트
-      setUserDoc((prev) => ({
-        ...prev!,
-        ...updateData,
-      }));
-
-      setIsEditing(false);
-      isShowSuccess("성공", "프로필 정보가 업데이트되었습니다.");
-    } catch (error) {
-      const { title, message } = firebaseErrorHandler(error);
-      isShowError(title, message);
-    } finally {
-      setIsLoading(false); // 모든 작업이 완료된 후 로딩 상태 해제
-    }
-  };
+    },
+    [dirtyFields, isShowError, isShowSuccess, serializedUser, dispatch],
+  );
 
   const editingToggle = useCallback(() => {
     setIsEditing((prev) => !prev);
