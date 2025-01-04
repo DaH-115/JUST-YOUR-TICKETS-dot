@@ -1,5 +1,5 @@
 import { RiMovieLine } from "react-icons/ri";
-import VideoPlayer from "app/video-palyer";
+import VideoPlayer from "app/video-player";
 
 export default function MovieTrailer({ trailerKey }: { trailerKey: string }) {
   return (

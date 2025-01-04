@@ -1,5 +1,5 @@
 import { MovieTrailer } from "api/fetchVideosMovies";
-import VideoPlayer from "app/video-palyer";
+import VideoPlayer from "app/video-player";
 
 export default function AllMovieTrailers({
   movieTrailer,

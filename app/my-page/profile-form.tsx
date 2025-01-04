@@ -4,11 +4,14 @@ import { updateProfile } from "firebase/auth";
 import {
   collection,
   doc,
+  FieldValue,
   getDoc,
   getDocs,
   limit,
   query,
-  updateDoc,
+  runTransaction,
+  serverTimestamp,
+  Timestamp,
   where,
 } from "firebase/firestore";
 import { useForm } from "react-hook-form";
@@ -24,7 +27,7 @@ import { BackAnimation } from "app/ui/back-animation";
 interface UserDoc {
   displayName: string;
   biography: string;
-  updatedAt: string;
+  updatedAt: Timestamp | FieldValue;
   provider: string;
 }
 
@@ -121,8 +124,6 @@ export default function ProfileForm() {
       setIsLoading(true);
 
       try {
-        const userRef = doc(db, "users", serializedUser.uid);
-
         // 1. 닉네임 중복 체크(닉네임이 변경된 경우에만)
         if (dirtyFields.displayName) {
           const nicknameQuery = query(
@@ -134,39 +135,44 @@ export default function ProfileForm() {
 
           if (!nicknameSnapshot.empty) {
             isShowError("알림", "이미 사용 중인 닉네임입니다.");
-            return; // 여기서 early return
+            return;
           }
         }
 
+        const userRef = doc(db, "users", serializedUser.uid);
         // 2. 사용자 정보 수정
-        let updateData: Partial<UserDoc> = {
-          updatedAt: new Date().toISOString(),
-        };
-
-        if (dirtyFields.displayName || dirtyFields.biography) {
-          updateData = {
-            ...updateData,
-            displayName: data.displayName,
-            biography: data.biography,
+        await runTransaction(db, async (transaction) => {
+          let updateData: Partial<UserDoc> = {
+            updatedAt: serverTimestamp(),
           };
-        }
 
-        // 3. Auth 업데이트 (displayName이 변경된 경우에만)
-        if (dirtyFields.displayName && isAuth.currentUser) {
-          await updateProfile(isAuth.currentUser, {
-            displayName: data.displayName,
-          });
-          dispatch(onUpdateUserDisplayName({ displayName: data.displayName }));
-        }
+          if (dirtyFields.displayName || dirtyFields.biography) {
+            updateData = {
+              ...updateData,
+              displayName: data.displayName,
+              biography: data.biography,
+            };
+          }
 
-        // 4. Firestore 업데이트
-        await updateDoc(userRef, updateData);
+          // Firestore 업데이트
+          transaction.update(userRef, updateData);
 
-        // 5. userDoc 상태 즉시 업데이트
-        setUserDoc((prev) => ({
-          ...prev!,
-          ...updateData,
-        }));
+          // Auth 업데이트 (displayName이 변경된 경우에만)
+          if (dirtyFields.displayName && isAuth.currentUser) {
+            await updateProfile(isAuth.currentUser, {
+              displayName: data.displayName,
+            });
+            dispatch(
+              onUpdateUserDisplayName({ displayName: data.displayName }),
+            );
+          }
+
+          // userDoc 상태 업데이트
+          setUserDoc((prev) => ({
+            ...prev!,
+            ...updateData,
+          }));
+        });
 
         setIsEditing(false);
         isShowSuccess("성공", "프로필 정보가 업데이트되었습니다.");
@@ -180,7 +186,7 @@ export default function ProfileForm() {
     [dirtyFields, isShowError, isShowSuccess, serializedUser, dispatch],
   );
 
-  const editingToggle = useCallback(() => {
+  const editingToggleHandler = useCallback(() => {
     setIsEditing((prev) => !prev);
     if (isEditing) {
       reset();
@@ -206,7 +212,7 @@ export default function ProfileForm() {
                 </div>
               ) : (
                 <div
-                  onClick={editingToggle}
+                  onClick={editingToggleHandler}
                   className={`cursor-pointer whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 ${!isLoading ? "hover:bg-black hover:text-white" : "cursor-not-allowed opacity-50"}`}
                 >
                   수정
