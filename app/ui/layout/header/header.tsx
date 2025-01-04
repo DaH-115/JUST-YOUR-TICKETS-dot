@@ -66,7 +66,7 @@ export default function Header() {
     return () => {
       document.removeEventListener("mousedown", clickOutsideHandler);
     };
-  }, []);
+  }, [dropdownRef]);
 
   useEffect(() => {
     if (isSideMenuOpen) {

@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { db } from "firebase-config";
@@ -62,7 +60,7 @@ const ReviewBtnGroup = React.memo(function ReviewBtnGroup({
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [dropdownRef]);
 
   if (!isOwnership) return null;
 

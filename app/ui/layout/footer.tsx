@@ -26,7 +26,7 @@ export default function Footer() {
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isVisible]);
 
   return (
     <div

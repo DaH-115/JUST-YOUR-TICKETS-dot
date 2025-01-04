@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -70,65 +70,68 @@ export default function SignUpPage() {
     mode: "onTouched",
   });
 
-  const onSubmit = async (data: SignupSchema) => {
-    setIsLoading(true);
+  const onSubmit = useCallback(
+    async (data: SignupSchema) => {
+      setIsLoading(true);
 
-    try {
-      const { name, displayName, email, password } = data;
+      try {
+        const { name, displayName, email, password } = data;
 
-      // 1. 닉네임 중복 체크
-      const displayNameQuery = query(
-        collection(db, "users"),
-        where("displayName", "==", displayName),
-        limit(1),
-      );
-      const displayNameSnapshot = await getDocs(displayNameQuery);
+        // 1. 닉네임 중복 체크
+        const displayNameQuery = query(
+          collection(db, "users"),
+          where("displayName", "==", displayName),
+          limit(1),
+        );
+        const displayNameSnapshot = await getDocs(displayNameQuery);
 
-      if (!displayNameSnapshot.empty) {
-        isShowError("알림", "이미 사용 중인 닉네임입니다.");
-        return;
+        if (!displayNameSnapshot.empty) {
+          isShowError("알림", "이미 사용 중인 닉네임입니다.");
+          return;
+        }
+
+        // 2. 사용자 계정 생성
+        const { user } = await createUserWithEmailAndPassword(
+          isAuth,
+          email,
+          password,
+        );
+
+        // 3. Auth Profile 업데이트
+        await updateProfile(user, {
+          displayName: displayName,
+        });
+
+        // 4. Firestore 문서 생성
+        const userRef = doc(db, "users", user.uid);
+        await setDoc(userRef, {
+          name,
+          displayName,
+          email,
+          profileImage: null,
+          provider: "email",
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          biography: "Make a ticket for your own movie review.",
+          role: "user",
+        });
+
+        isShowSuccess("회원가입 완료", "환영합니다!");
+        router.push("/");
+      } catch (error) {
+        const { title, message } = firebaseErrorHandler(error);
+        isShowError(title, message);
+
+        // Error 상황에서 Auth 계정이 생성된 경우 삭제
+        if (isAuth.currentUser) {
+          await isAuth.currentUser.delete();
+        }
+      } finally {
+        setIsLoading(false);
       }
-
-      // 2. 사용자 계정 생성
-      const { user } = await createUserWithEmailAndPassword(
-        isAuth,
-        email,
-        password,
-      );
-
-      // 3. Auth Profile 업데이트
-      await updateProfile(user, {
-        displayName: displayName,
-      });
-
-      // 4. Firestore 문서 생성
-      const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, {
-        name,
-        displayName,
-        email,
-        profileImage: null,
-        provider: "email",
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        biography: "Make a ticket for your own movie review.",
-        role: "user",
-      });
-
-      isShowSuccess("회원가입 완료", "환영합니다!");
-      router.push("/");
-    } catch (error) {
-      const { title, message } = firebaseErrorHandler(error);
-      isShowError(title, message);
-
-      // Error 상황에서 Auth 계정이 생성된 경우 삭제
-      if (isAuth.currentUser) {
-        await isAuth.currentUser.delete();
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [router, isShowError, isShowSuccess],
+  );
 
   return (
     <div className="w-full bg-white pb-8 md:flex md:justify-center md:py-10">

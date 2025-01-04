@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -34,7 +32,7 @@ const SideMenu = React.memo(function SideMenu({ uid }: { uid: string }) {
   );
 
   return (
-    <nav className="my-2 flex w-full flex-row md:mb-8 md:mt-2 lg:mb-0 lg:mr-6 lg:w-2/4 lg:flex-col">
+    <nav className="flex flex-row lg:flex-col">
       <Link href="/my-page" className="w-full">
         <div className={getMenuStyle("/my-page")}>MY PROFILE</div>
       </Link>

@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useEffect, useState } from "react";
 import { db, isAuth } from "firebase-config";
 import { updateProfile } from "firebase/auth";
@@ -176,7 +174,7 @@ export default function ProfileForm() {
         const { title, message } = firebaseErrorHandler(error);
         isShowError(title, message);
       } finally {
-        setIsLoading(false); // 모든 작업이 완료된 후 로딩 상태 해제
+        setIsLoading(false);
       }
     },
     [dirtyFields, isShowError, isShowSuccess, serializedUser, dispatch],
@@ -190,7 +188,7 @@ export default function ProfileForm() {
   }, [isEditing, reset]);
 
   return (
-    <main className="w-full">
+    <main className="w-full md:ml-8">
       <section className="group relative">
         <div className="rounded-xl border-2 border-black bg-white px-8 pb-10 pt-6 transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1">
           <form onSubmit={handleSubmit(onSubmitHandler)}>

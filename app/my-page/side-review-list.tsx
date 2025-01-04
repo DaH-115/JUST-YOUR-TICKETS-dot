@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { db } from "firebase-config";
@@ -44,7 +42,7 @@ export default function SideReviewList({ uid }: { uid: string }) {
     };
 
     fetchUserReviews();
-  }, [uid]);
+  }, [uid, isShowError]);
 
   return (
     <section className="group relative hidden lg:ml-8 lg:block lg:w-3/5">

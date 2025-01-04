@@ -1,6 +1,3 @@
-"use client";
-
-import Image from "next/image";
 import { MovieDetails } from "api/fetchMovieDetails";
 import { MovieCredits } from "api/fetchMovieCredits";
 import formatMovieDate from "app/utils/format-movie-date";
@@ -8,6 +5,7 @@ import getMovieTitle from "app/utils/get-movie-title";
 import convertRuntime from "app/utils/convert-runtime";
 import { IoStar } from "react-icons/io5";
 import NewWriteBtn from "app/ui/new-write-btn";
+import MoviePoster from "app/ui/movie-poster";
 
 type MovieDetailCardProps = {
   movieDetails: MovieDetails;
@@ -28,23 +26,16 @@ export default function MovieDetailCard({
   const crews = movieCredits?.crew || [];
 
   return (
-    <main className="relative mb-8 flex w-full items-center justify-center px-4 lg:my-8 lg:px-0">
-      <div className="flex flex-col justify-center lg:w-2/3 lg:flex-row">
+    <main className="relative mb-8 flex w-full items-center justify-center px-4 md:my-8 md:px-0">
+      <div className="flex flex-col justify-center md:w-2/3 md:flex-row">
         {/* MOVIE POSTER */}
-        <section className="mx-auto w-3/4 py-4 lg:mr-8 lg:w-2/3 lg:py-0">
+        <section className="h-full w-full py-4 md:mr-6 md:w-2/3 md:py-0">
           {movieDetails.poster_path ? (
-            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl">
-              <Image
-                src={`https://image.tmdb.org/t/p/w500/${movieDetails.poster_path}`}
-                alt={movieTitle}
-                width={500}
-                height={750}
-                className="rounded-lg object-cover shadow-lg"
-                quality={50}
-                priority
-                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 500px"
-              />
-            </div>
+            <MoviePoster
+              posterPath={movieDetails.poster_path}
+              size={500}
+              title={movieTitle}
+            />
           ) : (
             <div className="aspect-[2/3] h-full w-full animate-pulse rounded-lg bg-gray-300 shadow-lg" />
           )}
@@ -57,11 +48,11 @@ export default function MovieDetailCard({
             <h1 className="mb-2 inline-block rounded-lg bg-black p-1 text-xs font-bold text-white">
               영화 정보
             </h1>
-            <h2 className="break-keep text-2xl font-bold lg:text-3xl">
+            <h2 className="break-keep text-2xl font-bold md:text-3xl">
               {movieDetails.title}
             </h2>
             <div className="flex items-center">
-              <p className="text-sm text-gray-500 lg:text-base">
+              <p className="text-sm text-gray-500 md:text-base">
                 {movieDetails.original_title}
               </p>
               <p className="text-lg text-gray-500">

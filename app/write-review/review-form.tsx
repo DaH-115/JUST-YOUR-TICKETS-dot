@@ -1,10 +1,8 @@
-"use client";
-
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "store/hooks";
-import { useReviewForm } from "app/write-review/useReviewForm";
+import { useReviewForm } from "hooks/useReviewForm";
 import getMovieTitle from "app/utils/get-movie-title";
 import BackGround from "app/ui/layout/back-ground";
 import { IoStar } from "react-icons/io5";

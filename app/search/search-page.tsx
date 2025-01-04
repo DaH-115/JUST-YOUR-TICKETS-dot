@@ -109,12 +109,7 @@ export default function SearchPage({
             </h1>
             <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {searchResults.map((result, idx) => (
-                <SwiperCard
-                  key={result.id}
-                  movie={result}
-                  id={result.id}
-                  idx={idx}
-                />
+                <SwiperCard key={result.id} movie={result} idx={idx} />
               ))}
             </div>
           </section>
@@ -133,12 +128,7 @@ export default function SearchPage({
           </h2>
           <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {nowPlayingMovies.map((movie, idx) => (
-              <SwiperCard
-                key={movie.id}
-                movie={movie}
-                idx={idx}
-                id={movie.id}
-              />
+              <SwiperCard key={movie.id} movie={movie} idx={idx} />
             ))}
           </div>
         </section>

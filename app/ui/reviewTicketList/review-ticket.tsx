@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "firebase-config";
@@ -9,6 +8,7 @@ import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoIosAddCircle } from "react-icons/io";
 import ReviewDetailsModal from "app/ui/reviewTicketList/review-details-modal";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
+import MoviePoster from "app/ui/movie-poster";
 
 export default function ReviewTicket({
   reviews,
@@ -42,7 +42,7 @@ export default function ReviewTicket({
   }, []);
 
   return (
-    <div className="grid grid-cols-1 gap-4 pb-8 md:grid-cols-3 lg:grid-cols-4">
+    <div className="grid h-full w-full grid-cols-1 gap-4 pb-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {selectedReview && (
         <ReviewDetailsModal
           selectedReview={selectedReview}
@@ -52,7 +52,7 @@ export default function ReviewTicket({
         />
       )}
 
-      <div className="hidden h-[450px] items-center justify-center rounded-xl border-2 border-dashed border-gray-500 md:flex">
+      <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-gray-500 md:flex">
         <Link href="/search">
           <button className="p-12 text-xl font-bold text-gray-500 transition-colors duration-300 hover:text-gray-700">
             <IoIosAddCircle size={48} />
@@ -62,10 +62,7 @@ export default function ReviewTicket({
       {reviews.length > 0 && (
         <>
           {reviews.map((post) => (
-            <div
-              key={post.id}
-              className="group/card relative h-[450px] drop-shadow-md"
-            >
+            <div key={post.id} className="group/card relative drop-shadow-md">
               {/* CARD HEADER */}
               <div className="absolute left-0 top-0 z-10 flex w-full items-center justify-end p-2">
                 <ReviewBtnGroup
@@ -74,18 +71,16 @@ export default function ReviewTicket({
                   onReviewDeleted={onReviewDeleteHanlder}
                 />
               </div>
-              <div id="movie-poster" className="aspect-[2/3] h-full w-full">
-                <Image
-                  src={`https://image.tmdb.org/t/p/w500/${post.posterImage}`}
-                  alt={post.movieTitle}
-                  width={500}
-                  height={750}
-                  className="h-full w-full rounded-xl object-cover"
-                  loading="lazy"
-                  quality={50}
-                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 500px"
-                />
-              </div>
+
+              {/* MOVIE POSTER */}
+              <MoviePoster
+                posterPath={post.posterImage}
+                title={post.movieTitle}
+                size={342}
+                lazy
+              />
+
+              {/* MOVIE INFO CARD */}
               <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white p-2 transition-all duration-300 group-hover/card:bottom-1 group-hover/card:right-1 md:group-hover/card:bottom-2 md:group-hover/card:right-2">
                 <div className="flex items-center justify-between pb-1">
                   <div className="flex items-center justify-center px-2">

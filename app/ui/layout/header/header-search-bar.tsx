@@ -59,7 +59,7 @@ export default function HeaderSearchBar() {
     return () => {
       document.removeEventListener("mousedown", clickOutsideHandler);
     };
-  }, []);
+  }, [dropdownRef]);
 
   const handleIconClick = () => {
     setIsSearchOpen((prev) => !prev);

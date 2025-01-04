@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -45,48 +45,53 @@ export default function LoginPage() {
   });
   const isRememberMe = watch("rememberMe");
 
-  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
-    setIsLoading(true);
+  const onSubmit: SubmitHandler<LoginInputs> = useCallback(
+    async (data) => {
+      setIsLoading(true);
 
-    try {
-      // 1. 이메일/비밀번호로 Firebase 로그인
-      const userCredential = await signInWithEmailAndPassword(
-        isAuth,
-        data.email,
-        data.password,
-      );
+      try {
+        // 1. 이메일/비밀번호로 Firebase 로그인
+        const userCredential = await signInWithEmailAndPassword(
+          isAuth,
+          data.email,
+          data.password,
+        );
 
-      // 2. 사용자 이름이 없다면 Firestore에서 가져와서 설정
-      if (!userCredential.user.displayName) {
-        const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
-        if (userDoc.exists()) {
-          const { displayName } = userDoc.data();
-          await updateProfile(userCredential.user, {
-            displayName,
-          });
+        // 2. 사용자 이름이 없다면 Firestore에서 가져와서 설정
+        if (!userCredential.user.displayName) {
+          const userDoc = await getDoc(
+            doc(db, "users", userCredential.user.uid),
+          );
+          if (userDoc.exists()) {
+            const { displayName } = userDoc.data();
+            await updateProfile(userCredential.user, {
+              displayName,
+            });
+          }
         }
+
+        // 3. 로그인 성공 후 토큰을 받아와서 저장
+        const token = await userCredential.user.getIdToken();
+        setCookie(token, data.rememberMe);
+
+        // Remember Me 선택 여부를 localStorage에 저장
+        if (data.rememberMe) {
+          localStorage.setItem("rememberMe", "true");
+        } else {
+          localStorage.removeItem("rememberMe");
+        }
+
+        // 4. 로그인 성공 후 메인 페이지로 이동
+        router.push("/");
+      } catch (error: any) {
+        const { title, message } = firebaseErrorHandler(error);
+        isShowError(title, message);
+      } finally {
+        setIsLoading(false);
       }
-
-      // 3. 로그인 성공 후 토큰을 받아와서 저장
-      const token = await userCredential.user.getIdToken();
-      setCookie(token, data.rememberMe);
-
-      // Remember Me 선택 여부를 localStorage에 저장
-      if (data.rememberMe) {
-        localStorage.setItem("rememberMe", "true");
-      } else {
-        localStorage.removeItem("rememberMe");
-      }
-
-      // 4. 로그인 성공 후 메인 페이지로 이동
-      router.push("/");
-    } catch (error: any) {
-      const { title, message } = firebaseErrorHandler(error);
-      isShowError(title, message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [router, isShowError],
+  );
 
   return (
     <div className="w-full bg-white pb-8 md:flex md:justify-center md:py-10">

@@ -59,24 +59,27 @@ export default function MyTicktListPage() {
   useEffect(() => {
     if (!uid) return;
     fetchUserReviews();
-  }, [uid]);
+  }, [uid, fetchUserReviews]);
 
   useEffect(() => {
     searchReviewsHandler(searchTerm);
   }, [searchTerm, searchReviewsHandler]);
 
   return (
-    <div className="flex w-full flex-col lg:my-8 lg:mb-8 lg:flex-row lg:px-8">
+    <div className="flex w-full flex-col lg:mt-8 lg:flex-row">
       <SideMenu uid={uid || ""} />
       <main className="flex w-full flex-col">
-        <section className="mb-6 flex-col items-center justify-center px-8 md:flex-row md:items-end md:justify-between lg:px-0">
+        <header className="mb-6 flex-col items-center justify-center px-8 md:flex-row md:items-end md:justify-between lg:px-0">
           <div className="flex w-full flex-col md:flex-row">
             <div className="flex w-full items-center">
-              <h1 className="hidden text-2xl font-bold md:block">MY TICKETS</h1>
-              <span className="py-2 text-sm md:px-4">
-                <span className="font-bold">{filteredUserReviews.length}</span>
-                장
-              </span>
+              <h1 className="hidden text-2xl font-bold text-white md:block">
+                MY TICKETS
+              </h1>
+              <div className="py-2 md:px-4">
+                <span className="font-bold text-[#D4AF37]">
+                  {filteredUserReviews.length}
+                </span>
+              </div>
             </div>
             {/* 티켓 검색 */}
             <ReviewSearchInputregister
@@ -85,9 +88,9 @@ export default function MyTicktListPage() {
               placeholder="티켓 검색"
             />
           </div>
-        </section>
+        </header>
         {/* 티켓 목록 */}
-        <section className="px-8 lg:px-0">
+        <div className="h-full w-full">
           {isLoading ? (
             <ReviewListSkeleton />
           ) : !isLoading && userReviews.length > 0 ? (
@@ -100,7 +103,7 @@ export default function MyTicktListPage() {
               등록된 리뷰 티켓이 없습니다.
             </div>
           )}
-        </section>
+        </div>
       </main>
     </div>
   );
