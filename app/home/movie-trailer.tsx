@@ -1,13 +1,7 @@
 import { RiMovieLine } from "react-icons/ri";
 import VideoPlayer from "app/video-palyer";
 
-export default function MovieTrailer({
-  trailerKey,
-  movieTitle,
-}: {
-  trailerKey: string;
-  movieTitle: string;
-}) {
+export default function MovieTrailer({ trailerKey }: { trailerKey: string }) {
   return (
     <section
       id="movie-trailer"

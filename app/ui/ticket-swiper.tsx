@@ -42,7 +42,7 @@ export default function TicketSwiper({ movieList }: { movieList: Movie[] }) {
     >
       {movieList.map((movie, idx) => (
         <SwiperSlide key={movie.id}>
-          <SwiperCard id={movie.id} idx={idx} movie={movie} />
+          <SwiperCard idx={idx} movie={movie} />
         </SwiperSlide>
       ))}
       <SliderButton direction="prev" />

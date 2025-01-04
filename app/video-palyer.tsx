@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 
-// lazy 버전으로 동적 임포트
 const ReactPlayer = dynamic(() => import("react-player/lazy"), {
   ssr: false,
   loading: () => (
@@ -27,14 +26,12 @@ interface VideoPlayerProps {
 
 const VideoPlayer = ({
   url,
-  className = "",
   onReady,
   onStart,
   onPlay,
   onPause,
   onEnded,
 }: VideoPlayerProps) => {
-  // 비디오가 뷰포트에 있는지 확인하기 위한 상태와 참조
   const [isVisible, setIsVisible] = useState(false);
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -65,9 +62,9 @@ const VideoPlayer = ({
   }, [hasBeenVisible]);
 
   return (
-    <div ref={containerRef} className={`relative aspect-video ${className}`}>
+    <div ref={containerRef} className="relative aspect-video h-full w-full">
       {(isVisible || hasBeenVisible) && (
-        <div className="absolute left-0 top-0 h-full w-full">
+        <div className="h-full w-full overflow-hidden rounded-xl">
           <ReactPlayer
             url={url}
             width="100%"
@@ -92,7 +89,6 @@ const VideoPlayer = ({
                 },
               },
             }}
-            // 이벤트 핸들러
             onReady={onReady}
             onStart={onStart}
             onPlay={onPlay}

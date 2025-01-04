@@ -1,37 +1,41 @@
-import { Movie } from "api/fetchNowPlayingMovies";
+import { useMemo } from "react";
 import Link from "next/link";
+import { Movie } from "api/fetchNowPlayingMovies";
 import useGetGenres from "hooks/useGetGenres";
 import getMovieTitle from "app/utils/get-movie-title";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import NewWriteBtn from "app/ui/new-write-btn";
 import Tooltip from "app/ui/tooltip";
-import MoviePoster from "./movie-poster";
+import MoviePoster from "app/ui/movie-poster";
 
 export default function SwiperCard({
   idx,
   movie,
-  id,
 }: {
-  movie: Movie;
   idx: number;
-  id: number;
+  movie: Movie;
 }) {
+  const { id, original_title, poster_path, title, vote_average } = movie;
   const {
     genres,
-    loading: genresLoading,
-    error: genresError,
+    loading: isGenresLoading,
+    error: isGenresError,
   } = useGetGenres(id);
-  const { original_title, poster_path, title, vote_average } = movie;
-  const movieTitle = getMovieTitle(original_title, title);
+  const movieTitle = useMemo(
+    () => getMovieTitle(original_title, title),
+    [original_title, title],
+  );
 
   return (
-    <div className="group/card relative mx-2 my-8 h-[450px] drop-shadow-lg lg:h-[550px]">
-      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-gray-700 px-4 py-2 text-4xl font-bold text-white">
+    <div className="group/card relative mx-2 my-8 drop-shadow-lg">
+      <div className="absolute left-0 top-0 z-50 w-full rounded-t-xl bg-gradient-to-t from-transparent to-gray-700 px-4 py-2 text-4xl font-bold text-white">
         {idx + 1}.
       </div>
+
+      {/* MOVIE POSTER */}
       {poster_path ? (
-        <MoviePoster posterPath={poster_path} title={movieTitle} />
+        <MoviePoster posterPath={poster_path} title={movieTitle} size={342} />
       ) : (
         <div className="h-full w-full overflow-hidden rounded-xl bg-black text-4xl font-bold text-white">
           Make a ticket for your own movie review.
@@ -52,16 +56,15 @@ export default function SwiperCard({
           </div>
         </div>
         <ul className="flex w-full flex-wrap border-y-4 border-dotted border-gray-200 p-1">
-          {genresLoading && (
+          {isGenresLoading ? (
             <li className="text-xs text-gray-300 lg:text-sm">
               장르를 불러 오는 중
             </li>
-          )}
-          {genresError && (
+          ) : !isGenresLoading && isGenresError ? (
             <li className="text-xs text-gray-300 lg:text-sm">
               장르 정보를 불러올 수 없습니다
             </li>
-          )}
+          ) : null}
           {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li

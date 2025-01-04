@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Movie } from "api/fetchNowPlayingMovies";
 import getMovieTitle from "app/utils/get-movie-title";
 import MovieCard from "app/home/movie-card";
@@ -16,22 +17,24 @@ export default function RecommendMovie({
   currentMovie,
   trailerKey,
 }: RecommendMovieProps) {
-  const movieTitle = getMovieTitle(
-    currentMovie.original_title,
-    currentMovie.title,
+  const movieTitle = useMemo(
+    () => getMovieTitle(currentMovie.original_title, currentMovie.title),
+    [currentMovie],
   );
 
   return (
     <main className="mx-auto flex flex-col items-center justify-center pb-8 lg:mt-16 lg:w-4/5 lg:flex-row lg:items-start">
       {/* MOVIE POSTER */}
       {currentMovie.poster_path && (
-        <div className="w-2/4 py-4 md:w-1/3 lg:py-0 lg:pr-6">
+        <div className="w-1/3 py-4 md:py-0 lg:pr-4">
           <MoviePoster
             posterPath={currentMovie.poster_path}
             title={movieTitle}
+            size={500}
           />
         </div>
       )}
+
       {/* MOVIE CARD */}
       <div className="relative w-11/12 lg:w-2/5">
         <MovieCard movie={currentMovie} />

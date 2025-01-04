@@ -1,48 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { fetchVideosMovies } from "api/fetchVideosMovies";
+import React, { useMemo } from "react";
 import { Movie } from "api/fetchNowPlayingMovies";
+import dynamic from "next/dynamic";
+import Loading from "app/loading";
 import getMovieTitle from "app/utils/get-movie-title";
 import BackGround from "app/ui/layout/back-ground";
 import RecommendMovie from "app/home/recommend-movie";
 import RecommendMovieSkeleton from "app/home/recommend-movie-skeleton";
-import MovieTrailer from "app/home/movie-trailer";
-import NowPlayingList from "app/home/now-playing-list";
 import ScrollToTopButton from "app/ui/scroll-to-top-button";
 import Catchphrase from "app/ui/layout/catchphrase";
 
-export default function HomePage({ movieList }: { movieList: Movie[] }) {
-  const [trailerKey, setTrailerKey] = useState<string>("");
-  const [currentMovie, setCurrentMovie] = useState<Movie>();
-  const movieTitle = getMovieTitle(
-    currentMovie?.original_title,
-    currentMovie?.title,
+interface HomePageProps {
+  movieList: Movie[];
+  trailerKey: string;
+  currentMovie: Movie;
+}
+
+export default function HomePage({
+  movieList,
+  trailerKey,
+  currentMovie,
+}: HomePageProps) {
+  const memoizedMovieList = useMemo(() => movieList, [movieList]);
+  const movieTitle = useMemo(
+    () => getMovieTitle(currentMovie?.original_title, currentMovie?.title),
+    [currentMovie],
   );
 
-  useEffect(() => {
-    if (Array.isArray(movieList) && movieList.length > 0) {
-      const randomIndex = Math.floor(Math.random() * movieList.length);
-      setCurrentMovie(movieList[randomIndex]);
-    }
-  }, [movieList]);
+  const MovieTrailer = dynamic(() => import("app/home/movie-trailer"), {
+    loading: () => <Loading />,
+  });
 
-  useEffect(() => {
-    if (!currentMovie) return;
-    setTrailerKey("");
-
-    const fetchTrailer = async () => {
-      const trailerData = await fetchVideosMovies(currentMovie.id);
-
-      setTrailerKey(trailerData.results[0]?.key);
-    };
-
-    fetchTrailer();
-  }, [currentMovie]);
+  const NowPlayingList = dynamic(() => import("app/home/now-playing-list"), {
+    loading: () => <Loading />,
+    ssr: false,
+  });
 
   return (
     <>
-      {currentMovie?.backdrop_path && (
+      {currentMovie.backdrop_path && (
         <BackGround
           imageUrl={currentMovie.backdrop_path}
           movieTitle={movieTitle}
@@ -55,11 +52,9 @@ export default function HomePage({ movieList }: { movieList: Movie[] }) {
         <RecommendMovieSkeleton />
       )}
       {/* Movie Trailer */}
-      {trailerKey && (
-        <MovieTrailer trailerKey={trailerKey} movieTitle={movieTitle} />
-      )}
+      {trailerKey && <MovieTrailer trailerKey={trailerKey} />}
       {/* Now Playing List */}
-      <NowPlayingList movieList={movieList} />
+      <NowPlayingList movieList={memoizedMovieList} />
       {/* Catchphrase */}
       <Catchphrase />
       {/* Scroll to Top Button */}
