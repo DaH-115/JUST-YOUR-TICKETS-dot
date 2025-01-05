@@ -25,10 +25,15 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           <div className="flex">
             <h1 className="text-3xl font-bold lg:text-4xl">{title}</h1>
             <div className="group/tooltip relative ml-2">
-              <Link href={`/movie-details/${id}`}>
-                <FaInfoCircle className="relative text-base lg:text-lg" />
+              <Link
+                href={`/movie-details/${id}`}
+                aria-label={`${title}(${original_title}) 영화 상세정보 보기`}
+                title={`${title}(${original_title}) 영화 상세정보 보기`}
+                role="button"
+              >
+                <FaInfoCircle className="lg:text-lg" aria-hidden />
               </Link>
-              <Tooltip>더 자세한 정보 보기</Tooltip>
+              <Tooltip>영화 상세정보 보기</Tooltip>
             </div>
           </div>
           <div className="ml-1 flex items-center">

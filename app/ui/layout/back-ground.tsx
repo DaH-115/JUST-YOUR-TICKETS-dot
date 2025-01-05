@@ -28,7 +28,7 @@ export default function BackGround({
       </div>
       <div
         className="absolute inset-0 bg-gradient-to-t from-[#121212]/100 to-transparent"
-        aria-hidden="true"
+        aria-hidden
       />
     </div>
   );
