@@ -56,8 +56,10 @@ export default function HeaderSideMenu({
         <button
           onClick={onClose}
           className="transition-colors hover:text-gray-500"
+          aria-label="메뉴 열기"
         >
-          <IoMdClose size={24} />
+          <span className="sr-only">메뉴 열기</span>
+          <IoMdClose size={24} aria-hidden />
         </button>
       </div>
 

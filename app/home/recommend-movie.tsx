@@ -41,15 +41,21 @@ export default function RecommendMovie({
         <div className="absolute -right-20 top-0 hidden flex-row lg:block">
           {trailerKey && (
             <div className="group/tooltip relative">
-              <ScrollButton targetId="movie-trailer">
+              <ScrollButton
+                targetId={"movie-trailer"}
+                airaLabel={"영화 예고편 보기"}
+              >
                 <RiMovieLine size={24} />
               </ScrollButton>
               <Tooltip>영화 예고편 보기</Tooltip>
             </div>
           )}
           <div className="group/tooltip relative">
-            <ScrollButton targetId="now-playing">
-              <MdLocalMovies className="text-2xl" />
+            <ScrollButton
+              targetId={"now-playing"}
+              airaLabel={"현재 상영하는 영화 보기"}
+            >
+              <MdLocalMovies className="text-2xl" aria-hidden />
             </ScrollButton>
             <Tooltip>현재 상영하는 영화 보기</Tooltip>
           </div>

@@ -49,10 +49,15 @@ export default function SwiperCard({
             {movieTitle}
           </div>
           <div className="group/tooltip relative ml-2">
-            <Link href={`/movie-details/${id}`}>
-              <FaInfoCircle />
+            <Link
+              href={`/movie-details/${id}`}
+              aria-label={`${movieTitle}) 영화 상세정보 보기`}
+              title={`${movieTitle}) 영화 상세정보 보기`}
+              role="button"
+            >
+              <FaInfoCircle className="lg:text-lg" aria-hidden />
             </Link>
-            <Tooltip>더 자세한 정보 보기</Tooltip>
+            <Tooltip>영화 상세정보 보기</Tooltip>
           </div>
         </div>
         <ul className="flex w-full flex-wrap border-y-4 border-dotted border-gray-200 p-1">
