@@ -19,9 +19,9 @@ export default function MovieCard({ movie }: { movie: Movie }) {
     <section className="group relative mx-auto w-full break-keep">
       <div className="relative rounded-xl border-2 border-black bg-white p-2 lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
         <div className="p-4">
-          <h2 className="mb-2 inline-block animate-bounce rounded-lg bg-[#D4AF37] p-1 text-xs font-bold text-white">
+          <span className="mb-2 inline-block animate-bounce rounded-lg bg-[#8b1e3f] p-1 text-xs font-bold text-[#fbf7e8]">
             추천 영화
-          </h2>
+          </span>
           <div className="flex">
             <h1 className="text-3xl font-bold lg:text-4xl">{title}</h1>
             <div className="group/tooltip relative ml-2">
@@ -37,14 +37,14 @@ export default function MovieCard({ movie }: { movie: Movie }) {
             </div>
           </div>
           <div className="ml-1 flex items-center">
-            <h3 className="mr-2 text-lg text-gray-500">{`${original_title}(${release_date.slice(0, 4)})`}</h3>
+            <h2 className="mr-2 text-lg text-gray-500">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
           </div>
         </div>
         <ul className="flex items-center space-x-2 border-y-4 border-dotted border-gray-200 p-4 text-sm">
           {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li
-                className="rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-white active:text-black lg:text-sm"
+                className="rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-[#8b1e3f] hover:text-white active:bg-white active:text-black lg:text-sm"
                 key={idx}
               >
                 {genre}

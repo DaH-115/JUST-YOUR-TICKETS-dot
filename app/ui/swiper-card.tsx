@@ -73,7 +73,7 @@ export default function SwiperCard({
           {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li
-                className="m-1 rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white lg:text-sm"
+                className="m-1 rounded-full border border-[#8b1e3f] bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-[#8b1e3f] hover:text-white active:bg-black active:text-white lg:text-sm"
                 key={idx}
               >
                 {genre}
