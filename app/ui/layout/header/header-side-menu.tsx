@@ -90,27 +90,25 @@ export default function HeaderSideMenu({
                 >
                   Logout
                 </button>
-                <Link href="/my-page">
-                  <button
-                    className="rounded-2xl border border-white bg-white px-4 py-2 text-xs font-bold text-black transition-all duration-300 hover:bg-black hover:text-white"
-                    onClick={onClose}
-                  >
-                    My Page
-                  </button>
+                <Link
+                  href="/my-page"
+                  onClick={onClose}
+                  className="inline-block rounded-2xl border border-white bg-white px-4 py-2 text-xs font-bold text-black transition-all duration-300 hover:bg-black hover:text-white"
+                >
+                  My Page
                 </Link>
               </div>
             </div>
           </div>
         ) : (
           // 로그인 되어 있지 않은 경우 로그인 버튼 표시
-          <Link href="/login">
-            <div
-              onClick={onClose}
-              className="mb-2 flex w-full items-center justify-between rounded-2xl border border-white bg-white px-4 py-2 text-sm text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
-            >
-              Login
-              {pathname !== "/login" && <FaArrowRight />}
-            </div>
+          <Link
+            href="/login"
+            onClick={onClose}
+            className="mb-2 flex w-full items-center justify-between rounded-2xl border border-white bg-white px-4 py-2 text-sm text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
+          >
+            <span>Login</span>
+            {pathname !== "/login" && <FaArrowRight aria-hidden />}
           </Link>
         )}
       </div>
