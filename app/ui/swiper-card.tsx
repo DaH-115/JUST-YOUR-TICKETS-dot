@@ -28,7 +28,7 @@ export default function SwiperCard({
   );
 
   return (
-    <div className="group/card relative mx-2 my-8 drop-shadow-lg">
+    <div className="group/card relative m-2 drop-shadow-lg">
       <div className="absolute left-0 top-0 z-50 w-full rounded-t-xl bg-gradient-to-t from-transparent to-gray-700 px-4 py-2 text-4xl font-bold text-white">
         {idx + 1}.
       </div>
@@ -45,9 +45,7 @@ export default function SwiperCard({
       {/* MOVIE INFO CARD */}
       <div className="absolute bottom-2 right-2 w-full rounded-xl border-2 border-black bg-white transition-all duration-300 lg:bottom-0 lg:right-0 lg:group-hover/card:bottom-2 lg:group-hover/card:right-2">
         <div className="flex p-4 pb-0">
-          <div className="truncate pb-4 text-lg font-bold lg:text-xl">
-            {movieTitle}
-          </div>
+          <div className="truncate pb-2 text-lg font-bold">{movieTitle}</div>
           <div className="group/tooltip relative ml-2">
             <Link
               href={`/movie-details/${id}`}
@@ -73,7 +71,7 @@ export default function SwiperCard({
           {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li
-                className="m-1 rounded-full border border-[#8b1e3f] bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-[#8b1e3f] hover:text-white active:bg-black active:text-white lg:text-sm"
+                className="m-1 rounded-full border border-[#8b1e3f] bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-[#8b1e3f] hover:text-white active:bg-black active:text-white"
                 key={idx}
               >
                 {genre}
@@ -88,7 +86,7 @@ export default function SwiperCard({
         <div className="flex w-full text-center">
           <div className="flex items-center border-r-4 border-dotted border-gray-200 p-4">
             <IoStar className="mr-1 text-[#D4AF37]" />
-            <div className="text-xl font-bold">
+            <div className="text-lg font-bold">
               {Math.round(vote_average * 10) / 10}
             </div>
           </div>

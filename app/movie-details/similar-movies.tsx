@@ -8,9 +8,7 @@ export default function SimilarMovies({
 }) {
   return (
     <section className="px-8 py-4 lg:p-8">
-      <h2 className="mb-4 text-2xl font-bold text-white">
-        이런 영화는 어때요?
-      </h2>
+      <h2 className="text-2xl font-bold text-white">이런 영화는 어때요?</h2>
       {similarMovies.length > 0 ? (
         <TicketSwiper movieList={similarMovies} />
       ) : (

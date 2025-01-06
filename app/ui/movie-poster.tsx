@@ -19,7 +19,7 @@ export default function MoviePoster({
         src={`https://image.tmdb.org/t/p/w${size}/${posterPath}`}
         alt={title}
         fill
-        sizes="100vw"
+        sizes="(max-width: 640px) 342px, (max-width: 768px) 500px, 100vw"
         quality={70}
         priority={lazy ? false : true}
         loading={lazy ? "lazy" : "eager"}

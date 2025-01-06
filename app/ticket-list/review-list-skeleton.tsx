@@ -16,7 +16,7 @@ export default function ReviewListSkeleton() {
             </div>
           </div>
 
-          <div id="movie-poster" className="h-4/5 rounded-xl bg-gray-300"></div>
+          <div className="h-4/5 rounded-xl bg-gray-300"></div>
           <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-gray-300 bg-white">
             <div className="flex items-center justify-between border-b">
               <div className="flex items-center justify-center px-2 py-1">

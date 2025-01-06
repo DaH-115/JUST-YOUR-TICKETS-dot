@@ -103,7 +103,7 @@ export default function SearchPage({
         )}
         {searchResults.length > 0 ? (
           <section className="pt-0 md:p-8">
-            <h1 className="flex items-center text-2xl font-bold text-white md:text-4xl">
+            <h1 className="mb-6 flex items-center text-2xl font-bold text-white md:text-4xl">
               검색 결과
               <FaArrowRight size={26} className="ml-2" />
             </h1>
@@ -123,7 +123,7 @@ export default function SearchPage({
       </main>
       {!searchResults.length && (
         <section className="p-4 md:p-8">
-          <h2 className="flex items-center text-2xl font-bold text-[#D4AF37] md:text-4xl">
+          <h2 className="mb-6 flex items-center text-2xl font-bold text-[#D4AF37] md:text-4xl">
             Now Playing <FaArrowRight size={28} className="ml-2 mt-4" />
           </h2>
           <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

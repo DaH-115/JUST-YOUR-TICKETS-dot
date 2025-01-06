@@ -23,6 +23,8 @@ export default function HomePage({
   currentMovie,
 }: HomePageProps) {
   const memoizedMovieList = useMemo(() => movieList, [movieList]);
+  const memoizedTrailerKey = useMemo(() => trailerKey, [trailerKey]);
+  const memoizedCurrentMovie = useMemo(() => currentMovie, [currentMovie]);
   const movieTitle = useMemo(
     () => getMovieTitle(currentMovie?.original_title, currentMovie?.title),
     [currentMovie],
@@ -47,12 +49,15 @@ export default function HomePage({
       )}
       {/* Recommend Movie */}
       {currentMovie ? (
-        <RecommendMovie currentMovie={currentMovie} trailerKey={trailerKey} />
+        <RecommendMovie
+          currentMovie={memoizedCurrentMovie}
+          trailerKey={memoizedTrailerKey}
+        />
       ) : (
         <RecommendMovieSkeleton />
       )}
       {/* Movie Trailer */}
-      {trailerKey && <MovieTrailer trailerKey={trailerKey} />}
+      {memoizedTrailerKey && <MovieTrailer trailerKey={memoizedTrailerKey} />}
       {/* Now Playing List */}
       <NowPlayingList movieList={memoizedMovieList} />
       {/* Catchphrase */}

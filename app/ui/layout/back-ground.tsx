@@ -9,7 +9,7 @@ export default function BackGround({
   imageUrl,
   movieTitle = "Background Image",
 }: BackGroundProps) {
-  const blurImageUrl = `https://image.tmdb.org/t/p/w100/${imageUrl}`;
+  const blurImageUrl = `https://image.tmdb.org/t/p/w342/${imageUrl}`;
 
   return (
     <div className="absolute inset-0 -z-10 h-screen w-full">
@@ -20,7 +20,7 @@ export default function BackGround({
           fill
           priority
           quality={70}
-          sizes="100vw"
+          sizes="(max-width: 640px) 780px, (max-width: 1024px) 1280px, 100vw"
           placeholder="blur"
           blurDataURL={blurImageUrl}
           className="object-cover"

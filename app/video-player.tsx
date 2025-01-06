@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 const ReactPlayer = dynamic(() => import("react-player/lazy"), {
   ssr: false,
   loading: () => (
-    <div className="aspect-video animate-pulse rounded-lg bg-gray-200">
+    <div className="aspect-video animate-pulse bg-gray-200 md:rounded-xl">
       <div className="flex h-full w-full items-center justify-center">
         <span className="text-gray-500">Loading...</span>
       </div>
@@ -64,7 +64,7 @@ const VideoPlayer = ({
   return (
     <div ref={containerRef} className="relative aspect-video h-full w-full">
       {(isVisible || hasBeenVisible) && (
-        <div className="h-full w-full overflow-hidden rounded-xl">
+        <div className="h-full w-full overflow-hidden md:rounded-xl">
           <ReactPlayer
             url={url}
             width="100%"

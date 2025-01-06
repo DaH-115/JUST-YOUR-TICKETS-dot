@@ -26,7 +26,7 @@ export default function RecommendMovie({
     <main className="mx-auto flex flex-col items-center justify-center pb-8 lg:mt-16 lg:w-4/5 lg:flex-row lg:items-start">
       {/* MOVIE POSTER */}
       {currentMovie.poster_path && (
-        <div className="w-1/3 py-4 md:py-0 lg:pr-4">
+        <div className="w-2/3 py-4 md:w-1/3 md:py-0 lg:pr-4">
           <MoviePoster
             posterPath={currentMovie.poster_path}
             title={movieTitle}

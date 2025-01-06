@@ -107,7 +107,7 @@ export default function ReviewForm({
             <form onSubmit={handleSubmit(onSubmitHandler)}>
               <div className="p-4">
                 <label
-                  htmlFor="date"
+                  htmlFor="reviewTitle"
                   className="mb-2 inline-block text-sm font-bold"
                 >
                   제목

@@ -85,7 +85,7 @@ export default function ReviewTicket({
                 <div className="flex items-center justify-between pb-1">
                   <div className="flex items-center justify-center px-2">
                     <IoStar className="mr-1 text-[#D4AF37]" />
-                    <p className="font-bold lg:text-2xl">{post.rating}</p>
+                    <p className="font-bold">{post.rating}</p>
                   </div>
                   <p className="px-2 text-xs font-bold lg:text-sm">
                     {post.userName ? post.userName : "Guest"}
