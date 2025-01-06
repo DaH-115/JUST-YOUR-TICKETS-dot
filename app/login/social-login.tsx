@@ -7,7 +7,7 @@ import {
 import { useRouter } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { useError } from "store/error-context";
+import { useError } from "store/context/error-context";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useCallback, useState } from "react";
 import SocialLoginButton from "app/login/social-login-button";

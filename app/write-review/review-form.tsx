@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "store/hooks";
+import { useAppSelector } from "store/redux-toolkit/hooks";
 import { useReviewForm } from "hooks/useReviewForm";
 import getMovieTitle from "app/utils/get-movie-title";
 import BackGround from "app/ui/layout/back-ground";

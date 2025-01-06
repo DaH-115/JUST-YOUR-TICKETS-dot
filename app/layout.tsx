@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import "app/globals.css";
-import Providers from "app/providers";
+import Providers from "store/redux-toolkit/providers";
+import { ErrorProvider } from "store/context/error-context";
+import { AuthProvider } from "store/context/auth-context";
 import Header from "app/ui/layout/header/header";
 import Footer from "app/ui/layout/footer";
-import { ErrorProvider } from "store/error-context";
-import { AuthProvider } from "store/auth-context";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://just-movie-tickets.vercel.app"),

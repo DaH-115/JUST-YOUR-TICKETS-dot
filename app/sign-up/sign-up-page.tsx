@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { useError } from "store/error-context";
+import { useError } from "store/context/error-context";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
-import InputField from "app/ui/input-field";
+import InputField from "app/components/input-field";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { db, isAuth } from "firebase-config";
 import {

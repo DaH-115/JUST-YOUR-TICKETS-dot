@@ -14,11 +14,12 @@ export default function MoviePoster({
   lazy,
 }: MoviePosterProps) {
   return (
-    <div className="relative aspect-[2/3] h-full w-full">
+    <div className="aspect-[2/3] h-full w-full">
       <Image
         src={`https://image.tmdb.org/t/p/w${size}/${posterPath}`}
         alt={title}
-        fill
+        width={500}
+        height={750}
         sizes="(max-width: 640px) 342px, (max-width: 768px) 500px, 100vw"
         quality={70}
         priority={lazy ? false : true}

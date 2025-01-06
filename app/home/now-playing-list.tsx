@@ -1,7 +1,7 @@
 import { memo, useMemo } from "react";
 import { Movie } from "api/fetchNowPlayingMovies";
 import { MdLocalMovies } from "react-icons/md";
-import TicketSwiper from "app/ui/ticket-swiper";
+import TicketSwiper from "app/components/swiper/ticket-swiper";
 
 const NowPlayingHeader = memo(function NowPlayingHeader() {
   return (

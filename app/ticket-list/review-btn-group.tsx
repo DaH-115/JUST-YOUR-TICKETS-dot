@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { db } from "firebase-config";
 import { doc, getDoc } from "firebase/firestore";
-import { useAppSelector } from "store/hooks";
+import { useAppSelector } from "store/redux-toolkit/hooks";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 

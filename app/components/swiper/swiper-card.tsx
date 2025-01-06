@@ -5,9 +5,9 @@ import useGetGenres from "hooks/useGetGenres";
 import getMovieTitle from "app/utils/get-movie-title";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import NewWriteBtn from "app/ui/new-write-btn";
-import Tooltip from "app/ui/tooltip";
-import MoviePoster from "app/ui/movie-poster";
+import NewWriteBtn from "app/components/new-write-btn";
+import Tooltip from "app/components/tooltip";
+import MoviePoster from "app/components/movie-poster";
 
 export default function SwiperCard({
   idx,

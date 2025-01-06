@@ -8,11 +8,11 @@ import SideMenu from "app/my-page/side-menu";
 import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { useForm } from "react-hook-form";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
-import ReviewSearchInputregister from "app/ui/reviewTicketList/review-search-Input";
-import ReviewTicket from "app/ui/reviewTicketList/review-ticket";
+import ReviewSearchInputregister from "app/components/reviewTicketList/review-search-Input";
+import ReviewTicket from "app/components/reviewTicketList/review-ticket";
 import useReviewSearch from "hooks/useReviewSearch";
 import ReviewListSkeleton from "app/ticket-list/review-list-skeleton";
-import { useError } from "store/error-context";
+import { useError } from "store/context/error-context";
 
 export default function MyTicktListPage() {
   const searchParams = useSearchParams();

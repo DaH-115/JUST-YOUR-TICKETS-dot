@@ -4,9 +4,9 @@ import getMovieTitle from "app/utils/get-movie-title";
 import MovieCard from "app/home/movie-card";
 import { RiMovieLine } from "react-icons/ri";
 import { MdLocalMovies } from "react-icons/md";
-import ScrollButton from "app/ui/scroll-button";
-import Tooltip from "app/ui/tooltip";
-import MoviePoster from "app/ui/movie-poster";
+import ScrollButton from "app/components/scroll-button";
+import Tooltip from "app/components/tooltip";
+import MoviePoster from "app/components/movie-poster";
 
 interface RecommendMovieProps {
   currentMovie: Movie;

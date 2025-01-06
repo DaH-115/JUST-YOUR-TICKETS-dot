@@ -1,5 +1,5 @@
 import { Movie } from "api/fetchNowPlayingMovies";
-import TicketSwiper from "app/ui/ticket-swiper";
+import TicketSwiper from "app/components/swiper/ticket-swiper";
 
 export default function SimilarMovies({
   similarMovies,

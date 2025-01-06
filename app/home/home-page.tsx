@@ -8,7 +8,7 @@ import getMovieTitle from "app/utils/get-movie-title";
 import BackGround from "app/ui/layout/back-ground";
 import RecommendMovie from "app/home/recommend-movie";
 import RecommendMovieSkeleton from "app/home/recommend-movie-skeleton";
-import ScrollToTopButton from "app/ui/scroll-to-top-button";
+import ScrollToTopButton from "app/components/scroll-to-top-button";
 import Catchphrase from "app/ui/layout/catchphrase";
 
 interface HomePageProps {

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "store/hooks";
+import { useAppSelector } from "store/redux-toolkit/hooks";
 import SideMenu from "app/my-page/side-menu";
 import dynamic from "next/dynamic";
 import Loading from "app/loading";

@@ -1,7 +1,7 @@
 import { useSwiper } from "swiper/react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-export default function SliderButton({
+export default function SwiperButton({
   direction,
 }: {
   direction: "next" | "prev";

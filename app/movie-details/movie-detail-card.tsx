@@ -4,8 +4,9 @@ import formatMovieDate from "app/utils/format-movie-date";
 import getMovieTitle from "app/utils/get-movie-title";
 import convertRuntime from "app/utils/convert-runtime";
 import { IoStar } from "react-icons/io5";
-import NewWriteBtn from "app/ui/new-write-btn";
-import MoviePoster from "app/ui/movie-poster";
+import NewWriteBtn from "app/components/new-write-btn";
+import MoviePoster from "app/components/movie-poster";
+import Loading from "app/loading";
 
 type MovieDetailCardProps = {
   movieDetails: MovieDetails;
@@ -37,7 +38,7 @@ export default function MovieDetailCard({
               title={movieTitle}
             />
           ) : (
-            <div className="aspect-[2/3] h-full w-full animate-pulse rounded-lg bg-gray-300 shadow-lg" />
+            <Loading />
           )}
         </section>
 

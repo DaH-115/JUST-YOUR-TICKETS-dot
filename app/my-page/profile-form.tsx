@@ -16,12 +16,12 @@ import {
 } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import ChangePassword from "app/my-page/change-password";
-import { useError } from "store/error-context";
+import { useError } from "store/context/error-context";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
-import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { onUpdateUserDisplayName } from "store/userSlice";
+import { onUpdateUserDisplayName } from "store/redux-toolkit/slice/userSlice";
 import { BackAnimation } from "app/ui/back-animation";
 
 interface UserDoc {

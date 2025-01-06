@@ -7,13 +7,13 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { db, isAuth } from "firebase-config";
 import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { useError } from "store/error-context";
+import { useError } from "store/context/error-context";
 import { setCookie } from "app/utils/cookie-utils";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import SocialLogin from "app/login/social-login";
-import InputField from "app/ui/input-field";
+import InputField from "app/components/input-field";
 import { FaArrowRight } from "react-icons/fa";
 
 const loginSchema = z.object({

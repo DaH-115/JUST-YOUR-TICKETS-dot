@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { isAuth } from "firebase-config";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
-import { useAppSelector } from "store/hooks";
-import { useError } from "store/error-context";
+import { useAppSelector } from "store/redux-toolkit/hooks";
+import { useError } from "store/context/error-context";
 import { useRouter } from "next/navigation";
 import { BackAnimation } from "app/ui/back-animation";
 

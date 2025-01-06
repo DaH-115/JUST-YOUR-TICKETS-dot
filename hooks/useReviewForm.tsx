@@ -7,11 +7,11 @@ import {
   updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
+import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
+import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
 import { ReviewData } from "app/write-review/review-form";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
-import { useError } from "store/error-context";
+import { useError } from "store/context/error-context";
 import { MovieDetails } from "api/fetchMovieDetails";
 
 export const useReviewForm = (

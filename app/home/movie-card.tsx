@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { Movie } from "api/fetchNowPlayingMovies";
 import formatMovieDate from "app/utils/format-movie-date";
-import { useMovieDetails } from "store/movie-details-context";
+import { useMovieDetails } from "store/context/movie-details-context";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import AnimatedOverview from "app/ui/animated-overview";
-import NewWriteBtn from "app/ui/new-write-btn";
-import Tooltip from "app/ui/tooltip";
+import AnimatedOverview from "app/components/animated-overview";
+import NewWriteBtn from "app/components/new-write-btn";
+import Tooltip from "app/components/tooltip";
 import { BackAnimation } from "app/ui/back-animation";
 
 export default function MovieCard({ movie }: { movie: Movie }) {

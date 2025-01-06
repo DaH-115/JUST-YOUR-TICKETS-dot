@@ -1,17 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useAppSelector, useAppDispatch } from "store/hooks";
+import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
 import { FirebaseError } from "firebase/app";
 import { useForm } from "react-hook-form";
 import fetchMovieReviews, {
   MovieReview,
 } from "api/movie-reviews/fetchMovieReviews";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
-import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
+import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
 import useReviewSearch from "hooks/useReviewSearch";
-import ReviewTicket from "app/ui/reviewTicketList/review-ticket";
-import ReviewSearchInputregister from "app/ui/reviewTicketList/review-search-Input";
+import ReviewTicket from "app/components/reviewTicketList/review-ticket";
+import ReviewSearchInputregister from "app/components/reviewTicketList/review-search-Input";
 import ReviewListSkeleton from "app/ticket-list/review-list-skeleton";
 
 export default function TicketListPage() {

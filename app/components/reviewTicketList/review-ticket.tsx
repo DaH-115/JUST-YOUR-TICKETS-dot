@@ -6,9 +6,9 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoIosAddCircle } from "react-icons/io";
-import ReviewDetailsModal from "app/ui/reviewTicketList/review-details-modal";
+import ReviewDetailsModal from "app/components/reviewTicketList/review-details-modal";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
-import MoviePoster from "app/ui/movie-poster";
+import MoviePoster from "app/components/movie-poster";
 
 export default function ReviewTicket({
   reviews,

@@ -1,5 +1,5 @@
 import { fetchNowPlayingMovies } from "api/fetchNowPlayingMovies";
-import { MovieDetailsProvider } from "store/movie-details-context";
+import { MovieDetailsProvider } from "store/context/movie-details-context";
 import { fetchMovieCredits } from "api/fetchMovieCredits";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
 import { fetchVideosMovies } from "api/fetchVideosMovies";
