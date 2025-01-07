@@ -23,7 +23,7 @@ export default function MoviePoster({
           height={750}
           sizes="(max-width: 640px) 342px, (max-width: 768px) 500px, 100vw"
           quality={70}
-          priority={lazy ? false : true}
+          priority={!lazy}
           loading={lazy ? "lazy" : "eager"}
           className="rounded-xl object-cover"
         />

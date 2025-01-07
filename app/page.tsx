@@ -14,18 +14,23 @@ export default async function Page() {
       return notFound();
     }
 
+    const MAX_MOVIES = 10;
     const randomIndex = Math.floor(
-      Math.random() * Math.min(nowPlayingMovies.length, 10),
+      Math.random() * Math.min(nowPlayingMovies.length, MAX_MOVIES),
     );
     const currentMovie = nowPlayingMovies[randomIndex];
 
     const [trailerData, credits, genreResponse] = await Promise.all([
-      fetchVideosMovies(currentMovie.id),
-      fetchMovieCredits(currentMovie.id),
-      fetchMovieDetails(currentMovie.id),
-    ]).catch((error) => {
-      throw error;
-    });
+      fetchVideosMovies(currentMovie.id).catch(() => {
+        throw new Error("예고편 영상을 불러올 수 없습니다.");
+      }),
+      fetchMovieCredits(currentMovie.id).catch(() => {
+        throw new Error("출연진 정보를 불러올 수 없습니다.");
+      }),
+      fetchMovieDetails(currentMovie.id).catch(() => {
+        throw new Error("영화 상세 정보를 불러올 수 없습니다.");
+      }),
+    ]);
 
     const videoKey = trailerData?.results?.[0]?.key || "";
     const genres = genreResponse.genres.map((genre) => genre.name);
@@ -40,6 +45,6 @@ export default async function Page() {
       </MovieDetailsProvider>
     );
   } catch (error) {
-    throw error;
+    throw new Error("영화를 불러올 수 없습니다");
   }
 }
