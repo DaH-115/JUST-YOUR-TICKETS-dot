@@ -19,9 +19,12 @@ export default function HeaderSideMenuLi({
   const isCurrentPage = pathname === href;
 
   return (
-    <li className="inline-block rounded-2xl border border-white px-4 py-2 text-sm transition-all duration-300 hover:bg-white hover:font-bold hover:text-black">
-      <Link href={href}>
-        <div className="relative flex items-center justify-between">
+    <li className="rounded-full transition-colors hover:bg-white hover:text-black">
+      <Link
+        href={href}
+        className="block w-full rounded-full border border-white p-3"
+      >
+        <div className="flex items-center justify-between">
           {children}
           {/* 리뷰가 새롭게 추가 되면 알림 표시 */}
           {showAlert && (
@@ -30,7 +33,7 @@ export default function HeaderSideMenuLi({
               <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
             </span>
           )}
-          {!isCurrentPage && <FaArrowRight />}
+          {!isCurrentPage && <FaArrowRight aria-hidden />}
         </div>
       </Link>
     </li>

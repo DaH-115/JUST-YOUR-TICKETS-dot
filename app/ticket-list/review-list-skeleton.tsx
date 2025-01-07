@@ -1,9 +1,9 @@
 export default function ReviewListSkeleton() {
   return (
     <div className="grid grid-cols-1 gap-2 pb-8 md:grid-cols-3 lg:grid-cols-4">
-      {[...Array(8)].map((_, index) => (
+      {[...Array(8)].map((_, idx) => (
         <div
-          key={index}
+          key={idx}
           className="group/card relative h-[300px] animate-pulse drop-shadow-md md:h-[450px]"
         >
           {/* CARD HEADER */}
@@ -16,7 +16,7 @@ export default function ReviewListSkeleton() {
             </div>
           </div>
 
-          <div id="movie-poster" className="h-4/5 rounded-xl bg-gray-300"></div>
+          <div className="h-4/5 rounded-xl bg-gray-300"></div>
           <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-gray-300 bg-white">
             <div className="flex items-center justify-between border-b">
               <div className="flex items-center justify-center px-2 py-1">

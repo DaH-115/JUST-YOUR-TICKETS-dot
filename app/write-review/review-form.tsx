@@ -1,11 +1,9 @@
-"use client";
-
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "store/hooks";
-import { useReviewForm } from "app/write-review/useReviewForm";
-import useGetTitle from "hooks/useGetTitle";
+import { useAppSelector } from "store/redux-toolkit/hooks";
+import { useReviewForm } from "hooks/useReviewForm";
+import getMovieTitle from "app/utils/get-movie-title";
 import BackGround from "app/ui/layout/back-ground";
 import { IoStar } from "react-icons/io5";
 import { MdDriveFileRenameOutline } from "react-icons/md";
@@ -48,7 +46,7 @@ export default function ReviewForm({
   });
   const [showExitConfirmation, setShowExitConfirmation] = useState(false);
   const userState = useAppSelector((state) => state.user.user);
-  const movieTitle = useGetTitle(movieInfo.original_title, movieInfo.title);
+  const movieTitle = getMovieTitle(movieInfo.original_title, movieInfo.title);
   const { onSubmitHandler } = useReviewForm(mode, movieInfo, movieId, reviewId);
 
   const handlePageExit = useCallback(() => {
@@ -109,7 +107,7 @@ export default function ReviewForm({
             <form onSubmit={handleSubmit(onSubmitHandler)}>
               <div className="p-4">
                 <label
-                  htmlFor="date"
+                  htmlFor="reviewTitle"
                   className="mb-2 inline-block text-sm font-bold"
                 >
                   제목
@@ -145,12 +143,12 @@ export default function ReviewForm({
                     min="0"
                     max="10"
                     step="0.5"
-                    className="w-full accent-[#8B1E3F]"
+                    className="accent-primary-500 w-full"
                   />
                 </div>
                 <div className="flex items-center justify-center text-center">
                   <div>
-                    <IoStar className="mr-1 text-[#D4AF37]" size={20} />
+                    <IoStar className="text-accent-300 mr-1" size={20} />
                   </div>
                   <div className="text-lg font-bold">{rating}</div>
                   <span className="text-gray-400">/ 10</span>
@@ -190,7 +188,7 @@ export default function ReviewForm({
                 <button
                   type="submit"
                   disabled={!isFormValid}
-                  className="group flex w-full items-center justify-center rounded-xl bg-[#8B1E3F] p-4 text-white transition-colors duration-300 hover:bg-[#551226] disabled:text-gray-500"
+                  className="hover:bg-primary-700 bg-primary-500 group flex w-full items-center justify-center rounded-xl p-4 text-white transition-colors duration-300 disabled:text-gray-500"
                 >
                   <MdDriveFileRenameOutline className="mr-1" size={18} />
                   작성

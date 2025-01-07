@@ -2,14 +2,35 @@
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}", // Note the addition of the `app` directory.
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-
-    // Or if using `src` directory:
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
+      colors: {
+        primary: {
+          50: "#FDF2F4",
+          100: "#F7D9E0",
+          200: "#F0B5C3",
+          300: "#E38FA6",
+          400: "#D66A89",
+          500: "#8B1E3F", // 기본 버건디
+          600: "#701832",
+          700: "#551226",
+          800: "#3A0C19",
+          900: "#1E060D",
+        },
+        accent: {
+          50: "#FBF7E8",
+          100: "#F7EFD1",
+          200: "#ECD594",
+          300: "#D4AF37", // 기본 골드
+          400: "#BD9C31",
+          500: "#A6892B",
+          600: "#8F7625",
+          700: "#78631F",
+          800: "#615019",
+          900: "#4A3D13",
+        },
+      },
       animation: {
         scroll: "scroll 40s linear infinite",
       },
@@ -30,17 +51,6 @@ module.exports = {
             "linear-gradient(to bottom, black 60%, transparent 100%)",
           "-webkit-mask-image":
             "linear-gradient(to bottom, black 60%, transparent 100%)",
-        },
-        ".sr-only": {
-          position: "absolute",
-          width: "1px",
-          height: "1px",
-          padding: "0",
-          margin: "-1px",
-          overflow: "hidden",
-          clip: "rect(0, 0, 0, 0)",
-          whiteSpace: "nowrap",
-          borderWidth: "0",
         },
       };
       addUtilities(newUtilities);

@@ -26,36 +26,43 @@ export default function Footer() {
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isVisible]);
 
   return (
-    <div
-      id="footer"
-      className="w-full bg-black px-8 pb-8 pt-12 text-white lg:py-12"
-    >
+    <footer className="w-full bg-black px-8 pb-8 pt-4 text-white lg:py-12">
       <div className="pb-8">JUST YOUR TICKETS.</div>
       <div className="flex justify-between space-x-2 text-xs lg:text-sm">
         <div className="w-full space-y-1 border-l-2 border-dotted border-gray-500 pl-4">
-          <div className={`${borderStyle} ${"font-bold"}`}>Resume</div>
-          <div className={borderStyle}>Github</div>
-          <div className={borderStyle}>Email</div>
+          <Link href="/" className={`block p-1 font-bold ${borderStyle}`}>
+            Resume
+          </Link>
+          <Link
+            href="https://github.com/DaH-115/JUST-MOVIE-TICKETS-dot"
+            className={`block p-1 ${borderStyle}`}
+          >
+            Github
+          </Link>
         </div>
         <div className="w-full border-l-2 border-dotted border-gray-500 pl-4">
           <ul className="space-y-1">
             <li className={borderStyle}>
-              <Link href="/">Home</Link>
+              <Link href="/" className="block p-1">
+                Home
+              </Link>
             </li>
             <li className={borderStyle}>
-              <Link href="/search">Search</Link>
+              <Link href="/search" className="block p-1">
+                Search
+              </Link>
             </li>
             <li className={borderStyle}>
-              <Link href="/ticket-list">Ticket List</Link>
+              <Link href="/ticket-list" className="block p-1">
+                Ticket List
+              </Link>
             </li>
           </ul>
         </div>
-        <div
-          className={`hidden w-full border-l-2 border-dotted border-gray-500 pl-4 lg:block`}
-        >
+        <div className={`w-full border-l-2 border-dotted border-gray-500 pl-4`}>
           <div
             className={`font-bold transition-transform duration-700 ${
               isVisible ? "translate-y-0" : "translate-y-full"
@@ -65,13 +72,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div
-        className={`mt-8 border-t border-white pt-4 text-xs font-bold transition-transform duration-500 lg:hidden ${
-          isVisible ? "translate-y-0" : "translate-y-10"
-        }`}
-      >
-        ⓒGWAK DA HYUN 2024
-      </div>
-    </div>
+    </footer>
   );
 }

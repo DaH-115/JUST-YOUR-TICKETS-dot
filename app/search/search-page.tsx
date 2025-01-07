@@ -7,9 +7,9 @@ import * as z from "zod";
 import { Movie } from "api/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
 import { fetchSearchMovies } from "api/fetchSearchMovies";
-import ScrollToTopButton from "app/ui/scroll-to-top-button";
+import ScrollToTopButton from "app/components/scroll-to-top-button";
 import Catchphrase from "app/ui/layout/catchphrase";
-import SwiperCard from "app/ui/swiper-card";
+import SwiperCard from "app/components/swiper/swiper-card";
 import { FaArrowRight } from "react-icons/fa";
 
 const searchSchema = z.object({
@@ -72,13 +72,13 @@ export default function SearchPage({
             </label>
             <input
               id="search-input"
-              className="mr-2 w-full rounded-lg bg-white px-4 py-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+              className="focus:ring-accent-300 mr-2 w-full rounded-lg bg-white px-4 py-2 text-sm text-black focus:outline-none focus:ring-2"
               type="search"
               placeholder="검색어를 입력하세요"
               {...register("query")}
             />
             <button
-              className="cursor-pointer rounded-full p-2 text-white transition-colors duration-300 ease-in-out hover:bg-[#D4AF37] hover:text-black"
+              className="hover:bg-accent-300 cursor-pointer rounded-full p-2 text-white transition-colors duration-300 ease-in-out hover:text-black"
               type="submit"
               disabled={isLoading}
             >
@@ -103,18 +103,13 @@ export default function SearchPage({
         )}
         {searchResults.length > 0 ? (
           <section className="pt-0 md:p-8">
-            <h1 className="flex items-center text-2xl font-bold text-white md:text-4xl">
+            <h1 className="mb-6 flex items-center text-2xl font-bold text-white md:text-4xl">
               검색 결과
               <FaArrowRight size={26} className="ml-2" />
             </h1>
             <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {searchResults.map((result, idx) => (
-                <SwiperCard
-                  key={result.id}
-                  movie={result}
-                  id={result.id}
-                  idx={idx}
-                />
+                <SwiperCard key={result.id} movie={result} idx={idx} />
               ))}
             </div>
           </section>
@@ -128,17 +123,12 @@ export default function SearchPage({
       </main>
       {!searchResults.length && (
         <section className="p-4 md:p-8">
-          <h2 className="flex items-center text-2xl font-bold text-[#D4AF37] md:text-4xl">
+          <h2 className="text-accent-300 mb-6 flex items-center text-2xl font-bold md:text-4xl">
             Now Playing <FaArrowRight size={28} className="ml-2 mt-4" />
           </h2>
           <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {nowPlayingMovies.map((movie, idx) => (
-              <SwiperCard
-                key={movie.id}
-                movie={movie}
-                idx={idx}
-                id={movie.id}
-              />
+              <SwiperCard key={movie.id} movie={movie} idx={idx} />
             ))}
           </div>
         </section>

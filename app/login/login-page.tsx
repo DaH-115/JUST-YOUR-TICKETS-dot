@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { db, isAuth } from "firebase-config";
 import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { useError } from "store/error-context";
+import { useError } from "store/context/error-context";
 import { setCookie } from "app/utils/cookie-utils";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import SocialLogin from "app/login/social-login";
-import InputField from "app/ui/input-field";
+import InputField from "app/components/input-field";
 import { FaArrowRight } from "react-icons/fa";
 
 const loginSchema = z.object({
@@ -45,48 +45,53 @@ export default function LoginPage() {
   });
   const isRememberMe = watch("rememberMe");
 
-  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
-    setIsLoading(true);
+  const onSubmit: SubmitHandler<LoginInputs> = useCallback(
+    async (data) => {
+      setIsLoading(true);
 
-    try {
-      // 1. 이메일/비밀번호로 Firebase 로그인
-      const userCredential = await signInWithEmailAndPassword(
-        isAuth,
-        data.email,
-        data.password,
-      );
+      try {
+        // 1. 이메일/비밀번호로 Firebase 로그인
+        const userCredential = await signInWithEmailAndPassword(
+          isAuth,
+          data.email,
+          data.password,
+        );
 
-      // 2. 사용자 이름이 없다면 Firestore에서 가져와서 설정
-      if (!userCredential.user.displayName) {
-        const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
-        if (userDoc.exists()) {
-          const { displayName } = userDoc.data();
-          await updateProfile(userCredential.user, {
-            displayName,
-          });
+        // 2. 사용자 이름이 없다면 Firestore에서 가져와서 설정
+        if (!userCredential.user.displayName) {
+          const userDoc = await getDoc(
+            doc(db, "users", userCredential.user.uid),
+          );
+          if (userDoc.exists()) {
+            const { displayName } = userDoc.data();
+            await updateProfile(userCredential.user, {
+              displayName,
+            });
+          }
         }
+
+        // 3. 로그인 성공 후 토큰을 받아와서 저장
+        const token = await userCredential.user.getIdToken();
+        setCookie(token, data.rememberMe);
+
+        // Remember Me 선택 여부를 localStorage에 저장
+        if (data.rememberMe) {
+          localStorage.setItem("rememberMe", "true");
+        } else {
+          localStorage.removeItem("rememberMe");
+        }
+
+        // 4. 로그인 성공 후 메인 페이지로 이동
+        router.push("/");
+      } catch (error: any) {
+        const { title, message } = firebaseErrorHandler(error);
+        isShowError(title, message);
+      } finally {
+        setIsLoading(false);
       }
-
-      // 3. 로그인 성공 후 토큰을 받아와서 저장
-      const token = await userCredential.user.getIdToken();
-      setCookie(token, data.rememberMe);
-
-      // Remember Me 선택 여부를 localStorage에 저장
-      if (data.rememberMe) {
-        localStorage.setItem("rememberMe", "true");
-      } else {
-        localStorage.removeItem("rememberMe");
-      }
-
-      // 4. 로그인 성공 후 메인 페이지로 이동
-      router.push("/");
-    } catch (error: any) {
-      const { title, message } = firebaseErrorHandler(error);
-      isShowError(title, message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [router, isShowError],
+  );
 
   return (
     <div className="w-full bg-white pb-8 md:flex md:justify-center md:py-10">
@@ -136,8 +141,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className={`w-full rounded-full bg-[#8B1E3F] p-4 text-sm text-white transition-colors duration-300 ease-in-out ${
-              isLoading ? "cursor-not-allowed opacity-50" : "hover:bg-[#551226]"
+            className={`bg-primary-500 w-full rounded-full p-4 text-sm text-white transition-colors duration-300 ease-in-out ${
+              isLoading
+                ? "cursor-not-allowed opacity-50"
+                : "hover:bg-primary-700"
             }`}
             disabled={isLoading}
           >
@@ -147,10 +154,10 @@ export default function LoginPage() {
           <Link href="/sign-up">
             <button
               type="button"
-              className={`mt-2 flex w-full items-center justify-between rounded-full border border-[#8B1E3F] bg-white p-4 text-sm text-black transition-colors duration-300 ease-in-out ${
+              className={`border-primary-500 mt-2 flex w-full items-center justify-between rounded-full border bg-white p-4 text-sm text-black transition-colors duration-300 ease-in-out ${
                 isLoading
                   ? "cursor-not-allowed opacity-50"
-                  : "hover:bg-[#8B1E3F] hover:text-white"
+                  : "hover:bg-primary-500 hover:text-white"
               }`}
               disabled={isLoading}
             >

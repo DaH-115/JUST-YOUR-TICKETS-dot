@@ -1,5 +1,3 @@
-"use client";
-
 import { db, isAuth } from "firebase-config";
 import {
   GithubAuthProvider,
@@ -9,9 +7,9 @@ import {
 import { useRouter } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { useError } from "store/error-context";
+import { useError } from "store/context/error-context";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import SocialLoginButton from "app/login/social-login-button";
 import {
   doc,
@@ -20,7 +18,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import onGenerateDisplayName from "app/sign-up/utils/onGenerateDisplayName";
+import generateDisplayName from "app/utils/generate-displayName";
 import { setCookie } from "app/utils/cookie-utils";
 
 export type SocialProvider = "google" | "github";
@@ -31,61 +29,64 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
   const [isLoadingProvider, setIsLoadingProvider] =
     useState<SocialProvider | null>(null);
 
-  const socialLoginHandler = async (provider: SocialProvider) => {
-    setIsLoadingProvider(provider);
-    try {
-      // 1. 소셜 로그인
-      const authProvider =
-        provider === "google"
-          ? new GoogleAuthProvider()
-          : new GithubAuthProvider();
-      const { user } = await signInWithPopup(isAuth, authProvider);
+  const socialLoginHandler = useCallback(
+    async (provider: SocialProvider) => {
+      setIsLoadingProvider(provider);
+      try {
+        // 1. 소셜 로그인
+        const authProvider =
+          provider === "google"
+            ? new GoogleAuthProvider()
+            : new GithubAuthProvider();
+        const { user } = await signInWithPopup(isAuth, authProvider);
 
-      // 2. 토큰 생성
-      const token = await user.getIdToken();
-      setCookie(token, rememberMe);
+        // 2. 토큰 생성
+        const token = await user.getIdToken();
+        setCookie(token, rememberMe);
 
-      if (rememberMe) {
-        localStorage.setItem("rememberMe", "true");
-      } else {
-        localStorage.removeItem("rememberMe");
+        if (rememberMe) {
+          localStorage.setItem("rememberMe", "true");
+        } else {
+          localStorage.removeItem("rememberMe");
+        }
+
+        // 3. Firestore 사용자 정보 확인
+        const userRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+
+        if (!userDoc.exists()) {
+          // 3-1. 첫 로그인일 경우 Firestore에 사용자 정보 생성
+          const generatedDisplayName = await generateDisplayName();
+
+          await setDoc(userRef, {
+            name: user.displayName,
+            displayName: user.displayName || generatedDisplayName,
+            email: user.email,
+            profileImage: user.photoURL,
+            provider,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+            biography: "Make a ticket for your own movie review.",
+            roll: "user",
+          });
+        } else {
+          // 3-2. 기존 사용자의 경우 최종 접속 시간만 업데이트
+          await updateDoc(userRef, {
+            updatedAt: serverTimestamp(),
+          });
+        }
+
+        router.push("/");
+      } catch (error: any) {
+        if (error.code === "auth/popup-closed-by-user") return;
+        const { title, message } = firebaseErrorHandler(error);
+        isShowError(title, message);
+      } finally {
+        setIsLoadingProvider(null);
       }
-
-      // 3. Firestore 사용자 정보 확인
-      const userRef = doc(db, "users", user.uid);
-      const userDoc = await getDoc(userRef);
-
-      if (!userDoc.exists()) {
-        // 3-1. 첫 로그인일 경우 Firestore에 사용자 정보 생성
-        const generateDisplayName = await onGenerateDisplayName();
-
-        await setDoc(userRef, {
-          name: user.displayName,
-          displayName: user.displayName || generateDisplayName,
-          email: user.email,
-          profileImage: user.photoURL,
-          provider,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-          biography: "Make a ticket for your own movie review.",
-          roll: "user",
-        });
-      } else {
-        // 3-2. 기존 사용자의 경우 최종 접속 시간만 업데이트
-        await updateDoc(userRef, {
-          updatedAt: serverTimestamp(),
-        });
-      }
-
-      router.push("/");
-    } catch (error: any) {
-      if (error.code === "auth/popup-closed-by-user") return;
-      const { title, message } = firebaseErrorHandler(error);
-      isShowError(title, message);
-    } finally {
-      setIsLoadingProvider(null);
-    }
-  };
+    },
+    [rememberMe, router, isShowError],
+  );
 
   return (
     <>

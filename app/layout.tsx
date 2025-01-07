@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import "app/globals.css";
-import Providers from "app/providers";
+import Providers from "store/redux-toolkit/providers";
+import { ErrorProvider } from "store/context/error-context";
+import { AuthProvider } from "store/context/auth-context";
 import Header from "app/ui/layout/header/header";
 import Footer from "app/ui/layout/footer";
-import { ErrorProvider } from "store/error-context";
-import { AuthProvider } from "store/auth-context";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://just-movie-tickets.vercel.app"),
@@ -44,8 +44,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className="trancy-und h-full">
-      <body className="h-full w-full min-w-[320px] bg-[#121212]">
+    <html lang="ko" className="trancy-und">
+      <body className="min-h-screen w-full min-w-[320px] bg-[#121212]">
+        {/* RTK Provider */}
         <Providers>
           <AuthProvider>
             <ErrorProvider>

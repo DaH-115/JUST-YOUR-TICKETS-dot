@@ -7,6 +7,7 @@ interface SearchResult {
 export async function fetchSearchMovies(query: string): Promise<SearchResult> {
   const res = await fetch(
     `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&query=${query}&include_adult=true&language=ko-KR`,
+    { cache: "no-store" },
   );
 
   if (!res.ok) {

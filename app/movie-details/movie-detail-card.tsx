@@ -1,13 +1,12 @@
-"use client";
-
-import Image from "next/image";
 import { MovieDetails } from "api/fetchMovieDetails";
 import { MovieCredits } from "api/fetchMovieCredits";
-import useFormatDate from "hooks/useFormatDate";
-import useGetTitle from "hooks/useGetTitle";
-import useConvertRuntime from "app/movie-details/utils/useConvertRuntime";
+import formatMovieDate from "app/utils/format-movie-date";
+import getMovieTitle from "app/utils/get-movie-title";
+import convertRuntime from "app/utils/convert-runtime";
 import { IoStar } from "react-icons/io5";
-import NewWriteBtn from "app/ui/new-write-btn";
+import NewWriteBtn from "app/components/new-write-btn";
+import MoviePoster from "app/components/movie-poster";
+import Loading from "app/loading";
 
 type MovieDetailCardProps = {
   movieDetails: MovieDetails;
@@ -18,33 +17,28 @@ export default function MovieDetailCard({
   movieDetails,
   movieCredits,
 }: MovieDetailCardProps) {
-  const movieTitle = useGetTitle(
+  const movieTitle = getMovieTitle(
     movieDetails.original_title,
     movieDetails.title,
   );
-  const movieDate = useFormatDate(movieDetails.release_date);
-  const convertedRuntime = useConvertRuntime(movieDetails.runtime);
+  const movieDate = formatMovieDate(movieDetails.release_date);
+  const convertedRuntime = convertRuntime(movieDetails.runtime);
   const casts = movieCredits?.cast || [];
   const crews = movieCredits?.crew || [];
 
   return (
-    <main className="relative mb-8 flex w-full items-center justify-center px-4 lg:my-8 lg:px-0">
-      <div className="flex flex-col justify-center lg:w-2/3 lg:flex-row">
+    <main className="relative mb-8 flex w-full items-center justify-center px-4 md:my-8 md:px-0">
+      <div className="flex flex-col justify-center md:w-2/3 md:flex-row">
         {/* MOVIE POSTER */}
-        <section className="mx-auto w-3/4 py-4 lg:mr-8 lg:w-2/3 lg:py-0">
+        <section className="h-full w-full py-4 md:mr-6 md:w-2/3 md:py-0">
           {movieDetails.poster_path ? (
-            <Image
-              src={`https://image.tmdb.org/t/p/original/${movieDetails.poster_path}`}
-              alt={movieTitle}
-              width={500}
-              height={750}
-              className="rounded-lg object-cover shadow-lg"
-              placeholder="blur"
-              blurDataURL={`https://image.tmdb.org/t/p/w92/${movieDetails.poster_path}`}
-              priority
+            <MoviePoster
+              posterPath={movieDetails.poster_path}
+              size={500}
+              title={movieTitle}
             />
           ) : (
-            <div className="aspect-[2/3] h-full w-full animate-pulse rounded-lg bg-gray-300 shadow-lg" />
+            <Loading />
           )}
         </section>
 
@@ -52,14 +46,14 @@ export default function MovieDetailCard({
         <section className="mx-auto w-full rounded-xl border-2 border-black bg-white p-2 shadow-lg">
           {/* 기본 정보 영역 */}
           <div className="p-4 pb-2">
-            <h1 className="mb-2 inline-block rounded-lg bg-black p-1 text-xs font-bold text-white">
+            <h1 className="bg-primary-500 text-accent-50 mb-2 inline-block rounded-lg p-1 text-xs font-bold">
               영화 정보
             </h1>
-            <h2 className="break-keep text-2xl font-bold lg:text-3xl">
+            <h2 className="break-keep text-2xl font-bold md:text-3xl">
               {movieDetails.title}
             </h2>
             <div className="flex items-center">
-              <p className="text-sm text-gray-500 lg:text-base">
+              <p className="text-sm text-gray-500 md:text-base">
                 {movieDetails.original_title}
               </p>
               <p className="text-lg text-gray-500">
@@ -75,7 +69,7 @@ export default function MovieDetailCard({
               {movieDetails.genres.map((genre) => (
                 <li
                   key={genre.id}
-                  className="rounded-full border border-black bg-black px-2 py-1 text-xs text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black lg:text-xs"
+                  className="border-primary-500 bg-primary-500 rounded-full border px-2 py-1 text-xs text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black lg:text-xs"
                 >
                   {genre.name}
                 </li>
@@ -86,7 +80,7 @@ export default function MovieDetailCard({
           {/* 평점 영역 */}
           <div className="p-4 font-bold">
             <div className="flex items-center text-2xl md:text-4xl">
-              <IoStar className="mr-2" />
+              <IoStar className="text-accent-300 mr-2" />
               <p className="text-2xl md:text-4xl">
                 {Math.round(movieDetails.vote_average * 10) / 10}
                 <span className="text-xl font-normal text-gray-300 md:text-2xl">
@@ -164,8 +158,8 @@ export default function MovieDetailCard({
           <div className="flex items-center border-y-4 border-dotted border-gray-200 p-4">
             <h3 className="text-xs font-bold md:text-sm">제작</h3>
             <div className="ml-4 space-y-1 text-sm">
-              {movieDetails.production_companies.map((company, index) => (
-                <div key={index}>
+              {movieDetails.production_companies.map((company, idx) => (
+                <div key={idx}>
                   <span>{company.name}</span>
                 </div>
               ))}

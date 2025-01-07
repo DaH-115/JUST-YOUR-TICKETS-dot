@@ -1,17 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useAppSelector, useAppDispatch } from "store/hooks";
+import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
 import { FirebaseError } from "firebase/app";
 import { useForm } from "react-hook-form";
 import fetchMovieReviews, {
   MovieReview,
 } from "api/movie-reviews/fetchMovieReviews";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
-import { addNewReviewAlertHandler } from "store/newReviewAlertSlice";
-import useReviewSearch from "app/utils/useReviewSearch";
-import ReviewTicket from "app/ui/reviewTicketList/review-ticket";
-import ReviewSearchInputregister from "app/ui/reviewTicketList/review-search-Input";
+import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
+import useReviewSearch from "hooks/useReviewSearch";
+import ReviewTicket from "app/components/reviewTicketList/review-ticket";
+import ReviewSearchInputregister from "app/components/reviewTicketList/review-search-Input";
 import ReviewListSkeleton from "app/ticket-list/review-list-skeleton";
 
 export default function TicketListPage() {
@@ -72,7 +72,7 @@ export default function TicketListPage() {
         <div className="mb-4 mt-8 flex w-full items-center justify-between text-white md:mb-0 md:mt-0 md:justify-normal">
           <h1 className="text-2xl font-bold">ALL TICKETS</h1>
           <span className="md:px-4">
-            <span className="font-bold text-[#D4AF37]">
+            <span className="text-accent-300 font-bold">
               {filteredUserReviews.length}장
             </span>
           </span>

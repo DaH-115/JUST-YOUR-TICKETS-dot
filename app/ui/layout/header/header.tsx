@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { RootState } from "store";
-import { useAppDispatch, useAppSelector } from "store/hooks";
+import { RootState } from "store/redux-toolkit";
+import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { signOut } from "firebase/auth";
 import { isAuth } from "firebase-config";
 import { useRouter } from "next/navigation";
-import { clearUserState } from "store/userSlice";
+import { clearUserState } from "store/redux-toolkit/slice/userSlice";
 import HeaderSearchBar from "app/ui/layout/header/header-search-bar";
 import { IoIosMenu } from "react-icons/io";
 import HeaderSideMenu from "app/ui/layout/header/header-side-menu";
@@ -66,7 +66,7 @@ export default function Header() {
     return () => {
       document.removeEventListener("mousedown", clickOutsideHandler);
     };
-  }, []);
+  }, [dropdownRef]);
 
   useEffect(() => {
     if (isSideMenuOpen) {
@@ -108,7 +108,7 @@ export default function Header() {
           just your tickets.
         </h1>
         {/* MENU */}
-        <ul className="hidden lg:flex">
+        <ul className="hidden items-center justify-center md:flex">
           <li className="group">
             <Link
               href="/"
@@ -141,14 +141,15 @@ export default function Header() {
           </li>
         </ul>
         {/* MOBILE/ HAMBURGER MENU */}
-        <div
-          onClick={toggleSideMenu}
-          className={`block rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200 lg:hidden ${
-            isSideMenuOpen ? "pointer-events-auto" : ""
-          }`}
-        >
-          <IoIosMenu size={34} />
+        <div onClick={toggleSideMenu} className="md:hidden">
+          <button
+            className="rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200"
+            aria-label="메뉴 열기"
+          >
+            <IoIosMenu size={34} aria-hidden />
+          </button>
         </div>
+
         {/* PROFILE MENU */}
         <div className="hidden lg:flex">
           {userDisplayName ? (

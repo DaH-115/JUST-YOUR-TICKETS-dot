@@ -1,77 +1,71 @@
-import { Movie } from "api/fetchNowPlayingMovies";
-import Image from "next/image";
+import { useMemo } from "react";
 import Link from "next/link";
+import { Movie } from "api/fetchNowPlayingMovies";
 import useGetGenres from "hooks/useGetGenres";
-import useGetTitle from "hooks/useGetTitle";
+import getMovieTitle from "app/utils/get-movie-title";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import NewWriteBtn from "app/ui/new-write-btn";
-import Tooltip from "app/ui/tooltip";
+import NewWriteBtn from "app/components/new-write-btn";
+import Tooltip from "app/components/tooltip";
+import MoviePoster from "app/components/movie-poster";
 
 export default function SwiperCard({
   idx,
   movie,
-  id,
 }: {
-  movie: Movie;
   idx: number;
-  id: number;
+  movie: Movie;
 }) {
+  const { id, original_title, poster_path, title, vote_average } = movie;
   const {
     genres,
-    loading: genresLoading,
-    error: genresError,
+    loading: isGenresLoading,
+    error: isGenresError,
   } = useGetGenres(id);
-  const { original_title, poster_path, title, vote_average } = movie;
-  const movieTitle = useGetTitle(original_title, title);
+  const movieTitle = useMemo(
+    () => getMovieTitle(original_title, title),
+    [original_title, title],
+  );
 
   return (
-    <div className="group/card relative mx-2 my-8 h-[450px] drop-shadow-lg lg:h-[550px]">
-      <div className="absolute left-0 top-0 w-full rounded-t-xl bg-gradient-to-t from-transparent to-gray-700 px-4 py-2 text-4xl font-bold text-white">
+    <div className="group/card relative m-2 drop-shadow-lg">
+      <div className="absolute left-0 top-0 z-50 w-full rounded-t-xl bg-gradient-to-t from-transparent to-gray-700 px-4 py-2 text-4xl font-bold text-white">
         {idx + 1}.
       </div>
-      {poster_path ? (
-        <Image
-          width={500}
-          height={750}
-          className="h-full w-full rounded-xl object-cover object-center"
-          src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-          alt={movieTitle}
-        />
-      ) : (
-        <div className="h-full w-full overflow-hidden rounded-xl bg-black text-4xl font-bold text-white">
-          Make a ticket for your own movie review.
-        </div>
-      )}
+
+      {/* MOVIE POSTER */}
+      <MoviePoster posterPath={poster_path} title={movieTitle} size={342} />
 
       {/* MOVIE INFO CARD */}
       <div className="absolute bottom-2 right-2 w-full rounded-xl border-2 border-black bg-white transition-all duration-300 lg:bottom-0 lg:right-0 lg:group-hover/card:bottom-2 lg:group-hover/card:right-2">
         <div className="flex p-4 pb-0">
-          <div className="truncate pb-4 text-lg font-bold lg:text-xl">
-            {movieTitle}
-          </div>
+          <div className="truncate pb-2 text-lg font-bold">{movieTitle}</div>
           <div className="group/tooltip relative ml-2">
-            <Link href={`/movie-details/${id}`}>
-              <FaInfoCircle />
+            <Link
+              href={`/movie-details/${id}`}
+              aria-label={`${movieTitle} 영화 상세정보 보기`}
+              title={`${movieTitle} 영화 상세정보 보기`}
+              role="button"
+            >
+              <FaInfoCircle className="lg:text-lg" aria-hidden />
             </Link>
-            <Tooltip>더 자세한 정보 보기</Tooltip>
+            <Tooltip>영화 상세정보 보기</Tooltip>
           </div>
         </div>
         <ul className="flex w-full flex-wrap border-y-4 border-dotted border-gray-200 p-1">
-          {genresLoading && (
+          {isGenresLoading ? (
             <li className="text-xs text-gray-300 lg:text-sm">
               장르를 불러 오는 중
             </li>
-          )}
-          {genresError && (
+          ) : !isGenresLoading && isGenresError ? (
             <li className="text-xs text-gray-300 lg:text-sm">
               장르 정보를 불러올 수 없습니다
             </li>
-          )}
+          ) : null}
           {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li
-                className="m-1 rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white lg:text-sm"
+                className="border-primary-500 hover:bg-primary-500 m-1 rounded-full border bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:text-white active:bg-black active:text-white"
                 key={idx}
               >
                 {genre}
@@ -85,8 +79,8 @@ export default function SwiperCard({
         </ul>
         <div className="flex w-full text-center">
           <div className="flex items-center border-r-4 border-dotted border-gray-200 p-4">
-            <IoStar className="mr-1 text-[#D4AF37]" />
-            <div className="text-xl font-bold">
+            <IoStar className="text-accent-300 mr-1" />
+            <div className="text-lg font-bold">
               {Math.round(vote_average * 10) / 10}
             </div>
           </div>

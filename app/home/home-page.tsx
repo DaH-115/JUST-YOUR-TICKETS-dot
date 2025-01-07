@@ -1,69 +1,69 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { fetchVideosMovies } from "api/fetchVideosMovies";
+import React, { useMemo } from "react";
 import { Movie } from "api/fetchNowPlayingMovies";
-import useGetTitle from "hooks/useGetTitle";
+import dynamic from "next/dynamic";
+import Loading from "app/loading";
+import getMovieTitle from "app/utils/get-movie-title";
 import BackGround from "app/ui/layout/back-ground";
 import RecommendMovie from "app/home/recommend-movie";
 import RecommendMovieSkeleton from "app/home/recommend-movie-skeleton";
-import MovieTrailer from "app/home/movie-trailer";
-import NowPlayingList from "app/home/now-playing-list";
-import ScrollToTopButton from "app/ui/scroll-to-top-button";
+import ScrollToTopButton from "app/components/scroll-to-top-button";
 import Catchphrase from "app/ui/layout/catchphrase";
 
-export default function HomePage({ movieList }: { movieList: Movie[] }) {
-  const [trailerKey, setTrailerKey] = useState<string>("");
-  const [currentMovie, setCurrentMovie] = useState<Movie>();
-  const movieTitle = useGetTitle(
-    currentMovie?.original_title,
-    currentMovie?.title,
+interface HomePageProps {
+  movieList: Movie[];
+  trailerKey: string;
+  currentMovie: Movie;
+}
+
+export default function HomePage({
+  movieList,
+  trailerKey,
+  currentMovie,
+}: HomePageProps) {
+  const memoizedMovieList = useMemo(() => movieList, [movieList]);
+  const memoizedTrailerKey = useMemo(() => trailerKey, [trailerKey]);
+  const memoizedCurrentMovie = useMemo(() => currentMovie, [currentMovie]);
+  const movieTitle = useMemo(
+    () => getMovieTitle(currentMovie?.original_title, currentMovie?.title),
+    [currentMovie],
   );
 
-  useEffect(() => {
-    if (Array.isArray(movieList) && movieList.length > 0) {
-      const randomIndex = Math.floor(Math.random() * movieList.length);
-      setCurrentMovie(movieList[randomIndex]);
-    }
-  }, [movieList]);
+  const MovieTrailer = dynamic(() => import("app/home/movie-trailer"), {
+    loading: () => <Loading />,
+  });
 
-  useEffect(() => {
-    if (!currentMovie) return;
-    setTrailerKey("");
-
-    const fetchTrailer = async () => {
-      const trailerData = await fetchVideosMovies(currentMovie.id);
-
-      setTrailerKey(trailerData.results[0]?.key);
-    };
-
-    fetchTrailer();
-  }, [currentMovie]);
+  const NowPlayingList = dynamic(() => import("app/home/now-playing-list"), {
+    loading: () => <Loading />,
+    ssr: false,
+  });
 
   return (
-    <div className="min-w-[320px]">
+    <>
       {currentMovie?.backdrop_path && (
         <BackGround
-          imageUrl={currentMovie?.backdrop_path}
+          imageUrl={currentMovie.backdrop_path}
           movieTitle={movieTitle}
         />
       )}
       {/* Recommend Movie */}
       {currentMovie ? (
-        <RecommendMovie currentMovie={currentMovie} trailerKey={trailerKey} />
+        <RecommendMovie
+          currentMovie={memoizedCurrentMovie}
+          trailerKey={memoizedTrailerKey}
+        />
       ) : (
         <RecommendMovieSkeleton />
       )}
       {/* Movie Trailer */}
-      {trailerKey && (
-        <MovieTrailer trailerKey={trailerKey} movieTitle={movieTitle} />
-      )}
+      {memoizedTrailerKey && <MovieTrailer trailerKey={memoizedTrailerKey} />}
       {/* Now Playing List */}
-      <NowPlayingList movieList={movieList} />
+      <NowPlayingList movieList={memoizedMovieList} />
       {/* Catchphrase */}
       <Catchphrase />
       {/* Scroll to Top Button */}
       <ScrollToTopButton />
-    </div>
+    </>
   );
 }

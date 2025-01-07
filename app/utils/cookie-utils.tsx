@@ -3,12 +3,14 @@ export function isDevEnvironment() {
 }
 
 // 쿠키 옵션 생성 함수
-export function createCookieOptions(isRemembered: boolean): {
+export const createCookieOptions = (
+  isRemembered: boolean,
+): {
   maxAge?: number;
   path: string;
   sameSite: string;
   secure: boolean;
-} {
+} => {
   // 개발 환경일 때의 설정
   if (isDevEnvironment()) {
     return {
@@ -26,10 +28,10 @@ export function createCookieOptions(isRemembered: boolean): {
       secure: true,
     };
   }
-}
+};
 
 // 쿠키 설정 함수
-export function setCookie(token: string, isRemembered: boolean): void {
+export const setCookie = (token: string, isRemembered: boolean): void => {
   const options = createCookieOptions(isRemembered);
 
   // 쿠키 문자열 생성
@@ -44,15 +46,15 @@ export function setCookie(token: string, isRemembered: boolean): void {
   // 빈 문자열 제거하고 쿠키 설정
   const cookieString = cookieParts.filter((part) => part !== "").join("; ");
   document.cookie = cookieString;
-}
+};
 
 // 쿠키 삭제 함수
-export function removeCookie(): void {
+export const removeCookie = (): void => {
   document.cookie = "firebase-session-token=; max-age=0; path=/";
-}
+};
 
 // 쿠키 확인 함수
-export function getCookie(): string | null {
+export const getCookie = (): string | null => {
   const cookies = document.cookie.split(";");
 
   // 각 쿠키를 순회하면서 찾기
@@ -63,4 +65,4 @@ export function getCookie(): string | null {
     }
   }
   return null;
-}
+};

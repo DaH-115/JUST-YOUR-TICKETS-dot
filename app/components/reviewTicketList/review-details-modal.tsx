@@ -1,7 +1,7 @@
 import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
-import { formatDate } from "app/utils/format-date";
+import formatDate from "app/utils/format-date";
 
 type ReviewDetailsModalProps = {
   isModalOpen: boolean;
@@ -31,7 +31,7 @@ export default function ReviewDetailsModal({
       >
         <div className="flex h-[4rem] items-center justify-between pr-2">
           <div className="flex h-full items-center justify-center border-r border-black px-4 py-2">
-            <IoStar className="mt-1 text-[#D4AF37]" size={18} />
+            <IoStar className="text-accent-300 mt-1" size={18} />
             <p className="text-2xl font-bold md:text-3xl">
               {selectedReview.rating}
             </p>
@@ -63,7 +63,7 @@ export default function ReviewDetailsModal({
             님의 리뷰
           </div>
         </div>
-        <div className="flex items-center justify-end rounded-b-xl bg-[#701832] p-2">
+        <div className="bg-primary-600 flex items-center justify-end rounded-b-xl p-2">
           <IoCloseOutline
             onClick={closeModalHandler}
             className="cursor-pointer text-white"
