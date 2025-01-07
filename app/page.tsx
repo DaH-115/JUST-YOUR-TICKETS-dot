@@ -4,15 +4,27 @@ import { fetchMovieCredits } from "api/fetchMovieCredits";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
 import { fetchVideosMovies } from "api/fetchVideosMovies";
 import HomePage from "app/home/home-page";
+import { notFound } from "next/navigation";
 
 export default async function Page() {
   const { results: nowPlayingMovies } = await fetchNowPlayingMovies();
-  const randomIndex = Math.floor(Math.random() * 10);
-  const trailerData = await fetchVideosMovies(nowPlayingMovies[randomIndex].id);
+
+  if (!nowPlayingMovies) {
+    return notFound();
+  }
+
+  const randomIndex = Math.floor(
+    nowPlayingMovies.length <= 10
+      ? Math.random() * 10
+      : Math.random() * nowPlayingMovies.length,
+  );
   const currentMovie = nowPlayingMovies[randomIndex];
-  const videoKey = trailerData?.results?.[0]?.key ?? "";
-  const credits = await fetchMovieCredits(currentMovie.id);
-  const genreResponse = await fetchMovieDetails(currentMovie.id);
+  const [trailerData, credits, genreResponse] = await Promise.all([
+    fetchVideosMovies(currentMovie.id),
+    fetchMovieCredits(currentMovie.id),
+    fetchMovieDetails(currentMovie.id),
+  ]);
+  const videoKey = trailerData?.results?.[0]?.key || "";
   const genres = genreResponse.genres.map((genre) => genre.name);
 
   return (
