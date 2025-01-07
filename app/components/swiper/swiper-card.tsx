@@ -34,13 +34,7 @@ export default function SwiperCard({
       </div>
 
       {/* MOVIE POSTER */}
-      {poster_path ? (
-        <MoviePoster posterPath={poster_path} title={movieTitle} size={342} />
-      ) : (
-        <div className="h-full w-full overflow-hidden rounded-xl bg-black text-4xl font-bold text-white">
-          Make a ticket for your own movie review.
-        </div>
-      )}
+      <MoviePoster posterPath={poster_path} title={movieTitle} size={342} />
 
       {/* MOVIE INFO CARD */}
       <div className="absolute bottom-2 right-2 w-full rounded-xl border-2 border-black bg-white transition-all duration-300 lg:bottom-0 lg:right-0 lg:group-hover/card:bottom-2 lg:group-hover/card:right-2">

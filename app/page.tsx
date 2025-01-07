@@ -7,33 +7,39 @@ import HomePage from "app/home/home-page";
 import { notFound } from "next/navigation";
 
 export default async function Page() {
-  const { results: nowPlayingMovies } = await fetchNowPlayingMovies();
+  try {
+    const { results: nowPlayingMovies } = await fetchNowPlayingMovies();
 
-  if (!nowPlayingMovies) {
-    return notFound();
+    if (!nowPlayingMovies?.length) {
+      return notFound();
+    }
+
+    const randomIndex = Math.floor(
+      Math.random() * Math.min(nowPlayingMovies.length, 10),
+    );
+    const currentMovie = nowPlayingMovies[randomIndex];
+
+    const [trailerData, credits, genreResponse] = await Promise.all([
+      fetchVideosMovies(currentMovie.id),
+      fetchMovieCredits(currentMovie.id),
+      fetchMovieDetails(currentMovie.id),
+    ]).catch((error) => {
+      throw error;
+    });
+
+    const videoKey = trailerData?.results?.[0]?.key || "";
+    const genres = genreResponse.genres.map((genre) => genre.name);
+
+    return (
+      <MovieDetailsProvider credits={credits} genres={genres}>
+        <HomePage
+          movieList={nowPlayingMovies}
+          currentMovie={currentMovie}
+          trailerKey={videoKey}
+        />
+      </MovieDetailsProvider>
+    );
+  } catch (error) {
+    throw error;
   }
-
-  const randomIndex = Math.floor(
-    nowPlayingMovies.length <= 10
-      ? Math.random() * 10
-      : Math.random() * nowPlayingMovies.length,
-  );
-  const currentMovie = nowPlayingMovies[randomIndex];
-  const [trailerData, credits, genreResponse] = await Promise.all([
-    fetchVideosMovies(currentMovie.id),
-    fetchMovieCredits(currentMovie.id),
-    fetchMovieDetails(currentMovie.id),
-  ]);
-  const videoKey = trailerData?.results?.[0]?.key || "";
-  const genres = genreResponse.genres.map((genre) => genre.name);
-
-  return (
-    <MovieDetailsProvider credits={credits} genres={genres}>
-      <HomePage
-        movieList={nowPlayingMovies}
-        currentMovie={currentMovie}
-        trailerKey={videoKey}
-      />
-    </MovieDetailsProvider>
-  );
 }
