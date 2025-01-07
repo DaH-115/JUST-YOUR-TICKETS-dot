@@ -62,7 +62,7 @@ export default function SideReviewList({ uid }: { uid: string }) {
         </div>
         {userReviews && userReviews.length > 0 ? (
           <ul className="py-1">
-            {userReviews.map((review, index) => (
+            {userReviews.map((review) => (
               <li
                 key={review.id}
                 className="flex items-center border-b border-gray-300 p-2"

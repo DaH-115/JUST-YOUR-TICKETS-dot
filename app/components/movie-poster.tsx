@@ -28,7 +28,7 @@ export default function MoviePoster({
           className="rounded-xl object-cover"
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center rounded-xl bg-[#551226] p-4 text-center text-white">
+        <div className="bg-primary-700 flex h-full w-full items-center justify-center rounded-xl p-4 text-center text-white">
           <span className="text-sm">
             {title || "Make a ticket for your own movie review."}
           </span>

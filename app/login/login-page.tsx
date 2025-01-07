@@ -141,8 +141,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className={`w-full rounded-full bg-[#8B1E3F] p-4 text-sm text-white transition-colors duration-300 ease-in-out ${
-              isLoading ? "cursor-not-allowed opacity-50" : "hover:bg-[#551226]"
+            className={`bg-primary-500 w-full rounded-full p-4 text-sm text-white transition-colors duration-300 ease-in-out ${
+              isLoading
+                ? "cursor-not-allowed opacity-50"
+                : "hover:bg-primary-700"
             }`}
             disabled={isLoading}
           >
@@ -152,10 +154,10 @@ export default function LoginPage() {
           <Link href="/sign-up">
             <button
               type="button"
-              className={`mt-2 flex w-full items-center justify-between rounded-full border border-[#8B1E3F] bg-white p-4 text-sm text-black transition-colors duration-300 ease-in-out ${
+              className={`border-primary-500 mt-2 flex w-full items-center justify-between rounded-full border bg-white p-4 text-sm text-black transition-colors duration-300 ease-in-out ${
                 isLoading
                   ? "cursor-not-allowed opacity-50"
-                  : "hover:bg-[#8B1E3F] hover:text-white"
+                  : "hover:bg-primary-500 hover:text-white"
               }`}
               disabled={isLoading}
             >

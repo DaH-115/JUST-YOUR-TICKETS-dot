@@ -35,7 +35,7 @@ export default function MyPagePage() {
         aria-live="polite"
       >
         <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[#D4AF37] border-t-black" />
+          <div className="border-accent-300 mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-black" />
           <div className="mb-2 text-lg text-gray-300">
             로그인이 필요한 페이지입니다
           </div>

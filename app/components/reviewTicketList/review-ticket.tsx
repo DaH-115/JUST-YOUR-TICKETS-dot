@@ -84,7 +84,7 @@ export default function ReviewTicket({
               <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white p-2 transition-all duration-300 group-hover/card:bottom-1 group-hover/card:right-1 md:group-hover/card:bottom-2 md:group-hover/card:right-2">
                 <div className="flex items-center justify-between pb-1">
                   <div className="flex items-center justify-center px-2">
-                    <IoStar className="mr-1 text-[#D4AF37]" />
+                    <IoStar className="text-accent-300 mr-1" />
                     <p className="font-bold">{post.rating}</p>
                   </div>
                   <p className="px-2 text-xs font-bold lg:text-sm">
@@ -106,7 +106,7 @@ export default function ReviewTicket({
                     - {post.releaseYear}
                   </div>
                 </div>
-                <div className="rounded-lg bg-[#701832] px-3 py-2 hover:bg-[#551226]">
+                <div className="hover:bg-primary-700 bg-primary-600 rounded-lg px-3 py-2">
                   <button
                     className="group relative flex w-full items-center justify-end"
                     onClick={() => openModalHandler(post)}

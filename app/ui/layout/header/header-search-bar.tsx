@@ -86,7 +86,7 @@ export default function HeaderSearchBar() {
             {...register("search")}
             type="search"
             placeholder="영화 검색"
-            className={`h-12 w-full rounded-full border-2 border-black pl-4 pr-12 text-sm transition-all duration-300 ease-in-out focus:border-none focus:outline-none focus:ring-2 focus:ring-[#D4AF37] ${
+            className={`focus:ring-accent-300 h-12 w-full rounded-full border-2 border-black pl-4 pr-12 text-sm transition-all duration-300 ease-in-out focus:border-none focus:outline-none focus:ring-2 ${
               isSearchOpen ? "opacity-100" : "opacity-0"
             }`}
             onFocus={inputFocusHandler}
@@ -101,9 +101,9 @@ export default function HeaderSearchBar() {
 
         {isDropdownOpen && searchResults.length > 0 && (
           <div className="absolute right-0 top-full z-10 mt-1 max-h-60 w-64 cursor-pointer overflow-auto rounded-md border border-gray-300 bg-white shadow-lg">
-            {searchResults.map((result, index) => (
+            {searchResults.map((result, idx) => (
               <div
-                key={index}
+                key={idx}
                 className="px-3 py-2 hover:bg-gray-100"
                 onClick={() => {
                   setIsDropdownOpen(false);

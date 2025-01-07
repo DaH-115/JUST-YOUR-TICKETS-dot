@@ -46,7 +46,7 @@ export default function MovieDetailCard({
         <section className="mx-auto w-full rounded-xl border-2 border-black bg-white p-2 shadow-lg">
           {/* 기본 정보 영역 */}
           <div className="p-4 pb-2">
-            <h1 className="mb-2 inline-block rounded-lg bg-[#8b1e3f] p-1 text-xs font-bold text-white">
+            <h1 className="bg-primary-500 text-accent-50 mb-2 inline-block rounded-lg p-1 text-xs font-bold">
               영화 정보
             </h1>
             <h2 className="break-keep text-2xl font-bold md:text-3xl">
@@ -69,7 +69,7 @@ export default function MovieDetailCard({
               {movieDetails.genres.map((genre) => (
                 <li
                   key={genre.id}
-                  className="rounded-full border border-[#8b1e3f] bg-[#8b1e3f] px-2 py-1 text-xs text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black lg:text-xs"
+                  className="border-primary-500 bg-primary-500 rounded-full border px-2 py-1 text-xs text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black lg:text-xs"
                 >
                   {genre.name}
                 </li>
@@ -80,7 +80,7 @@ export default function MovieDetailCard({
           {/* 평점 영역 */}
           <div className="p-4 font-bold">
             <div className="flex items-center text-2xl md:text-4xl">
-              <IoStar className="mr-2 text-[#D4AF37]" />
+              <IoStar className="text-accent-300 mr-2" />
               <p className="text-2xl md:text-4xl">
                 {Math.round(movieDetails.vote_average * 10) / 10}
                 <span className="text-xl font-normal text-gray-300 md:text-2xl">
@@ -158,8 +158,8 @@ export default function MovieDetailCard({
           <div className="flex items-center border-y-4 border-dotted border-gray-200 p-4">
             <h3 className="text-xs font-bold md:text-sm">제작</h3>
             <div className="ml-4 space-y-1 text-sm">
-              {movieDetails.production_companies.map((company, index) => (
-                <div key={index}>
+              {movieDetails.production_companies.map((company, idx) => (
+                <div key={idx}>
                   <span>{company.name}</span>
                 </div>
               ))}

@@ -76,7 +76,7 @@ export default function MyTicktListPage() {
                 MY TICKETS
               </h1>
               <div className="py-2 md:px-4">
-                <span className="font-bold text-[#D4AF37]">
+                <span className="text-accent-300 font-bold">
                   {filteredUserReviews.length}
                 </span>
               </div>

@@ -72,7 +72,7 @@ export default function TicketListPage() {
         <div className="mb-4 mt-8 flex w-full items-center justify-between text-white md:mb-0 md:mt-0 md:justify-normal">
           <h1 className="text-2xl font-bold">ALL TICKETS</h1>
           <span className="md:px-4">
-            <span className="font-bold text-[#D4AF37]">
+            <span className="text-accent-300 font-bold">
               {filteredUserReviews.length}장
             </span>
           </span>

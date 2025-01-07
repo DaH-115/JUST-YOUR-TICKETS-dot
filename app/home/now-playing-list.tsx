@@ -7,7 +7,7 @@ const NowPlayingHeader = memo(function NowPlayingHeader() {
   return (
     <div className="mb-6">
       <div className="flex items-start justify-between md:justify-start">
-        <h2 className="text-4xl font-black text-[#D4AF37] lg:text-5xl">
+        <h2 className="text-accent-300 text-4xl font-black lg:text-5xl">
           Now
           <br />
           Playing

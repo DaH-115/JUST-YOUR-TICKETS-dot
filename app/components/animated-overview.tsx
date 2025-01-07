@@ -40,7 +40,7 @@ export default function AnimatedOverview({ overview }: { overview: string }) {
         <div className="flex justify-end">
           <button
             onClick={toggleExpandHandler}
-            className="mt-2 rounded-lg p-1 text-xs text-gray-600 transition-all duration-200 hover:bg-[#701832] hover:text-white"
+            className="hover:bg-primary-600 mt-2 rounded-lg p-1 text-xs text-gray-600 transition-all duration-200 hover:text-white"
           >
             {isExpanded ? "접기" : "더 보기"}
           </button>

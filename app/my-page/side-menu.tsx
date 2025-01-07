@@ -24,7 +24,7 @@ const SideMenu = React.memo(function SideMenu({ uid }: { uid: string }) {
 
       return `text-lg w-full text-center lg:text-start md:text-2xl lg:text-5xl ${
         isActive
-          ? "text-[#D4AF37]  font-bold"
+          ? "text-accent-300  font-bold"
           : "text-gray-300 hover:text-[#BD9C31]"
       } transition-all duration-300 ease-in-out`;
     },

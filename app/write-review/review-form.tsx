@@ -143,12 +143,12 @@ export default function ReviewForm({
                     min="0"
                     max="10"
                     step="0.5"
-                    className="w-full accent-[#8B1E3F]"
+                    className="accent-primary-500 w-full"
                   />
                 </div>
                 <div className="flex items-center justify-center text-center">
                   <div>
-                    <IoStar className="mr-1 text-[#D4AF37]" size={20} />
+                    <IoStar className="text-accent-300 mr-1" size={20} />
                   </div>
                   <div className="text-lg font-bold">{rating}</div>
                   <span className="text-gray-400">/ 10</span>
@@ -188,7 +188,7 @@ export default function ReviewForm({
                 <button
                   type="submit"
                   disabled={!isFormValid}
-                  className="group flex w-full items-center justify-center rounded-xl bg-[#8B1E3F] p-4 text-white transition-colors duration-300 hover:bg-[#551226] disabled:text-gray-500"
+                  className="hover:bg-primary-700 bg-primary-500 group flex w-full items-center justify-center rounded-xl p-4 text-white transition-colors duration-300 disabled:text-gray-500"
                 >
                   <MdDriveFileRenameOutline className="mr-1" size={18} />
                   작성

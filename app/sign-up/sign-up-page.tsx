@@ -200,8 +200,10 @@ export default function SignUpPage() {
 
           <button
             type="submit"
-            className={`mb-2 w-full rounded-full bg-[#8B1E3F] p-4 text-sm text-white transition-all duration-300 ease-in-out ${
-              isLoading ? "cursor-not-allowed opacity-50" : "hover:bg-[#551226]"
+            className={`bg-primary-500 mb-2 w-full rounded-full p-4 text-sm text-white transition-all duration-300 ease-in-out ${
+              isLoading
+                ? "cursor-not-allowed opacity-50"
+                : "hover:bg-primary-700"
             }`}
             disabled={isLoading}
           >

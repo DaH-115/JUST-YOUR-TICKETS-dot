@@ -9,7 +9,7 @@ export default function MovieTrailer({ trailerKey }: { trailerKey: string }) {
     >
       <div className="mb-4 px-4 lg:mb-8 lg:px-8">
         <div className="flex items-start justify-between md:justify-start">
-          <h2 className="text-4xl font-black text-[#D4AF37] lg:text-5xl">
+          <h2 className="text-accent-300 text-4xl font-black lg:text-5xl">
             Movie
             <br />
             Trailer

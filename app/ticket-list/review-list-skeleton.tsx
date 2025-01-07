@@ -1,9 +1,9 @@
 export default function ReviewListSkeleton() {
   return (
     <div className="grid grid-cols-1 gap-2 pb-8 md:grid-cols-3 lg:grid-cols-4">
-      {[...Array(8)].map((_, index) => (
+      {[...Array(8)].map((_, idx) => (
         <div
-          key={index}
+          key={idx}
           className="group/card relative h-[300px] animate-pulse drop-shadow-md md:h-[450px]"
         >
           {/* CARD HEADER */}
