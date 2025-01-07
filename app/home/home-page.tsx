@@ -41,7 +41,7 @@ export default function HomePage({
 
   return (
     <>
-      {currentMovie.backdrop_path && (
+      {currentMovie?.backdrop_path && (
         <BackGround
           imageUrl={currentMovie.backdrop_path}
           movieTitle={movieTitle}

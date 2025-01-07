@@ -45,7 +45,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className="trancy-und">
-      <body className="min-h-screen w-full min-w-[320px] bg-[#121212]">
+      <body className="min-h-screen w-full min-w-[320px] bg-[#121212] scrollbar-hide">
         {/* RTK Provider */}
         <Providers>
           <AuthProvider>

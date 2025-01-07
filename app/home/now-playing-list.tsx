@@ -5,7 +5,7 @@ import TicketSwiper from "app/components/swiper/ticket-swiper";
 
 const NowPlayingHeader = memo(function NowPlayingHeader() {
   return (
-    <div>
+    <div className="mb-6">
       <div className="flex items-start justify-between md:justify-start">
         <h2 className="text-4xl font-black text-[#D4AF37] lg:text-5xl">
           Now

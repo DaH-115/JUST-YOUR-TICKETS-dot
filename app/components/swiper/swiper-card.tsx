@@ -49,8 +49,8 @@ export default function SwiperCard({
           <div className="group/tooltip relative ml-2">
             <Link
               href={`/movie-details/${id}`}
-              aria-label={`${movieTitle}) 영화 상세정보 보기`}
-              title={`${movieTitle}) 영화 상세정보 보기`}
+              aria-label={`${movieTitle} 영화 상세정보 보기`}
+              title={`${movieTitle} 영화 상세정보 보기`}
               role="button"
             >
               <FaInfoCircle className="lg:text-lg" aria-hidden />

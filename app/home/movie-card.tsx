@@ -77,9 +77,13 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           <div className="flex-1 border-r-4 border-dotted border-gray-200">
             <p className="px-2 text-sm font-bold text-black">감독</p>
             <ul className="p-2 pb-4 text-center text-sm">
-              {uniqueDirectors.map((director) => (
-                <li key={`director-${director.id}`}>{director.name}</li>
-              ))}
+              {uniqueDirectors.length > 0 ? (
+                uniqueDirectors.map((director) => (
+                  <li key={`director-${director.id}`}>{director.name}</li>
+                ))
+              ) : (
+                <li className="text-gray-300">감독 정보가 없습니다</li>
+              )}
             </ul>
           </div>
           <div className="flex-1">

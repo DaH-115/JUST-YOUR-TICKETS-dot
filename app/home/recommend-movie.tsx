@@ -43,7 +43,7 @@ export default function RecommendMovie({
             <div className="group/tooltip relative">
               <ScrollButton
                 targetId={"movie-trailer"}
-                airaLabel={"영화 예고편 보기"}
+                ariaLabel={"영화 예고편 보기"}
               >
                 <RiMovieLine size={24} />
               </ScrollButton>
@@ -53,7 +53,7 @@ export default function RecommendMovie({
           <div className="group/tooltip relative">
             <ScrollButton
               targetId={"now-playing"}
-              airaLabel={"현재 상영하는 영화 보기"}
+              ariaLabel={"현재 상영하는 영화 보기"}
             >
               <MdLocalMovies className="text-2xl" aria-hidden />
             </ScrollButton>
