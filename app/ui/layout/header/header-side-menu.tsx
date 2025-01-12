@@ -100,13 +100,13 @@ export default function HeaderSideMenu({
             </div>
           </div>
         ) : (
-          // 로그인 되어 있지 않은 경우 로그인 버튼 표시
+          // 로그인 되어 있지 않은 경우 로그인 화면 이동 버튼 표시
           <Link
             href="/login"
             onClick={onClose}
-            className="mb-2 flex w-full items-center justify-between rounded-2xl border border-white bg-white px-4 py-2 text-sm text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
+            className="mb-2 flex w-full items-center justify-between rounded-full border border-white bg-white p-3 text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
           >
-            <span>Login</span>
+            Login
             {pathname !== "/login" && <FaArrowRight aria-hidden />}
           </Link>
         )}

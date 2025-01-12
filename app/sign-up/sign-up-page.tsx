@@ -134,7 +134,7 @@ export default function SignUpPage() {
   );
 
   return (
-    <div className="w-full bg-white pb-8 md:flex md:justify-center md:py-10">
+    <div className="w-full bg-white pb-8 pt-2 md:mt-4 md:flex md:justify-center md:py-10">
       <section className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:border-gray-200 md:pl-0 md:pt-0 md:text-8xl">
         SIGN UP
       </section>
@@ -200,7 +200,7 @@ export default function SignUpPage() {
 
           <button
             type="submit"
-            className={`bg-primary-500 mb-2 w-full rounded-full p-4 text-sm text-white transition-all duration-300 ease-in-out ${
+            className={`mb-2 w-full rounded-full bg-primary-500 p-4 text-sm text-white transition-all duration-300 ease-in-out ${
               isLoading
                 ? "cursor-not-allowed opacity-50"
                 : "hover:bg-primary-700"

@@ -33,7 +33,10 @@ export default function Footer() {
       <div className="pb-8">JUST YOUR TICKETS.</div>
       <div className="flex justify-between space-x-2 text-xs lg:text-sm">
         <div className="w-full space-y-1 border-l-2 border-dotted border-gray-500 pl-4">
-          <Link href="/" className={`block p-1 font-bold ${borderStyle}`}>
+          <Link
+            href="https://zippy-position-4e4.notion.site/Dahyun-Gwak-45235441d63641798c44ee9d7ed607f5"
+            className={`block p-1 font-bold ${borderStyle}`}
+          >
             Resume
           </Link>
           <Link
@@ -64,11 +67,11 @@ export default function Footer() {
         </div>
         <div className={`w-full border-l-2 border-dotted border-gray-500 pl-4`}>
           <div
-            className={`font-bold transition-transform duration-700 ${
+            className={`text-xs font-bold transition-transform duration-700 ${
               isVisible ? "translate-y-0" : "translate-y-full"
             }`}
           >
-            ⓒGWAK DA HYUN 2024
+            {`ⓒGWAK DA HYUN 2022 - ${new Date().getFullYear()}`}
           </div>
         </div>
       </div>

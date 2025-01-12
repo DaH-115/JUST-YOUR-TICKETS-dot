@@ -94,7 +94,7 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-10 flex w-full items-center justify-center px-2 py-4 lg:px-8 lg:pt-8 ${
+      className={`relative z-10 flex w-full items-center justify-center px-2 py-4 md:px-8 md:pt-8 ${
         isSideMenuOpen ? "pointer-events-none" : ""
       }`}
     >
@@ -108,7 +108,7 @@ export default function Header() {
           just your tickets.
         </h1>
         {/* MENU */}
-        <ul className="hidden items-center justify-center md:flex">
+        <ul className="hidden items-center justify-center lg:flex">
           <li className="group">
             <Link
               href="/"
@@ -141,7 +141,7 @@ export default function Header() {
           </li>
         </ul>
         {/* MOBILE/ HAMBURGER MENU */}
-        <div onClick={toggleSideMenu} className="md:hidden">
+        <div onClick={toggleSideMenu} className="lg:hidden">
           <button
             className="rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200"
             aria-label="메뉴 열기"
