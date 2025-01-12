@@ -20,6 +20,8 @@ export interface MovieReview {
   reviewTitle: string;
   userUid: string;
   userName: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export default async function fetchMovieReviews(): Promise<MovieReview[]> {

@@ -201,15 +201,23 @@ export default function ProfileForm() {
             <div className="flex items-center border-b-2 border-black pb-1">
               <h1 className="w-full text-2xl font-bold">PROFILE</h1>
               {isEditing ? (
-                <div className="whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 hover:bg-black hover:text-white">
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className={`${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
+                <>
+                  <div
+                    onClick={editingToggleHandler}
+                    className={`cursor-pointer whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 ${!isLoading ? "hover:bg-black hover:text-white" : "cursor-not-allowed opacity-50"}`}
                   >
-                    {isLoading ? "저장 중..." : "저장"}
-                  </button>
-                </div>
+                    취소
+                  </div>
+                  <div className="whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 hover:bg-black hover:text-white">
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className={`${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
+                    >
+                      {isLoading ? "저장 중..." : "저장"}
+                    </button>
+                  </div>
+                </>
               ) : (
                 <div
                   onClick={editingToggleHandler}
@@ -221,13 +229,13 @@ export default function ProfileForm() {
             </div>
             <div className="border-b border-black pb-2 pt-4">
               <h2 className="text-xs font-bold">닉네임</h2>
-              <div className="flex w-full items-center">
+              <div className="w-full">
                 {isEditing ? (
                   <>
                     <input
                       {...register("displayName")}
                       type="text"
-                      className={`w-full bg-transparent text-lg text-gray-300 ${
+                      className={`w-full bg-transparent text-lg text-gray-600 ${
                         isLoading ? "cursor-not-allowed opacity-50" : ""
                       }`}
                       disabled={isLoading}
@@ -247,7 +255,7 @@ export default function ProfileForm() {
             </div>
             <div className="border-b border-black pb-2 pt-4">
               <h2 className="text-xs font-bold">바이오</h2>
-              <div className="flex w-full items-center">
+              <div className="w-full">
                 {isLoading ? (
                   <div className="w-full text-sm text-gray-400">
                     바이오를 불러오는 중
@@ -257,7 +265,7 @@ export default function ProfileForm() {
                     <input
                       {...register("biography")}
                       type="text"
-                      className={`w-full bg-transparent text-lg text-gray-300 ${
+                      className={`w-full bg-transparent text-lg text-gray-600 ${
                         isLoading ? "cursor-not-allowed opacity-50" : ""
                       }`}
                       disabled={isLoading}

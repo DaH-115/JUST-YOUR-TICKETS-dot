@@ -43,13 +43,15 @@ export const useReviewForm = (
           movieTitle: movieInfo.title,
           releaseYear: movieInfo.release_date.slice(0, 4),
           posterImage: movieInfo.poster_path,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
         });
       } else if (mode === "edit" && reviewId) {
         await updateDoc(doc(db, "movie-reviews", reviewId), {
           reviewTitle,
           rating,
           review,
-          date: serverTimestamp(),
+          updatedAt: serverTimestamp(),
         });
       }
 
