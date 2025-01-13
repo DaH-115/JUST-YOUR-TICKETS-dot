@@ -61,6 +61,10 @@ Just Your Tickets는 TMDB API를 기반으로 한 영화 리뷰 커뮤니티 플
 
   - 중앙 집중식 상태 관리로 데이터 일관성 유지
 
+- **React-hook-form & Zod**
+
+  - 선언적이고 효율적인 폼 상태 관리 및 유효성 검증
+
 - **Tailwind CSS**
   - 유틸리티 클래스 기반의 효율적인 스타일링
   - 반응형 디자인 구현의 용이성
@@ -113,3 +117,6 @@ Just Your Tickets는 TMDB API를 기반으로 한 영화 리뷰 커뮤니티 플
   - 효율적인 캐싱 전략으로 API 호출 최소화
 
 - TypeScript와 정적 타입 시스템을 통한 코드 안정성 확보
+
+- React Hook Form과 Zod를 활용한 폼 시스템 고도화
+  - 로그인/회원가입과 리뷰 작성의 실시간 유효성 검증 구현
