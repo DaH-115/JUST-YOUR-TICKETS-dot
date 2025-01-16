@@ -1,20 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
-import { FirebaseError } from "firebase/app";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import fetchMovieReviews, {
-  MovieReview,
-} from "api/movie-reviews/fetchMovieReviews";
-import { firebaseErrorHandler } from "app/utils/firebase-error";
-import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
+import { UserReview } from "api/movie-reviews/fetchUserReviews";
+import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import useReviewSearch from "hooks/useReviewSearch";
-import ReviewTicket from "app/components/reviewTicketList/review-ticket";
+import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
 import ReviewSearchInputregister from "app/components/reviewTicketList/review-search-Input";
-import ReviewListSkeleton from "app/ticket-list/review-list-skeleton";
+import ReviewTicket from "app/components/reviewTicketList/review-ticket";
 
-export default function TicketListPage() {
+export default function TicketListPage({
+  userReviews,
+}: {
+  userReviews: UserReview[];
+}) {
   const newReviewAlertState = useAppSelector(
     (state) => state.newReviewAlert.newReviewAlertState,
   );
@@ -25,8 +24,6 @@ export default function TicketListPage() {
     },
   });
   const searchTerm = watch("search");
-  const [userReviews, setUserReviews] = useState<MovieReview[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { filteredUserReviews, searchReviewsHandler } =
     useReviewSearch(userReviews);
 
@@ -39,28 +36,6 @@ export default function TicketListPage() {
       return () => clearTimeout(timer);
     }
   }, [newReviewAlertState, dispatch]);
-
-  const fetchReviews = useCallback(async () => {
-    setIsLoading(true);
-
-    try {
-      const movieReviews = await fetchMovieReviews();
-      setUserReviews(movieReviews);
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        const errorInfo = firebaseErrorHandler(error);
-        window.alert(`${errorInfo.title}: ${errorInfo.message}`);
-      } else {
-        window.alert("티켓을 불러오는 중 오류가 발생했습니다.");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchReviews();
-  }, [fetchReviews]);
 
   useEffect(() => {
     searchReviewsHandler(searchTerm);
@@ -85,12 +60,9 @@ export default function TicketListPage() {
         />
       </section>
       {/* 티켓 목록 */}
-      {isLoading ? (
-        <ReviewListSkeleton />
-      ) : userReviews.length > 0 ? (
+      {userReviews.length > 0 ? (
         <ReviewTicket
           reviews={!filteredUserReviews ? userReviews : filteredUserReviews}
-          onReviewUpdated={fetchReviews}
         />
       ) : (
         <div className="flex h-96 w-full items-center justify-center text-center text-lg font-bold text-gray-500">

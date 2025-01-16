@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { db } from "firebase-config";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
+import { UserReview } from "api/movie-reviews/fetchUserReviews";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { IoStar } from "react-icons/io5";
 import { useError } from "store/context/error-context";
@@ -10,7 +10,7 @@ import formatDate from "app/utils/format-date";
 import { BackAnimation } from "app/ui/back-animation";
 
 export default function SideReviewList({ uid }: { uid: string }) {
-  const [userReviews, setUserReviews] = useState<MovieReview[]>([]);
+  const [userReviews, setUserReviews] = useState<UserReview[]>([]);
   const { isShowError } = useError();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function SideReviewList({ uid }: { uid: string }) {
             id: doc.id,
             number: totalCount - idx,
             ...doc.data(),
-          })) as MovieReview[];
+          })) as UserReview[];
           setUserReviews(reviews);
         }
       } catch (error) {

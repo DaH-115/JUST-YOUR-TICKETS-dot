@@ -1,26 +1,19 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
-import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "firebase-config";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
+import { UserReview } from "api/movie-reviews/fetchUserReviews";
 import { IoIosAddCircle } from "react-icons/io";
 import ReviewDetailsModal from "app/components/reviewTicketList/review-details-modal";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
+import { deleteReview } from "app/actions/action";
 import MoviePoster from "app/components/movie-poster";
 
-export default function ReviewTicket({
-  reviews,
-  onReviewUpdated,
-}: {
-  reviews: MovieReview[];
-  onReviewUpdated: () => void;
-}) {
+export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedReview, setSelectedReview] = useState<MovieReview>();
+  const [selectedReview, setSelectedReview] = useState<UserReview>();
 
-  const openModalHandler = useCallback((content: MovieReview) => {
+  const openModalHandler = useCallback((content: UserReview) => {
     setSelectedReview(content);
     setIsModalOpen(true);
   }, []);
@@ -29,15 +22,10 @@ export default function ReviewTicket({
     setIsModalOpen(false);
   }, []);
 
-  const onReviewDeleteHanlder = useCallback(async (id: string) => {
+  const onReviewDeleteHanlder = useCallback((id: string) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      try {
-        await deleteDoc(doc(db, "movie-reviews", id));
-        onReviewUpdated();
-        closeModalHandler();
-      } catch (error) {
-        alert("리뷰 삭제에 실패했습니다. 다시 시도해 주세요.");
-      }
+      deleteReview(id);
+      closeModalHandler();
     }
   }, []);
 
@@ -106,7 +94,7 @@ export default function ReviewTicket({
                     - {post.releaseYear}
                   </div>
                 </div>
-                <div className="hover:bg-primary-700 bg-primary-600 rounded-lg px-3 py-2">
+                <div className="bg-primary-600 hover:bg-primary-700 rounded-lg px-3 py-2">
                   <button
                     className="group relative flex w-full items-center justify-end"
                     onClick={() => openModalHandler(post)}

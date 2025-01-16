@@ -5,7 +5,7 @@ import { db } from "firebase-config";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { useSearchParams } from "next/navigation";
 import SideMenu from "app/my-page/side-menu";
-import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
+import { UserReview } from "api/movie-reviews/fetchUserReviews";
 import { useForm } from "react-hook-form";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import ReviewSearchInputregister from "app/components/reviewTicketList/review-search-Input";
@@ -17,7 +17,7 @@ import { useError } from "store/context/error-context";
 export default function MyTicktListPage() {
   const searchParams = useSearchParams();
   const uid = searchParams.get("uid");
-  const [userReviews, setUserReviews] = useState<MovieReview[]>([]);
+  const [userReviews, setUserReviews] = useState<UserReview[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { filteredUserReviews, searchReviewsHandler } =
     useReviewSearch(userReviews);
@@ -46,7 +46,7 @@ export default function MyTicktListPage() {
         id: doc.id,
         number: totalCount - idx,
         ...doc.data(),
-      })) as MovieReview[];
+      })) as UserReview[];
       setUserReviews(reviews);
     } catch (error) {
       const { title, message } = firebaseErrorHandler(error);
@@ -96,7 +96,6 @@ export default function MyTicktListPage() {
           ) : !isLoading && userReviews.length > 0 ? (
             <ReviewTicket
               reviews={!filteredUserReviews ? userReviews : filteredUserReviews}
-              onReviewUpdated={fetchUserReviews}
             />
           ) : (
             <div className="flex items-center justify-center text-center text-sm font-bold text-gray-300">

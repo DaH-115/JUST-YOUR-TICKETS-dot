@@ -1,11 +1,11 @@
-import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
+import { UserReview } from "api/movie-reviews/fetchUserReviews";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
 import formatDate from "app/utils/format-date";
 
 type ReviewDetailsModalProps = {
   isModalOpen: boolean;
-  selectedReview: MovieReview;
+  selectedReview: UserReview;
   closeModalHandler: () => void;
   onReviewDeleted: (id: string) => void;
 };
