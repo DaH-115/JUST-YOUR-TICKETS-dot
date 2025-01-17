@@ -22,13 +22,13 @@ export default function ErrorPage({
       <div className="flex gap-4">
         <button
           onClick={reset}
-          className="rounded-lg bg-black px-4 py-2 text-white hover:bg-gray-800"
+          className="bg-accent-500 hover:bg-accent-700 rounded-lg px-4 py-2 text-black"
         >
           다시 시도하기
         </button>
         <Link
           href="/"
-          className="rounded-lg bg-black px-4 py-2 text-white hover:bg-gray-800"
+          className="bg-accent-500 hover:bg-accent-700 rounded-lg px-4 py-2 text-black"
         >
           홈으로 돌아가기
         </Link>
