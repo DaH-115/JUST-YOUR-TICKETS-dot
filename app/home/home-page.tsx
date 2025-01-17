@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Movie } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/fetchNowPlayingMovies";
 import dynamic from "next/dynamic";
 import Loading from "app/loading";
 import getMovieTitle from "app/utils/get-movie-title";
@@ -12,9 +12,9 @@ import ScrollToTopButton from "app/components/scroll-to-top-button";
 import Catchphrase from "app/ui/layout/catchphrase";
 
 interface HomePageProps {
-  movieList: Movie[];
+  movieList: MovieList[];
+  currentMovie: MovieList;
   trailerKey: string;
-  currentMovie: Movie;
 }
 
 export default function HomePage({
@@ -36,7 +36,6 @@ export default function HomePage({
 
   const NowPlayingList = dynamic(() => import("app/home/now-playing-list"), {
     loading: () => <Loading />,
-    ssr: false,
   });
 
   return (

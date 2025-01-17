@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 
 export default async function Page() {
   try {
-    const { results: nowPlayingMovies } = await fetchNowPlayingMovies();
+    const nowPlayingMovies = await fetchNowPlayingMovies();
 
     if (!nowPlayingMovies?.length) {
       return notFound();

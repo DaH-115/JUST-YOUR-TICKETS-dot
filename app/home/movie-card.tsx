@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Movie } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/fetchNowPlayingMovies";
 import formatMovieDate from "app/utils/format-movie-date";
 import { useMovieDetails } from "store/context/movie-details-context";
 import { FaInfoCircle } from "react-icons/fa";
@@ -9,7 +9,7 @@ import NewWriteBtn from "app/components/new-write-btn";
 import Tooltip from "app/components/tooltip";
 import { BackAnimation } from "app/ui/back-animation";
 
-export default function MovieCard({ movie }: { movie: Movie }) {
+export default function MovieCard({ movie }: { movie: MovieList }) {
   const { id, title, original_title, release_date, vote_average, overview } =
     movie;
   const releaseDate = formatMovieDate(release_date);
@@ -51,7 +51,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
               </li>
             ))
           ) : (
-            <li className="text-xs text-gray-300 lg:text-sm">
+            <li className="px-2 py-1 text-xs text-gray-300 lg:text-sm">
               장르 정보가 없습니다
             </li>
           )}

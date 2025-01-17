@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Movie } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/fetchNowPlayingMovies";
 import getMovieTitle from "app/utils/get-movie-title";
 import MovieCard from "app/home/movie-card";
 import { RiMovieLine } from "react-icons/ri";
@@ -9,7 +9,7 @@ import Tooltip from "app/components/tooltip";
 import MoviePoster from "app/components/movie-poster";
 
 interface RecommendMovieProps {
-  currentMovie: Movie;
+  currentMovie: MovieList;
   trailerKey: string;
 }
 

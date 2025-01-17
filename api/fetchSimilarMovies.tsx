@@ -1,12 +1,8 @@
-import { Movie } from "api/fetchNowPlayingMovies";
-
-interface SimilarMoviesResult {
-  results: Movie[];
-}
+import { MovieList } from "api/fetchNowPlayingMovies";
 
 export async function fetchSimilarMovies(
   id: number,
-): Promise<SimilarMoviesResult> {
+): Promise<{ results: MovieList[] }> {
   const res = await fetch(
     `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko-KR`,
     { cache: "force-cache" },

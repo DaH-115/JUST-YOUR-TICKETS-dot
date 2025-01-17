@@ -1,10 +1,10 @@
-import { Movie } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/fetchNowPlayingMovies";
 import TicketSwiper from "app/components/swiper/ticket-swiper";
 
 export default function SimilarMovies({
   similarMovies,
 }: {
-  similarMovies: Movie[];
+  similarMovies: MovieList[];
 }) {
   return (
     <section className="px-8 py-4 lg:p-8">

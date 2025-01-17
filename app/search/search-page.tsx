@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import fetchSearchMovies from "api/fetchSearchMovies";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Movie } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
-import { fetchSearchMovies } from "api/fetchSearchMovies";
 import ScrollToTopButton from "app/components/scroll-to-top-button";
 import Catchphrase from "app/ui/layout/catchphrase";
 import SwiperCard from "app/components/swiper/swiper-card";
@@ -21,9 +21,9 @@ type SearchSchema = z.infer<typeof searchSchema>;
 export default function SearchPage({
   nowPlayingMovies,
 }: {
-  nowPlayingMovies: Movie[];
+  nowPlayingMovies: MovieList[];
 }) {
-  const [searchResults, setSearchResults] = useState<Movie[]>([]);
+  const [searchResults, setSearchResults] = useState<MovieList[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState<string | null>(null);
   const {
@@ -121,7 +121,7 @@ export default function SearchPage({
           </div>
         ) : null}
       </main>
-      {!searchResults.length && (
+      {searchResults.length <= 0 && (
         <section className="p-4 md:p-8">
           <h2 className="text-accent-300 mb-6 flex items-center text-2xl font-bold md:text-4xl">
             Now Playing <FaArrowRight size={28} className="ml-2 mt-4" />

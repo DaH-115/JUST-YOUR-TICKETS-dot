@@ -22,7 +22,7 @@ export default function MovieDetailCard({
     movieDetails.title,
   );
   const movieDate = formatMovieDate(movieDetails.release_date);
-  const convertedRuntime = convertRuntime(movieDetails.runtime);
+  const convertedRuntime = convertRuntime(Number(movieDetails.runtime));
   const casts = movieCredits?.cast || [];
   const crews = movieCredits?.crew || [];
 

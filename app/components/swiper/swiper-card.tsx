@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import Link from "next/link";
-import { Movie } from "api/fetchNowPlayingMovies";
-import useGetGenres from "hooks/useGetGenres";
+import { MovieList } from "api/fetchNowPlayingMovies";
 import getMovieTitle from "app/utils/get-movie-title";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
@@ -14,14 +13,10 @@ export default function SwiperCard({
   movie,
 }: {
   idx: number;
-  movie: Movie;
+  movie: MovieList;
 }) {
-  const { id, original_title, poster_path, title, vote_average } = movie;
-  const {
-    genres,
-    loading: isGenresLoading,
-    error: isGenresError,
-  } = useGetGenres(id);
+  const { id, original_title, poster_path, title, vote_average, genres } =
+    movie;
   const movieTitle = useMemo(
     () => getMovieTitle(original_title, title),
     [original_title, title],
@@ -52,27 +47,18 @@ export default function SwiperCard({
             <Tooltip>영화 상세정보 보기</Tooltip>
           </div>
         </div>
-        <ul className="flex w-full flex-wrap border-y-4 border-dotted border-gray-200 p-1">
-          {isGenresLoading ? (
-            <li className="text-xs text-gray-300 lg:text-sm">
-              장르를 불러 오는 중
-            </li>
-          ) : !isGenresLoading && isGenresError ? (
-            <li className="text-xs text-gray-300 lg:text-sm">
-              장르 정보를 불러올 수 없습니다
-            </li>
-          ) : null}
-          {genres.length > 0 ? (
+        <ul className="flex w-full flex-wrap gap-1 border-y-4 border-dotted border-gray-200 p-1">
+          {genres?.length > 0 ? (
             genres.map((genre, idx) => (
               <li
-                className="border-primary-500 hover:bg-primary-500 m-1 rounded-full border bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:text-white active:bg-black active:text-white"
+                className="border-primary-500 hover:bg-primary-500 rounded-full border bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:text-white active:bg-black active:text-white"
                 key={idx}
               >
                 {genre}
               </li>
             ))
           ) : (
-            <li className="text-xs text-gray-300 lg:text-sm">
+            <li className="px-2 py-1 text-xs text-gray-300 lg:text-sm">
               장르 정보가 없습니다
             </li>
           )}

@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 interface MoviePosterProps {
-  posterPath: string | null; // null인 경우 추가
+  posterPath?: string;
   title: string;
   size: 500 | 342;
   lazy?: boolean;

@@ -1,23 +1,24 @@
-export interface Movie {
-  genre_ids: number[];
+import { fetchGenres } from "app/utils/get-genres";
+
+export interface MovieBaseType {
   id: number;
+  title: string;
   original_title: string;
   overview: string;
-  poster_path: string;
+  poster_path?: string;
+  backdrop_path?: string;
   release_date: string;
-  title: string;
   vote_average: number;
-  genres: { id: number; name: string }[];
   runtime: string;
   production_companies: { id: number; name: string }[];
-  backdrop_path?: string;
 }
 
-interface MoviesResult {
-  results: Movie[];
+export interface MovieList extends MovieBaseType {
+  genre_ids: number[];
+  genres: string[];
 }
 
-export async function fetchNowPlayingMovies(): Promise<MoviesResult> {
+export async function fetchNowPlayingMovies(): Promise<MovieList[]> {
   const res = await fetch(
     `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&include_adult=true&language=ko-KR`,
     {
@@ -36,5 +37,12 @@ export async function fetchNowPlayingMovies(): Promise<MoviesResult> {
   }
 
   const data = await res.json();
-  return { results: data.results };
+  const genreMap = await fetchGenres();
+
+  const movieListwithGenres = data.results.map((movie: MovieList) => ({
+    ...movie,
+    genres: movie.genre_ids.map((genreId) => genreMap[genreId]).filter(Boolean),
+  }));
+
+  return movieListwithGenres;
 }

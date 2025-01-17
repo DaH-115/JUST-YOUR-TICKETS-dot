@@ -4,11 +4,15 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import { Movie } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/fetchNowPlayingMovies";
 import SwiperCard from "app/components/swiper/swiper-card";
 import SwiperButton from "app/components/swiper/swiper-button";
 
-export default function TicketSwiper({ movieList }: { movieList: Movie[] }) {
+export default function TicketSwiper({
+  movieList,
+}: {
+  movieList: MovieList[];
+}) {
   return (
     <Swiper
       slidesPerView={1}

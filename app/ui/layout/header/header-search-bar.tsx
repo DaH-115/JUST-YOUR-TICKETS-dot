@@ -3,15 +3,15 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { fetchSearchMovies } from "api/fetchSearchMovies";
+import fetchSearchMovies from "api/fetchSearchMovies";
 import debounce from "lodash/debounce";
-import { Movie } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
 
 export default function HeaderSearchBar() {
   const { register, watch, reset } = useForm();
   const searchQuery = watch("search");
-  const [searchResults, setSearchResults] = useState<Movie[]>([]);
+  const [searchResults, setSearchResults] = useState<MovieList[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
