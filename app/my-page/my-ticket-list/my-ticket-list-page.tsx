@@ -1,24 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { db } from "firebase-config";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import SideMenu from "app/my-page/side-menu";
 import { UserReview } from "api/movie-reviews/fetchUserReviews";
 import { useForm } from "react-hook-form";
-import { firebaseErrorHandler } from "app/utils/firebase-error";
 import ReviewSearchInputregister from "app/components/reviewTicketList/review-search-Input";
 import ReviewTicket from "app/components/reviewTicketList/review-ticket";
 import useReviewSearch from "hooks/useReviewSearch";
-import ReviewListSkeleton from "app/ticket-list/review-list-skeleton";
-import { useError } from "store/context/error-context";
 
-export default function MyTicktListPage() {
-  const searchParams = useSearchParams();
-  const uid = searchParams.get("uid");
-  const [userReviews, setUserReviews] = useState<UserReview[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+export default function MyTicktListPage({
+  userReviews,
+  uid,
+}: {
+  uid: string;
+  userReviews: UserReview[];
+}) {
   const { filteredUserReviews, searchReviewsHandler } =
     useReviewSearch(userReviews);
   const { register, watch } = useForm({
@@ -27,39 +23,6 @@ export default function MyTicktListPage() {
     },
   });
   const searchTerm = watch("search");
-  const { isShowError } = useError();
-
-  const fetchUserReviews = useCallback(async () => {
-    setIsLoading(true);
-
-    try {
-      const reviewsRef = collection(db, "movie-reviews");
-      const userReviewsQuery = query(
-        reviewsRef,
-        where("userUid", "==", uid),
-        orderBy("date", "desc"),
-      );
-      const querySnapshot = await getDocs(userReviewsQuery);
-
-      const totalCount = querySnapshot.size;
-      const reviews = querySnapshot.docs.map((doc, idx) => ({
-        id: doc.id,
-        number: totalCount - idx,
-        ...doc.data(),
-      })) as UserReview[];
-      setUserReviews(reviews);
-    } catch (error) {
-      const { title, message } = firebaseErrorHandler(error);
-      isShowError(title, message);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [uid]);
-
-  useEffect(() => {
-    if (!uid) return;
-    fetchUserReviews();
-  }, [uid, fetchUserReviews]);
 
   useEffect(() => {
     searchReviewsHandler(searchTerm);
@@ -91,9 +54,7 @@ export default function MyTicktListPage() {
         </header>
         {/* 티켓 목록 */}
         <div className="h-full w-full">
-          {isLoading ? (
-            <ReviewListSkeleton />
-          ) : !isLoading && userReviews.length > 0 ? (
+          {userReviews.length > 0 ? (
             <ReviewTicket
               reviews={!filteredUserReviews ? userReviews : filteredUserReviews}
             />

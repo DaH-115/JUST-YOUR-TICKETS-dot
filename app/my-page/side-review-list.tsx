@@ -1,49 +1,16 @@
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { db } from "firebase-config";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { UserReview } from "api/movie-reviews/fetchUserReviews";
-import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { IoStar } from "react-icons/io5";
-import { useError } from "store/context/error-context";
 import formatDate from "app/utils/format-date";
 import { BackAnimation } from "app/ui/back-animation";
 
-export default function SideReviewList({ uid }: { uid: string }) {
-  const [userReviews, setUserReviews] = useState<UserReview[]>([]);
-  const { isShowError } = useError();
-
-  useEffect(() => {
-    const fetchUserReviews = async () => {
-      try {
-        const reviewsRef = collection(db, "movie-reviews");
-        const userReviewsQuery = query(
-          reviewsRef,
-          where("userUid", "==", uid),
-          orderBy("date", "desc"),
-        );
-        const querySnapshot = await getDocs(userReviewsQuery);
-
-        if (querySnapshot.empty) {
-          setUserReviews([]);
-        } else {
-          const totalCount = querySnapshot.size;
-          const reviews = querySnapshot.docs.map((doc, idx) => ({
-            id: doc.id,
-            number: totalCount - idx,
-            ...doc.data(),
-          })) as UserReview[];
-          setUserReviews(reviews);
-        }
-      } catch (error) {
-        const { title, message } = firebaseErrorHandler(error);
-        isShowError(title, message);
-      }
-    };
-
-    fetchUserReviews();
-  }, [uid, isShowError]);
-
+export default function SideReviewList({
+  uid,
+  userReviews,
+}: {
+  uid: string;
+  userReviews: UserReview[];
+}) {
   return (
     <section className="group relative hidden lg:ml-8 lg:block lg:w-3/5">
       <div className="absolute inset-0 overflow-y-auto rounded-xl border-2 border-black bg-white p-4 px-8 transition-all duration-300 scrollbar-hide group-hover:-translate-x-1 group-hover:-translate-y-1">
@@ -60,7 +27,7 @@ export default function SideReviewList({ uid }: { uid: string }) {
             </div>
           </Link>
         </div>
-        {userReviews && userReviews.length > 0 ? (
+        {userReviews.length > 0 ? (
           <ul className="py-1">
             {userReviews.map((review) => (
               <li

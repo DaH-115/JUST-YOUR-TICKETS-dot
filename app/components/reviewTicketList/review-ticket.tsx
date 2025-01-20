@@ -6,7 +6,7 @@ import { UserReview } from "api/movie-reviews/fetchUserReviews";
 import { IoIosAddCircle } from "react-icons/io";
 import ReviewDetailsModal from "app/components/reviewTicketList/review-details-modal";
 import ReviewBtnGroup from "app/ticket-list/review-btn-group";
-import { deleteReview } from "app/actions/action";
+import { deleteReview } from "app/actions/delete-review";
 import MoviePoster from "app/components/movie-poster";
 
 export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {

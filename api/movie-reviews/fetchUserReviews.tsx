@@ -1,5 +1,5 @@
 import { db } from "firebase-config";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 
 export interface UserReview {
   id: string;
@@ -23,12 +23,17 @@ interface FirestoreTimestamp {
   nanoseconds: number;
 }
 
-export default async function fetchUserReviews(): Promise<UserReview[]> {
-  const movieReviewQuery = query(
-    collection(db, "movie-reviews"),
-    orderBy("date", "desc"),
-  );
+export default async function fetchUserReviews(
+  uid?: string,
+): Promise<UserReview[]> {
+  const reviewsRef = collection(db, "movie-reviews");
+  const queryConstraints = [orderBy("date", "desc")];
 
+  if (uid) {
+    queryConstraints.unshift(where("userUid", "==", uid));
+  }
+
+  const movieReviewQuery = query(reviewsRef, ...queryConstraints);
   const querySnapshot = await getDocs(movieReviewQuery);
 
   if (querySnapshot.empty) {

@@ -6,6 +6,7 @@ import { useAppSelector } from "store/redux-toolkit/hooks";
 import SideMenu from "app/my-page/side-menu";
 import dynamic from "next/dynamic";
 import Loading from "app/loading";
+import { UserReview } from "api/movie-reviews/fetchUserReviews";
 
 const ProfileForm = dynamic(() => import("app/my-page/profile-form"), {
   loading: () => <Loading />,
@@ -17,7 +18,11 @@ const SideReviewList = dynamic(() => import("app/my-page/side-review-list"), {
   ssr: false,
 });
 
-export default function MyPagePage() {
+export default function MyPagePage({
+  userReview,
+}: {
+  userReview: UserReview[];
+}) {
   const router = useRouter();
   const userState = useAppSelector((state) => state.user.user);
 
@@ -52,7 +57,7 @@ export default function MyPagePage() {
       <SideMenu uid={userState.uid} />
       {/* Main */}
       <ProfileForm />
-      <SideReviewList uid={userState.uid} />
+      <SideReviewList uid={userState.uid} userReviews={userReview} />
     </>
   );
 }
