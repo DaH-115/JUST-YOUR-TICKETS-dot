@@ -80,8 +80,9 @@ export default function HeaderSideMenu({
 
             {/* Dropdown Menu */}
             <div
-              className={`w-full overflow-hidden transition-all duration-300 ${menuIsOpen ? "mb-4 max-h-24 opacity-100" : "mb-2 max-h-0 opacity-0"} `}
+              className={`w-full transition-all duration-300 ${menuIsOpen ? "mb-4 max-h-24 opacity-100" : "mb-2 max-h-0 opacity-0"} `}
             >
+              {/* 수정 중 */}
               <div className="flex items-center justify-between">
                 <button
                   className="rounded-2xl border border-white px-4 py-2 text-xs transition-all duration-300 hover:bg-white hover:text-black"
@@ -89,13 +90,22 @@ export default function HeaderSideMenu({
                 >
                   Logout
                 </button>
-                <Link
-                  href="/my-page"
-                  onClick={onClose}
-                  className="inline-block rounded-2xl border border-white bg-white px-4 py-2 text-xs font-bold text-black transition-all duration-300 hover:bg-black hover:text-white"
-                >
-                  My Page
-                </Link>
+                <div className="space-x-2">
+                  <Link
+                    href="/my-page"
+                    onClick={onClose}
+                    className="rounded-2xl border border-white bg-white px-4 py-2 text-xs font-bold text-black transition-all duration-300 hover:bg-black hover:text-white"
+                  >
+                    My Page
+                  </Link>
+                  <Link
+                    href="/my-page/my-ticket-list"
+                    onClick={onClose}
+                    className="rounded-2xl border border-white bg-white px-4 py-2 text-xs font-bold text-black transition-all duration-300 hover:bg-black hover:text-white"
+                  >
+                    My Ticket List
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

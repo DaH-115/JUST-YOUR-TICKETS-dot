@@ -19,7 +19,7 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
     <section className="group relative mx-auto w-full break-keep">
       <div className="relative rounded-xl border-2 border-black bg-white p-2 lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
         <div className="p-4">
-          <span className="bg-primary-500 text-accent-50 mb-2 inline-block animate-bounce rounded-lg p-1 text-xs font-bold">
+          <span className="mb-2 inline-block animate-bounce rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">
             추천 영화
           </span>
           <div className="flex">
@@ -44,7 +44,7 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
           {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li
-                className="hover:bg-primary-500 rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:text-white active:bg-white active:text-black lg:text-sm"
+                className="rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-primary-500 hover:text-white active:bg-white active:text-black lg:text-sm"
                 key={idx}
               >
                 {genre}
@@ -89,7 +89,7 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
           <div className="flex-1">
             <p className="px-2 text-sm font-bold text-black">평점</p>
             <div className="flex flex-1 items-center justify-center p-2 pb-4">
-              <IoStar className="text-accent-300 mr-1" size={24} />
+              <IoStar className="mr-1 text-accent-300" size={24} />
               <div className="text-2xl font-bold">
                 {Math.round(vote_average * 10) / 10}
               </div>

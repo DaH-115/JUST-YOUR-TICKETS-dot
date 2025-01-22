@@ -30,7 +30,7 @@ export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
   }, []);
 
   return (
-    <div className="grid h-full w-full grid-cols-1 gap-4 pb-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid h-full w-full grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {selectedReview && (
         <ReviewDetailsModal
           selectedReview={selectedReview}
@@ -72,7 +72,7 @@ export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
               <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white p-2 transition-all duration-300 group-hover/card:bottom-1 group-hover/card:right-1 md:group-hover/card:bottom-2 md:group-hover/card:right-2">
                 <div className="flex items-center justify-between pb-1">
                   <div className="flex items-center justify-center px-2">
-                    <IoStar className="text-accent-300 mr-1" />
+                    <IoStar className="mr-1 text-accent-300" />
                     <p className="font-bold">{post.rating}</p>
                   </div>
                   <p className="px-2 text-xs font-bold lg:text-sm">
@@ -94,7 +94,7 @@ export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
                     - {post.releaseYear}
                   </div>
                 </div>
-                <div className="bg-primary-600 hover:bg-primary-700 rounded-lg px-3 py-2">
+                <div className="rounded-lg bg-primary-600 px-3 py-2 hover:bg-primary-700">
                   <button
                     className="group relative flex w-full items-center justify-end"
                     onClick={() => openModalHandler(post)}

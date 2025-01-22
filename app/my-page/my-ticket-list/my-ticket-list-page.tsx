@@ -29,28 +29,23 @@ export default function MyTicktListPage({
   }, [searchTerm, searchReviewsHandler]);
 
   return (
-    <div className="flex w-full flex-col lg:mt-8 lg:flex-row">
+    <div className="flex w-full flex-col p-8 lg:flex-row">
       <SideMenu uid={uid || ""} />
       <main className="flex w-full flex-col">
-        <header className="mb-6 flex-col items-center justify-center px-8 md:flex-row md:items-end md:justify-between lg:px-0">
-          <div className="flex w-full flex-col md:flex-row">
-            <div className="flex w-full items-center">
-              <h1 className="hidden text-2xl font-bold text-white md:block">
-                MY TICKETS
-              </h1>
-              <div className="py-2 md:px-4">
-                <span className="text-accent-300 font-bold">
-                  {filteredUserReviews.length}
-                </span>
-              </div>
+        <header className="flex items-center border-t-2 border-t-accent-500 pb-8 pt-6 lg:border-t-0">
+          {/* 티켓 개수 */}
+          <div className="flex items-center font-bold">
+            <h1 className="text-xl text-white">All</h1>
+            <div className="px-2 text-2xl text-accent-300">
+              {filteredUserReviews.length}
             </div>
-            {/* 티켓 검색 */}
-            <ReviewSearchInputregister
-              label="티켓 검색"
-              register={register}
-              placeholder="티켓 검색"
-            />
           </div>
+          {/* 티켓 검색 */}
+          <ReviewSearchInputregister
+            label="티켓 검색"
+            register={register}
+            placeholder="티켓 검색"
+          />
         </header>
         {/* 티켓 목록 */}
         <div className="h-full w-full">

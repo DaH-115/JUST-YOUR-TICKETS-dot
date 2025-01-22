@@ -51,7 +51,7 @@ export default function SwiperCard({
           {genres?.length > 0 ? (
             genres.map((genre, idx) => (
               <li
-                className="border-primary-500 hover:bg-primary-500 rounded-full border bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:text-white active:bg-black active:text-white"
+                className="rounded-full border border-primary-500 bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-primary-500 hover:text-white active:bg-black active:text-white"
                 key={idx}
               >
                 {genre}
@@ -65,7 +65,7 @@ export default function SwiperCard({
         </ul>
         <div className="flex w-full text-center">
           <div className="flex items-center border-r-4 border-dotted border-gray-200 p-4">
-            <IoStar className="text-accent-300 mr-1" />
+            <IoStar className="mr-1 text-accent-300" />
             <div className="text-lg font-bold">
               {Math.round(vote_average * 10) / 10}
             </div>

@@ -194,7 +194,7 @@ export default function ProfileForm() {
   }, [isEditing, reset]);
 
   return (
-    <main className="w-full md:ml-8">
+    <main className="w-full px-8 pb-4 lg:ml-8">
       <section className="group relative">
         <div className="rounded-xl border-2 border-black bg-white px-8 pb-10 pt-6 transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1">
           <form onSubmit={handleSubmit(onSubmitHandler)}>
@@ -257,7 +257,7 @@ export default function ProfileForm() {
               <h2 className="text-xs font-bold">바이오</h2>
               <div className="w-full">
                 {isLoading ? (
-                  <div className="w-full text-sm text-gray-400">
+                  <div className="w-full text-base text-gray-400">
                     바이오를 불러오는 중
                   </div>
                 ) : isEditing ? (
@@ -277,7 +277,7 @@ export default function ProfileForm() {
                     )}
                   </>
                 ) : (
-                  <div className="w-full text-lg">
+                  <div className="w-full text-base">
                     {userDoc?.biography || (
                       <p className="text-gray-600">바이오를 입력해 주세요.</p>
                     )}
