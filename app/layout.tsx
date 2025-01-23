@@ -5,6 +5,19 @@ import { ErrorProvider } from "store/context/error-context";
 import { AuthProvider } from "store/context/auth-context";
 import Header from "app/ui/layout/header/header";
 import Footer from "app/ui/layout/footer";
+import { Nanum_Gothic, Montserrat } from "next/font/google";
+
+const nanumGothic = Nanum_Gothic({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
+const roboto = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://just-movie-tickets.vercel.app"),
@@ -104,7 +117,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className="trancy-und">
+    <html lang="ko" className={`${nanumGothic.className} ${roboto.className}`}>
       <body className="min-h-screen w-full min-w-[320px] bg-[#121212]">
         {/* RTK Provider */}
         <Providers>
