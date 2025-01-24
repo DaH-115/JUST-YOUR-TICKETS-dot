@@ -9,12 +9,12 @@ export default function MovieTrailer({ trailerKey }: { trailerKey: string }) {
     >
       <div className="mb-4 px-4 lg:mb-8 lg:px-8">
         <div className="flex items-start justify-between md:justify-start">
-          <h2 className="text-accent-300 text-4xl font-black lg:text-5xl">
+          <h2 className="text-4xl font-black text-accent-300 lg:text-5xl">
             Movie
             <br />
             Trailer
           </h2>
-          <div className="ml-2 rounded-full bg-white p-2 transition-colors duration-300 hover:bg-black hover:text-white">
+          <div className="ml-2 rounded-full bg-white p-2 text-primary-500">
             <RiMovieLine className="text-2xl" />
           </div>
         </div>
@@ -24,10 +24,7 @@ export default function MovieTrailer({ trailerKey }: { trailerKey: string }) {
       </div>
 
       <div className="mx-auto aspect-video w-full md:w-4/6">
-        <VideoPlayer
-          url={`https://www.youtube.com/embed/${trailerKey}`}
-          className="h-full w-full"
-        />
+        <VideoPlayer trailerKey={trailerKey} thubmnailSize={"large"} />
       </div>
     </section>
   );
