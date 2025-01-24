@@ -5,7 +5,7 @@ import { IoStar } from "react-icons/io5";
 import { UserReview } from "api/movie-reviews/fetchUserReviews";
 import { IoIosAddCircle } from "react-icons/io";
 import ReviewDetailsModal from "app/components/reviewTicketList/review-details-modal";
-import ReviewBtnGroup from "app/ticket-list/review-btn-group";
+import TicketBtnGroup from "app/ticket-list/ticket-btn-group";
 import { deleteReview } from "app/actions/delete-review";
 import MoviePoster from "app/components/movie-poster";
 
@@ -40,6 +40,7 @@ export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
         />
       )}
 
+      {/* 리뷰 티켓 추가 버튼 */}
       <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-gray-500 md:flex">
         <Link href="/search">
           <button className="p-12 text-xl font-bold text-gray-500 transition-colors duration-300 hover:text-gray-700">
@@ -50,10 +51,13 @@ export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
       {reviews.length > 0 && (
         <>
           {reviews.map((post) => (
-            <div key={post.id} className="group/card relative drop-shadow-md">
+            <div
+              key={post.id}
+              className="group/card relative mb-32 drop-shadow-md"
+            >
               {/* CARD HEADER */}
               <div className="absolute left-0 top-0 z-10 flex w-full items-center justify-end p-2">
-                <ReviewBtnGroup
+                <TicketBtnGroup
                   postId={post.id}
                   movieId={post.movieId}
                   onReviewDeleted={onReviewDeleteHanlder}
@@ -69,7 +73,7 @@ export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
               />
 
               {/* MOVIE INFO CARD */}
-              <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white p-2 transition-all duration-300 group-hover/card:bottom-1 group-hover/card:right-1 md:group-hover/card:bottom-2 md:group-hover/card:right-2">
+              <div className="absolute -bottom-32 right-0 w-full rounded-xl border-2 border-black bg-white p-2 transition-all duration-500 lg:group-hover/card:-bottom-28 lg:group-hover/card:right-2">
                 <div className="flex items-center justify-between pb-1">
                   <div className="flex items-center justify-center px-2">
                     <IoStar className="mr-1 text-accent-300" />
