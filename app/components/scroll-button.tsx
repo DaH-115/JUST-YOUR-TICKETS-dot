@@ -21,7 +21,7 @@ export default function ScrollButton({
   return (
     <button
       onClick={clickHandler}
-      className="mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-black text-white shadow-md transition-colors duration-300 hover:bg-white hover:text-[#121212] hover:shadow-lg"
+      className="mb-2 flex items-center justify-center rounded-full border border-black bg-white p-3 text-primary-500 shadow-md"
       aria-label={`${ariaLabel} 부분으로 스크롤`}
     >
       {children}
