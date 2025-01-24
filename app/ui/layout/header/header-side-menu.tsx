@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { IoIosArrowDown, IoMdClose } from "react-icons/io";
 import HeaderSideMenuLi from "app/ui/layout/header/header-side-menu-li";
@@ -45,6 +45,10 @@ export default function HeaderSideMenu({
     };
   }, [isOpen, onClose]);
 
+  const toggleMenuHandler = useCallback(() => {
+    setMenuIsOpen((prev) => !prev);
+  }, []);
+
   return (
     <div
       ref={sideMenuRef}
@@ -52,10 +56,10 @@ export default function HeaderSideMenu({
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
-      <div className="flex justify-end p-4">
+      <div className="flex justify-end p-4 pb-8">
         <button
           onClick={onClose}
-          className="transition-colors hover:text-gray-500"
+          className="transition-colors hover:text-accent-300"
           aria-label="메뉴 닫기"
         >
           <IoMdClose size={24} aria-hidden />
@@ -67,12 +71,14 @@ export default function HeaderSideMenu({
         {userDisplayName ? (
           <div className="cursor-pointer">
             <button
-              onClick={() => setMenuIsOpen(!menuIsOpen)}
-              className="mb-2 flex w-full items-center justify-between border-b border-white pb-2 text-xs"
+              onClick={toggleMenuHandler}
+              className="mb-2 flex w-full items-center justify-between border-b border-white pb-2"
             >
-              <span>{userDisplayName} 님</span>
+              <div className="text-xs">
+                <span className="font-bold">{userDisplayName}</span>님
+              </div>
               <div
-                className={`px-1 transition-all duration-200 hover:text-gray-500 ${menuIsOpen ? "rotate-180" : ""}`}
+                className={`px-1 transition-colors hover:text-accent-300 ${menuIsOpen ? "rotate-180" : ""}`}
               >
                 <IoIosArrowDown size={16} />
               </div>
@@ -80,32 +86,33 @@ export default function HeaderSideMenu({
 
             {/* Dropdown Menu */}
             <div
-              className={`w-full transition-all duration-300 ${menuIsOpen ? "mb-4 max-h-24 opacity-100" : "mb-2 max-h-0 opacity-0"} `}
+              className={`transition-all duration-300 ${menuIsOpen ? "mb-4 max-h-36 opacity-100" : "mb-2 max-h-0 opacity-0"} `}
             >
-              {/* 수정 중 */}
-              <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <Link
+                  href="/my-page"
+                  onClick={onClose}
+                  className="flex items-center justify-between rounded-full border border-white bg-white px-4 py-2 text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
+                >
+                  My Page
+                  {pathname !== "/my-page" && <FaArrowRight aria-hidden />}
+                </Link>
+                <Link
+                  href="/my-page/my-ticket-list"
+                  onClick={onClose}
+                  className="flex items-center justify-between rounded-full border border-white bg-white px-4 py-2 text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
+                >
+                  My Ticket List
+                  {pathname !== "/my-page/my-ticket-list" && (
+                    <FaArrowRight aria-hidden />
+                  )}
+                </Link>
                 <button
-                  className="rounded-2xl border border-white px-4 py-2 text-xs transition-all duration-300 hover:bg-white hover:text-black"
+                  className="rounded-full border border-white px-4 py-2 transition-all duration-300 hover:bg-white hover:font-bold hover:text-black"
                   onClick={onLogout}
                 >
                   Logout
                 </button>
-                <div className="space-x-2">
-                  <Link
-                    href="/my-page"
-                    onClick={onClose}
-                    className="rounded-2xl border border-white bg-white px-4 py-2 text-xs font-bold text-black transition-all duration-300 hover:bg-black hover:text-white"
-                  >
-                    My Page
-                  </Link>
-                  <Link
-                    href="/my-page/my-ticket-list"
-                    onClick={onClose}
-                    className="rounded-2xl border border-white bg-white px-4 py-2 text-xs font-bold text-black transition-all duration-300 hover:bg-black hover:text-white"
-                  >
-                    My Ticket List
-                  </Link>
-                </div>
               </div>
             </div>
           </div>
@@ -123,9 +130,12 @@ export default function HeaderSideMenu({
       </div>
       <nav className="cursor-pointer px-4">
         <ul onClick={onClose} className="flex flex-col space-y-2">
-          <HeaderSideMenuLi href="/">Home</HeaderSideMenuLi>
-          <HeaderSideMenuLi href="/search">Search</HeaderSideMenuLi>
-          <HeaderSideMenuLi href="/ticket-list" showAlert={newReviewAlertState}>
+          <HeaderSideMenuLi href={"/"}>Home</HeaderSideMenuLi>
+          <HeaderSideMenuLi href={"/search"}>Search</HeaderSideMenuLi>
+          <HeaderSideMenuLi
+            href={"/ticket-list"}
+            showAlert={newReviewAlertState}
+          >
             Ticket List
           </HeaderSideMenuLi>
         </ul>

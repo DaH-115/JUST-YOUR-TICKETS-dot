@@ -86,13 +86,13 @@ export default function HeaderSearchBar() {
             {...register("search")}
             type="search"
             placeholder="영화 검색"
-            className={`focus:ring-accent-300 h-12 w-full rounded-full border-2 border-black pl-4 pr-12 text-sm transition-all duration-300 ease-in-out focus:border-none focus:outline-none focus:ring-2 ${
+            className={`h-12 w-full rounded-full border border-black pl-4 pr-12 text-sm transition-all duration-300 ease-in-out focus:border-none focus:outline-none focus:ring-2 focus:ring-accent-300 ${
               isSearchOpen ? "opacity-100" : "opacity-0"
             }`}
             onFocus={inputFocusHandler}
           />
           <div
-            className={`${isSearchOpen ? "border-none" : "bg-white"} absolute right-0 top-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-2 border-black transition-all duration-300 ease-in-out`}
+            className={`${isSearchOpen ? "border-none" : "bg-white"} absolute right-0 top-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-black transition-all duration-300 ease-in-out`}
             onClick={handleIconClick}
           >
             <IoSearchOutline size={20} color="black" />
@@ -100,7 +100,7 @@ export default function HeaderSearchBar() {
         </div>
 
         {isDropdownOpen && searchResults.length > 0 && (
-          <div className="absolute right-0 top-full z-10 mt-1 max-h-60 w-64 cursor-pointer overflow-auto rounded-md border border-gray-300 bg-white shadow-lg">
+          <div className="absolute right-0 top-full z-10 mt-1 max-h-60 w-64 cursor-pointer overflow-auto rounded-md border border-gray-300 bg-white shadow-lg scrollbar-hide">
             {searchResults.map((result, idx) => (
               <div
                 key={idx}

@@ -29,8 +29,10 @@ export default function Footer() {
   }, [isVisible]);
 
   return (
-    <footer className="w-full bg-black px-8 pb-8 pt-4 text-white lg:py-12">
-      <div className="pb-8">JUST YOUR TICKETS.</div>
+    <footer className="w-full bg-primary-700 p-8 pt-6 text-white md:p-8">
+      <div className="pb-6 text-xs md:pb-8 md:text-base">
+        JUST YOUR TICKETS.
+      </div>
       <div className="flex justify-between space-x-2 text-xs lg:text-sm">
         <div className="w-full space-y-1 border-l-2 border-dotted border-gray-500 pl-4">
           <Link
