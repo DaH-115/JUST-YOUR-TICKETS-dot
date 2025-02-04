@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useState } from "react";
-import ModalAlert from "app/ui/alert/modal-alert";
-import ModalSuccessAlert from "app/ui/alert/modal-success-alert";
+import Modal from "app/ui/modal";
+import SuccessAlert from "app/ui/success-alert";
 
 interface ErrorContextType {
   isShowError: (title: string, message: string, status?: number) => void;
@@ -63,16 +63,15 @@ export function ErrorProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
       {isError && (
-        <ModalAlert
+        <Modal
           title={isError.title}
           description={isError.message}
           status={isError.status}
           onConfirm={isHideError}
-          variant="destructive"
         />
       )}
       {isSuccess && (
-        <ModalSuccessAlert
+        <SuccessAlert
           title={isSuccess.title}
           description={isSuccess.message}
           onConfirm={() => {

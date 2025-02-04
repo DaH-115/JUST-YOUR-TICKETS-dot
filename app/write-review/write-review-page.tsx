@@ -6,7 +6,6 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "firebase-config";
 import { fetchMovieDetails, MovieDetails } from "api/fetchMovieDetails";
 import ReviewForm, { ReviewData } from "app/write-review/review-form";
-import Catchphrase from "app/ui/layout/catchphrase";
 import ReviewFormSkeleton from "app/write-review/review-form-skeleton";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 
@@ -28,8 +27,9 @@ export default function WriteReviewPage() {
         const movieData = await fetchMovieDetails(Number(movieId));
         setMovieInfo(movieData);
       } catch (error) {
-        const { title, message } = firebaseErrorHandler(error);
-        window.alert(`${title}: ${message}`);
+        window.alert(
+          "영화 정보를 불러오는데 실패했습니다. 다시 시도해 주세요.",
+        );
       }
 
       if (id !== "new") {
@@ -67,7 +67,6 @@ export default function WriteReviewPage() {
           reviewId={id}
         />
       )}
-      <Catchphrase />
     </>
   );
 }
