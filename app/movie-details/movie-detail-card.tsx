@@ -2,7 +2,7 @@ import { MovieDetails } from "api/fetchMovieDetails";
 import { MovieCredits } from "api/fetchMovieCredits";
 import formatMovieDate from "app/utils/format-movie-date";
 import getMovieTitle from "app/utils/get-movie-title";
-import convertRuntime from "app/utils/convert-runtime";
+import convertRuntime from "app/movie-details/utils/convert-runtime";
 import { IoStar } from "react-icons/io5";
 import NewWriteBtn from "app/components/new-write-btn";
 import MoviePoster from "app/components/movie-poster";

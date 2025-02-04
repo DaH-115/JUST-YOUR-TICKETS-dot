@@ -1,4 +1,4 @@
-import { fetchGenres } from "app/utils/get-genres";
+import { fetchGenres } from "api/utils/get-genres";
 
 export interface MovieBaseType {
   id: number;

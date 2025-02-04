@@ -1,5 +1,5 @@
 import { MovieList } from "api/fetchNowPlayingMovies";
-import { fetchGenres } from "app/utils/get-genres";
+import { fetchGenres } from "api/utils/get-genres";
 
 export async function fetchSimilarMovies(id: number): Promise<MovieList[]> {
   const res = await fetch(

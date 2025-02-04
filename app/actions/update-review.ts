@@ -5,7 +5,7 @@ import { db } from "firebase-config";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
 
-export default async function UpdateReview(
+export default async function updateReview(
   reviewId: string,
   reviewData: ReviewData,
 ) {

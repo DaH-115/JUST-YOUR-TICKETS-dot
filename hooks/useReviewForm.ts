@@ -7,7 +7,7 @@ import { ReviewData } from "app/write-review/review-form";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useError } from "store/context/error-context";
 import { MovieDetails } from "api/fetchMovieDetails";
-import UpdateReview from "app/actions/update-review";
+import updateReview from "app/actions/update-review";
 
 export const useReviewForm = (
   mode: "create" | "edit",
@@ -48,8 +48,9 @@ export const useReviewForm = (
           reviewTitle,
           rating,
           review,
+          updatedAt: serverTimestamp(),
         };
-        await UpdateReview(reviewId, updateData);
+        await updateReview(reviewId, updateData);
       }
 
       isShowSuccess("알림", "리뷰가 성공적으로 저장되었습니다.", () =>

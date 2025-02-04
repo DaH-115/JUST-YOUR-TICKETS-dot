@@ -18,7 +18,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import generateDisplayName from "app/utils/generate-displayName";
+import generateDisplayName from "app/login/utils/generate-displayName";
 import { setCookie } from "app/utils/cookie-utils";
 
 export type SocialProvider = "google" | "github";
