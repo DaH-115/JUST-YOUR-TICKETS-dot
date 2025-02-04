@@ -16,10 +16,10 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
   const { genres, cast, uniqueDirectors } = useMovieDetails();
 
   return (
-    <section className="group relative mx-auto w-full break-keep">
-      <div className="relative rounded-xl border-2 border-black bg-white p-2 lg:border-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
+    <section className="group mx-auto w-full break-keep rounded-xl bg-accent-300">
+      <div className="rounded-xl border border-black bg-white p-2 lg:transition-all lg:duration-500 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
         <div className="p-4">
-          <span className="mb-2 inline-block animate-bounce rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">
+          <span className="mb-2 inline-block rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">
             추천 영화
           </span>
           <div className="flex">
@@ -31,7 +31,7 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
                 title={`${title}(${original_title}) 영화 상세정보 보기`}
                 role="button"
               >
-                <FaInfoCircle className="lg:text-lg" aria-hidden />
+                <FaInfoCircle className="text-lg" aria-hidden />
               </Link>
               <Tooltip>영화 상세정보 보기</Tooltip>
             </div>
@@ -40,25 +40,25 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
             <h2 className="mr-2 text-lg text-gray-500">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
           </div>
         </div>
-        <ul className="flex items-center space-x-2 border-y-4 border-dotted border-gray-200 p-4 text-sm">
+        <ul className="flex items-center space-x-2 border-y-4 border-dotted border-gray-200 p-2 text-xs">
           {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li
-                className="rounded-full border border-black bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-primary-500 hover:text-white active:bg-white active:text-black lg:text-sm"
+                className="rounded-full border border-black bg-white px-2 py-1 text-black transition-colors duration-300 hover:bg-primary-500 hover:text-white active:bg-white active:text-black"
                 key={idx}
               >
                 {genre}
               </li>
             ))
           ) : (
-            <li className="px-2 py-1 text-xs text-gray-300 lg:text-sm">
+            <li className="px-2 py-1 text-gray-300 lg:text-sm">
               장르 정보가 없습니다
             </li>
           )}
         </ul>
         {overview && <AnimatedOverview overview={overview} />}
         <div className="flex flex-1 border-b-4 border-dotted border-gray-200">
-          <ul className="flex-1 flex-col items-center justify-center py-4 text-center text-sm">
+          <ul className="flex-1 flex-col items-center justify-center space-y-2 py-4 text-center text-sm">
             {cast.slice(0, 3).map((actor) => (
               <li key={actor.id}>
                 {actor.name}
@@ -100,7 +100,6 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
           <NewWriteBtn movieId={id} />
         </div>
       </div>
-      <BackAnimation />
     </section>
   );
 }

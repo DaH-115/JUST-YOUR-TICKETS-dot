@@ -15,8 +15,10 @@ export default function MyTicktListPage({
   uid: string;
   userReviews: UserReview[];
 }) {
+  const myTicketList = userReviews.filter((review) => review.userUid === uid);
+
   const { filteredUserReviews, searchReviewsHandler } =
-    useReviewSearch(userReviews);
+    useReviewSearch(myTicketList);
   const { register, watch } = useForm({
     defaultValues: {
       search: "",
@@ -29,29 +31,36 @@ export default function MyTicktListPage({
   }, [searchTerm, searchReviewsHandler]);
 
   return (
-    <div className="flex w-full flex-col p-8 lg:flex-row">
+    <div className="flex w-full flex-col p-8 pt-4 lg:flex-row">
       <SideMenu uid={uid || ""} />
       <main className="flex w-full flex-col">
-        <header className="flex items-center border-t-2 border-t-accent-500 pb-8 pt-6 lg:border-t-0">
-          {/* 티켓 개수 */}
-          <div className="flex items-center font-bold">
-            <h1 className="text-xl text-white">All</h1>
-            <div className="px-2 text-2xl text-accent-300">
-              {filteredUserReviews.length}
+        <header className="pb-8">
+          <h1 className="mb-8 text-2xl font-bold text-accent-300">
+            MY TICKET
+            <br />
+            LIST
+          </h1>
+          <div className="flex w-full items-center justify-between text-white">
+            {/* 티켓 개수 */}
+            <div className="flex items-center gap-2">
+              All
+              <p className="text-accent-300">{filteredUserReviews.length}</p>
             </div>
+            {/* 티켓 검색 */}
+            <ReviewSearchInputregister
+              label="티켓 검색"
+              register={register}
+              placeholder="티켓 검색"
+            />
           </div>
-          {/* 티켓 검색 */}
-          <ReviewSearchInputregister
-            label="티켓 검색"
-            register={register}
-            placeholder="티켓 검색"
-          />
         </header>
         {/* 티켓 목록 */}
         <div className="h-full w-full">
           {userReviews.length > 0 ? (
             <ReviewTicket
-              reviews={!filteredUserReviews ? userReviews : filteredUserReviews}
+              reviews={
+                !filteredUserReviews ? myTicketList : filteredUserReviews
+              }
             />
           ) : (
             <div className="flex items-center justify-center text-center text-sm font-bold text-gray-300">

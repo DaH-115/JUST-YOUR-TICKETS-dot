@@ -6,6 +6,7 @@ import { IoIosArrowDown, IoMdClose } from "react-icons/io";
 import HeaderSideMenuLi from "app/ui/layout/header/header-side-menu-li";
 import { FaArrowRight } from "react-icons/fa";
 import { usePathname } from "next/navigation";
+import { useAppSelector } from "store/redux-toolkit/hooks";
 
 interface HeaderSideMenuProps {
   newReviewAlertState: boolean;
@@ -23,6 +24,7 @@ export default function HeaderSideMenu({
   onClose,
 }: HeaderSideMenuProps) {
   const sideMenuRef = useRef<HTMLDivElement>(null);
+  const userUid = useAppSelector((state) => state.user.user?.uid);
   const pathname = usePathname();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
@@ -86,7 +88,7 @@ export default function HeaderSideMenu({
 
             {/* Dropdown Menu */}
             <div
-              className={`transition-all duration-300 ${menuIsOpen ? "mb-4 max-h-36 opacity-100" : "mb-2 max-h-0 opacity-0"} `}
+              className={`transition-all duration-300 ${menuIsOpen ? "pointer-events-auto mb-4 max-h-36 opacity-100" : "pointer-events-none mb-2 max-h-0 opacity-0"} `}
             >
               <div className="space-y-2">
                 <Link
@@ -98,7 +100,7 @@ export default function HeaderSideMenu({
                   {pathname !== "/my-page" && <FaArrowRight aria-hidden />}
                 </Link>
                 <Link
-                  href="/my-page/my-ticket-list"
+                  href={`/my-page/my-ticket-list?uid=${userUid}`}
                   onClick={onClose}
                   className="flex items-center justify-between rounded-full border border-white bg-white px-4 py-2 text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
                 >

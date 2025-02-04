@@ -30,7 +30,7 @@ export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
   }, []);
 
   return (
-    <div className="grid h-full w-full grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid grid-cols-3 gap-2 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
       {selectedReview && (
         <ReviewDetailsModal
           selectedReview={selectedReview}
@@ -43,8 +43,8 @@ export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
       {/* 리뷰 티켓 추가 버튼 */}
       <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-gray-500 md:flex">
         <Link href="/search">
-          <button className="p-12 text-xl font-bold text-gray-500 transition-colors duration-300 hover:text-gray-700">
-            <IoIosAddCircle size={48} />
+          <button className="p-12 text-4xl font-bold text-gray-500 transition-colors duration-300 hover:text-gray-700 md:text-6xl">
+            <IoIosAddCircle />
           </button>
         </Link>
       </div>
@@ -53,10 +53,10 @@ export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
           {reviews.map((post) => (
             <div
               key={post.id}
-              className="group/card relative mb-32 drop-shadow-md"
+              className="group/card relative mb-20 drop-shadow-md md:mb-32"
             >
               {/* CARD HEADER */}
-              <div className="absolute left-0 top-0 z-10 flex w-full items-center justify-end p-2">
+              <div className="absolute left-0 top-0 z-10 flex w-full items-center justify-end p-1 md:p-2">
                 <TicketBtnGroup
                   postId={post.id}
                   movieId={post.movieId}
@@ -73,38 +73,44 @@ export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
               />
 
               {/* MOVIE INFO CARD */}
-              <div className="absolute -bottom-32 right-0 w-full rounded-xl border-2 border-black bg-white p-2 transition-all duration-500 lg:group-hover/card:-bottom-28 lg:group-hover/card:right-2">
-                <div className="flex items-center justify-between pb-1">
-                  <div className="flex items-center justify-center px-2">
+              <div className="absolute -bottom-20 right-0 w-full rounded-lg border-2 border-black bg-white p-1 transition-all duration-500 md:-bottom-32 md:rounded-xl md:p-2 lg:group-hover/card:-bottom-28 lg:group-hover/card:right-2">
+                {/* RATE & NAME */}
+                <div className="flex items-center justify-between py-1">
+                  <div className="flex items-center justify-center text-xs md:px-2 md:text-base">
                     <IoStar className="mr-1 text-accent-300" />
                     <p className="font-bold">{post.rating}</p>
                   </div>
-                  <p className="px-2 text-xs font-bold lg:text-sm">
+                  <p className="truncate px-2 text-xs font-bold lg:text-sm">
                     {post.userName ? post.userName : "Guest"}
                   </p>
                 </div>
-                <div className="mb-2 h-[4rem] overflow-y-scroll break-keep border-y-4 border-dotted border-gray-200 py-2 scrollbar-hide">
-                  <p className="text-sm font-bold">
-                    {post.number}. {post.reviewTitle}
+                {/* POST NUMBER & REVIEW TITLE */}
+                <div className="mb-2 max-h-10 w-full overflow-y-scroll border-y-2 border-dotted border-gray-200 p-1 scrollbar-hide md:border-y-4 md:px-0 md:py-2">
+                  <p className="text-xs md:text-sm">
+                    {`${post.number}.`}
+                    <span className="ml-1 font-bold">{post.reviewTitle}</span>
                   </p>
                   {/* 영화 상세 정보로 이동 */}
-                  <div className="text-xs text-gray-500">
+                  <div className="hidden text-xs text-gray-500 md:block">
                     <Link
                       href={`/movie-details/${post.movieId}`}
                       className="border-gray-500 transition-all hover:border-b"
                     >
                       {post.movieTitle}
                     </Link>
-                    - {post.releaseYear}
+                    {`(${post.releaseYear})`}
                   </div>
                 </div>
-                <div className="rounded-lg bg-primary-600 px-3 py-2 hover:bg-primary-700">
+                {/* REVIEW CONTENT MODAL BUTTON */}
+                <div className="rounded-md bg-primary-600 p-1 hover:bg-primary-700 md:rounded-lg md:px-3 md:py-2">
                   <button
                     className="group relative flex w-full items-center justify-end"
                     onClick={() => openModalHandler(post)}
                   >
                     <div className="flex items-center justify-center">
-                      <p className="mr-1 text-xs text-white">내용 보기</p>
+                      <p className="hidden text-xs text-white md:mr-1 md:block">
+                        내용 보기
+                      </p>
                       <FaExternalLinkAlt className="text-xs text-gray-200" />
                     </div>
                   </button>

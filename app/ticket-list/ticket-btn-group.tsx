@@ -69,7 +69,7 @@ const TicketBtnGroup = React.memo(function ReviewBtnGroup({
       {/* DROPDOWN MENU TOGGLE BUTTON */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="rounded-full border border-black bg-white p-1.5 hover:bg-gray-100 focus:outline-none"
+        className="rounded-full border border-black bg-white p-1 text-xs hover:bg-gray-100 focus:outline-none md:text-base"
         aria-label="메뉴 열기"
       >
         <BsThreeDotsVertical className="text-gray-600" />
