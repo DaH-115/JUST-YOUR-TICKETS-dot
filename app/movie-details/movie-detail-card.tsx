@@ -43,7 +43,7 @@ export default function MovieDetailCard({
         </section>
 
         {/* MOVIE INFO */}
-        <section className="mx-auto w-full rounded-xl border-2 border-black bg-white p-2 shadow-lg">
+        <section className="mx-auto w-full rounded-xl border-2 border-gray-200 bg-white p-2 shadow-lg">
           {/* 기본 정보 영역 */}
           <div className="p-4 pb-2">
             <h1 className="mb-2 inline-block rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">

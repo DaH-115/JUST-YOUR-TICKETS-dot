@@ -38,7 +38,7 @@ const SideMenu = React.memo(function SideMenu({ uid }: { uid: string }) {
       </Link>
       <Link href={`/my-page/my-ticket-list?uid=${uid}`} className="w-full">
         <div className={getMenuStyle("/my-page/my-ticket-list")}>
-          MY TICKETS
+          MY TICKET LIST
         </div>
       </Link>
     </nav>

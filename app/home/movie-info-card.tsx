@@ -7,9 +7,8 @@ import { IoStar } from "react-icons/io5";
 import AnimatedOverview from "app/components/animated-overview";
 import NewWriteBtn from "app/components/new-write-btn";
 import Tooltip from "app/components/tooltip";
-import { BackAnimation } from "app/ui/back-animation";
 
-export default function MovieCard({ movie }: { movie: MovieList }) {
+export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   const { id, title, original_title, release_date, vote_average, overview } =
     movie;
   const releaseDate = formatMovieDate(release_date);
@@ -17,7 +16,7 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
 
   return (
     <section className="group mx-auto w-full break-keep rounded-xl bg-accent-300">
-      <div className="rounded-xl border border-black bg-white p-2 lg:transition-all lg:duration-500 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
+      <div className="rounded-xl border-2 border-gray-200 bg-white p-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
         <div className="p-4">
           <span className="mb-2 inline-block rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">
             추천 영화
@@ -40,7 +39,7 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
             <h2 className="mr-2 text-lg text-gray-500">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
           </div>
         </div>
-        <ul className="flex items-center space-x-2 border-y-4 border-dotted border-gray-200 p-2 text-xs">
+        <ul className="flex items-center space-x-2 overflow-x-scroll border-y-4 border-dotted border-gray-200 p-2 text-xs scrollbar-hide">
           {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li
@@ -57,12 +56,12 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
           )}
         </ul>
         {overview && <AnimatedOverview overview={overview} />}
-        <div className="flex flex-1 border-b-4 border-dotted border-gray-200">
-          <ul className="flex-1 flex-col items-center justify-center space-y-2 py-4 text-center text-sm">
+        <div className="flex flex-1 items-center justify-between border-b-4 border-dotted border-gray-200">
+          <ul className="flex w-full items-center justify-center gap-6 p-4 text-center text-xs">
             {cast.slice(0, 3).map((actor) => (
-              <li key={actor.id}>
+              <li key={actor.id} className="font-bold">
                 {actor.name}
-                <span className="block text-xs text-gray-500">
+                <span className="block text-xs font-normal text-gray-500">
                   {actor.character}
                 </span>
               </li>
@@ -71,12 +70,12 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
         </div>
         <div className="flex p-2">
           <div className="flex-1 border-r-4 border-dotted border-gray-200">
-            <p className="pr-2 text-sm font-bold text-black">개봉일</p>
-            <p className="p-2 pb-4 text-center text-sm">{releaseDate}</p>
+            <p className="pr-2 text-xs font-bold text-black">개봉일</p>
+            <p className="p-2 text-center text-xs">{releaseDate}</p>
           </div>
           <div className="flex-1 border-r-4 border-dotted border-gray-200">
-            <p className="px-2 text-sm font-bold text-black">감독</p>
-            <ul className="p-2 pb-4 text-center text-sm">
+            <p className="px-2 text-xs font-bold text-black">감독</p>
+            <ul className="p-2 text-center text-xs">
               {uniqueDirectors.length > 0 ? (
                 uniqueDirectors.map((director) => (
                   <li key={`director-${director.id}`}>{director.name}</li>
@@ -87,8 +86,8 @@ export default function MovieCard({ movie }: { movie: MovieList }) {
             </ul>
           </div>
           <div className="flex-1">
-            <p className="px-2 text-sm font-bold text-black">평점</p>
-            <div className="flex flex-1 items-center justify-center p-2 pb-4">
+            <p className="px-2 text-xs font-bold text-black">평점</p>
+            <div className="flex flex-1 items-center justify-center p-2">
               <IoStar className="mr-1 text-accent-300" size={24} />
               <div className="text-2xl font-bold">
                 {Math.round(vote_average * 10) / 10}

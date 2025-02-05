@@ -35,7 +35,7 @@ export default function MyTicktListPage({
       <SideMenu uid={uid || ""} />
       <main className="flex w-full flex-col">
         <header className="pb-8">
-          <h1 className="mb-8 text-2xl font-bold text-accent-300">
+          <h1 className="mb-8 text-2xl font-bold text-accent-300 lg:sr-only">
             MY TICKET
             <br />
             LIST

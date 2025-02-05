@@ -29,11 +29,16 @@ export default function SwiperCard({
         {idx + 1}.
       </div>
       {/* MOVIE POSTER */}
-      <MoviePoster posterPath={poster_path} title={movieTitle} size={342} />
+      <MoviePoster
+        posterPath={poster_path}
+        title={movieTitle}
+        size={342}
+        lazy
+      />
       {/* MOVIE INFO CARD */}
-      <div className="absolute -bottom-20 right-0 w-full rounded-xl border-2 border-black bg-white transition-all duration-500 md:-bottom-32 lg:group-hover/card:-bottom-28 lg:group-hover/card:right-2">
+      <div className="absolute -bottom-20 right-0 w-full rounded-xl border-2 border-gray-200 bg-white transition-all duration-300 ease-in-out md:-bottom-32 lg:group-hover/card:-bottom-28 lg:group-hover/card:right-2">
         {/* MOVIE TITLE & LINK */}
-        <div className="flex items-center p-2 scrollbar-hide md:overflow-x-scroll md:p-4">
+        <div className="flex items-center justify-between p-2 md:px-4 md:py-3">
           <div className="truncate text-sm font-bold">{movieTitle}</div>
           <div className="group/tooltip relative text-xs md:ml-2 md:text-base">
             <Link

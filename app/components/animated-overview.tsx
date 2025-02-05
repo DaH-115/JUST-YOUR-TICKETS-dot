@@ -20,7 +20,7 @@ export default function AnimatedOverview({ overview }: { overview: string }) {
   };
 
   return (
-    <div className="border-b-4 border-dotted border-gray-200 px-4 py-6">
+    <div className="border-b-4 border-dotted border-gray-200 p-4">
       <div className="relative">
         <div
           ref={contentRef}
@@ -29,10 +29,10 @@ export default function AnimatedOverview({ overview }: { overview: string }) {
             !isExpanded && needsExpansion ? "mask-linear-gradient" : ""
           }`}
         >
-          <p className="break-keep font-light">{overview}</p>
+          <p className="break-keep text-sm font-light">{overview}</p>
         </div>
         {!isExpanded && needsExpansion && (
-          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent"></div>
+          <span className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
         )}
       </div>
 

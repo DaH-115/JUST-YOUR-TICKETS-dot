@@ -18,7 +18,7 @@ export default function MovieTrailer({ trailerKey }: { trailerKey: string }) {
             <RiMovieLine className="text-2xl" />
           </div>
         </div>
-        <p className="pt-1 text-base text-gray-300 lg:pt-4">
+        <p className="pt-1 text-sm text-gray-300 lg:pt-4">
           이 영화의 예고편을 확인해 보세요
         </p>
       </div>

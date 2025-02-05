@@ -107,7 +107,7 @@ export default function SearchPage({
               검색 결과
               <FaArrowRight size={20} className="ml-2" />
             </h1>
-            <div className="grid grid-cols-3 gap-2 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid grid-cols-3 gap-4 lg:grid-cols-4 xl:grid-cols-5">
               {searchResults.map((result, idx) => (
                 <SwiperCard key={result.id} movie={result} idx={idx} />
               ))}
@@ -125,7 +125,7 @@ export default function SearchPage({
             <h2 className="mb-4 flex items-center text-2xl font-bold text-accent-300 md:text-4xl">
               Now Playing <FaArrowRight size={20} className="ml-2 mt-1" />
             </h2>
-            <div className="grid grid-cols-3 gap-2 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid grid-cols-3 gap-4 lg:grid-cols-4 xl:grid-cols-5">
               {nowPlayingMovies.map((movie, idx) => (
                 <SwiperCard key={movie.id} movie={movie} idx={idx} />
               ))}

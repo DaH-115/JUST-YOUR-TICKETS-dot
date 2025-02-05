@@ -7,7 +7,7 @@ function NowPlayingList({ movieList }: { movieList: MovieList[] }) {
   const slicedMovieList = useMemo(() => movieList.slice(0, 10), [movieList]);
 
   return (
-    <section id="now-playing" className="relative p-4 md:py-8">
+    <section id="now-playing" className="relative p-4 md:pb-16 md:pt-8">
       <div className="mb-6 md:px-8">
         <div className="flex items-start justify-between md:justify-start">
           <h2 className="text-4xl font-black text-accent-300 lg:text-5xl">
@@ -19,7 +19,7 @@ function NowPlayingList({ movieList }: { movieList: MovieList[] }) {
             <MdLocalMovies className="text-2xl" />
           </div>
         </div>
-        <p className="pt-2 text-base text-gray-300 lg:pt-6">
+        <p className="pt-2 text-sm text-gray-200 lg:pt-6">
           현재 상영 중인 영화들을 확인해 보세요
         </p>
       </div>
