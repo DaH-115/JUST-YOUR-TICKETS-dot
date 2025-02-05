@@ -95,54 +95,54 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-10 flex w-full items-center justify-center px-2 py-4 md:px-8 md:pt-8 ${
+      className={`relative z-10 flex w-full items-center justify-center p-4 text-xs md:px-8 md:pt-8 ${
         isSideMenuOpen ? "pointer-events-none" : ""
       }`}
     >
       <div
-        className={`flex w-full items-center justify-between rounded-full border border-black bg-white lg:w-auto lg:justify-center lg:px-4 lg:py-3 ${
+        className={`flex w-full items-center justify-between rounded-full border-2 border-gray-200 bg-white md:w-auto md:justify-center md:px-4 md:py-3 ${
           isSideMenuOpen ? "pointer-events-auto" : ""
         }`}
       >
         {/* LOGO */}
-        <h1 className="px-4 text-sm font-bold text-gray-700 lg:py-0">
-          just your tickets.
-        </h1>
+        <h1 className="px-4 font-bold md:py-0">{"Just Your Tickets."}</h1>
         {/* MENU */}
-        <ul className="hidden items-center justify-center gap-3 lg:flex">
-          <li className="group">
-            <Link
-              href="/"
-              className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
-            >
-              Home
-            </Link>
-          </li>
-          <li className="group relative">
-            <Link
-              href="/search"
-              className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
-            >
-              Search
-            </Link>
-          </li>
-          <li className="group relative">
-            <Link
-              href="/ticket-list"
-              className="group relative rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
-            >
-              Ticket List
-              {newReviewAlertState && (
-                <span className="absolute right-1 top-1 flex h-3 w-3">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                  <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
-                </span>
-              )}
-            </Link>
-          </li>
-        </ul>
+        <nav className="hidden md:flex">
+          <ul className="flex items-center justify-center gap-3">
+            <li className="group">
+              <Link
+                href="/"
+                className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+              >
+                Home
+              </Link>
+            </li>
+            <li className="group relative">
+              <Link
+                href="/search"
+                className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+              >
+                Search
+              </Link>
+            </li>
+            <li className="group relative">
+              <Link
+                href="/ticket-list"
+                className="group relative rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+              >
+                Ticket List
+                {newReviewAlertState && (
+                  <span className="absolute right-1 top-1 flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+                  </span>
+                )}
+              </Link>
+            </li>
+          </ul>
+        </nav>
         {/* MOBILE/ HAMBURGER MENU */}
-        <div onClick={toggleSideMenu} className="lg:hidden">
+        <div onClick={toggleSideMenu} className="md:hidden">
           <button
             className="rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200"
             aria-label="메뉴 열기"
@@ -152,7 +152,7 @@ export default function Header() {
         </div>
 
         {/* PROFILE MENU */}
-        <div className="hidden text-sm lg:flex">
+        <div className="hidden md:flex">
           {userDisplayName ? (
             <HeaderDropDownMenu
               dropdownRef={dropdownRef}

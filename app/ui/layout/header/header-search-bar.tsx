@@ -16,8 +16,33 @@ export default function HeaderSearchBar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const debounceHandler = useCallback(
-    debounce(async (query: string) => {
+  const inputFocusHandler = useCallback(() => {
+    if (searchResults.length > 0) {
+      setIsDropdownOpen(true);
+    }
+  }, [searchResults]);
+
+  const iconClickHandler = useCallback(() => {
+    setIsSearchOpen((prev) => !prev);
+    if (!isSearchOpen) {
+      setTimeout(
+        () =>
+          (
+            document.querySelector('input[type="search"]') as HTMLInputElement
+          )?.focus(),
+        300,
+      );
+    }
+  }, []);
+
+  const resultsClickHandler = useCallback(() => {
+    setIsDropdownOpen(false);
+    setIsSearchOpen(false);
+    reset({ search: "" });
+  }, []);
+
+  useEffect(() => {
+    const debounceHandler = debounce(async (query: string) => {
       if (query.trim()) {
         try {
           const { results } = await fetchSearchMovies(query);
@@ -30,19 +55,10 @@ export default function HeaderSearchBar() {
         setSearchResults([]);
         setIsDropdownOpen(false);
       }
-    }, 300),
-    [],
-  );
+    }, 300);
 
-  const inputFocusHandler = useCallback(() => {
-    if (searchResults.length > 0) {
-      setIsDropdownOpen(true);
-    }
-  }, [searchResults]);
-
-  useEffect(() => {
-    debounceHandler(searchQuery || "");
-  }, [searchQuery, debounceHandler]);
+    debounceHandler(searchQuery);
+  }, [searchQuery]);
 
   useEffect(() => {
     const clickOutsideHandler = (event: MouseEvent) => {
@@ -61,41 +77,28 @@ export default function HeaderSearchBar() {
     };
   }, [dropdownRef]);
 
-  const handleIconClick = () => {
-    setIsSearchOpen((prev) => !prev);
-    if (!isSearchOpen) {
-      setTimeout(
-        () =>
-          (
-            document.querySelector('input[type="search"]') as HTMLInputElement
-          )?.focus(),
-        300,
-      );
-    }
-  };
-
   return (
-    <div className="ml-4 hidden h-12 lg:flex" ref={dropdownRef}>
+    <div className="ml-4 hidden h-10 lg:flex" ref={dropdownRef}>
       <div className="relative flex h-full items-center justify-end">
         <div
           className={`relative flex items-center transition-all duration-300 ease-in-out ${
-            isSearchOpen ? "w-64" : "w-12"
+            isSearchOpen ? "w-64" : "w-10"
           }`}
         >
           <input
             {...register("search")}
             type="search"
             placeholder="영화 검색"
-            className={`h-12 w-full rounded-full border border-black pl-4 pr-12 text-sm transition-all duration-300 ease-in-out focus:border-none focus:outline-none focus:ring-2 focus:ring-accent-300 ${
+            className={`h-10 w-full rounded-full border border-black pl-4 pr-12 text-sm transition-all duration-300 ease-in-out focus:border-none focus:outline-none focus:ring-2 focus:ring-accent-300 ${
               isSearchOpen ? "opacity-100" : "opacity-0"
             }`}
             onFocus={inputFocusHandler}
           />
           <div
-            className={`${isSearchOpen ? "border-none" : "bg-white"} absolute right-0 top-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-black transition-all duration-300 ease-in-out`}
-            onClick={handleIconClick}
+            className={`${isSearchOpen ? "border-none" : "bg-white"} absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-gray-200 transition-all duration-300 ease-in-out`}
+            onClick={iconClickHandler}
           >
-            <IoSearchOutline size={20} color="black" />
+            <IoSearchOutline size={18} color="black" />
           </div>
         </div>
 
@@ -105,11 +108,7 @@ export default function HeaderSearchBar() {
               <div
                 key={idx}
                 className="px-3 py-2 hover:bg-gray-100"
-                onClick={() => {
-                  setIsDropdownOpen(false);
-                  setIsSearchOpen(false);
-                  reset({ search: "" });
-                }}
+                onClick={resultsClickHandler}
               >
                 <Link href={`/movie-details/${result.id}`}>
                   <p>{result.title}</p>

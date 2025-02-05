@@ -72,25 +72,24 @@ export default function HeaderSideMenu({
       <div className="px-4">
         {userDisplayName ? (
           <div className="cursor-pointer">
+            {/* Dropdown Button */}
             <button
               onClick={toggleMenuHandler}
               className="mb-2 flex w-full items-center justify-between border-b border-white pb-2"
             >
-              <div className="text-xs">
+              <div className="text-sm">
                 <span className="font-bold">{userDisplayName}</span>님
               </div>
-              <div
-                className={`px-1 transition-colors hover:text-accent-300 ${menuIsOpen ? "rotate-180" : ""}`}
-              >
+              <div className={`px-1 ${menuIsOpen ? "rotate-180" : ""}`}>
                 <IoIosArrowDown size={16} />
               </div>
             </button>
 
             {/* Dropdown Menu */}
             <div
-              className={`transition-all duration-300 ${menuIsOpen ? "pointer-events-auto mb-4 max-h-36 opacity-100" : "pointer-events-none mb-2 max-h-0 opacity-0"} `}
+              className={`transition-all duration-300 ease-in-out ${menuIsOpen ? "pointer-events-auto mb-4 max-h-36 opacity-100" : "pointer-events-none mb-2 max-h-0 opacity-0"} `}
             >
-              <div className="space-y-2">
+              <div className="space-y-2 text-sm">
                 <Link
                   href="/my-page"
                   onClick={onClose}
@@ -130,7 +129,7 @@ export default function HeaderSideMenu({
           </Link>
         )}
       </div>
-      <nav className="cursor-pointer px-4">
+      <nav className="cursor-pointer px-4 text-sm">
         <ul onClick={onClose} className="flex flex-col space-y-2">
           <HeaderSideMenuLi href={"/"}>Home</HeaderSideMenuLi>
           <HeaderSideMenuLi href={"/search"}>Search</HeaderSideMenuLi>
