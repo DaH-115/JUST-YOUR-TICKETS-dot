@@ -52,7 +52,7 @@ export default async function MovieDetailPage({
   const movieDetails = await fetchMovieDetails(params.id);
   const movieCredits = await fetchMovieCredits(params.id);
   const { results: movieTrailer } = await fetchVideosMovies(params.id);
-  const { results: similarMovies } = await fetchSimilarMovies(params.id);
+  const similarMovies = await fetchSimilarMovies(params.id);
 
   if (!params.id) {
     notFound();

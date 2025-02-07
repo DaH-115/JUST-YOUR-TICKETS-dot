@@ -7,7 +7,7 @@ import getMovieTitle from "app/utils/get-movie-title";
 import BackGround from "app/ui/layout/back-ground";
 import { IoStar } from "react-icons/io5";
 import { MdDriveFileRenameOutline } from "react-icons/md";
-import ModalAlert from "app/ui/alert/modal-alert";
+import Modal from "app/ui/modal";
 import { MovieDetails } from "api/fetchMovieDetails";
 
 export interface ReviewData {
@@ -49,14 +49,6 @@ export default function ReviewForm({
   const movieTitle = getMovieTitle(movieInfo.original_title, movieInfo.title);
   const { onSubmitHandler } = useReviewForm(mode, movieInfo, movieId, reviewId);
 
-  const handlePageExit = useCallback(() => {
-    if (isDirty) {
-      setShowExitConfirmation(true);
-    } else {
-      router.push("/");
-    }
-  }, [router, isDirty]);
-
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (isDirty) {
@@ -69,7 +61,15 @@ export default function ReviewForm({
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [isDirty]);
+  }, [showExitConfirmation]);
+
+  const pageExitHandler = useCallback(() => {
+    if (isDirty) {
+      setShowExitConfirmation(true);
+    } else {
+      router.push("/");
+    }
+  }, [router, isDirty]);
 
   const rating = watch("rating");
   const isFormValid = !errors.reviewTitle && !errors.review && rating >= 0;
@@ -84,14 +84,14 @@ export default function ReviewForm({
       )}
 
       <main className="relative mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
-        <div className="mx-auto w-11/12 rounded-xl border-2 border-black bg-white md:w-2/3">
+        <div className="mx-auto w-11/12 rounded-xl border-2 border-black bg-white md:w-2/4">
           <div className="w-full p-4 pb-0">
             <div className="mb-1 flex items-end lg:mb-2">
               <h1 className="text-sm font-bold">
                 {mode === "create" ? "새로운 리뷰 작성" : "리뷰 수정"}
               </h1>
             </div>
-            <h2 className="mb-2 text-xl font-bold lg:text-3xl">{`${movieTitle} (${movieInfo.release_date.slice(0, 4)})`}</h2>
+            <h2 className="mb-2 text-xl font-bold lg:text-2xl">{`${movieTitle} (${movieInfo.release_date.slice(0, 4)})`}</h2>
           </div>
           <div className="flex justify-between border-b border-black px-4 py-2 text-xs lg:text-sm">
             <span>{new Date().toLocaleDateString()}</span>
@@ -102,7 +102,7 @@ export default function ReviewForm({
               </span>
             </div>
           </div>
-
+          {/* 리뷰 작성 부분 */}
           <div className="w-full">
             <form onSubmit={handleSubmit(onSubmitHandler)}>
               <div className="p-4">
@@ -119,7 +119,7 @@ export default function ReviewForm({
                     required: "제목을 입력해주세요.",
                   })}
                   placeholder="리뷰 제목"
-                  className="w-full rounded-lg border p-2"
+                  className="w-full rounded-lg border p-2 text-sm"
                 />
                 {errors.reviewTitle && (
                   <p className="mt-2 text-sm text-red-600">
@@ -143,12 +143,12 @@ export default function ReviewForm({
                     min="0"
                     max="10"
                     step="0.5"
-                    className="accent-primary-500 w-full"
+                    className="w-full accent-primary-500"
                   />
                 </div>
                 <div className="flex items-center justify-center text-center">
                   <div>
-                    <IoStar className="text-accent-300 mr-1" size={20} />
+                    <IoStar className="mr-1 text-accent-300" size={20} />
                   </div>
                   <div className="text-lg font-bold">{rating}</div>
                   <span className="text-gray-400">/ 10</span>
@@ -168,7 +168,7 @@ export default function ReviewForm({
                     required: "내용을 입력해주세요.",
                   })}
                   placeholder="감상평을 작성해주세요."
-                  className="h-32 w-full rounded-lg border p-2"
+                  className="h-32 w-full rounded-lg border p-2 text-sm"
                 />
                 {errors.review && (
                   <p className="mt-2 text-sm text-red-600">
@@ -180,15 +180,15 @@ export default function ReviewForm({
               <div className="flex justify-end border-t border-black p-2">
                 <button
                   type="button"
-                  className="mr-2 w-full rounded-xl bg-gray-200 py-4 transition-all duration-300 hover:bg-gray-300"
-                  onClick={handlePageExit}
+                  className="mr-2 w-full rounded-xl bg-gray-200 py-4 text-sm transition-all duration-300 hover:bg-gray-300"
+                  onClick={pageExitHandler}
                 >
                   취소
                 </button>
                 <button
                   type="submit"
                   disabled={!isFormValid}
-                  className="hover:bg-primary-700 bg-primary-500 group flex w-full items-center justify-center rounded-xl p-4 text-white transition-colors duration-300 disabled:text-gray-500"
+                  className="group flex w-full items-center justify-center rounded-xl bg-primary-500 p-4 text-sm text-white transition-colors duration-300 hover:bg-primary-700 disabled:text-gray-500"
                 >
                   <MdDriveFileRenameOutline className="mr-1" size={18} />
                   작성
@@ -197,18 +197,17 @@ export default function ReviewForm({
             </form>
           </div>
         </div>
-
-        {/* Modal Alert */}
-        {showExitConfirmation && (
-          <ModalAlert
-            title="알림"
-            description="현재 내용이 사라집니다. 나가시겠습니까?"
-            onConfirm={() => router.push("/")}
-            onClose={() => setShowExitConfirmation(false)}
-            variant="destructive"
-          />
-        )}
       </main>
+
+      {/* Modal */}
+      {showExitConfirmation && (
+        <Modal
+          title="알림"
+          description="현재 내용이 사라집니다. 나가시겠습니까?"
+          onConfirm={() => router.push("/")}
+          onClose={() => setShowExitConfirmation(false)}
+        />
+      )}
     </>
   );
 }

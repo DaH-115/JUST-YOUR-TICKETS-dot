@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   try {
-    const { results: nowPlayingMovies } = await fetchNowPlayingMovies();
+    const nowPlayingMovies = await fetchNowPlayingMovies();
 
     return <SearchPage nowPlayingMovies={nowPlayingMovies} />;
   } catch (error) {

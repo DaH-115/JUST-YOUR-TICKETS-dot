@@ -1,66 +1,50 @@
 import { useMemo } from "react";
-import { Movie } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/fetchNowPlayingMovies";
 import getMovieTitle from "app/utils/get-movie-title";
-import MovieCard from "app/home/movie-card";
-import { RiMovieLine } from "react-icons/ri";
-import { MdLocalMovies } from "react-icons/md";
-import ScrollButton from "app/components/scroll-button";
-import Tooltip from "app/components/tooltip";
+import MovieInfoCard from "app/home/movie-info-card";
 import MoviePoster from "app/components/movie-poster";
-
-interface RecommendMovieProps {
-  currentMovie: Movie;
-  trailerKey: string;
-}
 
 export default function RecommendMovie({
   currentMovie,
-  trailerKey,
-}: RecommendMovieProps) {
+}: {
+  currentMovie: MovieList;
+}) {
   const movieTitle = useMemo(
     () => getMovieTitle(currentMovie.original_title, currentMovie.title),
     [currentMovie],
   );
 
   return (
-    <main className="mx-auto flex flex-col items-center justify-center pb-8 lg:mt-16 lg:w-4/5 lg:flex-row lg:items-start">
-      {/* MOVIE POSTER */}
-      {currentMovie.poster_path && (
-        <div className="w-2/3 py-4 md:w-1/3 md:py-0 lg:pr-4">
-          <MoviePoster
-            posterPath={currentMovie.poster_path}
-            title={movieTitle}
-            size={500}
-          />
-        </div>
-      )}
-
-      {/* MOVIE CARD */}
-      <div className="relative w-11/12 lg:w-2/5">
-        <MovieCard movie={currentMovie} />
-        <div className="absolute -right-20 top-0 hidden flex-row lg:block">
-          {trailerKey && (
-            <div className="group/tooltip relative">
-              <ScrollButton
-                targetId={"movie-trailer"}
-                ariaLabel={"영화 예고편 보기"}
-              >
-                <RiMovieLine size={24} />
-              </ScrollButton>
-              <Tooltip>영화 예고편 보기</Tooltip>
+    <section className="py-8">
+      {/* SECTION TITLE */}
+      <div className="px-8 pb-8 pt-6 md:px-16">
+        <h2 className="text-5xl font-bold text-accent-300 lg:text-6xl">
+          Movie
+          <br />
+          Pick!
+        </h2>
+        <p className="mt-4 text-white">선택하기 어렵다면 이 영화는 어때요?</p>
+      </div>
+      {/* SECTION CONTETNS */}
+      <div className="flex w-full flex-col items-center justify-center">
+        <div className="flex w-full flex-col items-center justify-center md:w-2/3 md:flex-row md:items-start lg:w-4/5">
+          {/* MOVIE POSTER */}
+          {currentMovie.poster_path && (
+            <div className="w-1/2 overflow-hidden rounded-xl pb-4 drop-shadow md:mr-4 md:w-2/6 md:py-0">
+              <MoviePoster
+                posterPath={currentMovie.poster_path}
+                title={movieTitle}
+                size={500}
+              />
             </div>
           )}
-          <div className="group/tooltip relative">
-            <ScrollButton
-              targetId={"now-playing"}
-              ariaLabel={"현재 상영하는 영화 보기"}
-            >
-              <MdLocalMovies className="text-2xl" aria-hidden />
-            </ScrollButton>
-            <Tooltip>현재 상영하는 영화 보기</Tooltip>
+
+          {/* MOVIE INFO CARD */}
+          <div className="relative h-full w-4/5 md:w-3/6">
+            <MovieInfoCard movie={currentMovie} />
           </div>
         </div>
       </div>
-    </main>
+    </section>
   );
 }

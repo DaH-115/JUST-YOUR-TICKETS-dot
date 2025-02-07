@@ -4,18 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import SideMenu from "app/my-page/side-menu";
-import dynamic from "next/dynamic";
-import Loading from "app/loading";
-
-const ProfileForm = dynamic(() => import("app/my-page/profile-form"), {
-  loading: () => <Loading />,
-  ssr: false,
-});
-
-const SideReviewList = dynamic(() => import("app/my-page/side-review-list"), {
-  loading: () => <Loading />,
-  ssr: false,
-});
+import ProfileForm from "app/my-page/profile-form";
 
 export default function MyPagePage() {
   const router = useRouter();
@@ -35,7 +24,7 @@ export default function MyPagePage() {
         aria-live="polite"
       >
         <div className="text-center">
-          <div className="border-accent-300 mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-black" />
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-accent-300 border-t-black" />
           <div className="mb-2 text-lg text-gray-300">
             로그인이 필요한 페이지입니다
           </div>
@@ -48,11 +37,9 @@ export default function MyPagePage() {
   }
 
   return (
-    <>
+    <div className="flex w-full p-8">
       <SideMenu uid={userState.uid} />
-      {/* Main */}
       <ProfileForm />
-      <SideReviewList uid={userState.uid} />
-    </>
+    </div>
   );
 }

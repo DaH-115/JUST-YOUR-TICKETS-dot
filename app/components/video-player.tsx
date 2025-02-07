@@ -2,20 +2,21 @@
 
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import Loading from "app/loading";
 
 const ReactPlayer = dynamic(() => import("react-player/lazy"), {
-  ssr: false,
   loading: () => (
-    <div className="aspect-video animate-pulse bg-gray-200 md:rounded-xl">
+    <div className="aspect-video bg-primary-700 md:rounded-xl">
       <div className="flex h-full w-full items-center justify-center">
-        <span className="text-gray-500">Loading...</span>
+        <Loading />
       </div>
     </div>
   ),
 });
 
 interface VideoPlayerProps {
-  url: string;
+  trailerKey: string;
+  thubmnailSize?: "large" | "small";
   className?: string;
   onReady?: () => void;
   onStart?: () => void;
@@ -25,7 +26,8 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer = ({
-  url,
+  trailerKey,
+  thubmnailSize = "small",
   onReady,
   onStart,
   onPlay,
@@ -66,12 +68,12 @@ const VideoPlayer = ({
       {(isVisible || hasBeenVisible) && (
         <div className="h-full w-full overflow-hidden md:rounded-xl">
           <ReactPlayer
-            url={url}
+            url={`https://www.youtube.com/embed/${trailerKey}`}
             width="100%"
             height="100%"
             controls
             // 썸네일 모드 활성화
-            light
+            light={`https://img.youtube.com/vi/${trailerKey}/${thubmnailSize === "large" ? "maxresdefault" : "mqdefault"}.jpg`}
             // 플레이어 설정 최적화
             config={{
               youtube: {

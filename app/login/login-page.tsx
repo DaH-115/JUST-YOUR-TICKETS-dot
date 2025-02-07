@@ -94,7 +94,7 @@ export default function LoginPage() {
   );
 
   return (
-    <div className="w-full bg-white pb-8 md:flex md:justify-center md:py-10">
+    <div className="w-full border-t-4 border-accent-300 bg-white pb-8 pt-4 md:mt-4 md:flex md:justify-center md:py-10">
       <section className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:border-gray-200 md:pl-0 md:pt-0 md:text-8xl">
         <h1>LOG IN</h1>
       </section>
@@ -134,14 +134,14 @@ export default function LoginPage() {
               className="h-4 w-4"
               disabled={isLoading}
             />
-            <label htmlFor="rememberMe" className="text-sm text-gray-600">
+            <label htmlFor="rememberMe" className="text-xs text-gray-600">
               로그인 상태 유지
             </label>
           </div>
 
           <button
             type="submit"
-            className={`bg-primary-500 w-full rounded-full p-4 text-sm text-white transition-colors duration-300 ease-in-out ${
+            className={`w-full rounded-full bg-primary-500 p-4 text-sm text-white transition-colors duration-300 ease-in-out ${
               isLoading
                 ? "cursor-not-allowed opacity-50"
                 : "hover:bg-primary-700"
@@ -154,15 +154,13 @@ export default function LoginPage() {
           <Link href="/sign-up">
             <button
               type="button"
-              className={`border-primary-500 mt-2 flex w-full items-center justify-between rounded-full border bg-white p-4 text-sm text-black transition-colors duration-300 ease-in-out ${
-                isLoading
-                  ? "cursor-not-allowed opacity-50"
-                  : "hover:bg-primary-500 hover:text-white"
+              className={`mt-2 flex w-full items-center justify-center rounded-full border border-primary-500 bg-white p-4 text-sm text-black transition-colors duration-300 ease-in-out ${
+                isLoading ? "cursor-not-allowed opacity-50" : ""
               }`}
               disabled={isLoading}
             >
               회원가입
-              <FaArrowRight size={16} />
+              <FaArrowRight size={16} className="ml-2 text-primary-700" />
             </button>
           </Link>
         </form>

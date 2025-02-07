@@ -1,18 +1,13 @@
 import { useRouter } from "next/navigation";
 import { db } from "firebase-config";
-import {
-  collection,
-  addDoc,
-  doc,
-  updateDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
 import { ReviewData } from "app/write-review/review-form";
 import { firebaseErrorHandler } from "app/utils/firebase-error";
 import { useError } from "store/context/error-context";
 import { MovieDetails } from "api/fetchMovieDetails";
+import updateReview from "app/actions/update-review";
 
 export const useReviewForm = (
   mode: "create" | "edit",
@@ -43,17 +38,21 @@ export const useReviewForm = (
           movieTitle: movieInfo.title,
           releaseYear: movieInfo.release_date.slice(0, 4),
           posterImage: movieInfo.poster_path,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
         });
+
+        dispatch(addNewReviewAlertHandler());
       } else if (mode === "edit" && reviewId) {
-        await updateDoc(doc(db, "movie-reviews", reviewId), {
+        const updateData = {
           reviewTitle,
           rating,
           review,
-          date: serverTimestamp(),
-        });
+          updatedAt: serverTimestamp(),
+        };
+        await updateReview(reviewId, updateData);
       }
 
-      dispatch(addNewReviewAlertHandler());
       isShowSuccess("알림", "리뷰가 성공적으로 저장되었습니다.", () =>
         router.push("/"),
       );

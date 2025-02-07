@@ -2,7 +2,7 @@ import { MovieDetails } from "api/fetchMovieDetails";
 import { MovieCredits } from "api/fetchMovieCredits";
 import formatMovieDate from "app/utils/format-movie-date";
 import getMovieTitle from "app/utils/get-movie-title";
-import convertRuntime from "app/utils/convert-runtime";
+import convertRuntime from "app/movie-details/utils/convert-runtime";
 import { IoStar } from "react-icons/io5";
 import NewWriteBtn from "app/components/new-write-btn";
 import MoviePoster from "app/components/movie-poster";
@@ -22,7 +22,7 @@ export default function MovieDetailCard({
     movieDetails.title,
   );
   const movieDate = formatMovieDate(movieDetails.release_date);
-  const convertedRuntime = convertRuntime(movieDetails.runtime);
+  const convertedRuntime = convertRuntime(Number(movieDetails.runtime));
   const casts = movieCredits?.cast || [];
   const crews = movieCredits?.crew || [];
 
@@ -43,10 +43,10 @@ export default function MovieDetailCard({
         </section>
 
         {/* MOVIE INFO */}
-        <section className="mx-auto w-full rounded-xl border-2 border-black bg-white p-2 shadow-lg">
+        <section className="mx-auto w-full rounded-xl border-2 border-gray-200 bg-white p-2 shadow-lg">
           {/* 기본 정보 영역 */}
           <div className="p-4 pb-2">
-            <h1 className="bg-primary-500 text-accent-50 mb-2 inline-block rounded-lg p-1 text-xs font-bold">
+            <h1 className="mb-2 inline-block rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">
               영화 정보
             </h1>
             <h2 className="break-keep text-2xl font-bold md:text-3xl">
@@ -69,7 +69,7 @@ export default function MovieDetailCard({
               {movieDetails.genres.map((genre) => (
                 <li
                   key={genre.id}
-                  className="border-primary-500 bg-primary-500 rounded-full border px-2 py-1 text-xs text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black lg:text-xs"
+                  className="rounded-full border border-primary-500 bg-primary-500 px-2 py-1 text-xs text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black lg:text-xs"
                 >
                   {genre.name}
                 </li>
@@ -80,7 +80,7 @@ export default function MovieDetailCard({
           {/* 평점 영역 */}
           <div className="p-4 font-bold">
             <div className="flex items-center text-2xl md:text-4xl">
-              <IoStar className="text-accent-300 mr-2" />
+              <IoStar className="mr-2 text-accent-300" />
               <p className="text-2xl md:text-4xl">
                 {Math.round(movieDetails.vote_average * 10) / 10}
                 <span className="text-xl font-normal text-gray-300 md:text-2xl">

@@ -32,13 +32,13 @@ const SideMenu = React.memo(function SideMenu({ uid }: { uid: string }) {
   );
 
   return (
-    <nav className="flex flex-row lg:flex-col">
+    <nav className="hidden pr-8 lg:block">
       <Link href="/my-page" className="w-full">
         <div className={getMenuStyle("/my-page")}>MY PROFILE</div>
       </Link>
       <Link href={`/my-page/my-ticket-list?uid=${uid}`} className="w-full">
         <div className={getMenuStyle("/my-page/my-ticket-list")}>
-          MY TICKETS
+          MY TICKET LIST
         </div>
       </Link>
     </nav>

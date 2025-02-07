@@ -12,6 +12,7 @@ import HeaderSearchBar from "app/ui/layout/header/header-search-bar";
 import { IoIosMenu } from "react-icons/io";
 import HeaderSideMenu from "app/ui/layout/header/header-side-menu";
 import { removeCookie } from "app/utils/cookie-utils";
+import HeaderDropDownMenu from "app/ui/layout/header/header-dropDown-menu";
 
 export default function Header() {
   const router = useRouter();
@@ -94,95 +95,73 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-10 flex w-full items-center justify-center px-2 py-4 lg:px-8 lg:pt-8 ${
+      className={`relative z-10 flex w-full items-center justify-center p-8 pb-0 text-xs md:px-8 md:pt-8 ${
         isSideMenuOpen ? "pointer-events-none" : ""
       }`}
     >
       <div
-        className={`flex w-full items-center justify-between rounded-full border border-black bg-white lg:w-auto lg:justify-center lg:border-2 lg:px-4 lg:py-3 ${
+        className={`flex w-full items-center justify-between rounded-full border-2 border-gray-200 bg-white md:w-auto md:justify-center md:px-4 md:py-3 ${
           isSideMenuOpen ? "pointer-events-auto" : ""
         }`}
       >
-        {/* LOGO */}
-        <h1 className="ml-1 px-4 py-2 text-sm font-bold text-gray-700 lg:px-4 lg:py-0">
-          just your tickets.
-        </h1>
         {/* MENU */}
-        <ul className="hidden items-center justify-center md:flex">
-          <li className="group">
-            <Link
-              href="/"
-              className="rounded-full px-4 py-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
-            >
-              Home
-            </Link>
-          </li>
-          <li className="group relative">
-            <Link
-              href="/search"
-              className="rounded-full px-4 py-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
-            >
-              Search
-            </Link>
-          </li>
-          <li className="group relative">
-            <Link
-              href="/ticket-list"
-              className="group relative rounded-full px-4 py-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
-            >
-              Ticket List
-              {newReviewAlertState && (
-                <span className="absolute right-1 top-1 flex h-3 w-3">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                  <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
-                </span>
-              )}
-            </Link>
-          </li>
-        </ul>
+        <nav className="hidden md:flex">
+          <ul className="flex items-center justify-center gap-3">
+            <li className="group">
+              <Link
+                href="/"
+                className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+              >
+                Home
+              </Link>
+            </li>
+            <li className="group relative">
+              <Link
+                href="/search"
+                className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+              >
+                Search
+              </Link>
+            </li>
+            <li className="group relative">
+              <Link
+                href="/ticket-list"
+                className="group relative rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+              >
+                Ticket List
+                {newReviewAlertState && (
+                  <span className="absolute right-[0.1rem] top-1 flex h-3 w-3">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+                  </span>
+                )}
+              </Link>
+            </li>
+          </ul>
+        </nav>
         {/* MOBILE/ HAMBURGER MENU */}
-        <div onClick={toggleSideMenu} className="md:hidden">
+        <div
+          onClick={toggleSideMenu}
+          className="flex w-full justify-end md:hidden"
+        >
           <button
             className="rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200"
             aria-label="메뉴 열기"
           >
-            <IoIosMenu size={34} aria-hidden />
+            <IoIosMenu size={28} aria-hidden />
           </button>
         </div>
 
         {/* PROFILE MENU */}
-        <div className="hidden lg:flex">
+        <div className="hidden md:flex">
           {userDisplayName ? (
-            <div className="relative" ref={dropdownRef}>
-              <button className="ml-4 font-bold" onClick={dropDownHandler}>
-                {userDisplayName ? userDisplayName : "Guest"} 님
-              </button>
-
-              <div
-                onClick={dropDownHandler}
-                className={`absolute -right-10 top-full z-10 flex w-[150px] cursor-pointer flex-col items-center justify-center whitespace-nowrap rounded-xl border-2 border-black bg-white shadow-lg transition-all duration-300 ${
-                  isDropdownOpen
-                    ? "pointer-events-auto translate-y-5 opacity-100"
-                    : "pointer-events-none translate-y-0 opacity-0"
-                }`}
-              >
-                <div className="w-full p-1">
-                  <Link href="/my-page">
-                    <button className="w-full rounded-xl px-4 py-2 transition-all duration-300 hover:bg-gray-200 hover:font-bold">
-                      My Page
-                    </button>
-                  </Link>
-                </div>
-                <div className="w-full p-1">
-                  <button
-                    onClick={logoutHandler}
-                    className="w-full rounded-xl px-4 py-2 transition-all duration-300 hover:bg-gray-200 hover:font-bold"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </div>
-            </div>
+            <HeaderDropDownMenu
+              dropdownRef={dropdownRef}
+              userDisplayName={userDisplayName}
+              isDropdownOpen={isDropdownOpen}
+              dropDownHandler={dropDownHandler}
+              logoutHandler={logoutHandler}
+            />
           ) : (
             <Link href="/login">
               <button type="button" className="font-bold">

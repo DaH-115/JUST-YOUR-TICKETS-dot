@@ -1,12 +1,12 @@
 import { useState, useCallback, useEffect } from "react";
 import debounce from "lodash/debounce";
-import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
+import { UserReview } from "api/movie-reviews/fetchUserReviews";
 
 type SearchField = "review" | "reviewTitle" | "movieTitle";
 
-export default function useReviewSearch(initialReviews: MovieReview[]) {
+export default function useReviewSearch(initialReviews: UserReview[]) {
   const [filteredUserReviews, setFilteredUserReviews] =
-    useState<MovieReview[]>(initialReviews);
+    useState<UserReview[]>(initialReviews);
 
   const searchReviewsHandler = useCallback(
     debounce((term: string) => {

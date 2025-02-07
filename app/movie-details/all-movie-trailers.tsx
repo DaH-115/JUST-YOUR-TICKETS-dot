@@ -13,9 +13,7 @@ export default function AllMovieTrailers({
         {movieTrailer.length > 0 ? (
           movieTrailer.map((trailer) => (
             <div key={trailer.id} className="aspect-video">
-              <VideoPlayer
-                url={`https://www.youtube.com/embed/${trailer.key}`}
-              />
+              <VideoPlayer trailerKey={trailer.key} />
             </div>
           ))
         ) : (

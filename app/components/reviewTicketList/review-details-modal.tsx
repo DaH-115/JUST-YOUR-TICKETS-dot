@@ -1,11 +1,11 @@
-import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
+import { UserReview } from "api/movie-reviews/fetchUserReviews";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
-import ReviewBtnGroup from "app/ticket-list/review-btn-group";
+import ReviewBtnGroup from "app/ticket-list/ticket-btn-group";
 import formatDate from "app/utils/format-date";
 
 type ReviewDetailsModalProps = {
   isModalOpen: boolean;
-  selectedReview: MovieReview;
+  selectedReview: UserReview;
   closeModalHandler: () => void;
   onReviewDeleted: (id: string) => void;
 };
@@ -23,7 +23,7 @@ export default function ReviewDetailsModal({
       }`}
     >
       <div
-        className={`absolute w-11/12 rounded-2xl border-2 border-black bg-white drop-shadow-lg transition-all duration-500 lg:w-2/5 ${
+        className={`absolute w-11/12 rounded-2xl bg-white drop-shadow-lg transition-all duration-500 lg:w-2/5 ${
           isModalOpen
             ? "visible translate-y-0 opacity-100"
             : "invisible translate-y-full opacity-0"
@@ -31,7 +31,7 @@ export default function ReviewDetailsModal({
       >
         <div className="flex h-[4rem] items-center justify-between pr-2">
           <div className="flex h-full items-center justify-center border-r border-black px-4 py-2">
-            <IoStar className="text-accent-300 mt-1" size={18} />
+            <IoStar className="mt-1 text-accent-300" size={18} />
             <p className="text-2xl font-bold md:text-3xl">
               {selectedReview.rating}
             </p>
@@ -63,7 +63,7 @@ export default function ReviewDetailsModal({
             님의 리뷰
           </div>
         </div>
-        <div className="bg-primary-600 flex items-center justify-end rounded-b-xl p-2">
+        <div className="flex items-center justify-end rounded-b-xl bg-primary-600 p-2">
           <IoCloseOutline
             onClick={closeModalHandler}
             className="cursor-pointer text-white"

@@ -1,15 +1,7 @@
-export interface MovieDetails {
-  id: number;
-  title: string;
-  original_title: string;
-  overview: string;
-  poster_path: string | null;
-  backdrop_path: string | null;
-  release_date: string;
-  runtime: number;
-  vote_average: number;
+import { MovieBaseType } from "api/fetchNowPlayingMovies";
+
+export interface MovieDetails extends MovieBaseType {
   genres: { id: number; name: string }[];
-  production_companies: { id: number; name: string }[];
 }
 
 export async function fetchMovieDetails(id: number): Promise<MovieDetails> {

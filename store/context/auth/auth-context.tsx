@@ -13,7 +13,7 @@ import { isAuth } from "firebase-config";
 import { useAppDispatch } from "store/redux-toolkit/hooks";
 import { getCookie, removeCookie, setCookie } from "app/utils/cookie-utils";
 import { onAuthStateChanged } from "firebase/auth";
-import serializeUser from "app/utils/firebase-utils";
+import serializeUser from "store/context/auth/utils/serialize-user";
 import { clearUserState, setUser } from "store/redux-toolkit/slice/userSlice";
 
 interface AuthContextType {

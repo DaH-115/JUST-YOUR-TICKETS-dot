@@ -10,7 +10,7 @@ export default function ReviewSearchInputregister({
   placeholder: string;
 }) {
   return (
-    <div className="relative flex h-10 w-full items-center justify-end">
+    <div className="relative flex h-10 w-64 items-center justify-end">
       <label htmlFor="review-search" className="sr-only">
         {label}
       </label>
@@ -19,10 +19,10 @@ export default function ReviewSearchInputregister({
         id="review-search"
         type="search"
         placeholder={placeholder}
-        className="focus:ring-accent-300 h-full w-full rounded-full pl-4 pr-10 text-sm focus:outline-none focus:ring-2 md:w-64"
+        className="h-full w-full rounded-full pl-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-accent-300"
       />
-      <div className="absolute right-0 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full">
-        <IoSearchOutline size={20} color="black" />
+      <div className="absolute right-1 top-0 flex h-full w-10 cursor-pointer items-center justify-center rounded-full">
+        <IoSearchOutline size={22} color="black" />
       </div>
     </div>
   );

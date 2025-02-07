@@ -1,26 +1,16 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
-import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "firebase-config";
-import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import { MovieReview } from "api/movie-reviews/fetchMovieReviews";
-import { IoIosAddCircle } from "react-icons/io";
+import { UserReview } from "api/movie-reviews/fetchUserReviews";
 import ReviewDetailsModal from "app/components/reviewTicketList/review-details-modal";
-import ReviewBtnGroup from "app/ticket-list/review-btn-group";
+import { deleteReview } from "app/actions/delete-review";
 import MoviePoster from "app/components/movie-poster";
 
-export default function ReviewTicket({
-  reviews,
-  onReviewUpdated,
-}: {
-  reviews: MovieReview[];
-  onReviewUpdated: () => void;
-}) {
+export default function ReviewTicket({ reviews }: { reviews: UserReview[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedReview, setSelectedReview] = useState<MovieReview>();
+  const [selectedReview, setSelectedReview] = useState<UserReview>();
 
-  const openModalHandler = useCallback((content: MovieReview) => {
+  const openModalHandler = useCallback((content: UserReview) => {
     setSelectedReview(content);
     setIsModalOpen(true);
   }, []);
@@ -29,20 +19,15 @@ export default function ReviewTicket({
     setIsModalOpen(false);
   }, []);
 
-  const onReviewDeleteHanlder = useCallback(async (id: string) => {
+  const onReviewDeleteHanlder = useCallback((id: string) => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      try {
-        await deleteDoc(doc(db, "movie-reviews", id));
-        onReviewUpdated();
-        closeModalHandler();
-      } catch (error) {
-        alert("리뷰 삭제에 실패했습니다. 다시 시도해 주세요.");
-      }
+      deleteReview(id);
+      closeModalHandler();
     }
   }, []);
 
   return (
-    <div className="grid h-full w-full grid-cols-1 gap-4 pb-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid grid-cols-3 gap-2 lg:grid-cols-7">
       {selectedReview && (
         <ReviewDetailsModal
           selectedReview={selectedReview}
@@ -51,27 +36,14 @@ export default function ReviewTicket({
           onReviewDeleted={onReviewDeleteHanlder}
         />
       )}
-
-      <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-gray-500 md:flex">
-        <Link href="/search">
-          <button className="p-12 text-xl font-bold text-gray-500 transition-colors duration-300 hover:text-gray-700">
-            <IoIosAddCircle size={48} />
-          </button>
-        </Link>
-      </div>
       {reviews.length > 0 && (
         <>
           {reviews.map((post) => (
-            <div key={post.id} className="group/card relative drop-shadow-md">
-              {/* CARD HEADER */}
-              <div className="absolute left-0 top-0 z-10 flex w-full items-center justify-end p-2">
-                <ReviewBtnGroup
-                  postId={post.id}
-                  movieId={post.movieId}
-                  onReviewDeleted={onReviewDeleteHanlder}
-                />
-              </div>
-
+            <div
+              key={post.id}
+              onClick={() => openModalHandler(post)}
+              className="relative mb-16 cursor-pointer drop-shadow-md transition-transform duration-300 hover:-translate-y-1"
+            >
               {/* MOVIE POSTER */}
               <MoviePoster
                 posterPath={post.posterImage}
@@ -81,41 +53,33 @@ export default function ReviewTicket({
               />
 
               {/* MOVIE INFO CARD */}
-              <div className="absolute bottom-0 right-0 w-full rounded-xl border-2 border-black bg-white p-2 transition-all duration-300 group-hover/card:bottom-1 group-hover/card:right-1 md:group-hover/card:bottom-2 md:group-hover/card:right-2">
-                <div className="flex items-center justify-between pb-1">
-                  <div className="flex items-center justify-center px-2">
-                    <IoStar className="text-accent-300 mr-1" />
+              <div className="absolute -bottom-16 right-0 w-full rounded-lg border border-gray-200 bg-white p-2 transition-all duration-500 md:-bottom-16">
+                {/* RATE & NAME */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-center text-xs">
+                    <IoStar className="mr-1 text-accent-300" />
                     <p className="font-bold">{post.rating}</p>
                   </div>
-                  <p className="px-2 text-xs font-bold lg:text-sm">
-                    {post.userName ? post.userName : "Guest"}
-                  </p>
-                </div>
-                <div className="mb-2 h-[4rem] overflow-y-scroll break-keep border-y-4 border-dotted border-gray-200 py-2 scrollbar-hide">
-                  <p className="text-sm font-bold">
-                    {post.number}. {post.reviewTitle}
-                  </p>
-                  {/* 영화 상세 정보로 이동 */}
-                  <div className="text-xs text-gray-500">
-                    <Link
-                      href={`/movie-details/${post.movieId}`}
-                      className="border-gray-500 transition-all hover:border-b"
-                    >
-                      {post.movieTitle}
-                    </Link>
-                    - {post.releaseYear}
+                  <div className="flex-1 pl-2">
+                    <p className="truncate text-right text-xs font-bold">
+                      {post.userName ? post.userName : "Guest"}
+                    </p>
                   </div>
                 </div>
-                <div className="hover:bg-primary-700 bg-primary-600 rounded-lg px-3 py-2">
-                  <button
-                    className="group relative flex w-full items-center justify-end"
-                    onClick={() => openModalHandler(post)}
-                  >
-                    <div className="flex items-center justify-center">
-                      <p className="mr-1 text-xs text-white">내용 보기</p>
-                      <FaExternalLinkAlt className="text-xs text-gray-200" />
-                    </div>
-                  </button>
+                {/* POST NUMBER & REVIEW TITLE */}
+                <div className="w-full">
+                  <p className="block w-full truncate pt-2 text-xs">
+                    {post.reviewTitle}
+                  </p>
+                  {/* 영화 상세 정보로 이동 */}
+                  <div className="w-full text-xs text-gray-500">
+                    <Link
+                      href={`/movie-details/${post.movieId}`}
+                      className="block truncate border-gray-500 transition-all"
+                    >
+                      {`${post.movieTitle}(${post.releaseYear})`}
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

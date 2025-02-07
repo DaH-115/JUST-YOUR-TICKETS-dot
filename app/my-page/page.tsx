@@ -5,6 +5,6 @@ export const metadata: Metadata = {
   title: "My Page",
 };
 
-export default function MyPage() {
+export default async function MyPage() {
   return <MyPagePage />;
 }

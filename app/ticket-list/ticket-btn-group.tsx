@@ -6,17 +6,17 @@ import { useAppSelector } from "store/redux-toolkit/hooks";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
-interface ReviewBtnGroupProps {
+interface TicketBtnGroupProps {
   postId: string;
   movieId: string;
   onReviewDeleted: (postId: string) => void;
 }
 
-const ReviewBtnGroup = React.memo(function ReviewBtnGroup({
+const TicketBtnGroup = React.memo(function ReviewBtnGroup({
   postId,
   movieId,
   onReviewDeleted,
-}: ReviewBtnGroupProps) {
+}: TicketBtnGroupProps) {
   const userState = useAppSelector((state) => state.user.user);
   const [isOwnership, setIsOwnership] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -66,40 +66,40 @@ const ReviewBtnGroup = React.memo(function ReviewBtnGroup({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* 드롭다운 버튼 */}
+      {/* DROPDOWN MENU TOGGLE BUTTON */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="rounded-full border border-black bg-white p-1.5 hover:bg-gray-100 focus:outline-none"
+        className="rounded-full border border-black bg-white p-1 text-xs hover:bg-gray-100 focus:outline-none md:text-base"
         aria-label="메뉴 열기"
       >
         <BsThreeDotsVertical className="text-gray-600" />
       </button>
 
-      {/* 드롭다운 메뉴 */}
+      {/* DROPDOWN MENU */}
       <div
-        className={`absolute right-0 top-8 z-10 min-w-[80px] rounded-lg border border-black bg-white drop-shadow-md ${
+        className={`absolute right-0 top-8 z-10 min-w-20 rounded-lg border border-black bg-white text-black drop-shadow-md ${
           isOpen ? "block" : "hidden"
         }`}
       >
-        {/* 수정 버튼 */}
+        {/* UPDATE BUTTON */}
         <Link
           href={`/write-review/${postId}?movieId=${movieId}`}
-          className="block p-1 text-center text-sm text-gray-700 transition-all hover:scale-105 hover:transform hover:font-bold"
+          className="inline-block w-full border-b border-gray-300 px-1 py-2 text-center text-sm"
           onClick={() => setIsOpen(false)}
         >
-          <div className="flex items-center justify-center rounded-md p-1 hover:bg-gray-100">
+          <div className="flex items-center justify-center rounded-md p-1 transition-colors ease-in-out hover:bg-gray-100 hover:font-bold">
             <span className="mr-1">
-              <MdOutlineEdit className="text-lg text-gray-600" />
+              <MdOutlineEdit className="text-lg" />
             </span>
             수정
           </div>
         </Link>
-        {/* 삭제 버튼 */}
+        {/* DELETE BUTTON */}
         <button
           onClick={handleDelete}
-          className="block w-full p-1 text-center text-sm text-red-600 transition-all hover:scale-105 hover:transform hover:font-bold"
+          className="w-full px-1 py-2 text-center text-sm text-red-600"
         >
-          <div className="flex items-center justify-center rounded-md p-1 hover:bg-gray-100">
+          <div className="flex items-center justify-center rounded-md p-1 transition-colors ease-in-out hover:bg-gray-100 hover:font-bold">
             <span className="mr-1">
               <MdDeleteOutline className="text-lg text-red-500" />
             </span>
@@ -111,4 +111,4 @@ const ReviewBtnGroup = React.memo(function ReviewBtnGroup({
   );
 });
 
-export default ReviewBtnGroup;
+export default TicketBtnGroup;

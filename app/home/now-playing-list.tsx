@@ -1,38 +1,18 @@
 import { memo, useMemo } from "react";
-import { Movie } from "api/fetchNowPlayingMovies";
-import { MdLocalMovies } from "react-icons/md";
+import { MovieList } from "api/fetchNowPlayingMovies";
 import TicketSwiper from "app/components/swiper/ticket-swiper";
 
-const NowPlayingHeader = memo(function NowPlayingHeader() {
-  return (
-    <div className="mb-6">
-      <div className="flex items-start justify-between md:justify-start">
-        <h2 className="text-accent-300 text-4xl font-black lg:text-5xl">
-          Now
-          <br />
-          Playing
-        </h2>
-        <div className="ml-2 rounded-full bg-white p-2 transition-colors duration-300 hover:bg-black hover:text-white">
-          <MdLocalMovies className="text-2xl" />
-        </div>
-      </div>
-      <p className="pt-2 text-base text-gray-300 lg:pt-6">
-        현재 상영 중인 영화들을 확인해 보세요
-      </p>
-    </div>
-  );
-});
-
-// 메인 컴포넌트
-function NowPlayingList({ movieList }: { movieList: Movie[] }) {
+function NowPlayingList({ movieList }: { movieList: MovieList[] }) {
   const slicedMovieList = useMemo(() => movieList.slice(0, 10), [movieList]);
 
   return (
-    <section
-      id="now-playing"
-      className="relative z-10 w-full px-4 pb-12 pt-8 lg:px-8"
-    >
-      <NowPlayingHeader />
+    <section className="px-4 py-8 md:p-8">
+      {/* SECTION TITLE */}
+      <div className="sr-only">
+        <h2>Now Playing</h2>
+        <p>{"티켓으로 만들 영화를 찾아보세요."}</p>
+      </div>
+      {/* SECTION CONTENTS */}
       <TicketSwiper movieList={slicedMovieList} />
     </section>
   );
