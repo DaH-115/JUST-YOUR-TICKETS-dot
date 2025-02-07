@@ -27,13 +27,19 @@ export default async function fetchUserReviews(
   uid?: string,
 ): Promise<UserReview[]> {
   const reviewsRef = collection(db, "movie-reviews");
-  const queryConstraints = [orderBy("date", "desc")];
+
+  let movieReviewQuery;
 
   if (uid) {
-    queryConstraints.unshift(where("userUid", "==", uid));
+    movieReviewQuery = query(
+      reviewsRef,
+      where("userUid", "==", uid),
+      orderBy("date", "desc"),
+    );
+  } else {
+    movieReviewQuery = query(reviewsRef, orderBy("date", "desc"));
   }
 
-  const movieReviewQuery = query(reviewsRef, ...queryConstraints);
   const querySnapshot = await getDocs(movieReviewQuery);
 
   if (querySnapshot.empty) {
