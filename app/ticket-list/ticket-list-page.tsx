@@ -42,12 +42,12 @@ export default function TicketListPage({
   }, [searchTerm, searchReviewsHandler]);
 
   return (
-    <main className="mb-8 w-full px-4 md:px-8">
+    <main className="my-8 w-full px-4 md:my-16 md:px-8">
       <section className="flex w-full flex-col items-center pb-8 md:flex-row">
-        <div className="mb-4 mt-8 flex w-full items-center justify-between text-white md:mb-0 md:mt-0 md:justify-normal">
-          <h1 className="text-2xl font-bold">ALL TICKETS</h1>
+        <div className="mb-4 flex w-full items-center text-white md:mb-0">
+          <h1 className="text-2xl font-bold">ALL TICKET LIST</h1>
           <span className="md:px-4">
-            <span className="font-bold text-accent-300">
+            <span className="ml-2 font-bold text-accent-300">
               {filteredUserReviews.length}장
             </span>
           </span>

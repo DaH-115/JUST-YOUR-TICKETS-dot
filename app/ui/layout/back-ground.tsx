@@ -12,7 +12,7 @@ export default function BackGround({
   const blurImageUrl = `https://image.tmdb.org/t/p/w342/${imageUrl}`;
 
   return (
-    <div className="absolute inset-0 -z-10 h-screen w-full">
+    <div className="absolute top-[90%] -z-10 h-dvh w-full">
       <div className="relative h-full w-full overflow-hidden">
         <Image
           src={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${imageUrl}`}
@@ -27,7 +27,7 @@ export default function BackGround({
         />
       </div>
       <div
-        className="absolute inset-0 bg-gradient-to-t from-[#121212]/100 to-transparent"
+        className="absolute inset-0 bg-gradient-to-b from-[#121212]/100 via-transparent to-[#121212]/100"
         aria-hidden
       />
     </div>

@@ -9,7 +9,9 @@ import { MovieList } from "api/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
 
 export default function HeaderSearchBar() {
-  const { register, watch, reset } = useForm();
+  const { register, watch, reset } = useForm({
+    defaultValues: { search: "" },
+  });
   const searchQuery = watch("search");
   const [searchResults, setSearchResults] = useState<MovieList[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

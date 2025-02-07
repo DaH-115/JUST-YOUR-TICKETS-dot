@@ -13,7 +13,7 @@ export default function SuccessAlert({
 }: SuccessAlertProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-md rounded-xl border-2 border-emerald-500 bg-white p-4 drop-shadow-lg">
+      <div className="w-11/12 max-w-md rounded-xl border-2 border-emerald-500 bg-white p-4 drop-shadow-lg">
         <div className="mb-4 flex items-center gap-2 border-b border-emerald-500">
           <FaCheck className="text-base text-emerald-500" />
           <strong className="font-bold">{title}</strong>

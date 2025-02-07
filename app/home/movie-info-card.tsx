@@ -22,7 +22,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
             추천 영화
           </span>
           <div className="flex">
-            <h1 className="text-3xl font-bold lg:text-4xl">{title}</h1>
+            <h1 className="text-xl font-bold md:text-3xl">{title}</h1>
             <div className="group/tooltip relative ml-2">
               <Link
                 href={`/movie-details/${id}`}
@@ -36,7 +36,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
             </div>
           </div>
           <div className="ml-1 flex items-center">
-            <h2 className="mr-2 text-lg text-gray-500">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
+            <h2 className="mr-2 text-sm text-gray-500 md:text-lg">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
           </div>
         </div>
         <ul className="flex items-center space-x-2 overflow-x-scroll border-y-4 border-dotted border-gray-200 p-2 text-xs scrollbar-hide">

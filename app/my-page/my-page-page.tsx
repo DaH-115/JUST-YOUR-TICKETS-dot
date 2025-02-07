@@ -4,15 +4,9 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import SideMenu from "app/my-page/side-menu";
-import { UserReview } from "api/movie-reviews/fetchUserReviews";
 import ProfileForm from "app/my-page/profile-form";
-import SideReviewList from "app/my-page/side-review-list";
 
-export default function MyPagePage({
-  userReview,
-}: {
-  userReview: UserReview[];
-}) {
+export default function MyPagePage() {
   const router = useRouter();
   const userState = useAppSelector((state) => state.user.user);
 
@@ -43,11 +37,9 @@ export default function MyPagePage({
   }
 
   return (
-    <div className="flex min-h-screen w-full p-8">
+    <div className="flex w-full p-8">
       <SideMenu uid={userState.uid} />
-      {/* Main */}
       <ProfileForm />
-      <SideReviewList uid={userState.uid} userReviews={userReview} />
     </div>
   );
 }

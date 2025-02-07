@@ -95,7 +95,7 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-10 flex w-full items-center justify-center p-4 text-xs md:px-8 md:pt-8 ${
+      className={`relative z-10 flex w-full items-center justify-center p-8 pb-0 text-xs md:px-8 md:pt-8 ${
         isSideMenuOpen ? "pointer-events-none" : ""
       }`}
     >
@@ -104,8 +104,6 @@ export default function Header() {
           isSideMenuOpen ? "pointer-events-auto" : ""
         }`}
       >
-        {/* LOGO */}
-        <h1 className="px-4 font-bold md:py-0">{"Just Your Tickets."}</h1>
         {/* MENU */}
         <nav className="hidden md:flex">
           <ul className="flex items-center justify-center gap-3">
@@ -132,7 +130,7 @@ export default function Header() {
               >
                 Ticket List
                 {newReviewAlertState && (
-                  <span className="absolute right-1 top-1 flex h-3 w-3">
+                  <span className="absolute right-[0.1rem] top-1 flex h-3 w-3">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
                     <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
                   </span>
@@ -142,7 +140,10 @@ export default function Header() {
           </ul>
         </nav>
         {/* MOBILE/ HAMBURGER MENU */}
-        <div onClick={toggleSideMenu} className="md:hidden">
+        <div
+          onClick={toggleSideMenu}
+          className="flex w-full justify-end md:hidden"
+        >
           <button
             className="rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200"
             aria-label="메뉴 열기"

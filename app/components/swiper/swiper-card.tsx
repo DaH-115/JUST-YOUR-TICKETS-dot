@@ -29,12 +29,9 @@ export default function SwiperCard({
         {idx + 1}.
       </div>
       {/* MOVIE POSTER */}
-      <MoviePoster
-        posterPath={poster_path}
-        title={movieTitle}
-        size={342}
-        lazy
-      />
+      <div className="overflow-hidden rounded-xl">
+        <MoviePoster posterPath={poster_path} title={movieTitle} size={342} />
+      </div>
       {/* MOVIE INFO CARD */}
       <div className="absolute -bottom-20 right-0 w-full rounded-xl border-2 border-gray-200 bg-white transition-all duration-300 ease-in-out md:-bottom-32 lg:group-hover/card:-bottom-28 lg:group-hover/card:right-2">
         {/* MOVIE TITLE & LINK */}

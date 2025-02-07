@@ -21,10 +21,9 @@ export default function MoviePoster({
           alt={title}
           fill
           sizes="(max-width: 640px) 342px, (max-width: 768px) 500px, 100vw"
-          quality={70}
+          quality={85}
           priority={!lazy}
           loading={lazy ? "lazy" : "eager"}
-          className="rounded-xl"
         />
       ) : (
         <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center rounded-xl bg-primary-700 p-4 text-center text-white">

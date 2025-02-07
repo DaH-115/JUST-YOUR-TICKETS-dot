@@ -23,7 +23,7 @@ export default function ReviewDetailsModal({
       }`}
     >
       <div
-        className={`absolute w-11/12 rounded-2xl border-2 border-black bg-white drop-shadow-lg transition-all duration-500 lg:w-2/5 ${
+        className={`absolute w-11/12 rounded-2xl bg-white drop-shadow-lg transition-all duration-500 lg:w-2/5 ${
           isModalOpen
             ? "visible translate-y-0 opacity-100"
             : "invisible translate-y-full opacity-0"

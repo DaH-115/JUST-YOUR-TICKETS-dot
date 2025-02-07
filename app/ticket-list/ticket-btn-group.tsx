@@ -87,7 +87,7 @@ const TicketBtnGroup = React.memo(function ReviewBtnGroup({
           className="inline-block w-full border-b border-gray-300 px-1 py-2 text-center text-sm"
           onClick={() => setIsOpen(false)}
         >
-          <div className="flex items-center justify-center rounded-md p-1 hover:bg-gray-100 hover:font-bold">
+          <div className="flex items-center justify-center rounded-md p-1 transition-colors ease-in-out hover:bg-gray-100 hover:font-bold">
             <span className="mr-1">
               <MdOutlineEdit className="text-lg" />
             </span>
@@ -99,7 +99,7 @@ const TicketBtnGroup = React.memo(function ReviewBtnGroup({
           onClick={handleDelete}
           className="w-full px-1 py-2 text-center text-sm text-red-600"
         >
-          <div className="flex items-center justify-center rounded-md p-1 hover:bg-gray-100 hover:font-bold">
+          <div className="flex items-center justify-center rounded-md p-1 transition-colors ease-in-out hover:bg-gray-100 hover:font-bold">
             <span className="mr-1">
               <MdDeleteOutline className="text-lg text-red-500" />
             </span>

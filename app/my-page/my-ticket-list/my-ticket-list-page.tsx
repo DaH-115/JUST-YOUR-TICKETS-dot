@@ -31,7 +31,7 @@ export default function MyTicktListPage({
   }, [searchTerm, searchReviewsHandler]);
 
   return (
-    <div className="flex w-full flex-col p-8 pt-4 lg:flex-row">
+    <div className="flex w-full flex-col p-8 pb-16 pt-4 lg:flex-row">
       <SideMenu uid={uid || ""} />
       <main className="flex w-full flex-col">
         <header className="pb-8">
@@ -40,10 +40,10 @@ export default function MyTicktListPage({
             <br />
             LIST
           </h1>
-          <div className="flex w-full items-center justify-between text-white">
+          <div className="flex w-full items-center justify-end text-white">
             {/* 티켓 개수 */}
-            <div className="flex items-center gap-2">
-              All
+            <div className="mr-4 flex items-center gap-2 text-lg font-bold">
+              all
               <p className="text-accent-300">{filteredUserReviews.length}</p>
             </div>
             {/* 티켓 검색 */}

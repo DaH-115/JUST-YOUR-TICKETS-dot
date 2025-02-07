@@ -22,7 +22,6 @@ import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { onUpdateUserDisplayName } from "store/redux-toolkit/slice/userSlice";
-import { BackAnimation } from "app/ui/back-animation";
 
 interface UserDoc {
   displayName: string;
@@ -194,12 +193,12 @@ export default function ProfileForm() {
   }, [isEditing, reset]);
 
   return (
-    <main className="w-full px-8 pb-4 lg:ml-8">
-      <section className="group relative">
-        <div className="rounded-xl border-2 border-black bg-white px-8 pb-10 pt-6 transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1">
+    <main className="w-full">
+      <section className="group mb-6">
+        <div className="rounded-xl border-2 border-gray-200 bg-white p-8 pt-6 transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1">
           <form onSubmit={handleSubmit(onSubmitHandler)}>
-            <div className="flex items-center border-b-2 border-black pb-1">
-              <h1 className="w-full text-2xl font-bold">PROFILE</h1>
+            <div className="flex items-center">
+              <h1 className="w-full text-xl font-bold">MY PROFILE</h1>
               {isEditing ? (
                 <>
                   <div
@@ -227,15 +226,18 @@ export default function ProfileForm() {
                 </div>
               )}
             </div>
-            <div className="border-b border-black pb-2 pt-4">
-              <h2 className="text-xs font-bold">닉네임</h2>
+            <div className="border-b border-black py-2">
+              <label htmlFor="displayName" className="text-xs font-bold">
+                닉네임
+              </label>
               <div className="w-full">
                 {isEditing ? (
                   <>
                     <input
+                      id="displayName"
                       {...register("displayName")}
                       type="text"
-                      className={`w-full bg-transparent text-lg text-gray-600 ${
+                      className={`w-full bg-transparent text-gray-600 ${
                         isLoading ? "cursor-not-allowed opacity-50" : ""
                       }`}
                       disabled={isLoading}
@@ -247,14 +249,16 @@ export default function ProfileForm() {
                     )}
                   </>
                 ) : (
-                  <div className="w-full text-lg">
+                  <div className="w-full font-bold">
                     {serializedUser?.displayName || "Guest"}
                   </div>
                 )}
               </div>
             </div>
-            <div className="border-b border-black pb-2 pt-4">
-              <h2 className="text-xs font-bold">바이오</h2>
+            <div className="border-b border-black py-2">
+              <label htmlFor="biography" className="text-xs font-bold">
+                바이오
+              </label>
               <div className="w-full">
                 {isLoading ? (
                   <div className="w-full text-base text-gray-400">
@@ -263,9 +267,10 @@ export default function ProfileForm() {
                 ) : isEditing ? (
                   <>
                     <input
+                      id="biography"
                       {...register("biography")}
                       type="text"
-                      className={`w-full bg-transparent text-lg text-gray-600 ${
+                      className={`w-full bg-transparent text-gray-600 ${
                         isLoading ? "cursor-not-allowed opacity-50" : ""
                       }`}
                       disabled={isLoading}
@@ -286,12 +291,11 @@ export default function ProfileForm() {
               </div>
             </div>
           </form>
-          <div className="w-full border-b border-black pb-2 pt-4">
+          <div className="w-full border-b border-black py-2">
             <h2 className="text-xs font-bold">이메일</h2>
-            <div className="mr-4 w-full">{serializedUser?.email}</div>
+            <div className="w-full">{serializedUser?.email}</div>
           </div>
         </div>
-        <BackAnimation />
       </section>
 
       {/* Change Password */}
