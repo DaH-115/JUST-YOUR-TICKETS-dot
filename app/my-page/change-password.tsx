@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +28,6 @@ type NewPasswordSchema = z.infer<typeof newPasswordSchema>;
 
 export default function ChangePassword() {
   const [isVerified, setIsVerified] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const currentUser = isAuth.currentUser;
@@ -97,7 +96,6 @@ export default function ChangePassword() {
     try {
       await updatePassword(currentUser, newPassword);
       setIsVerified(false);
-      setIsEditing(false);
       isShowSuccess("성공", "비밀번호가 성공적으로 변경되었습니다.");
     } catch (error) {
       if (error instanceof Error) {
@@ -114,95 +112,77 @@ export default function ChangePassword() {
     }
   };
 
-  const scrollToBttomHandler = () => {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    if (isEditing) {
-      scrollToBttomHandler();
-    }
-  }, [isEditing]);
-
   return (
-    <section
-      className={`group relative bg-transparent transition-all duration-300 ease-in-out ${
-        isEditing ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-      }`}
-    >
-      <div
-        className={`relative rounded-xl border-2 border-gray-200 bg-white px-8 py-6 transition-all duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1`}
-      >
-        <h2 className="mb-4 text-xl font-bold">PASSWORD CHANGE</h2>
-        <form onSubmit={handleSubmitCurrent(verifyCurrentPasswordHandler)}>
-          <label
-            htmlFor="current-password"
-            className="mb-1 block text-xs font-bold text-gray-700"
-          >
-            현재 비밀번호
-          </label>
-          <input
-            id="current-password"
-            {...registerCurrent("currentPassword")}
-            type="password"
-            className={`w-full border-b border-black bg-transparent pb-2 text-sm ${isVerified ? "bg-gray-300" : "border-b-2"} ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
-            placeholder={
-              !isVerified ? "현재 비밀번호를 입력하세요." : "확인되었습니다."
-            }
-            autoComplete="off"
+    <section className="relative rounded-xl border-2 border-gray-200 bg-white px-8 py-6 transition-all duration-300 hover:-translate-x-1 hover:-translate-y-1">
+      <h2 className="mb-4 text-xl font-bold">PASSWORD CHANGE</h2>
+      <form onSubmit={handleSubmitCurrent(verifyCurrentPasswordHandler)}>
+        <label
+          htmlFor="current-password"
+          className="mb-1 block text-xs font-bold text-gray-700"
+        >
+          현재 비밀번호
+        </label>
+        <input
+          id="current-password"
+          {...registerCurrent("currentPassword")}
+          type="password"
+          className={`w-full border-b border-black bg-transparent pb-2 text-sm ${isVerified ? "bg-gray-300" : "border-b-2"} ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
+          placeholder={
+            !isVerified ? "현재 비밀번호를 입력하세요." : "확인되었습니다."
+          }
+          autoComplete="off"
+          disabled={isLoading || isVerified}
+        />
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className={`mt-1 whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 ${
+              isLoading || isVerified
+                ? "cursor-not-allowed bg-gray-300"
+                : "hover:bg-black hover:text-white"
+            }`}
             disabled={isLoading || isVerified}
-          />
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className={`mt-1 whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 ${
-                isLoading || isVerified
-                  ? "cursor-not-allowed bg-gray-300"
-                  : "hover:bg-black hover:text-white"
-              }`}
-              disabled={isLoading || isVerified}
-            >
-              {isLoading ? "확인 중..." : "확인"}
-            </button>
-          </div>
-          {errorsCurrent.currentPassword && (
-            <p className="mt-2 text-sm text-red-600">
-              {errorsCurrent.currentPassword.message}
-            </p>
-          )}
-        </form>
-        <form onSubmit={handleSubmitNew(changePasswordHanlder)}>
-          <label
-            htmlFor="new-password"
-            className="mb-1 block text-xs font-bold text-gray-700"
           >
-            새로운 비밀번호
-          </label>
-          <input
-            id="new-password"
-            {...registerNew("newPassword")}
-            type="password"
-            className={`w-full border-b border-black bg-transparent pb-2 text-sm ${!isVerified ? "bg-slate-200" : "border-b-2"} ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
-            placeholder={`${!isVerified ? "현재 비밀번호를 먼저 확인하세요." : "새로운 비밀번호를 입력하세요."}`}
+            {isLoading ? "확인 중..." : "확인"}
+          </button>
+        </div>
+        {errorsCurrent.currentPassword && (
+          <p className="mt-2 text-sm text-red-600">
+            {errorsCurrent.currentPassword.message}
+          </p>
+        )}
+      </form>
+      <form onSubmit={handleSubmitNew(changePasswordHanlder)}>
+        <label
+          htmlFor="new-password"
+          className="mb-1 block text-xs font-bold text-gray-700"
+        >
+          새로운 비밀번호
+        </label>
+        <input
+          id="new-password"
+          {...registerNew("newPassword")}
+          type="password"
+          className={`w-full border-b border-black bg-transparent pb-2 text-sm ${!isVerified ? "bg-slate-200" : "border-b-2"} ${isLoading ? "cursor-not-allowed opacity-50" : ""}`}
+          placeholder={`${!isVerified ? "현재 비밀번호를 먼저 확인하세요." : "새로운 비밀번호를 입력하세요."}`}
+          disabled={!isVerified || isLoading}
+          autoComplete="off"
+        />
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className={`${!isVerified && "cursor-not-allowed hover:text-gray-300"} mt-1 whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 hover:bg-black hover:text-white`}
             disabled={!isVerified || isLoading}
-            autoComplete="off"
-          />
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className={`${!isVerified && "cursor-not-allowed hover:text-gray-300"} mt-1 whitespace-nowrap rounded-xl px-2 py-1 text-xs transition-colors duration-300 hover:bg-black hover:text-white`}
-              disabled={!isVerified || isLoading}
-            >
-              {isLoading ? "변경 중..." : "수정"}
-            </button>
-          </div>
-          {errorsNew.newPassword && (
-            <p className="mt-2 text-sm text-red-600">
-              {errorsNew.newPassword.message}
-            </p>
-          )}
-        </form>
-      </div>
+          >
+            {isLoading ? "변경 중..." : "수정"}
+          </button>
+        </div>
+        {errorsNew.newPassword && (
+          <p className="mt-2 text-sm text-red-600">
+            {errorsNew.newPassword.message}
+          </p>
+        )}
+      </form>
     </section>
   );
 }
