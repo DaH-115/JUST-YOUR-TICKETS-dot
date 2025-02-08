@@ -153,7 +153,7 @@ export default function Header() {
         </div>
 
         {/* PROFILE MENU */}
-        <div className="hidden md:flex">
+        <div className="ml-4 hidden md:flex">
           {userDisplayName ? (
             <HeaderDropDownMenu
               dropdownRef={dropdownRef}

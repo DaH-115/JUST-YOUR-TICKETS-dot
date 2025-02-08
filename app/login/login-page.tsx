@@ -94,11 +94,11 @@ export default function LoginPage() {
   );
 
   return (
-    <div className="w-full border-t-4 border-accent-300 bg-white pb-8 pt-4 md:mt-4 md:flex md:justify-center md:py-10">
-      <section className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:border-gray-200 md:pl-0 md:pt-0 md:text-8xl">
-        <h1>LOG IN</h1>
-      </section>
-      <main className="md:w-2/3">
+    <main className="mt-8 w-full border-t-4 border-accent-300 bg-white pb-8 pt-4 md:flex md:justify-center md:py-10">
+      <h1 className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:border-gray-200 md:pl-0 md:pt-0 md:text-8xl">
+        LOG IN
+      </h1>
+      <div className="md:w-2/3">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="mx-auto space-y-6 px-8 md:mt-16 md:w-2/3 md:px-0"
@@ -167,7 +167,7 @@ export default function LoginPage() {
 
         {/* Social Login */}
         <SocialLogin rememberMe={isRememberMe} />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
