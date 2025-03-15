@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import "app/globals.css";
-import Providers from "store/redux-toolkit/providers";
-import { ErrorProvider } from "store/context/error-context";
-import { AuthProvider } from "store/context/auth/auth-context";
-import Header from "app/ui/layout/header/header";
-import Footer from "app/ui/layout/footer";
+import Providers from "store/redux-toolkit/Providers";
+import { ErrorProvider } from "store/context/errorContext";
+import { AuthProvider } from "store/context/auth/authContext";
+import Header from "app/ui/layout/header/Header";
+import Footer from "app/ui/layout/Footer";
 import { Nanum_Gothic, Montserrat } from "next/font/google";
 
 const nanumGothic = Nanum_Gothic({

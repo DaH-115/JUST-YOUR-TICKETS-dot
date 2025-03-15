@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import SearchPage from "app/search/search-page";
+import SearchPage from "app/search/components/SearchPage";
 import { fetchNowPlayingMovies } from "api/fetchNowPlayingMovies";
 import { notFound } from "next/navigation";
 
@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  try {
-    const nowPlayingMovies = await fetchNowPlayingMovies();
+  const nowPlayingMovies = await fetchNowPlayingMovies();
 
-    return <SearchPage nowPlayingMovies={nowPlayingMovies} />;
-  } catch (error) {
-    notFound();
+  if (!nowPlayingMovies?.length) {
+    return notFound();
   }
+
+  return <SearchPage nowPlayingMovies={nowPlayingMovies} />;
 }

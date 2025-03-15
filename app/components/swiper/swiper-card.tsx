@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { MovieList } from "api/fetchNowPlayingMovies";
-import getMovieTitle from "app/utils/get-movie-title";
+import getMovieTitle from "app/utils/getMovieTitle";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import NewWriteBtn from "app/components/new-write-btn";
-import Tooltip from "app/components/tooltip";
-import MoviePoster from "app/components/movie-poster";
+import WriteBtn from "app/components/WriteBtn";
+import Tooltip from "app/components/Tooltip";
+import MoviePoster from "app/components/MoviePoster";
 
 export default function SwiperCard({
   idx,
@@ -76,7 +76,7 @@ export default function SwiperCard({
           </div>
           {/* REVIEW WRITE BUTTON */}
           <div className="flex w-full p-1">
-            <NewWriteBtn movieId={id} size={"small"} />
+            <WriteBtn movieId={id} size={"small"} />
           </div>
         </div>
       </div>

@@ -4,17 +4,24 @@ import { fetchMovieDetails } from "api/fetchMovieDetails";
 import { fetchMovieCredits } from "api/fetchMovieCredits";
 import { fetchVideosMovies } from "api/fetchVideosMovies";
 import { fetchSimilarMovies } from "api/fetchSimilarMovies";
-import getMovieTitle from "app/utils/get-movie-title";
-import BackGround from "app/ui/layout/back-ground";
-import SimilarMovies from "app/movie-details/similar-movies";
-import AllMovieTrailers from "app/movie-details/all-movie-trailers";
-import MovieDetailCard from "app/movie-details/movie-detail-card";
+import getMovieTitle from "app/utils/getMovieTitle";
+import BackGround from "app/ui/layout/BackGround";
+import SimilarMovies from "app/movie-details/components/SimilarMovies";
+import AllMovieTrailers from "app/movie-details/components/MovieTrailers";
+import MovieDetailCard from "app/movie-details/components/MovieDetails";
 
 export async function generateMetadata({
   params,
 }: {
   params: { id: number };
 }): Promise<Metadata> {
+  if (!params.id) {
+    return {
+      title: "잘못된 접근",
+      description: "올바르지 않은 영화 ID입니다.",
+    };
+  }
+
   try {
     const movieDetails = await fetchMovieDetails(params.id);
     const { original_title, title, backdrop_path, overview } = movieDetails;
@@ -49,27 +56,45 @@ export default async function MovieDetailPage({
 }: {
   params: { id: number };
 }) {
-  const movieDetails = await fetchMovieDetails(params.id);
-  const movieCredits = await fetchMovieCredits(params.id);
-  const { results: movieTrailer } = await fetchVideosMovies(params.id);
-  const similarMovies = await fetchSimilarMovies(params.id);
-
   if (!params.id) {
-    notFound();
+    return notFound();
   }
 
-  const { original_title, title, backdrop_path } = movieDetails;
-  const movieTitle = getMovieTitle(original_title, title);
+  try {
+    const [movieDetails, movieCredits, movieTrailerData, similarMovies] =
+      await Promise.all([
+        fetchMovieDetails(params.id),
+        fetchMovieCredits(params.id),
+        fetchVideosMovies(params.id),
+        fetchSimilarMovies(params.id),
+      ]).catch((error) => {
+        if (error.message.includes("TMDB API 키가 설정되지 않았습니다")) {
+          throw new Error("서버 설정 오류가 발생했습니다.");
+        }
+        throw error;
+      });
 
-  return (
-    <>
-      <BackGround imageUrl={backdrop_path || ""} movieTitle={movieTitle} />
-      <MovieDetailCard
-        movieDetails={movieDetails}
-        movieCredits={movieCredits}
-      />
-      <AllMovieTrailers movieTrailer={movieTrailer} />
-      <SimilarMovies similarMovies={similarMovies} />
-    </>
-  );
+    if (!movieDetails || !movieCredits) {
+      return notFound();
+    }
+
+    const { backdrop_path } = movieDetails;
+
+    return (
+      <>
+        <BackGround imageUrl={backdrop_path || ""} />
+        <MovieDetailCard
+          movieDetails={movieDetails}
+          movieCredits={movieCredits}
+        />
+        <AllMovieTrailers movieTrailer={movieTrailerData.results} />
+        <SimilarMovies similarMovies={similarMovies} />
+      </>
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    return notFound();
+  }
 }

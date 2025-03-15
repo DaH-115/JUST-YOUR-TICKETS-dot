@@ -1,64 +1,44 @@
-"use client";
-
-import React, { useMemo } from "react";
 import { MovieList } from "api/fetchNowPlayingMovies";
-import dynamic from "next/dynamic";
-import Loading from "app/loading";
-import getMovieTitle from "app/utils/get-movie-title";
-import BackGround from "app/ui/layout/back-ground";
-import RecommendMovie from "app/home/recommend-movie";
-import ScrollToTopButton from "app/components/scroll-to-top-button";
-import Catchphrase from "app/ui/layout/catchphrase";
-import { FaArrowRight } from "react-icons/fa";
+import { Review } from "api/reviews/fetchUserReviews";
+import BackGround from "app/ui/layout/BackGround";
+import RecommendMovie from "app/home/components/RecommendMovie";
+import NowPlayingList from "app/home/components/NowPlayingList";
+import MovieTrailer from "app/home/components/MovieTrailer";
+import TrendingMovies from "app/home/components/trending/TrendingMovies";
+import LatestReviews from "app/home/components/reviews/LatestReviews";
+import ScrollToTopBtn from "app/components/ScrollToTopBtn";
 
 interface HomePageProps {
   movieList: MovieList[];
-  currentMovie: MovieList;
+  recommendMovie: MovieList;
   trailerKey: string;
+  trendingMovies: MovieList[];
+  latestReviews: Review[];
 }
 
 export default function HomePage({
   movieList,
+  recommendMovie,
   trailerKey,
-  currentMovie,
+  trendingMovies,
+  latestReviews,
 }: HomePageProps) {
-  const memoizedMovieList = useMemo(() => movieList, [movieList]);
-  const memoizedTrailerKey = useMemo(() => trailerKey, [trailerKey]);
-  const memoizedCurrentMovie = useMemo(() => currentMovie, [currentMovie]);
-  const movieTitle = useMemo(
-    () => getMovieTitle(currentMovie?.original_title, currentMovie?.title),
-    [currentMovie],
-  );
-
-  const NowPlayingList = dynamic(() => import("app/home/now-playing-list"), {
-    loading: () => <Loading />,
-  });
-
-  const MovieTrailer = dynamic(() => import("app/home/movie-trailer"), {
-    loading: () => <Loading />,
-  });
-
   return (
     <>
-      {currentMovie?.backdrop_path && (
-        <BackGround
-          imageUrl={currentMovie.backdrop_path}
-          movieTitle={movieTitle}
-        />
+      {recommendMovie?.backdrop_path && (
+        <BackGround imageUrl={recommendMovie.backdrop_path} />
       )}
-      <main>
-        <h1 className="mt-8 px-8 text-5xl font-bold text-accent-300 md:mt-16">
-          {"JUST YOUR TICKETS."}
+      <main className="p-8">
+        <h1 className="mb-4 text-center text-4xl font-bold text-white">
+          Just Movie Tickets
         </h1>
-        <p className="mt-4 px-8 text-white">
-          당신만의 영화 리뷰 티켓을 만들어보세요.
-        </p>
-        <NowPlayingList movieList={memoizedMovieList} />
-        {currentMovie && <RecommendMovie currentMovie={memoizedCurrentMovie} />}
-        {memoizedTrailerKey && <MovieTrailer trailerKey={memoizedTrailerKey} />}
+        <NowPlayingList movieList={movieList} />
+        <TrendingMovies trendingMovies={trendingMovies} />
+        <RecommendMovie currentMovie={recommendMovie} />
+        {trailerKey && <MovieTrailer trailerKey={trailerKey} />}
+        <LatestReviews reviews={latestReviews} />
       </main>
-      <Catchphrase />
-      <ScrollToTopButton />
+      <ScrollToTopBtn />
     </>
   );
 }
