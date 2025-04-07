@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "store/redux-toolkit/hooks";
 import { useReviewForm } from "app/write-review/hook/useReviewForm";
 import getMovieTitle from "app/utils/getMovieTitle";
 import BackGround from "app/ui/layout/BackGround";
@@ -10,7 +9,6 @@ import Modal from "app/ui/Modal";
 import { MovieDetails } from "api/fetchMovieDetails";
 import { Review } from "api/reviews/fetchUserReviews";
 import ReviewFormHeader from "app/write-review/components/ReviewFormHeader";
-import ReviewFormUserInfo from "app/write-review/components/ReviewFormUserInfo";
 import ReviewFormTitle from "app/write-review/components/ReviewFormTitle";
 import ReviewFormRating from "app/write-review/components/ReviewFormRating";
 import ReviewFormContent from "app/write-review/components/ReviewFormContent";
@@ -39,9 +37,10 @@ export default function ReviewForm({
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isValid },
     watch,
   } = useForm<ReviewFormValues>({
+    mode: "onChange",
     defaultValues: initialData || {
       reviewTitle: "",
       rating: 0,
@@ -49,10 +48,8 @@ export default function ReviewForm({
     },
   });
   const [showExitConfirmation, setShowExitConfirmation] = useState(false);
-  const userState = useAppSelector((state) => state.user.user);
   const movieTitle = getMovieTitle(movieInfo.original_title, movieInfo.title);
   const { onSubmitHandler } = useReviewForm(mode, movieInfo, movieId, reviewId);
-  const rating = watch("rating");
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -68,17 +65,6 @@ export default function ReviewForm({
     };
   }, [isDirty]);
 
-  const pageExitHandler = useCallback(() => {
-    if (isDirty) {
-      setShowExitConfirmation(true);
-    } else {
-      router.push("/");
-    }
-  }, [router, isDirty]);
-
-  const isFormValid =
-    !errors.reviewTitle && !errors.reviewContent && rating >= 0;
-
   return (
     <>
       {movieInfo.backdrop_path && (
@@ -86,21 +72,25 @@ export default function ReviewForm({
       )}
 
       <main className="relative mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
-        <div className="mx-auto w-11/12 rounded-xl border-2 border-black bg-white md:w-2/4">
+        <div className="mx-auto w-11/12 rounded-xl border-2 border-gray-200 bg-white md:w-2/4">
           <form onSubmit={handleSubmit(onSubmitHandler)}>
             <ReviewFormHeader
-              movieTitle={movieTitle}
               isEditMode={mode === "edit"}
+              isDirty={isDirty}
+              setShowExitConfirmation={setShowExitConfirmation}
             />
-            <ReviewFormUserInfo
-              userName={userState?.displayName || "사용자"}
-              movieTitle={movieTitle}
-            />
-            <div className="w-full">
+            <div className="p-4 pb-1">
+              <p className="text-3xl font-bold">{movieTitle}</p>
+              <p className="text-gray-400">
+                {movieInfo.release_date.replaceAll("-", ".")}
+              </p>
+            </div>
+            <div className="w-full p-4">
               <ReviewFormTitle
                 register={register}
                 errors={errors}
                 isEditMode={mode === "edit"}
+                watch={watch}
               />
               <ReviewFormRating
                 register={register}
@@ -112,20 +102,13 @@ export default function ReviewForm({
                 register={register}
                 errors={errors}
                 isEditMode={mode === "edit"}
+                watch={watch}
               />
-
-              <div className="flex justify-end border-t border-black p-2">
-                <button
-                  type="button"
-                  className="mr-2 w-full rounded-xl bg-gray-200 py-4 text-sm transition-all duration-300 hover:bg-gray-300"
-                  onClick={pageExitHandler}
-                >
-                  취소
-                </button>
+              <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={!isFormValid}
-                  className="group flex w-full items-center justify-center rounded-xl bg-primary-500 p-4 text-sm text-white transition-colors duration-300 hover:bg-primary-700 disabled:text-gray-500"
+                  disabled={!isValid}
+                  className="group flex w-full items-center justify-center rounded-xl bg-primary-500 p-4 font-bold text-white transition-colors duration-300 hover:bg-primary-700 disabled:text-gray-500"
                 >
                   <MdDriveFileRenameOutline className="mr-1" size={18} />
                   작성
@@ -135,12 +118,11 @@ export default function ReviewForm({
           </form>
         </div>
       </main>
-
       {showExitConfirmation && (
         <Modal
           title="알림"
           description="현재 내용이 사라집니다. 나가시겠습니까?"
-          onConfirm={() => router.push("/")}
+          onConfirm={() => router.back()}
           onClose={() => setShowExitConfirmation(false)}
         />
       )}

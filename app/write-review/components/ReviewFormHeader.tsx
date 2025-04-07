@@ -1,25 +1,36 @@
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosArrowBack } from "react-icons/io";
 
 interface ReviewFormHeaderProps {
-  movieTitle: string;
+  isDirty: boolean;
+  setShowExitConfirmation: React.Dispatch<React.SetStateAction<boolean>>;
   isEditMode?: boolean;
 }
 
 export default function ReviewFormHeader({
-  movieTitle,
+  isDirty,
+  setShowExitConfirmation,
   isEditMode = false,
 }: ReviewFormHeaderProps) {
   const router = useRouter();
 
+  const pageExitHandler = useCallback(() => {
+    if (isDirty) {
+      setShowExitConfirmation(true);
+    } else {
+      router.back();
+    }
+  }, [router, isDirty]);
+
   return (
-    <div className="mb-8 flex items-center justify-between">
+    <div className="flex items-center justify-between border-b-2 border-gray-200 p-4">
       <button
         type="button"
-        onClick={() => router.back()}
-        className="flex items-center gap-1 text-sm font-medium text-gray-600 transition-colors hover:text-black"
+        onClick={pageExitHandler}
+        className="flex items-center text-gray-600 transition-colors hover:text-black"
       >
-        <IoIosArrowBack />
+        <IoIosArrowBack size={18} />
         뒤로가기
       </button>
       <h1 className="text-xl font-bold">

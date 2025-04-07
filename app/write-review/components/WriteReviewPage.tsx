@@ -9,6 +9,7 @@ import ReviewForm, {
   ReviewFormValues,
 } from "app/write-review/components/ReviewForm";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
+import Loading from "app/loading";
 
 export default function WriteReviewPage() {
   const params = useParams();
@@ -51,12 +52,16 @@ export default function WriteReviewPage() {
     fetchData();
   }, [id, movieId]);
 
+  if (!movieId || !movieInfo) {
+    return <Loading />;
+  }
+
   return (
     <ReviewForm
       mode={id === "new" ? "create" : "edit"}
       initialData={initialData}
-      movieInfo={movieInfo as MovieDetails}
-      movieId={movieId as string}
+      movieInfo={movieInfo}
+      movieId={movieId}
       reviewId={id}
     />
   );
