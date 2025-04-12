@@ -1,54 +1,31 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { Review } from "api/reviews/fetchReviews";
 import useReviewSearch from "hooks/useReviewSearch";
 import MyTicketHeader from "app/my-page/my-ticket-list/components/MyTicketPageHeader";
-import MyTicketList from "app/my-page/my-ticket-list/components/MyTicketList";
-
-interface MyTicketListPageProps {
-  uid: string;
-  userReviews: Review[];
-}
+import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
+import EmptyState from "app/my-page/components/EmptyState";
 
 export default function MyTicketListPage({
   userReviews,
-  uid,
-}: MyTicketListPageProps) {
-  // 현재 사용자의 리뷰만 필터링
-  const myTicketList = userReviews.filter((review) => review.uid === uid);
-  // 검색 폼 설정
-  const { register, watch } = useForm({
-    defaultValues: {
-      search: "",
-    },
-  });
-  // 검색 기능 설정
-  const { filteredUserReviews, searchReviewsHandler } =
-    useReviewSearch(myTicketList);
-  const searchTerm = watch("search");
-
-  // 검색어 변경 시 검색 실행
-  useEffect(() => {
-    searchReviewsHandler(searchTerm);
-  }, [searchTerm, searchReviewsHandler]);
-
-  // 표시할 리뷰 목록 결정
+}: {
+  userReviews: Review[];
+}) {
+  const { filteredUserReviews } = useReviewSearch(userReviews);
   const displayReviews =
-    filteredUserReviews.length > 0 ? filteredUserReviews : myTicketList;
+    filteredUserReviews.length > 0 ? filteredUserReviews : userReviews;
 
   return (
-    <div className="flex w-full flex-col p-8 pb-16 pt-4 lg:flex-row">
-      <main className="flex w-full flex-col">
-        <MyTicketHeader
-          ticketCount={filteredUserReviews.length}
-          register={register}
-        />
-        <div className="h-full w-full">
-          <MyTicketList reviews={displayReviews} />
-        </div>
-      </main>
-    </div>
+    <main className="flex w-full flex-col lg:flex-row">
+      <MyTicketHeader userReviews={userReviews} />
+      <p className="mb-2 text-white">
+        전체 {userReviews.length > 0 ? userReviews.length : 0}장
+      </p>
+      {displayReviews.length > 0 ? (
+        <ReviewTicket reviews={displayReviews} />
+      ) : (
+        <EmptyState message="작성한 리뷰가 없습니다" />
+      )}
+    </main>
   );
 }

@@ -6,7 +6,7 @@ import { Review } from "api/reviews/fetchReviews";
 import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import useReviewSearch from "hooks/useReviewSearch";
 import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
-import ReviewSearchInputregister from "app/components/reviewTicket/ReviewSearchInput";
+import ReviewSearchInput from "app/components/reviewTicket/ReviewSearchInput";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 
 export default function TicketListPage({
@@ -53,7 +53,7 @@ export default function TicketListPage({
           </span>
         </div>
         {/* 티켓 검색 */}
-        <ReviewSearchInputregister
+        <ReviewSearchInput
           label="티켓 검색"
           register={register}
           placeholder="티켓 검색"

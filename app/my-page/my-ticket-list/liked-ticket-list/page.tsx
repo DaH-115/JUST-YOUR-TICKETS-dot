@@ -2,6 +2,7 @@ import fetchLikedReviews from "api/reviews/fetchLikedReviews";
 import fetchReviewById from "api/reviews/fetchReviewById";
 import { Review } from "api/reviews/fetchReviews";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
+import EmptyState from "app/my-page/components/EmptyState";
 
 export const metadata = {
   title: "Liked Tickets",
@@ -34,19 +35,20 @@ export default async function Page({
 
   return (
     <main>
-      <div className="mb-8 text-white">
-        <h1 className="text-3xl font-bold">Liked Ticket List</h1>
-        <p>좋아요를 누른 티켓 목록입니다</p>
+      <div className="mb-2">
+        <h1 className="text-3xl font-bold text-accent-300">
+          Liked Ticket List
+        </h1>
+        <p className="text-white">좋아요를 누른 티켓 목록입니다</p>
       </div>
-      <div>
-        {fullList.length > 0 ? (
-          <ReviewTicket reviews={fullList} />
-        ) : (
-          <div className="text-center text-gray-500">
-            좋아요한 리뷰가 없습니다
-          </div>
-        )}
-      </div>
+      <p className="mb-2 text-white">
+        전체 {fullList.length > 0 ? fullList.length : 0}장
+      </p>
+      {fullList.length > 0 ? (
+        <ReviewTicket reviews={fullList} />
+      ) : (
+        <EmptyState message="좋아요한 티켓이 없습니다" />
+      )}
     </main>
   );
 }

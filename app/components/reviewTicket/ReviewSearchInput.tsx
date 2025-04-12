@@ -1,6 +1,6 @@
 import { IoSearchOutline } from "react-icons/io5";
 
-export default function ReviewSearchInputregister({
+export default function ReviewSearchInput({
   label,
   register,
   placeholder,

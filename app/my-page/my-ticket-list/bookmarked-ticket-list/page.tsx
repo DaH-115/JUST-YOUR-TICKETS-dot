@@ -2,6 +2,7 @@ import fetchBookmarkedReviews from "api/reviews/fetchBookmarkedReviews";
 import fetchReviewById from "api/reviews/fetchReviewById";
 import { Review } from "api/reviews/fetchReviews";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
+import EmptyState from "app/my-page/components/EmptyState";
 
 export const metadata = {
   title: "Bookmarked Tickets",
@@ -33,20 +34,21 @@ export default async function Page({
   );
 
   return (
-    <main>
-      <div className="mb-8 text-white">
-        <h1 className="text-3xl font-bold">Bookmarked Ticket List</h1>
-        <p>북마크한 티켓 목록입니다</p>
+    <main className="w-full">
+      <div className="mb-2">
+        <h1 className="text-3xl font-bold text-accent-300">
+          Bookmarked Ticket List
+        </h1>
+        <p className="text-white">북마크한 티켓 목록입니다</p>
       </div>
-      <div>
-        {fullList.length > 0 ? (
-          <ReviewTicket reviews={fullList} />
-        ) : (
-          <div className="text-center text-gray-500">
-            북마크한 티켓이 없습니다
-          </div>
-        )}
-      </div>
+      <p className="mb-2 text-white">
+        전체 {fullList.length > 0 ? fullList.length : 0}장
+      </p>
+      {fullList.length > 0 ? (
+        <ReviewTicket reviews={fullList} />
+      ) : (
+        <EmptyState message="북마크한 티켓이 없습니다" />
+      )}
     </main>
   );
 }

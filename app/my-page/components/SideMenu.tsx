@@ -1,77 +1,47 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 
-const SideMenu = React.memo(function SideMenu() {
+export default function SideMenu() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const urlUid = searchParams.get("uid");
-  const userState = useAppSelector((state) => state.user.user);
+  const uid = useAppSelector((state) => state.user.user)?.uid;
 
-  const getMenuStyle = useCallback(
-    (path: string) => {
-      const isCurrentPath = pathname === path;
-      let isActive = false;
-
-      if (path === "/my-page" && isCurrentPath && !urlUid) {
-        isActive = true;
-      } else if (
-        path === "/my-page/my-ticket-list" &&
-        isCurrentPath &&
-        urlUid
-      ) {
-        isActive = true;
-      }
-
-      return `text-lg w-full text-center lg:text-start md:text-2xl lg:text-5xl ${
-        isActive
-          ? "text-accent-300  font-bold"
-          : "text-gray-300 hover:text-[#BD9C31]"
-      } transition-all duration-300 ease-in-out`;
-    },
-    [pathname, urlUid],
-  );
+  const getMenuStyle = (targetPath: string) =>
+    `text-lg w-full text-center lg:text-start md:text-2xl lg:text-4xl ${
+      pathname === targetPath
+        ? "text-accent-300 font-bold"
+        : "text-gray-300 hover:text-[#BD9C31]"
+    } transition-all duration-300 ease-in-out`;
 
   return (
-    <nav className="hidden pr-8 lg:block">
-      <Link href="/my-page" className="w-full">
-        <div className={getMenuStyle("/my-page")}>MY PROFILE</div>
-      </Link>
-      <Link
-        href={`/my-page/my-ticket-list?uid=${userState?.uid}`}
-        className="w-full"
+    <aside className="mr-14 hidden space-y-2 lg:block">
+      <div className={getMenuStyle("/my-page")}>
+        <Link href="/my-page">MY PROFILE</Link>
+      </div>
+      <div className={getMenuStyle("/my-page/my-ticket-list")}>
+        <Link href={`/my-page/my-ticket-list?uid=${uid}`}>MY TICKET LIST</Link>
+      </div>
+      <div
+        className={getMenuStyle("/my-page/my-ticket-list/liked-ticket-list")}
       >
-        <div className={getMenuStyle("/my-page/my-ticket-list")}>
-          MY TICKET LIST
-        </div>
-      </Link>
-      <Link
-        href={`/my-page/my-ticket-list/liked-ticket-list?uid=${userState?.uid}`}
-        className="w-full"
+        <Link href={`/my-page/my-ticket-list/liked-ticket-list?uid=${uid}`}>
+          LIKED
+        </Link>
+      </div>
+      <div
+        className={getMenuStyle(
+          "/my-page/my-ticket-list/bookmarked-ticket-list",
+        )}
       >
-        <div
-          className={getMenuStyle("/my-page/my-ticket-list/liked-ticket-list")}
+        <Link
+          href={`/my-page/my-ticket-list/bookmarked-ticket-list?uid=${uid}`}
         >
-          LIKED TICKET LIST
-        </div>
-      </Link>
-      <Link
-        href={`/my-page/my-ticket-list/bookmarked-ticket-list?uid=${userState?.uid}`}
-        className="w-full"
-      >
-        <div
-          className={getMenuStyle(
-            "/my-page/my-ticket-list/bookmarked-ticket-list",
-          )}
-        >
-          BOOKMARKED TICKET LIST
-        </div>
-      </Link>
-    </nav>
+          BOOKMARKED
+        </Link>
+      </div>
+    </aside>
   );
-});
-
-export default SideMenu;
+}
