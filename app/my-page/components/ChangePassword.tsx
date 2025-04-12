@@ -6,7 +6,7 @@ import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { isAuth } from "firebase-config";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { useAppSelector } from "store/redux-toolkit/hooks";
-import { useError } from "store/context/errorContext";
+import { useAlert } from "store/context/alertContext";
 import { useRouter } from "next/navigation";
 
 const currentPasswordSchema = z.object({
@@ -32,7 +32,7 @@ export default function ChangePassword() {
   const router = useRouter();
   const currentUser = isAuth.currentUser;
   const serializedUser = useAppSelector((state) => state.user.user);
-  const { isShowError, isShowSuccess } = useError();
+  const { showErrorHanlder, showSuccessHanlder } = useAlert();
 
   const {
     register: registerCurrent,
@@ -52,7 +52,7 @@ export default function ChangePassword() {
 
   const verifyCurrentPasswordHandler = async (data: CurrentPasswordSchema) => {
     if (!serializedUser?.email) {
-      isShowError("오류", "사용자의 이메일을 찾을 수 없습니다.");
+      showErrorHanlder("오류", "사용자의 이메일을 찾을 수 없습니다.");
       return;
     }
 
@@ -67,13 +67,13 @@ export default function ChangePassword() {
       setIsVerified(true);
     } catch (error) {
       if (error instanceof Error) {
-        isShowError(
+        showErrorHanlder(
           "오류",
           "현재 비밀번호가 일치하지 않습니다. 다시 시도해 주세요.",
         );
       } else {
         const { title, message } = firebaseErrorHandler(error);
-        isShowError(title, message);
+        showErrorHanlder(title, message);
       }
     } finally {
       setIsLoading(false);
@@ -96,16 +96,16 @@ export default function ChangePassword() {
     try {
       await updatePassword(currentUser, newPassword);
       setIsVerified(false);
-      isShowSuccess("성공", "비밀번호가 성공적으로 변경되었습니다.");
+      showSuccessHanlder("성공", "비밀번호가 성공적으로 변경되었습니다.");
     } catch (error) {
       if (error instanceof Error) {
-        isShowError(
+        showErrorHanlder(
           "오류",
           "비밀번호 변경에 실패했습니다. 다시 시도해 주세요.",
         );
       } else {
         const { title, message } = firebaseErrorHandler(error);
-        isShowError(title, message);
+        showErrorHanlder(title, message);
       }
     } finally {
       setIsLoading(false);

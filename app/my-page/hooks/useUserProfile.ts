@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { doc, getDoc, FieldValue, Timestamp } from "firebase/firestore";
 import { db } from "firebase-config";
-import { useError } from "store/context/errorContext";
+import { useAlert } from "store/context/alertContext";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 
 export interface UserDoc {
@@ -14,7 +14,7 @@ export interface UserDoc {
 export function useUserProfile(uid: string | undefined) {
   const [userDoc, setUserDoc] = useState<UserDoc>();
   const [isLoading, setIsLoading] = useState(false);
-  const { isShowError } = useError();
+  const { showErrorHanlder } = useAlert();
 
   useEffect(() => {
     if (!uid) return;
@@ -30,14 +30,14 @@ export function useUserProfile(uid: string | undefined) {
           const userDoc = user.data() as UserDoc;
           setUserDoc(userDoc);
         } else {
-          isShowError("데이터 없음", "사용자 정보를 찾을 수 없습니다.");
+          showErrorHanlder("오류", "사용자 정보를 찾을 수 없습니다.");
         }
       } catch (error) {
         if (error instanceof Error) {
-          window.alert("사용자 정보를 불러오는 중 오류가 발생했습니다.");
+          showErrorHanlder("오류", error.message);
         } else {
           const { title, message } = firebaseErrorHandler(error);
-          isShowError(title, message);
+          showErrorHanlder(title, message);
         }
       } finally {
         setIsLoading(false);
@@ -45,7 +45,7 @@ export function useUserProfile(uid: string | undefined) {
     };
 
     fetchUserData();
-  }, [uid, isShowError]);
+  }, [uid, showErrorHanlder]);
 
   return { userDoc, isLoading, setUserDoc };
 }

@@ -7,7 +7,7 @@ import {
 import { useRouter } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { useError } from "store/context/errorContext";
+import { useAlert } from "store/context/alertContext";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { useCallback, useState } from "react";
 import SocialLoginBtn from "app/login/components/SocialLoginBtn";
@@ -25,7 +25,7 @@ export type SocialProvider = "google" | "github";
 
 export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
   const router = useRouter();
-  const { isShowError } = useError();
+  const { showErrorHanlder } = useAlert();
   const [isLoadingProvider, setIsLoadingProvider] =
     useState<SocialProvider | null>(null);
 
@@ -80,12 +80,12 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
       } catch (error: any) {
         if (error.code === "auth/popup-closed-by-user") return;
         const { title, message } = firebaseErrorHandler(error);
-        isShowError(title, message);
+        showErrorHanlder(title, message);
       } finally {
         setIsLoadingProvider(null);
       }
     },
-    [rememberMe, router, isShowError],
+    [rememberMe, router, showErrorHanlder],
   );
 
   return (

@@ -10,6 +10,7 @@ export async function deleteReview(userId: string) {
     revalidatePath("/ticket-list");
     revalidatePath("/my-page/my-ticket-list");
   } catch (error) {
-    alert("리뷰 삭제에 실패했습니다. 다시 시도해 주세요.");
+    console.error("리뷰 티켓 삭제 실패:", error);
+    throw new Error("리뷰 티켓 삭제에 실패했습니다.");
   }
 }

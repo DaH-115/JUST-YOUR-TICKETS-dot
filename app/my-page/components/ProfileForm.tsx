@@ -6,12 +6,13 @@ import ProfileField from "app/my-page/components/ProfileField";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useError } from "store/context/errorContext";
+import { useAlert } from "store/context/alertContext";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { useUserProfile } from "app/my-page/hooks/useUserProfile";
 import { useNicknameValidation } from "app/my-page/hooks/useNicknameValidation";
 import { useProfileUpdate } from "app/my-page/hooks/useProfileUpdate";
 import { z } from "zod";
+import { firebaseErrorHandler } from "app/utils/firebaseError";
 
 export const profileSchema = z.object({
   displayName: z
@@ -31,7 +32,7 @@ export type ProfileFormData = z.infer<typeof profileSchema>;
 export default function ProfileForm() {
   const [isEditing, setIsEditing] = useState(false);
   const serializedUser = useAppSelector((state) => state.user.user);
-  const { isShowError, isShowSuccess } = useError();
+  const { showErrorHanlder, showSuccessHanlder } = useAlert();
 
   const { userDoc, isLoading, setUserDoc } = useUserProfile(
     serializedUser?.uid,
@@ -66,7 +67,7 @@ export default function ProfileForm() {
   const onSubmit = useCallback(
     async (data: ProfileFormData) => {
       if (!serializedUser) {
-        isShowError("오류", "로그인이 필요합니다.");
+        showErrorHanlder("오류", "로그인이 필요합니다.");
         return;
       }
 
@@ -80,7 +81,7 @@ export default function ProfileForm() {
         if (dirtyFields.displayName) {
           const isDuplicate = await checkNicknameDuplicate(data.displayName);
           if (isDuplicate) {
-            isShowError("알림", "이미 사용 중인 닉네임입니다.");
+            showErrorHanlder("알림", "이미 사용 중인 닉네임입니다.");
             return;
           }
         }
@@ -93,21 +94,24 @@ export default function ProfileForm() {
         });
 
         setIsEditing(false);
-        isShowSuccess("성공", "프로필 정보가 업데이트되었습니다.");
+        showSuccessHanlder("성공", "프로필 정보가 업데이트되었습니다.");
       } catch (error) {
         if (error instanceof Error) {
-          isShowError("오류", error.message);
+          showErrorHanlder("오류", error.message);
+        } else {
+          const { title, message } = firebaseErrorHandler(error);
+          showErrorHanlder(title, message);
         }
       }
     },
     [
       dirtyFields,
-      isShowError,
-      isShowSuccess,
       serializedUser,
       checkNicknameDuplicate,
       updateUserProfile,
       setUserDoc,
+      showErrorHanlder,
+      showSuccessHanlder,
     ],
   );
 

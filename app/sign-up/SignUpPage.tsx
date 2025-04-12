@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { useError } from "store/context/errorContext";
+import { useAlert } from "store/context/alertContext";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import InputField from "app/components/InputField";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -60,7 +60,7 @@ export type SignupSchema = z.infer<typeof signupSchema>;
 export default function SignUpPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const { isShowError, isShowSuccess } = useError();
+  const { showErrorHanlder, showSuccessHanlder } = useAlert();
   const {
     register,
     handleSubmit,
@@ -86,7 +86,7 @@ export default function SignUpPage() {
         const displayNameSnapshot = await getDocs(displayNameQuery);
 
         if (!displayNameSnapshot.empty) {
-          isShowError("알림", "이미 사용 중인 닉네임입니다.");
+          showErrorHanlder("알림", "이미 사용 중인 닉네임입니다.");
           return;
         }
 
@@ -116,11 +116,11 @@ export default function SignUpPage() {
           role: "user",
         });
 
-        isShowSuccess("회원가입 완료", "환영합니다!");
+        showSuccessHanlder("회원가입 완료", "환영합니다!");
         router.push("/");
       } catch (error) {
         const { title, message } = firebaseErrorHandler(error);
-        isShowError(title, message);
+        showErrorHanlder(title, message);
 
         // Error 상황에서 Auth 계정이 생성된 경우 삭제
         if (isAuth.currentUser) {
@@ -130,7 +130,7 @@ export default function SignUpPage() {
         setIsLoading(false);
       }
     },
-    [router, isShowError, isShowSuccess],
+    [router, showErrorHanlder, showSuccessHanlder],
   );
 
   return (

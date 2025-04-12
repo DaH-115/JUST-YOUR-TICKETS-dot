@@ -4,7 +4,7 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
-import { useError } from "store/context/errorContext";
+import { useAlert } from "store/context/alertContext";
 import { MovieDetails } from "api/fetchMovieDetails";
 import updateReview from "app/actions/updateReview";
 import { ReviewFormValues } from "app/write-review/components/ReviewForm";
@@ -18,7 +18,7 @@ export const useReviewForm = (
   const router = useRouter();
   const dispatch = useAppDispatch();
   const serializedUser = useAppSelector((state) => state.user.user);
-  const { isShowError, isShowSuccess } = useError();
+  const { showErrorHanlder, showSuccessHanlder } = useAlert();
 
   const onSubmitHandler = async (data: ReviewFormValues) => {
     if (!serializedUser) return;
@@ -51,12 +51,17 @@ export const useReviewForm = (
         await updateReview(reviewId, updateData);
       }
 
-      isShowSuccess("알림", "리뷰가 성공적으로 저장되었습니다.", () =>
+      showSuccessHanlder("알림", "리뷰 티켓이 성공적으로 저장되었습니다.", () =>
         router.push("/"),
       );
     } catch (error) {
-      const { title, message } = firebaseErrorHandler(error);
-      isShowError(title, message);
+      if (error instanceof Error) {
+        console.error("리뷰 티켓 생성 중 오류 발생:", error.message);
+        showErrorHanlder("오류", error.message);
+      } else {
+        const { title, message } = firebaseErrorHandler(error);
+        showErrorHanlder(title, message);
+      }
     }
   };
 

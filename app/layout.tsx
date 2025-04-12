@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import "app/globals.css";
 import Providers from "store/redux-toolkit/Providers";
-import { ErrorProvider } from "store/context/errorContext";
+import { AlertProvider } from "store/context/alertContext";
 import { AuthProvider } from "store/context/auth/authContext";
 import Header from "app/ui/layout/header/Header";
 import Footer from "app/ui/layout/Footer";
@@ -122,11 +122,11 @@ export default function RootLayout({
         {/* RTK Provider */}
         <Providers>
           <AuthProvider>
-            <ErrorProvider>
+            <AlertProvider>
               <Header />
               {children}
               <Footer />
-            </ErrorProvider>
+            </AlertProvider>
           </AuthProvider>
         </Providers>
       </body>

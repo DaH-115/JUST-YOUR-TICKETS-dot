@@ -17,6 +17,7 @@ export default async function updateReview(
     revalidatePath("/ticket-list");
     revalidatePath("/my-page/my-ticket-list");
   } catch (error) {
-    throw new Error("리뷰 수정을 실패했습니다.");
+    console.error("리뷰 티켓 수정 실패:", error);
+    throw new Error("리뷰 티켓 수정을 실패했습니다.");
   }
 }

@@ -7,7 +7,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { db, isAuth } from "firebase-config";
 import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { useError } from "store/context/errorContext";
+import { useAlert } from "store/context/alertContext";
 import { setCookie } from "app/utils/cookieUtils";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,7 +33,7 @@ type LoginInputs = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const { isShowError } = useError();
+  const { showErrorHanlder } = useAlert();
   const {
     register,
     watch,
@@ -83,14 +83,14 @@ export default function LoginPage() {
 
         // 4. 로그인 성공 후 메인 페이지로 이동
         router.push("/");
-      } catch (error: any) {
+      } catch (error) {
         const { title, message } = firebaseErrorHandler(error);
-        isShowError(title, message);
+        showErrorHanlder(title, message);
       } finally {
         setIsLoading(false);
       }
     },
-    [router, isShowError],
+    [router, showErrorHanlder],
   );
 
   return (
