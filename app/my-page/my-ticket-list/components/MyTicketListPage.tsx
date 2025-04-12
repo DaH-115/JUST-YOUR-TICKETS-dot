@@ -2,9 +2,8 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Review } from "api/reviews/fetchUserReviews";
+import { Review } from "api/reviews/fetchReviews";
 import useReviewSearch from "hooks/useReviewSearch";
-import SideMenu from "app/my-page/components/SideMenu";
 import MyTicketHeader from "app/my-page/my-ticket-list/components/MyTicketPageHeader";
 import MyTicketList from "app/my-page/my-ticket-list/components/MyTicketList";
 
@@ -19,14 +18,12 @@ export default function MyTicketListPage({
 }: MyTicketListPageProps) {
   // 현재 사용자의 리뷰만 필터링
   const myTicketList = userReviews.filter((review) => review.uid === uid);
-
   // 검색 폼 설정
   const { register, watch } = useForm({
     defaultValues: {
       search: "",
     },
   });
-
   // 검색 기능 설정
   const { filteredUserReviews, searchReviewsHandler } =
     useReviewSearch(myTicketList);
@@ -43,7 +40,6 @@ export default function MyTicketListPage({
 
   return (
     <div className="flex w-full flex-col p-8 pb-16 pt-4 lg:flex-row">
-      <SideMenu />
       <main className="flex w-full flex-col">
         <MyTicketHeader
           ticketCount={filteredUserReviews.length}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Review } from "api/reviews/fetchUserReviews";
+import { Review } from "api/reviews/fetchReviews";
 import ReviewCard from "app/home/components/reviews/ReviewCard";
 import { FaArrowRight } from "react-icons/fa";
 
@@ -10,7 +10,7 @@ interface LatestReviewsProps {
 export default function LatestReviews({ reviews }: LatestReviewsProps) {
   return (
     <section className="mt-16">
-      <h2 className="mb-8 flex items-center px-8 text-2xl font-bold text-accent-300 md:text-4xl">
+      <h2 className="mb-8 flex items-center text-2xl font-bold text-accent-300 md:text-4xl">
         Latest Reviews
         <Link
           href="/ticket-list"

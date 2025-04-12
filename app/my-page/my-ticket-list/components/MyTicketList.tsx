@@ -1,4 +1,4 @@
-import { Review } from "api/reviews/fetchUserReviews";
+import { Review } from "api/reviews/fetchReviews";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 
 interface MyTicketListProps {

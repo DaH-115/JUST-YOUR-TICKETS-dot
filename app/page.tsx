@@ -4,7 +4,7 @@ import { fetchMovieCredits } from "api/fetchMovieCredits";
 import { fetchMovieDetails } from "api/fetchMovieDetails";
 import { fetchVideosMovies } from "api/fetchVideosMovies";
 import { fetchTrendingMovies } from "api/fetchTrendingMovies";
-import fetchReviews from "api/reviews/fetchUserReviews";
+import fetchReviews from "api/reviews/fetchReviews";
 import HomePage from "app/home/home-page";
 import { notFound } from "next/navigation";
 

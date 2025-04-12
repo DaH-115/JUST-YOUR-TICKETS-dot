@@ -95,84 +95,90 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-10 flex w-full items-center justify-center p-8 pb-0 text-xs md:px-8 md:pt-8 ${
+      className={`relative z-10 flex w-full items-center justify-between p-8 pb-0 text-xs md:px-8 md:pt-8 ${
         isSideMenuOpen ? "pointer-events-none" : ""
       }`}
     >
-      <div
-        className={`flex w-full items-center justify-between rounded-full border-2 border-gray-200 bg-white md:w-auto md:justify-center md:px-4 md:py-3 ${
-          isSideMenuOpen ? "pointer-events-auto" : ""
-        }`}
-      >
-        {/* MENU */}
-        <nav className="hidden md:flex">
-          <ul className="flex items-center justify-center gap-3">
-            <li className="group">
-              <Link
-                href="/"
-                className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
-              >
-                Home
-              </Link>
-            </li>
-            <li className="group relative">
-              <Link
-                href="/search"
-                className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
-              >
-                Search
-              </Link>
-            </li>
-            <li className="group relative">
-              <Link
-                href="/ticket-list"
-                className="group relative rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
-              >
-                Ticket List
-                {newReviewAlertState && (
-                  <span className="absolute right-[0.1rem] top-1 flex h-3 w-3">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
-                  </span>
-                )}
-              </Link>
-            </li>
-          </ul>
-        </nav>
-        {/* MOBILE/ HAMBURGER MENU */}
+      {/* LOGO */}
+      <h1 className="mr-4 text-4xl font-bold text-white">Just Movie Tickets</h1>
+      <div className="flex">
+        {/* NAVIGATION */}
         <div
-          onClick={toggleSideMenu}
-          className="flex w-full justify-end md:hidden"
+          className={`flex w-full items-center justify-between rounded-full border-2 border-gray-200 bg-white md:w-auto md:justify-center md:px-4 md:py-3 ${
+            isSideMenuOpen ? "pointer-events-auto" : ""
+          }`}
         >
-          <button
-            className="rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200"
-            aria-label="메뉴 열기"
+          {/* MENU */}
+          <nav className="hidden md:flex">
+            <ul className="flex items-center justify-center gap-3">
+              <li className="group">
+                <Link
+                  href="/"
+                  className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+                >
+                  Home
+                </Link>
+              </li>
+              <li className="group relative">
+                <Link
+                  href="/search"
+                  className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+                >
+                  Search
+                </Link>
+              </li>
+              <li className="group relative">
+                <Link
+                  href="/ticket-list"
+                  className="group relative rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+                >
+                  Ticket List
+                  {newReviewAlertState && (
+                    <span className="absolute right-[0.1rem] top-1 flex h-3 w-3">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
+                    </span>
+                  )}
+                </Link>
+              </li>
+            </ul>
+          </nav>
+          {/* MOBILE/ HAMBURGER MENU */}
+          <div
+            onClick={toggleSideMenu}
+            className="flex w-full justify-end md:hidden"
           >
-            <IoIosMenu size={28} aria-hidden />
-          </button>
-        </div>
+            <button
+              className="rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200"
+              aria-label="메뉴 열기"
+            >
+              <IoIosMenu size={28} aria-hidden />
+            </button>
+          </div>
 
-        {/* PROFILE MENU */}
-        <div className="hidden md:flex">
-          {userDisplayName ? (
-            <HeaderDropDownMenu
-              dropdownRef={dropdownRef}
-              userDisplayName={userDisplayName}
-              isDropdownOpen={isDropdownOpen}
-              dropDownHandler={dropDownHandler}
-              logoutHandler={logoutHandler}
-            />
-          ) : (
-            <Link href="/login">
-              <button type="button" className="font-bold">
-                로그인
-              </button>
-            </Link>
-          )}
+          {/* PROFILE MENU */}
+          <div className="hidden md:flex">
+            {userDisplayName ? (
+              <HeaderDropDownMenu
+                dropdownRef={dropdownRef}
+                userDisplayName={userDisplayName}
+                isDropdownOpen={isDropdownOpen}
+                dropDownHandler={dropDownHandler}
+                logoutHandler={logoutHandler}
+              />
+            ) : (
+              <Link href="/login">
+                <button type="button" className="font-bold">
+                  로그인
+                </button>
+              </Link>
+            )}
+          </div>
         </div>
+        {/* SEARCH BAR */}
+        <HeaderSearchBar />
       </div>
-      {/* SEARCH BAR */}
-      <HeaderSearchBar />
+
       {/* MOBILE SIDE MENU */}
       <HeaderSideMenu
         newReviewAlertState={newReviewAlertState}

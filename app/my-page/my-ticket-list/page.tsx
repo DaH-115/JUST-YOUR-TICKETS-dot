@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import MyTicktListPage from "app/my-page/my-ticket-list/components/MyTicketListPage";
-import fetchUserReviews from "api/reviews/fetchUserReviews";
+import fetchUserReviews from "api/reviews/fetchReviews";
 
 interface MyTicketListParams {
   searchParams: {

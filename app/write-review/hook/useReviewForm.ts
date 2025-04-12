@@ -38,6 +38,7 @@ export const useReviewForm = (
           reviewTitle,
           reviewContent,
           createdAt: serverTimestamp(),
+          likeCount: 0,
         });
 
         dispatch(addNewReviewAlertHandler());

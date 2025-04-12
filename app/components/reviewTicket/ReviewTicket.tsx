@@ -1,7 +1,9 @@
+"use client";
+
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import { IoStar } from "react-icons/io5";
-import { Review } from "api/reviews/fetchUserReviews";
+import { Review } from "api/reviews/fetchReviews";
 import ReviewDetailsModal from "app/components/reviewTicket/ReviewDetailsModal";
 import { deleteReview } from "app/actions/deleteReview";
 import MoviePoster from "app/components/MoviePoster";
@@ -19,12 +21,15 @@ export default function ReviewTicket({ reviews }: { reviews: Review[] }) {
     setIsModalOpen(false);
   }, []);
 
-  const onReviewDeleteHanlder = useCallback((id: string) => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      deleteReview(id);
-      closeModalHandler();
-    }
-  }, []);
+  const onReviewDeleteHanlder = useCallback(
+    (id: string) => {
+      if (window.confirm("정말 삭제하시겠습니까?")) {
+        deleteReview(id);
+        closeModalHandler();
+      }
+    },
+    [closeModalHandler],
+  );
 
   return (
     <div className="grid grid-cols-3 gap-2 lg:grid-cols-7">

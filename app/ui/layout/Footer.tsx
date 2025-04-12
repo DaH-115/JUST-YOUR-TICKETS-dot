@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 
 export default function Footer() {
@@ -44,7 +43,7 @@ export default function Footer() {
                 href={`/my-page/my-ticket-list?uid=${userUid}`}
                 className="block p-1"
               >
-                MY TICKET LIST
+                My Ticket List
               </Link>
             </li>
           </ul>

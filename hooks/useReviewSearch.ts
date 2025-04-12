@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import debounce from "lodash/debounce";
-import { Review } from "api/reviews/fetchUserReviews";
+import { Review } from "api/reviews/fetchReviews";
 
 type SearchField = "review" | "reviewTitle" | "movieTitle";
 

@@ -7,7 +7,7 @@ import BackGround from "app/ui/layout/BackGround";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import Modal from "app/ui/Modal";
 import { MovieDetails } from "api/fetchMovieDetails";
-import { Review } from "api/reviews/fetchUserReviews";
+import { Review } from "api/reviews/fetchReviews";
 import ReviewFormHeader from "app/write-review/components/ReviewFormHeader";
 import ReviewFormTitle from "app/write-review/components/ReviewFormTitle";
 import ReviewFormRating from "app/write-review/components/ReviewFormRating";

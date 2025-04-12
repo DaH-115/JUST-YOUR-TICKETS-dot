@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Review } from "api/reviews/fetchUserReviews";
+import { Review } from "api/reviews/fetchReviews";
 import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import useReviewSearch from "hooks/useReviewSearch";
 import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";

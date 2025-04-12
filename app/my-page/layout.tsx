@@ -1,4 +1,5 @@
 import { PrivateRoute } from "store/context/auth/authContext";
+import SideMenu from "app/my-page/components/SideMenu";
 
 export default function MyPageLayout({
   children,
@@ -7,9 +8,10 @@ export default function MyPageLayout({
 }) {
   return (
     <PrivateRoute>
-      <main className="flex min-h-screen px-4 py-8 sm:px-6 lg:px-8">
+      <div className="flex min-h-screen px-4 py-8 sm:px-6 lg:px-8">
+        <SideMenu />
         {children}
-      </main>
+      </div>
     </PrivateRoute>
   );
 }

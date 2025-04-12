@@ -9,8 +9,8 @@ import {
 } from "firebase/firestore";
 
 export interface Review {
+  number?: number;
   id: string;
-  number: number;
   uid: string;
   userName: string;
   movieId: string;
@@ -21,6 +21,7 @@ export interface Review {
   reviewTitle: string;
   reviewContent: string;
   createdAt: string;
+  likeCount: number;
 }
 
 interface FirestoreTimestamp {
@@ -78,6 +79,7 @@ export default async function fetchReviews(
       reviewTitle: review.reviewTitle,
       reviewContent: review.reviewContent,
       createdAt: convertTimestampToString(review.createdAt),
+      likeCount: review.likeCount,
     } as Review;
   });
 

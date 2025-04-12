@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 export default async function MyPage() {
   return (
     <div className="flex w-full p-8">
-      <SideMenu />
       <ProfileForm />
     </div>
   );

@@ -1,5 +1,5 @@
 import { MovieList } from "api/fetchNowPlayingMovies";
-import { Review } from "api/reviews/fetchUserReviews";
+import { Review } from "api/reviews/fetchReviews";
 import BackGround from "app/ui/layout/BackGround";
 import RecommendMovie from "app/home/components/RecommendMovie";
 import NowPlayingList from "app/home/components/NowPlayingList";
@@ -29,9 +29,6 @@ export default function HomePage({
         <BackGround imageUrl={recommendMovie.backdrop_path} />
       )}
       <main className="p-8">
-        <h1 className="mb-4 text-center text-4xl font-bold text-white">
-          Just Movie Tickets
-        </h1>
         <NowPlayingList movieList={movieList} />
         <TrendingMovies trendingMovies={trendingMovies} />
         <RecommendMovie currentMovie={recommendMovie} />

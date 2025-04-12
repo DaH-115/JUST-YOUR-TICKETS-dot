@@ -48,6 +48,28 @@ const SideMenu = React.memo(function SideMenu() {
           MY TICKET LIST
         </div>
       </Link>
+      <Link
+        href={`/my-page/my-ticket-list/liked-ticket-list?uid=${userState?.uid}`}
+        className="w-full"
+      >
+        <div
+          className={getMenuStyle("/my-page/my-ticket-list/liked-ticket-list")}
+        >
+          LIKED TICKET LIST
+        </div>
+      </Link>
+      <Link
+        href={`/my-page/my-ticket-list/bookmarked-ticket-list?uid=${userState?.uid}`}
+        className="w-full"
+      >
+        <div
+          className={getMenuStyle(
+            "/my-page/my-ticket-list/bookmarked-ticket-list",
+          )}
+        >
+          BOOKMARKED TICKET LIST
+        </div>
+      </Link>
     </nav>
   );
 });
