@@ -1,7 +1,11 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { CastMember, CrewMember, MovieCredits } from "api/fetchMovieCredits";
+import {
+  CastMember,
+  CrewMember,
+  MovieCredits,
+} from "api/movies/fetchMovieCredits";
 
 interface MovieDetailsContextType {
   genres: string[];

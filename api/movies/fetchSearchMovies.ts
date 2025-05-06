@@ -1,4 +1,4 @@
-import { MovieList } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/movies/fetchNowPlayingMovies";
 import { fetchGenres } from "api/utils/getGenres";
 
 interface SearchMovieResponse {

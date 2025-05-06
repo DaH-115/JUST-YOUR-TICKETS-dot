@@ -55,7 +55,7 @@ export default function ReviewTicket({ reviews }: { reviews: Review[] }) {
           onReviewDeleted={onReviewDeleteHanlder}
         />
       )}
-      <div className="grid grid-cols-3 gap-2 lg:grid-cols-7">
+      <div className="grid grid-cols-3 gap-2 lg:grid-cols-5">
         {reviews.map((post) => (
           <div
             key={post.id}

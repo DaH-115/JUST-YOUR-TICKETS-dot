@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import MyTicketListPage from "app/my-page/my-ticket-list/components/MyTicketListPage";
-import fetchUserReviews from "api/reviews/fetchReviews";
+
+import { fetchReviewsPaginated } from "api/reviews/fetchReviewsPaginated";
 
 export const metadata: Metadata = {
   title: "My Tickets",
@@ -15,7 +16,19 @@ export default async function Page({
   };
 }) {
   const uid = searchParams.uid;
-  const userReviews = await fetchUserReviews({ uid });
+  const page = 1;
+  const PAGE_SIZE = 10;
+  const { reviews, totalPages } = await fetchReviewsPaginated({
+    uid,
+    page,
+    pageSize: PAGE_SIZE,
+  });
 
-  return <MyTicketListPage userReviews={userReviews} />;
+  return (
+    <MyTicketListPage
+      userReviews={reviews}
+      currentPage={page}
+      totalPages={totalPages}
+    />
+  );
 }

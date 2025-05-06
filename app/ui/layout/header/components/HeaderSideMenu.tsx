@@ -24,7 +24,7 @@ export default function HeaderSideMenu({
   onClose,
 }: HeaderSideMenuProps) {
   const sideMenuRef = useRef<HTMLDivElement>(null);
-  const userUid = useAppSelector((state) => state.user.user?.uid);
+  const userUid = useAppSelector((state) => state.userData.auth?.uid);
   const pathname = usePathname();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 

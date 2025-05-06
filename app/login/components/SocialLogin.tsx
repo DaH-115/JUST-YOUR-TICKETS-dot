@@ -1,16 +1,16 @@
-import { db, isAuth } from "firebase-config";
-import {
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { useAlert } from "store/context/alertContext";
-import { firebaseErrorHandler } from "app/utils/firebaseError";
-import { useCallback, useState } from "react";
-import SocialLoginBtn from "app/login/components/SocialLoginBtn";
+import {
+  browserLocalPersistence,
+  browserSessionPersistence,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  setPersistence,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
 import {
   doc,
   getDoc,
@@ -18,8 +18,11 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import generateDisplayName from "app/login/utils/generateDisplayName";
-import { setCookie } from "app/utils/cookieUtils";
+import { db, isAuth } from "firebase-config";
+import { useAlert } from "store/context/alertContext";
+import { firebaseErrorHandler } from "app/utils/firebaseError";
+import SocialLoginBtn from "app/login/components/SocialLoginBtn";
+import generateUniqueNickname from "app/login/utils/generateUniqueNickname";
 
 export type SocialProvider = "google" | "github";
 
@@ -33,50 +36,43 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
     async (provider: SocialProvider) => {
       setIsLoadingProvider(provider);
       try {
-        // 1. 소셜 로그인
+        // 1. Persistence 설정
+        await setPersistence(
+          isAuth,
+          rememberMe ? browserLocalPersistence : browserSessionPersistence,
+        );
+
+        // 2. 소셜 로그인
         const authProvider =
           provider === "google"
             ? new GoogleAuthProvider()
             : new GithubAuthProvider();
         const { user } = await signInWithPopup(isAuth, authProvider);
 
-        // 2. 토큰 생성
-        const token = await user.getIdToken();
-        setCookie(token, rememberMe);
-
-        if (rememberMe) {
-          localStorage.setItem("rememberMe", "true");
-        } else {
-          localStorage.removeItem("rememberMe");
-        }
-
-        // 3. Firestore 사용자 정보 확인
         const userRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userRef);
+        const snapshot = await getDoc(userRef);
 
-        if (!userDoc.exists()) {
-          // 3-1. 첫 로그인일 경우 Firestore에 사용자 정보 생성
-          const generatedDisplayName = await generateDisplayName();
+        if (!snapshot.exists()) {
+          // 3. 랜덤 닉네임 생성 + 중복 검사
+          const uniqueNick = await generateUniqueNickname(user.uid);
 
+          // 4. Auth 프로필 업데이트
+          await updateProfile(user, { displayName: uniqueNick });
+
+          // 5. users 컬렉션에 프로필 저장
           await setDoc(userRef, {
-            name: user.displayName,
-            displayName: user.displayName || generatedDisplayName,
-            email: user.email,
-            profileImage: user.photoURL,
-            provider,
+            provider: provider,
+            biography: "Make a ticket for your own movie review.",
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
-            biography: "Make a ticket for your own movie review.",
-            roll: "user",
           });
         } else {
-          // 3-2. 기존 사용자의 경우 최종 접속 시간만 업데이트
-          await updateDoc(userRef, {
-            updatedAt: serverTimestamp(),
-          });
+          // 기존 유저: updatedAt만 갱신
+          await updateDoc(userRef, { updatedAt: serverTimestamp() });
         }
 
-        router.push("/");
+        // 6. 로그인 성공 후 리다이렉트
+        router.replace("/");
       } catch (error: any) {
         if (error.code === "auth/popup-closed-by-user") return;
         const { title, message } = firebaseErrorHandler(error);
@@ -95,7 +91,7 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
         <span className="mx-4 text-xs text-gray-500">OR</span>
         <div className="flex-grow border-t border-gray-400"></div>
       </div>
-      <div className="flex items-center justify-center">
+      <div className="mb-4 flex items-center justify-center">
         <div className="flex space-x-2">
           <SocialLoginBtn
             provider="google"

@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { signOut } from "firebase/auth";
 import { isAuth } from "firebase-config";
 import { useRouter } from "next/navigation";
-import { clearUserState } from "store/redux-toolkit/slice/userSlice";
+import { clearUser } from "store/redux-toolkit/slice/userSlice";
 import HeaderSearchBar from "app/ui/layout/header/components/HeaderSearchBar";
 import { IoIosMenu } from "react-icons/io";
 import HeaderSideMenu from "app/ui/layout/header/components/HeaderSideMenu";
@@ -20,8 +20,9 @@ export default function Header() {
     (state) => state.newReviewAlert.newReviewAlertState,
   );
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const users = useAppSelector((state: RootState) => state.user.user);
-  const userDisplayName = users?.displayName;
+  const userDisplayName = useAppSelector(
+    (state: RootState) => state.userData.auth?.displayName,
+  );
   const dispatch = useAppDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
@@ -36,7 +37,7 @@ export default function Header() {
       localStorage.removeItem("rememberMe");
 
       // 3. Redux 상태 초기화
-      dispatch(clearUserState());
+      dispatch(clearUser());
 
       // 4. 로그인 페이지로 이동
       router.push("/login");
@@ -95,7 +96,7 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-10 flex w-full items-center justify-between p-8 pb-0 text-xs md:px-8 md:pt-8 ${
+      className={`relative z-10 flex w-full items-center justify-between p-8 text-xs md:px-8 md:pt-8 ${
         isSideMenuOpen ? "pointer-events-none" : ""
       }`}
     >
@@ -168,7 +169,7 @@ export default function Header() {
               />
             ) : (
               <Link href="/login">
-                <button type="button" className="font-bold">
+                <button type="button" className="mx-3 font-bold">
                   로그인
                 </button>
               </Link>

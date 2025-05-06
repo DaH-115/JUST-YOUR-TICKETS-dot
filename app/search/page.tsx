@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import SearchPage from "app/search/components/SearchPage";
-import { fetchNowPlayingMovies } from "api/fetchNowPlayingMovies";
+import { fetchNowPlayingMovies } from "api/movies/fetchNowPlayingMovies";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {

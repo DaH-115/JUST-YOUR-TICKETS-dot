@@ -1,4 +1,4 @@
-import { MovieList } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/movies/fetchNowPlayingMovies";
 import { Review } from "api/reviews/fetchReviews";
 import BackGround from "app/ui/layout/BackGround";
 import RecommendMovie from "app/home/components/RecommendMovie";

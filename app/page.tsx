@@ -1,28 +1,35 @@
-import { fetchNowPlayingMovies } from "api/fetchNowPlayingMovies";
-import { MovieDetailsProvider } from "store/context/movieDetailsContext";
-import { fetchMovieCredits } from "api/fetchMovieCredits";
-import { fetchMovieDetails } from "api/fetchMovieDetails";
-import { fetchVideosMovies } from "api/fetchVideosMovies";
-import { fetchTrendingMovies } from "api/fetchTrendingMovies";
-import fetchReviews from "api/reviews/fetchReviews";
-import HomePage from "app/home/home-page";
 import { notFound } from "next/navigation";
 
+import { fetchNowPlayingMovies } from "api/movies/fetchNowPlayingMovies";
+import { fetchMovieCredits } from "api/movies/fetchMovieCredits";
+import { fetchMovieDetails } from "api/movies/fetchMovieDetails";
+import { fetchVideosMovies } from "api/movies/fetchVideosMovies";
+import { fetchTrendingMovies } from "api/movies/fetchTrendingMovies";
+import { fetchReviewsPaginated } from "api/reviews/fetchReviewsPaginated";
+
+import { MovieDetailsProvider } from "store/context/movieDetailsContext";
+
+import HomePage from "app/home/home-page";
+
 export default async function Page() {
-  const [nowPlayingMovies, trendingMovies, latestReviews] = await Promise.all([
-    fetchNowPlayingMovies().catch((error) => {
-      console.error(
-        "현재 상영 영화 목록을 불러오는 중 오류가 발생했습니다:",
-        error,
-      );
-      return [];
-    }),
-    fetchTrendingMovies().catch((error) => {
-      console.error("인기 영화 목록을 불러오는 중 오류가 발생했습니다:", error);
-      return [];
-    }),
-    fetchReviews({ limit: 10 }),
-  ]);
+  const [nowPlayingMovies, trendingMovies, { reviews: latestReviews }] =
+    await Promise.all([
+      fetchNowPlayingMovies().catch((error) => {
+        console.error(
+          "현재 상영 영화 목록을 불러오는 중 오류가 발생했습니다:",
+          error,
+        );
+        return [];
+      }),
+      fetchTrendingMovies().catch((error) => {
+        console.error(
+          "인기 영화 목록을 불러오는 중 오류가 발생했습니다:",
+          error,
+        );
+        return [];
+      }),
+      fetchReviewsPaginated({ page: 1, pageSize: 10 }),
+    ]);
 
   if (!nowPlayingMovies?.length) {
     console.error("현재 상영 중인 영화 목록이 비어있습니다.");

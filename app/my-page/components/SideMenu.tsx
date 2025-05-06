@@ -7,7 +7,7 @@ import { useAppSelector } from "store/redux-toolkit/hooks";
 
 export default function SideMenu() {
   const pathname = usePathname();
-  const uid = useAppSelector((state) => state.user.user)?.uid;
+  const uid = useAppSelector((state) => state.userData.auth?.uid);
 
   const getMenuStyle = (targetPath: string) =>
     `text-lg w-full text-center lg:text-start md:text-2xl lg:text-4xl ${
@@ -17,7 +17,7 @@ export default function SideMenu() {
     } transition-all duration-300 ease-in-out`;
 
   return (
-    <aside className="mr-14 hidden space-y-2 lg:block">
+    <aside className="hidden w-1/2 space-y-2 pr-0 lg:block">
       <div className={getMenuStyle("/my-page")}>
         <Link href="/my-page">MY PROFILE</Link>
       </div>

@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { useAlert } from "store/context/alertContext";
-import { MovieDetails } from "api/fetchMovieDetails";
+import { MovieDetails } from "api/movies/fetchMovieDetails";
 import updateReview from "app/actions/updateReview";
 import { ReviewFormValues } from "app/write-review/components/ReviewForm";
 
@@ -17,19 +17,19 @@ export const useReviewForm = (
 ) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const serializedUser = useAppSelector((state) => state.user.user);
+  const userState = useAppSelector((state) => state.userData.auth);
   const { showErrorHanlder, showSuccessHanlder } = useAlert();
 
   const onSubmitHandler = async (data: ReviewFormValues) => {
-    if (!serializedUser) return;
+    if (!userState) return;
 
     try {
       const { reviewTitle, reviewContent, rating } = data;
 
       if (mode === "create") {
         await addDoc(collection(db, "movie-reviews"), {
-          uid: serializedUser.uid,
-          userName: serializedUser.displayName,
+          uid: userState.uid,
+          userName: userState.displayName,
           movieId,
           movieTitle: movieInfo.title,
           moviePosterPath: movieInfo.poster_path,

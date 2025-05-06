@@ -8,7 +8,7 @@ export default function MyPageLayout({
 }) {
   return (
     <PrivateRoute>
-      <div className="flex min-h-screen px-4 py-8 sm:px-6 lg:px-8">
+      <div className="flex p-8">
         <SideMenu />
         {children}
       </div>

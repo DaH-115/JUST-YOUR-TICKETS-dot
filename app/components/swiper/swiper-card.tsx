@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import Link from "next/link";
-import { MovieList } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/movies/fetchNowPlayingMovies";
 import getMovieTitle from "app/utils/getMovieTitle";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";

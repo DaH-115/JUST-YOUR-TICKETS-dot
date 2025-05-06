@@ -34,7 +34,7 @@ export default function ReviewDetailsModal({
   const [isLiking, setIsLiking] = useState(false);
   const [isBookmarking, setIsBookmarking] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
-  const userState = useAppSelector((state) => state.user.user);
+  const userState = useAppSelector((state) => state.userData.auth);
 
   useEffect(() => {
     if (!userState?.uid) return;

@@ -1,5 +1,5 @@
-import { MovieDetails } from "api/fetchMovieDetails";
-import { MovieCredits } from "api/fetchMovieCredits";
+import { MovieDetails } from "api/movies/fetchMovieDetails";
+import { MovieCredits } from "api/movies/fetchMovieCredits";
 import formatMovieDate from "app/utils/formatMovieDate";
 import getMovieTitle from "app/utils/getMovieTitle";
 import convertRuntime from "app/movie-details/utils/convertRuntime";

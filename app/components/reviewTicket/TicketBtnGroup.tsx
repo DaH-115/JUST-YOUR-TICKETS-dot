@@ -17,7 +17,7 @@ const TicketBtnGroup = React.memo(function ReviewBtnGroup({
   authorId,
   onReviewDeleted,
 }: TicketBtnGroupProps) {
-  const userState = useAppSelector((state) => state.user.user);
+  const userState = useAppSelector((state) => state.userData.auth);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   // 현재 사용자가 리뷰 작성자인지 확인

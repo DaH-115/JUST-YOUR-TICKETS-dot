@@ -3,11 +3,7 @@ import { Review } from "api/reviews/fetchReviews";
 import ReviewCard from "app/home/components/reviews/ReviewCard";
 import { FaArrowRight } from "react-icons/fa";
 
-interface LatestReviewsProps {
-  reviews: Review[];
-}
-
-export default function LatestReviews({ reviews }: LatestReviewsProps) {
+export default function LatestReviews({ reviews }: { reviews: Review[] }) {
   return (
     <section className="mt-16">
       <h2 className="mb-8 flex items-center text-2xl font-bold text-accent-300 md:text-4xl">

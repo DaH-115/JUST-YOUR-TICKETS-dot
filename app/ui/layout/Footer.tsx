@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 
 export default function Footer() {
-  const userUid = useAppSelector((state) => state.user.user?.uid);
+  const userUid = useAppSelector((state) => state.userData.auth?.uid);
 
   const borderStyle =
     "border-b-2 border-transparent transition duration-300 hover:border-white";
@@ -59,7 +59,7 @@ export default function Footer() {
             href="https://github.com/DaH-115/JUST-MOVIE-TICKETS-dot"
             className={`block p-1 ${borderStyle}`}
           >
-            Github
+            GitHub
           </Link>
         </div>
       </div>

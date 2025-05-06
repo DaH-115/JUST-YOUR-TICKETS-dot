@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { MovieList } from "api/fetchNowPlayingMovies";
+import { MovieList } from "api/movies/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
 import SwiperCard from "app/components/swiper/swiper-card";
 import SearchResultList from "app/search/components/SearchResultList";
@@ -24,8 +24,6 @@ export default function SearchPage({
   const { register, handleSubmit, watch } = useForm<SearchSchema>({
     resolver: zodResolver(searchSchema),
   });
-
-  const query = watch("query");
 
   const onSubmit = async ({ query }: { query: string }) => {
     setCleandeQuery(query.trim().replace(/\s+/g, " "));

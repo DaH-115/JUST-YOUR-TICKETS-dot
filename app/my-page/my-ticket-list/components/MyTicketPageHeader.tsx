@@ -24,7 +24,7 @@ export default function MyTicketHeader({
   }, [searchTerm, searchReviewsHandler]);
 
   return (
-    <header className="mb-2 flex items-center justify-between">
+    <header className="mb-4 flex items-center justify-between">
       <div>
         <h1 className="text-3xl font-bold text-accent-300">My Ticket List</h1>
         <p className="text-white">내가 작성한 티켓 목록입니다</p>

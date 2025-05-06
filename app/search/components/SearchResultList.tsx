@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import fetchSearchMovies from "api/fetchSearchMovies";
-import { MovieList } from "api/fetchNowPlayingMovies";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import fetchSearchMovies from "api/movies/fetchSearchMovies";
+import { MovieList } from "api/movies/fetchNowPlayingMovies";
 import Loading from "app/loading";
 import SwiperCard from "app/components/swiper/swiper-card";
+import Pagination from "app/components/Pagination";
 
 export default function SearchResultList({
   searchQuery,
@@ -82,69 +82,12 @@ export default function SearchResultList({
           <SwiperCard key={movie.id} movie={movie} idx={idx} />
         ))}
       </div>
-
-      {/* PAGE NUMBER */}
-      <div className="flex items-center justify-center p-8 pb-0 text-white">
-        <div className="mr-4 flex justify-center">
-          {currentPage > 1 && (
-            <button
-              onClick={() => pageChangeHandler(1)}
-              className="rounded-full border border-white px-3 py-1 text-sm transition-colors duration-300 hover:bg-white hover:text-black"
-            >
-              처음
-            </button>
-          )}
-
-          {currentPage > 1 && (
-            <button
-              onClick={() => pageChangeHandler(currentPage - 1)}
-              className="px-3 text-sm"
-            >
-              <FaArrowLeft />
-            </button>
-          )}
-        </div>
-
-        <div className="space-x-2">
-          {[...Array(totalPages)].map((_, index) => {
-            const pageNumber = index + 1;
-
-            return (
-              <button
-                key={index}
-                onClick={() => pageChangeHandler(pageNumber)}
-                className={`rounded-full px-3 py-1 text-sm transition-colors duration-300 ${
-                  pageNumber === currentPage
-                    ? "bg-accent-300 text-black"
-                    : "border border-white hover:bg-white hover:text-black"
-                }`}
-              >
-                {pageNumber}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="ml-4 flex justify-center">
-          {currentPage < totalPages && (
-            <button
-              onClick={() => pageChangeHandler(currentPage + 1)}
-              className="px-3 text-sm"
-            >
-              <FaArrowRight />
-            </button>
-          )}
-
-          {currentPage < totalPages && (
-            <button
-              onClick={() => pageChangeHandler(totalPages)}
-              className="rounded-full border border-white px-3 py-1 text-sm transition-colors duration-300 hover:bg-white hover:text-black"
-            >
-              마지막
-            </button>
-          )}
-        </div>
-      </div>
+      {/* 페이지네이션 */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={pageChangeHandler}
+      />
     </div>
   );
 }

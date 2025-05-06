@@ -4,11 +4,14 @@ import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { db, isAuth } from "firebase-config";
-import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { isAuth } from "firebase-config";
+import {
+  browserLocalPersistence,
+  browserSessionPersistence,
+  setPersistence,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { useAlert } from "store/context/alertContext";
-import { setCookie } from "app/utils/cookieUtils";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -45,88 +48,63 @@ export default function LoginPage() {
   });
   const isRememberMe = watch("rememberMe");
 
-  const onSubmit: SubmitHandler<LoginInputs> = useCallback(
-    async (data) => {
-      setIsLoading(true);
+  const onSubmit: SubmitHandler<LoginInputs> = useCallback(async (data) => {
+    setIsLoading(true);
 
-      try {
-        // 1. 이메일/비밀번호로 Firebase 로그인
-        const userCredential = await signInWithEmailAndPassword(
-          isAuth,
-          data.email,
-          data.password,
-        );
-
-        // 2. 사용자 이름이 없다면 Firestore에서 가져와서 설정
-        if (!userCredential.user.displayName) {
-          const userDoc = await getDoc(
-            doc(db, "users", userCredential.user.uid),
-          );
-          if (userDoc.exists()) {
-            const { displayName } = userDoc.data();
-            await updateProfile(userCredential.user, {
-              displayName,
-            });
-          }
-        }
-
-        // 3. 로그인 성공 후 토큰을 받아와서 저장
-        const token = await userCredential.user.getIdToken();
-        setCookie(token, data.rememberMe);
-
-        // Remember Me 선택 여부를 localStorage에 저장
-        if (data.rememberMe) {
-          localStorage.setItem("rememberMe", "true");
-        } else {
-          localStorage.removeItem("rememberMe");
-        }
-
-        // 4. 로그인 성공 후 메인 페이지로 이동
-        router.push("/");
-      } catch (error) {
-        const { title, message } = firebaseErrorHandler(error);
-        showErrorHanlder(title, message);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [router, showErrorHanlder],
-  );
+    try {
+      // 1. Persistence 설정 (로컬 스토리지 또는 세션 스토리지)
+      await setPersistence(
+        isAuth,
+        data.rememberMe ? browserLocalPersistence : browserSessionPersistence,
+      );
+      // 2. 로그인 시도
+      await signInWithEmailAndPassword(isAuth, data.email, data.password);
+      // 3. 로그인 성공시 리다이렉트
+      router.push("/");
+    } catch (error) {
+      const { title, message } = firebaseErrorHandler(error);
+      showErrorHanlder(title, message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   return (
-    <div className="w-full border-t-4 border-accent-300 bg-white pb-8 pt-4 md:mt-4 md:flex md:justify-center md:py-10">
-      <section className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:border-gray-200 md:pl-0 md:pt-0 md:text-8xl">
+    <div className="w-full border-t-4 border-accent-300 bg-white pb-8 pt-4 md:flex md:justify-center md:py-8">
+      <section className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:border-gray-200 md:pl-0 md:pt-0 md:text-4xl">
         <h1>LOG IN</h1>
       </section>
       <main className="md:w-2/3">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mx-auto space-y-6 px-8 md:mt-16 md:w-2/3 md:px-0"
+          className="mx-auto px-8 md:mt-16 md:w-2/3 md:px-0"
         >
           <InputField
             id="email"
             label="이메일"
             type="email"
-            placeholder="이메일을 입력해 주세요"
+            placeholder="example@domain.com"
             register={register}
             error={errors.email?.message}
             touched={touchedFields.email}
             disabled={isLoading}
+            autoComplete={"email"}
           />
 
           <InputField
             id="password"
             label="비밀번호"
             type="password"
-            placeholder="비밀번호를 입력해 주세요"
+            placeholder=""
             register={register}
             error={errors.password?.message}
             touched={touchedFields.password}
             disabled={isLoading}
+            autoComplete={"password"}
           />
 
           {/* Remember Me */}
-          <div className="flex items-center gap-2">
+          <div className="my-4 flex items-center gap-2">
             <input
               type="checkbox"
               id="rememberMe"

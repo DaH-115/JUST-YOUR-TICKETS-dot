@@ -1,4 +1,4 @@
-import { MovieBaseType } from "api/fetchNowPlayingMovies";
+import { MovieBaseType } from "api/movies/fetchNowPlayingMovies";
 
 export interface MovieDetails extends MovieBaseType {
   genres: { id: number; name: string }[];
