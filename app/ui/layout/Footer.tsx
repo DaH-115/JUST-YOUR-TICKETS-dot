@@ -7,7 +7,7 @@ export default function Footer() {
   const userUid = useAppSelector((state) => state.userData.auth?.uid);
 
   const borderStyle =
-    "border-b-2 border-transparent transition duration-300 hover:border-white";
+    "border-b border-transparent transition duration-300 hover:border-white";
 
   return (
     <footer className="w-full bg-primary-700 p-8 pt-6 text-xs text-white md:p-8">
