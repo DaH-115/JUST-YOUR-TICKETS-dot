@@ -1,52 +1,55 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import debounce from "lodash/debounce";
-import { UserReview } from "api/movie-reviews/fetchUserReviews";
+import { Review } from "api/reviews/fetchReviews";
 
-type SearchField = "review" | "reviewTitle" | "movieTitle";
+type SearchField = "reviewContent" | "reviewTitle" | "movieTitle";
 
-export default function useReviewSearch(initialReviews: UserReview[]) {
-  const [filteredUserReviews, setFilteredUserReviews] =
-    useState<UserReview[]>(initialReviews);
+export default function useReviewSearch(initialReviews: Review[]) {
+  const [filteredReviews, setFilteredReviews] =
+    useState<Review[]>(initialReviews);
 
-  const searchReviewsHandler = useCallback(
-    debounce((term: string) => {
-      // 검색어가 비어있으면 모든 리뷰를 보여줍니다
-      if (!term.trim()) {
-        setFilteredUserReviews(initialReviews);
-        return;
-      }
+  // initialReviews 변경 시 원본으로 리셋
+  useEffect(() => {
+    setFilteredReviews(initialReviews);
+  }, [initialReviews]);
 
-      const normalizedTerm = term.replace(/\s+/g, "").toLowerCase();
-      const searchFields: SearchField[] = [
-        "review",
-        "reviewTitle",
-        "movieTitle",
-      ];
+  // 검색 로직만 분리한 함수
+  const doSearch = (term: string) => {
+    if (!term.trim()) {
+      setFilteredReviews(initialReviews);
+      return;
+    }
 
-      const results = initialReviews.filter((review) =>
-        searchFields.some((field) => {
-          const value = review[field];
-          if (!value) return false;
+    const normalizedTerm = term.replace(/\s+/g, "").toLowerCase();
+    const fields: SearchField[] = [
+      "reviewContent",
+      "reviewTitle",
+      "movieTitle",
+    ];
 
-          const normalizedValue = value.replace(/\s+/g, "").toLowerCase();
-          return normalizedValue.includes(normalizedTerm);
-        }),
-      );
+    const results = initialReviews.filter((r) =>
+      fields.some((f) => {
+        const v = r[f];
+        if (!v) return false;
+        return v
+          .toString()
+          .replace(/\s+/g, "")
+          .toLowerCase()
+          .includes(normalizedTerm);
+      }),
+    );
 
-      setFilteredUserReviews(results);
-    }, 300),
+    setFilteredReviews(results);
+  };
+
+  // debounce는 한 번만 생성
+  const searchReviewsHandler = useMemo(
+    () => debounce(doSearch, 300),
     [initialReviews],
   );
 
-  // debounce 타이머를 정리
-  useEffect(() => {
-    return () => {
-      searchReviewsHandler.cancel();
-    };
-  }, [searchReviewsHandler]);
+  // 언마운트 시 타이머 정리
+  useEffect(() => () => searchReviewsHandler.cancel(), [searchReviewsHandler]);
 
-  return {
-    filteredUserReviews,
-    searchReviewsHandler,
-  };
+  return { filteredReviews, searchReviewsHandler };
 }

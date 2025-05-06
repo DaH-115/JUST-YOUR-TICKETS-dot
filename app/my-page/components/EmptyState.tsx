@@ -1,0 +1,7 @@
+export default function EmptyState({ message }: { message: string }) {
+  return (
+    <div className="flex min-h-[50vh] w-full items-center justify-center">
+      <p className="text-center text-gray-500">{message}</p>
+    </div>
+  );
+}

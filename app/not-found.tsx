@@ -9,7 +9,7 @@ export default function NotFound() {
       <p className="mb-8 text-gray-600">잠시 후 다시 시도해 주세요.</p>
       <Link
         href="/"
-        className="bg-accent-500 hover:bg-accent-700 rounded-lg px-4 py-2 text-black"
+        className="rounded-lg bg-accent-500 px-4 py-2 text-black hover:bg-accent-700"
       >
         홈으로 돌아가기
       </Link>

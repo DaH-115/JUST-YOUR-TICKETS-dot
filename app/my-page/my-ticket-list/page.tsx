@@ -1,20 +1,34 @@
 import { Metadata } from "next";
-import MyTicktListPage from "app/my-page/my-ticket-list/my-ticket-list-page";
-import fetchUserReviews from "api/movie-reviews/fetchUserReviews";
+import MyTicketListPage from "app/my-page/my-ticket-list/components/MyTicketListPage";
 
-interface SearchParams {
-  searchParams: {
-    uid: string;
-  };
-}
+import { fetchReviewsPaginated } from "api/reviews/fetchReviewsPaginated";
 
 export const metadata: Metadata = {
   title: "My Tickets",
+  description: "내가 작성한 티켓 목록입니다.",
 };
 
-export default async function Page({ searchParams }: SearchParams) {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: {
+    uid: string;
+  };
+}) {
   const uid = searchParams.uid;
-  const userReviews = await fetchUserReviews(uid);
+  const page = 1;
+  const PAGE_SIZE = 10;
+  const { reviews, totalPages } = await fetchReviewsPaginated({
+    uid,
+    page,
+    pageSize: PAGE_SIZE,
+  });
 
-  return <MyTicktListPage userReviews={userReviews} uid={uid} />;
+  return (
+    <MyTicketListPage
+      userReviews={reviews}
+      currentPage={page}
+      totalPages={totalPages}
+    />
+  );
 }
