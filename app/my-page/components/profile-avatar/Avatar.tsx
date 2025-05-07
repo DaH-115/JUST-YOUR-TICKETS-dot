@@ -14,7 +14,7 @@ export default function Avatar({
   const src = previewSrc
     ? previewSrc
     : photoKey
-      ? `/api/s3/get-image?key=${encodeURIComponent(photoKey)}`
+      ? `/api/s3?key=${encodeURIComponent(photoKey)}`
       : "/images/fallback-avatar.png";
 
   return (

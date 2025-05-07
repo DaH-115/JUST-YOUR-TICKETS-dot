@@ -47,7 +47,7 @@ export default function AvatarUploader({
     setUploading(true);
 
     // 1) Presigned URL 발급
-    const res = await fetch("/api/s3/get-upload-url", {
+    const res = await fetch("/api/s3", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
