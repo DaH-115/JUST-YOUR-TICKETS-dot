@@ -83,11 +83,7 @@ export default function SearchResultList({
         ))}
       </div>
       {/* 페이지네이션 */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={pageChangeHandler}
-      />
+      <Pagination currentPage={currentPage} totalPages={totalPages} />
     </div>
   );
 }

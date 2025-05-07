@@ -2,9 +2,9 @@ import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { updateProfile as updateFirebaseProfile } from "firebase/auth";
 import { db, isAuth } from "firebase-config";
 import { useAppDispatch } from "store/redux-toolkit/hooks";
-import { onUpdateUserDisplayName } from "store/redux-toolkit/slice/userSlice";
+import { updateUserDisplayName } from "store/redux-toolkit/slice/userSlice";
 import { UserDoc } from "app/my-page/hooks/useUserProfile";
-import { ProfileFormData } from "app/my-page/components/ProfileForm";
+import { ProfileFormData } from "app/my-page/components/MyProfileForm";
 
 interface UpdateProfileParams {
   uid: string;
@@ -45,7 +45,7 @@ export function useProfileUpdate() {
         await updateFirebaseProfile(isAuth.currentUser, {
           displayName: data.displayName,
         });
-        dispatch(onUpdateUserDisplayName({ displayName: data.displayName }));
+        dispatch(updateUserDisplayName(data.displayName));
       }
 
       setUserDoc((prev) => ({
