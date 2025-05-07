@@ -10,6 +10,8 @@ import SimilarMovies from "app/movie-details/components/SimilarMovies";
 import AllMovieTrailers from "app/movie-details/components/MovieTrailers";
 import MovieDetailCard from "app/movie-details/components/MovieDetails";
 
+export const runtime = "edge";
+
 export async function generateMetadata({
   params,
 }: {
