@@ -1,23 +1,23 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
+  onPageChange: (newPage: number) => void;
 }
 
 export default function Pagination({
   currentPage,
   totalPages,
+  onPageChange,
 }: PaginationProps) {
-  const router = useRouter();
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const pageChangeHandler = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
-      router.push(`?page=${newPage}`);
+      onPageChange(newPage);
     }
   };
 

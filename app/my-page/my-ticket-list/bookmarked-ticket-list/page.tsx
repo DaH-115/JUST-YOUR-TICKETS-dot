@@ -1,3 +1,7 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { fetchBookmarkedReviewsPaginated } from "api/reviews/fetchBookmarkedReviews";
 import fetchReviewById from "api/reviews/fetchReviewById";
 import { Review } from "api/reviews/fetchReviews";
@@ -5,40 +9,34 @@ import Pagination from "app/components/Pagination";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 import EmptyState from "app/my-page/components/EmptyState";
 
-export const metadata = {
-  title: "Bookmarked Tickets",
-  description: "북마크한 티켓 목록입니다",
-};
+const PAGE_SIZE = 10;
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { uid: string };
-}) {
-  const uid = searchParams.uid;
-  const page = 1;
-  const PAGE_SIZE = 10;
+export default function Page() {
+  const searchParams = useSearchParams();
+  const uid = searchParams.get("uid") || "";
+  const [page, setPage] = useState<number>(1);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!uid) return;
+    setLoading(true);
+    (async () => {
+      const { reviews: bookmarked, totalPages } =
+        await fetchBookmarkedReviewsPaginated(uid, page, PAGE_SIZE);
+      const detailed = await Promise.all(
+        bookmarked.map(({ id }) => fetchReviewById(id)),
+      );
+      setReviews(detailed.filter((r): r is Review => !!r));
+      setTotalPages(totalPages);
+      setLoading(false);
+    })();
+  }, [uid, page]);
 
   if (!uid) {
     return <div>로그인이 필요합니다</div>;
   }
-
-  // 1. 북마크 리스트 가져오기
-  const { reviews: bookmarkedReviews, totalPages } =
-    await fetchBookmarkedReviewsPaginated(uid, page, PAGE_SIZE);
-
-  // 2. 북마크 리스트에 저장된 리뷰 ID로 리뷰 정보 가져오기
-  const detailedReviews = await Promise.all(
-    bookmarkedReviews.map(async ({ id }) => {
-      const review = await fetchReviewById(id);
-      return review ? { ...review } : null;
-    }),
-  );
-
-  // 3. null이 아닌 리뷰만 필터링
-  const fullList = detailedReviews.filter(
-    (review): review is Review => review !== null,
-  );
 
   return (
     <div className="flex w-full flex-col">
@@ -49,17 +47,22 @@ export default async function Page({
           </h1>
           <p className="text-white">북마크한 티켓 목록입니다</p>
         </div>
-        <p className="mb-6 text-white">
-          전체 {fullList.length > 0 ? fullList.length : 0}장
-        </p>
-        {fullList.length > 0 ? (
-          <ReviewTicket reviews={fullList} />
+        <p className="mb-6 text-white">전체 {reviews.length}장</p>
+
+        {loading ? (
+          <p className="text-white">로딩 중…</p>
+        ) : reviews.length > 0 ? (
+          <ReviewTicket reviews={reviews} />
         ) : (
           <EmptyState message="북마크한 티켓이 없습니다" />
         )}
       </main>
-      {/* 페이지네이션 */}
-      <Pagination currentPage={page} totalPages={totalPages} />
+
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 }

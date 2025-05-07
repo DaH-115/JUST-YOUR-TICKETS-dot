@@ -1,30 +1,27 @@
 import { Metadata } from "next";
-import TicketListPage from "app/ticket-list/components/TicketListPage";
-import {
-  fetchReviewsPaginated,
-  PaginatedReviews,
-} from "api/reviews/fetchReviewsPaginated";
+import { fetchReviewsPaginated } from "api/reviews/fetchReviewsPaginated";
+import TicketListPage from "./components/TicketListPage";
 
 export const metadata: Metadata = {
   title: "Ticket List",
   description: "티켓 목록입니다.",
 };
 
-export default async function Page() {
-  const page = 1;
-  const PAGE_SIZE = 10;
+interface PageProps {
+  searchParams: { page?: string };
+}
 
-  // 한 번에 전체 개수+페이징 데이터를 가져옴
-  const { reviews, totalPages }: PaginatedReviews = await fetchReviewsPaginated(
-    {
-      page,
-      pageSize: PAGE_SIZE,
-    },
-  );
+export default async function Page({ searchParams }: PageProps) {
+  const PAGE_SIZE = 10;
+  const page = parseInt(searchParams.page ?? "1", 10);
+  const { reviews, totalPages } = await fetchReviewsPaginated({
+    page,
+    pageSize: PAGE_SIZE,
+  });
 
   return (
     <TicketListPage
-      reviews={reviews}
+      initialReviews={reviews}
       currentPage={page}
       totalPages={totalPages}
     />

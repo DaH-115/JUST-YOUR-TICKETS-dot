@@ -1,52 +1,61 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "next/navigation";
-import type { Review } from "api/reviews/fetchReviews";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { Review } from "api/reviews/fetchReviews";
 import useReviewSearch from "hooks/useReviewSearch";
 import ReviewSearchInput from "app/components/reviewTicket/ReviewSearchInput";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 import Pagination from "app/components/Pagination";
+import EmptyState from "app/my-page/components/EmptyState";
+
+type FormValues = { search: string };
 
 interface TicketListPageProps {
-  reviews: Review[];
+  initialReviews: Review[];
   currentPage: number;
   totalPages: number;
 }
 
 export default function TicketListPage({
-  reviews: initialReviews,
+  initialReviews,
   currentPage,
   totalPages,
 }: TicketListPageProps) {
-  const searchParams = useSearchParams();
-
-  // 검색 폼 설정: URL의 검색어를 초기값으로
-  const { register, watch } = useForm<{ search: string }>({
-    defaultValues: { search: searchParams.get("search") || "" },
+  const [reviews] = useState<Review[]>(initialReviews);
+  const { register, watch } = useForm<FormValues>({
+    defaultValues: { search: "" },
   });
   const searchTerm = watch("search");
-  const { filteredReviews, searchReviewsHandler } =
-    useReviewSearch(initialReviews);
+  const { filteredReviews, searchReviewsHandler } = useReviewSearch(reviews);
+  const displayed = searchTerm ? filteredReviews : reviews;
 
-  // 검색어가 바뀔 때마다 필터 적용
+  // 검색어 변경 시 필터 적용
   useEffect(() => {
     searchReviewsHandler(searchTerm);
   }, [searchTerm, searchReviewsHandler]);
 
-  const displayedReviews = searchTerm ? filteredReviews : initialReviews;
+  // 페이지 변경 시 URL 동기화
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const onPageChange = (newPage: number) => {
+    const params = new URLSearchParams(Array.from(searchParams.entries()));
+    params.set("page", newPage.toString());
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <div className="flex flex-col p-8">
       <main className="w-full flex-1">
-        {/* 검색 및 헤더 */}
         <section className="flex w-full flex-col items-center pb-8 md:flex-row">
           <div className="mb-4 flex w-full items-center text-white md:mb-0">
             <h1 className="text-2xl font-bold">ALL TICKET LIST</h1>
             <span className="md:px-4">
               <span className="ml-2 font-bold text-accent-300">
-                {displayedReviews.length}장
+                {displayed.length}장
               </span>
             </span>
           </div>
@@ -57,17 +66,18 @@ export default function TicketListPage({
           />
         </section>
 
-        {/* 리뷰 목록 */}
-        {displayedReviews.length > 0 ? (
-          <ReviewTicket reviews={displayedReviews} />
+        {displayed.length > 0 ? (
+          <ReviewTicket reviews={displayed} />
         ) : (
-          <div className="flex h-96 w-full items-center justify-center text-center text-lg font-bold text-gray-500">
-            등록된 리뷰 티켓이 없습니다.
-          </div>
+          <EmptyState message="등록된 리뷰 티켓이 없습니다" />
         )}
       </main>
-      {/* 페이지네이션 */}
-      <Pagination currentPage={currentPage} totalPages={totalPages} />
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={onPageChange}
+      />
     </div>
   );
 }
