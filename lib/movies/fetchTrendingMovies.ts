@@ -1,8 +1,8 @@
-import { MovieList } from "api/movies/fetchNowPlayingMovies";
-import { fetchGenres } from "api/utils/getGenres";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
+import { fetchGenres } from "lib/movies/fetchGenres";
 
 export async function fetchTrendingMovies(): Promise<MovieList[]> {
-  const TMDB_API_KEY = process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY;
+  const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
   if (!TMDB_API_KEY) {
     throw new Error("TMDB API 키가 설정되지 않았습니다.");

@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import fetchSearchMovies from "api/movies/fetchSearchMovies";
+import fetchSearchMovies from "lib/movies/fetchSearchMovies";
 import debounce from "lodash/debounce";
-import { MovieList } from "api/movies/fetchNowPlayingMovies";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
 
 export default function HeaderSearchBar() {

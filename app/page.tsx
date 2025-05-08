@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 
-import { fetchNowPlayingMovies } from "api/movies/fetchNowPlayingMovies";
-import { fetchMovieCredits } from "api/movies/fetchMovieCredits";
-import { fetchMovieDetails } from "api/movies/fetchMovieDetails";
-import { fetchVideosMovies } from "api/movies/fetchVideosMovies";
-import { fetchTrendingMovies } from "api/movies/fetchTrendingMovies";
-import { fetchReviewsPaginated } from "api/reviews/fetchReviewsPaginated";
+import { fetchNowPlayingMovies } from "lib/movies/fetchNowPlayingMovies";
+import { fetchMovieCredits } from "lib/movies/fetchMovieCredits";
+import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
+import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
+import { fetchTrendingMovies } from "lib/movies/fetchTrendingMovies";
+import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
 
 import { MovieDetailsProvider } from "store/context/movieDetailsContext";
 

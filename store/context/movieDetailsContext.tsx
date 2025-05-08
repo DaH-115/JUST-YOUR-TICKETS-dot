@@ -5,7 +5,7 @@ import {
   CastMember,
   CrewMember,
   MovieCredits,
-} from "api/movies/fetchMovieCredits";
+} from "lib/movies/fetchMovieCredits";
 
 interface MovieDetailsContextType {
   genres: string[];

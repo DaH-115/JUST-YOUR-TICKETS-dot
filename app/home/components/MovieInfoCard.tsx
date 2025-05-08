@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MovieList } from "api/movies/fetchNowPlayingMovies";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import formatMovieDate from "app/utils/formatMovieDate";
 import { useMovieDetails } from "store/context/movieDetailsContext";
 import { FaInfoCircle } from "react-icons/fa";

@@ -1,9 +1,9 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchMovieDetails } from "api/movies/fetchMovieDetails";
-import { fetchMovieCredits } from "api/movies/fetchMovieCredits";
-import { fetchVideosMovies } from "api/movies/fetchVideosMovies";
-import { fetchSimilarMovies } from "api/movies/fetchSimilarMovies";
+import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
+import { fetchMovieCredits } from "lib/movies/fetchMovieCredits";
+import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
+import { fetchSimilarMovies } from "lib/movies/fetchSimilarMovies";
 import getMovieTitle from "app/utils/getMovieTitle";
 import BackGround from "app/ui/layout/BackGround";
 import SimilarMovies from "app/movie-details/components/SimilarMovies";

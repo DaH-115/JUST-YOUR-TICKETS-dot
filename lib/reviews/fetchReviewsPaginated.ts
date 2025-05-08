@@ -8,7 +8,7 @@ import {
   getCountFromServer,
 } from "firebase/firestore";
 import { db } from "firebase-config";
-import type { Review } from "./fetchReviews";
+import type { Review } from "lib/reviews/fetchReviews";
 
 export interface PaginatedReviews {
   reviews: Review[];

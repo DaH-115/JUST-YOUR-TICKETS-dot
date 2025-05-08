@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import { IoStar } from "react-icons/io5";
-import { Review } from "api/reviews/fetchReviews";
+import { Review } from "lib/reviews/fetchReviews";
 import ReviewDetailsModal from "app/components/reviewTicket/ReviewDetailsModal";
 import { deleteReview } from "app/actions/deleteReview";
 import MoviePoster from "app/components/MoviePoster";

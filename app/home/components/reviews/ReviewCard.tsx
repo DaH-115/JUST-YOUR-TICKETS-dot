@@ -1,4 +1,4 @@
-import { Review } from "api/reviews/fetchReviews";
+import { Review } from "lib/reviews/fetchReviews";
 import Image from "next/image";
 import Link from "next/link";
 import { FaStar } from "react-icons/fa";
@@ -9,7 +9,7 @@ interface ReviewCardProps {
 
 export default function ReviewCard({ review }: ReviewCardProps) {
   return (
-    <Link href={`/movies/${review.movieId}`} className="group">
+    <Link href={`/movie-details/${review.movieId}`} className="group">
       <div className="relative overflow-hidden rounded-lg bg-white/5 p-4 transition-all duration-300 hover:bg-white/10">
         <div className="flex gap-4">
           <div className="relative h-24 w-16 flex-shrink-0 overflow-hidden rounded-md">

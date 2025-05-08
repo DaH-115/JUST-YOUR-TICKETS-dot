@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Review } from "api/reviews/fetchReviews";
+import { Review } from "lib/reviews/fetchReviews";
 import { FaHeart, FaRegHeart, FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
 import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";

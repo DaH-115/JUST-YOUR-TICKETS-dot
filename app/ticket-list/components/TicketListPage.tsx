@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Review } from "api/reviews/fetchReviews";
+import { Review } from "lib/reviews/fetchReviews";
 import useReviewSearch from "hooks/useReviewSearch";
 import ReviewSearchInput from "app/components/reviewTicket/ReviewSearchInput";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";

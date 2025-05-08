@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Review } from "api/reviews/fetchReviews";
+import { Review } from "lib/reviews/fetchReviews";
 import MyTicketHeader from "app/my-page/my-ticket-list/components/MyTicketPageHeader";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 import EmptyState from "app/my-page/components/EmptyState";
 import Pagination from "app/components/Pagination";
 import useReviewSearch from "hooks/useReviewSearch";
-import { fetchReviewsPaginated } from "api/reviews/fetchReviewsPaginated";
+import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
 
 const PAGE_SIZE = 10;
 

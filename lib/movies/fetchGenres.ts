@@ -8,7 +8,7 @@ interface GenreMap {
 
 export async function fetchGenres(): Promise<GenreMap> {
   const res = await fetch(
-    `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY}&language=ko`,
+    `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.TMDB_API_KEY}&language=ko`,
   );
 
   if (!res.ok) {

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { fetchReviewsPaginated } from "api/reviews/fetchReviewsPaginated";
-import TicketListPage from "./components/TicketListPage";
+import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
+import TicketListPage from "app/ticket-list/components/TicketListPage";
 
 export const metadata: Metadata = {
   title: "Ticket List",

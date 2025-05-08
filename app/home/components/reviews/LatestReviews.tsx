@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Review } from "api/reviews/fetchReviews";
+import { Review } from "lib/reviews/fetchReviews";
 import ReviewCard from "app/home/components/reviews/ReviewCard";
 import { FaArrowRight } from "react-icons/fa";
 

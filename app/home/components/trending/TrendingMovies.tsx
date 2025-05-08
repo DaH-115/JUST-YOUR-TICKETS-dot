@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { MovieList } from "api/movies/fetchNowPlayingMovies";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import TicketSwiper from "app/components/swiper/ticket-swiper";
 
 function TrendingMovies({ trendingMovies }: { trendingMovies: MovieList[] }) {

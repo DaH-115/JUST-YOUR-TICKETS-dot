@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { useAlert } from "store/context/alertContext";
-import { MovieDetails } from "api/movies/fetchMovieDetails";
+import { MovieDetails } from "lib/movies/fetchMovieDetails";
 import updateReview from "app/actions/updateReview";
 import { ReviewFormValues } from "app/write-review/components/ReviewForm";
 

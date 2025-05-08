@@ -1,4 +1,4 @@
-import { MovieList } from "api/movies/fetchNowPlayingMovies";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import TicketSwiper from "app/components/swiper/ticket-swiper";
 
 export default function SimilarMovies({

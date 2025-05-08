@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchBookmarkedReviewsPaginated } from "api/reviews/fetchBookmarkedReviews";
-import fetchReviewById from "api/reviews/fetchReviewById";
-import { Review } from "api/reviews/fetchReviews";
+import { fetchBookmarkedReviewsPaginated } from "lib/reviews/fetchBookmarkedReviews";
+import fetchReviewById from "lib/reviews/fetchReviewById";
+import { Review } from "lib/reviews/fetchReviews";
 import Pagination from "app/components/Pagination";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 import EmptyState from "app/my-page/components/EmptyState";

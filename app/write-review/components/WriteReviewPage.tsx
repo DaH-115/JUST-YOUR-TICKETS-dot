@@ -4,7 +4,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "firebase-config";
-import { fetchMovieDetails, MovieDetails } from "api/movies/fetchMovieDetails";
+import { fetchMovieDetails, MovieDetails } from "lib/movies/fetchMovieDetails";
 import ReviewForm, {
   ReviewFormValues,
 } from "app/write-review/components/ReviewForm";

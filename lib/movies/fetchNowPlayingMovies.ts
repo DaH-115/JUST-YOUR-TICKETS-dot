@@ -1,4 +1,4 @@
-import { fetchGenres } from "api/utils/getGenres";
+import { fetchGenres } from "lib/movies/fetchGenres";
 
 export interface MovieBaseType {
   id: number;
@@ -19,7 +19,7 @@ export interface MovieList extends MovieBaseType {
 }
 
 export async function fetchNowPlayingMovies(): Promise<MovieList[]> {
-  const TMDB_API_KEY = process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY;
+  const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
   if (!TMDB_API_KEY) {
     throw new Error("TMDB API 키가 설정되지 않았습니다.");

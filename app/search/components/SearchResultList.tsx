@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import fetchSearchMovies from "api/movies/fetchSearchMovies";
-import { MovieList } from "api/movies/fetchNowPlayingMovies";
+import fetchSearchMovies from "lib/movies/fetchSearchMovies";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import Loading from "app/loading";
 import SwiperCard from "app/components/swiper/swiper-card";
 import Pagination from "app/components/Pagination";

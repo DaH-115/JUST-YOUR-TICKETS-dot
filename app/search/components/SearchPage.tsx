@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { MovieList } from "api/movies/fetchNowPlayingMovies";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
 import SwiperCard from "app/components/swiper/swiper-card";
 import SearchResultList from "app/search/components/SearchResultList";

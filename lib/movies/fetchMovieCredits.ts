@@ -33,7 +33,7 @@ export interface MovieCredits {
 }
 
 export async function fetchMovieCredits(id: number): Promise<MovieCredits> {
-  const TMDB_API_KEY = process.env.NEXT_PUBLIC_THEMOVIEDB_API_KEY;
+  const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
   if (!TMDB_API_KEY) {
     throw new Error("TMDB API 키가 설정되지 않았습니다.");

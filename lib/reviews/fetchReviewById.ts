@@ -1,6 +1,6 @@
 import { db } from "firebase-config";
 import { doc, getDoc } from "firebase/firestore";
-import { Review } from "api/reviews/fetchReviews";
+import { Review } from "lib/reviews/fetchReviews";
 
 interface FirestoreTimestamp {
   seconds: number;

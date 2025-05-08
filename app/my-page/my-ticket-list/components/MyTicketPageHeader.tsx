@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import useReviewSearch from "hooks/useReviewSearch";
-import { Review } from "api/reviews/fetchReviews";
+import { Review } from "lib/reviews/fetchReviews";
 import { useForm } from "react-hook-form";
 import ReviewSearchInput from "app/components/reviewTicket/ReviewSearchInput";
 
