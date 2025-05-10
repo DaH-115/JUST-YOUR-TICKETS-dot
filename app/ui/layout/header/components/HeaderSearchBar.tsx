@@ -3,63 +3,73 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import fetchSearchMovies from "lib/movies/fetchSearchMovies";
 import debounce from "lodash/debounce";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { IoSearchOutline } from "react-icons/io5";
+import { FaArrowRight } from "react-icons/fa";
 
 export default function HeaderSearchBar() {
   const { register, watch, reset } = useForm({
     defaultValues: { search: "" },
   });
   const searchQuery = watch("search");
-  const [searchResults, setSearchResults] = useState<MovieList[]>([]);
+  const [results, setResults] = useState<MovieList[]>([]);
+  const [visibleCount, setVisibleCount] = useState(5);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const inputFocusHandler = useCallback(() => {
-    if (searchResults.length > 0) {
+    if (results.length > 0) {
       setIsDropdownOpen(true);
     }
-  }, [searchResults]);
+  }, [results]);
 
   const iconClickHandler = useCallback(() => {
     setIsSearchOpen((prev) => !prev);
     if (!isSearchOpen) {
-      setTimeout(
-        () =>
-          (
-            document.querySelector('input[type="search"]') as HTMLInputElement
-          )?.focus(),
-        300,
-      );
+      setTimeout(() => {
+        const input = document.querySelector(
+          'input[type="search"]',
+        ) as HTMLInputElement;
+        input?.focus();
+      }, 300);
     }
-  }, []);
+  }, [isSearchOpen]);
 
   const resultsClickHandler = useCallback(() => {
     setIsDropdownOpen(false);
     setIsSearchOpen(false);
     reset({ search: "" });
-  }, []);
+    setResults([]);
+    setVisibleCount(5);
+  }, [reset]);
 
   useEffect(() => {
     const debounceHandler = debounce(async (query: string) => {
       if (query.trim()) {
         try {
-          const { movies } = await fetchSearchMovies(query);
-          setSearchResults(movies);
+          const res = await fetch(
+            `/api/tmdb/search?query=${encodeURIComponent(query)}&page=1`,
+          );
+          if (!res.ok) throw new Error("검색 실패");
+          const data = await res.json();
+          setResults(data.movies);
+          setVisibleCount(5);
           setIsDropdownOpen(true);
         } catch (error) {
-          setSearchResults([]);
+          console.error("검색 실패:", error);
+          setResults([]);
+          setIsDropdownOpen(false);
         }
       } else {
-        setSearchResults([]);
+        setResults([]);
         setIsDropdownOpen(false);
       }
     }, 300);
 
     debounceHandler(searchQuery);
+    return () => debounceHandler.cancel();
   }, [searchQuery]);
 
   useEffect(() => {
@@ -77,7 +87,7 @@ export default function HeaderSearchBar() {
     return () => {
       document.removeEventListener("mousedown", clickOutsideHandler);
     };
-  }, [dropdownRef]);
+  }, []);
 
   return (
     <div className="ml-4 hidden h-10 lg:flex" ref={dropdownRef}>
@@ -97,16 +107,18 @@ export default function HeaderSearchBar() {
             onFocus={inputFocusHandler}
           />
           <div
-            className={`${isSearchOpen ? "border-none" : "bg-white"} absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-gray-200 transition-all duration-300 ease-in-out`}
+            className={`${
+              isSearchOpen ? "border-none" : "bg-white"
+            } absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-gray-200 transition-all duration-300 ease-in-out`}
             onClick={iconClickHandler}
           >
             <IoSearchOutline size={18} color="black" />
           </div>
         </div>
 
-        {isDropdownOpen && searchResults.length > 0 && (
-          <div className="absolute right-0 top-full z-10 mt-1 max-h-60 w-64 cursor-pointer overflow-auto rounded-md border border-gray-300 bg-white shadow-lg scrollbar-hide">
-            {searchResults.map((result, idx) => (
+        {isDropdownOpen && results.length > 0 && (
+          <div className="absolute right-0 top-full z-10 mt-1 max-h-96 w-64 overflow-auto rounded-md border border-gray-300 bg-white shadow-lg scrollbar-hide">
+            {results.slice(0, visibleCount).map((result, idx) => (
               <div
                 key={idx}
                 className="px-3 py-2 hover:bg-gray-100"
@@ -115,11 +127,31 @@ export default function HeaderSearchBar() {
                 <Link href={`/movie-details/${result.id}`}>
                   <p>{result.title}</p>
                   <p className="text-sm text-gray-500">
-                    ({result.release_date.slice(0, 4)})
+                    ({result.release_date?.slice(0, 4)})
                   </p>
                 </Link>
               </div>
             ))}
+
+            {/* 더 보기 버튼 */}
+            {visibleCount < results.length && (
+              <button
+                onClick={() => setVisibleCount((prev) => prev + 5)}
+                className="w-full px-3 py-2 text-sm text-gray-500 hover:bg-gray-100"
+              >
+                더 보기
+              </button>
+            )}
+
+            {/* 전체 검색 페이지로 이동 */}
+            {results.length >= 20 && (
+              <Link href={`/search?query=${encodeURIComponent(searchQuery)}`}>
+                <div className="flex w-full items-center bg-gray-100 px-3 py-2 text-sm text-gray-500 hover:bg-gray-200">
+                  전체 검색 결과 보기
+                  <FaArrowRight className="ml-1 text-gray-400" />
+                </div>
+              </Link>
+            )}
           </div>
         )}
       </div>

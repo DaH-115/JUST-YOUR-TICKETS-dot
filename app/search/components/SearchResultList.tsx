@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import fetchSearchMovies from "lib/movies/fetchSearchMovies";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import Loading from "app/loading";
 import SwiperCard from "app/components/swiper/swiper-card";
@@ -9,6 +8,11 @@ import Pagination from "app/components/Pagination";
 
 interface SearchResultListProps {
   searchQuery: string;
+}
+
+interface SearchMovieResponse {
+  movies: MovieList[];
+  totalPages: number;
 }
 
 export default function SearchResultList({
@@ -24,10 +28,14 @@ export default function SearchResultList({
     setIsLoading(true);
     (async () => {
       try {
-        const { movies, totalPages } = await fetchSearchMovies(
-          searchQuery,
-          currentPage,
+        const res = await fetch(
+          `/api/tmdb/search?query=${encodeURIComponent(
+            searchQuery,
+          )}&page=${currentPage}`,
         );
+        if (!res.ok) throw new Error("검색 요청 실패");
+
+        const { movies, totalPages }: SearchMovieResponse = await res.json();
         setSearchResults(movies);
         setTotalPages(totalPages);
       } catch (error) {
