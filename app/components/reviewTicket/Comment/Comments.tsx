@@ -153,9 +153,9 @@ export default function Comments({ id: reviewId }: Pick<Review, "id">) {
 
   return (
     <>
-      <div className="h-40 flex-1 overflow-y-scroll px-4">
-        {comments.map((c, idx) => (
-          <ul className="space-y-2">
+      <div className="h-40 flex-1 overflow-y-scroll">
+        <ul className="space-y-2">
+          {comments.map((c, idx) => (
             <li key={c.id} className="border-b pb-2">
               <div className="flex items-center justify-between pt-1">
                 <p className="text-xs font-bold text-gray-800">
@@ -184,12 +184,12 @@ export default function Comments({ id: reviewId }: Pick<Review, "id">) {
               <p className="py-2 text-sm">{c.content}</p>
               <p className="text-xs text-gray-500">{formatDate(c.createdAt)}</p>
             </li>
-          </ul>
-        ))}
+          ))}
+        </ul>
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="border-t-4 border-dotted p-4"
+        className="border-t-4 border-dotted pt-4"
       >
         <textarea
           {...register("comment")}

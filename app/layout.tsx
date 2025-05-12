@@ -125,6 +125,7 @@ export default function RootLayout({
             <AlertProvider>
               <Header />
               {children}
+              <div id="modal-root" />
               <Footer />
             </AlertProvider>
           </AuthProvider>

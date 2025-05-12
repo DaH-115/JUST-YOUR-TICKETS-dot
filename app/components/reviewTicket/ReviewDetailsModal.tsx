@@ -16,25 +16,27 @@ import {
 import { db } from "firebase-config";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import Comments from "app/components/reviewTicket/Comment/Comments";
+import Modal from "app/components/modal/Modal";
 
-type ReviewDetailsModalProps = {
+interface ReviewDetailsModalProps {
   isModalOpen: boolean;
-  selectedReview: Review;
   closeModalHandler: () => void;
+  selectedReview: Review;
   onReviewDeleted: (id: string) => void;
-};
+}
 
 export default function ReviewDetailsModal({
-  closeModalHandler,
-  onReviewDeleted,
   isModalOpen,
+  closeModalHandler,
   selectedReview,
+  onReviewDeleted,
 }: ReviewDetailsModalProps) {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(selectedReview.likeCount || 0);
   const [isLiking, setIsLiking] = useState(false);
   const [isBookmarking, setIsBookmarking] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+
   const userState = useAppSelector((state) => state.userData.auth);
 
   useEffect(() => {
@@ -133,82 +135,71 @@ export default function ReviewDetailsModal({
   };
 
   return (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 shadow-lg transition-all duration-300 ${
-        isModalOpen ? "visible opacity-100" : "invisible opacity-0"
-      }`}
-    >
-      <div
-        className={`absolute w-11/12 rounded-2xl border-2 bg-white drop-shadow-lg transition-all duration-500 lg:w-2/5 ${
-          isModalOpen
-            ? "visible translate-y-0 opacity-100"
-            : "invisible translate-y-full opacity-0"
-        }`}
-      >
-        <div className="flex w-full items-center justify-between p-4 pb-2">
-          {/* 왼쪽: 별점 영역 */}
-          <div className="mr-4 flex h-full items-center justify-center">
-            <IoStar className="mr-1 text-accent-300" size={18} />
-            <p className="text-2xl font-bold md:text-3xl">
-              {selectedReview.rating}
-            </p>
-          </div>
-          {/* 오른쪽: 타이틀 및 버튼 */}
-          <div className="w-full">
-            <h1 className="font-bold">{selectedReview?.reviewTitle}</h1>
-            <div className="flex text-xs text-gray-500">
-              {selectedReview.movieTitle} - {selectedReview.releaseYear}
-            </div>
-          </div>
-          {userState?.uid && (
-            <div className="mr-2 flex items-center gap-3">
-              {/* 좋아요 버튼 */}
-              <button
-                onClick={likeHandler}
-                disabled={isLiking}
-                className="flex items-center text-red-500 transition hover:scale-105"
-              >
-                {liked ? <FaHeart /> : <FaRegHeart />}
-                <span className="ml-1 text-sm text-black">{likeCount}</span>
-              </button>
-              {/* 북마크 버튼 */}
-              <button
-                onClick={bookmarkHandler}
-                disabled={isBookmarking}
-                className="text-accent-300 transition hover:scale-105"
-              >
-                {bookmarked ? <FaBookmark /> : <FaRegBookmark />}
-              </button>
-              {/* 기존 삭제 등 버튼 그룹 */}
-              <ReviewBtnGroup
-                movieId={selectedReview.movieId}
-                postId={selectedReview.id}
-                authorId={selectedReview.uid}
-                onReviewDeleted={onReviewDeleted}
-              />
-            </div>
-          )}
-          <IoCloseOutline
-            onClick={closeModalHandler}
-            className="cursor-pointer text-4xl text-black"
-          />
-        </div>
-        <div className="flex items-center justify-between px-4 pb-2 text-sm">
-          <p className="text-xs text-gray-500">
-            {formatDate(selectedReview.createdAt)}
+    <Modal isOpen={isModalOpen} onClose={closeModalHandler}>
+      <div className="flex w-full items-center justify-between pb-2">
+        {/* 왼쪽: 별점 영역 */}
+        <div className="mr-4 flex h-full items-center justify-center">
+          <IoStar className="mr-1 text-accent-300" size={18} />
+          <p className="text-2xl font-bold md:text-3xl">
+            {selectedReview.rating}
           </p>
-          <div className="flex items-center">
-            <span className="mr-1 font-bold">{selectedReview.userName}</span>
-            님의 리뷰
+        </div>
+        {/* 오른쪽: 타이틀 및 버튼 */}
+        <div className="w-full">
+          <h1 className="font-bold">{selectedReview?.reviewTitle}</h1>
+          <div className="flex text-xs text-gray-500">
+            {selectedReview.movieTitle} - {selectedReview.releaseYear}
           </div>
         </div>
-        <div className="mb-2 h-64 flex-1 overflow-y-scroll border-y-4 border-dotted px-4 pb-8 pt-2">
-          <p className="mb-1 text-xs font-bold">리뷰 내용</p>
-          <p className="break-keep">{selectedReview.reviewContent}</p>
+        <div className="mr-2 flex items-center gap-3">
+          {/* 좋아요 버튼 */}
+          <button
+            onClick={likeHandler}
+            disabled={!userState?.uid || isLiking}
+            className="flex items-center text-red-500 transition hover:scale-105"
+          >
+            {liked ? <FaHeart /> : <FaRegHeart />}
+            <span className="ml-1 text-sm text-black">{likeCount}</span>
+          </button>
+          {/* 북마크 버튼 */}
+          <button
+            onClick={bookmarkHandler}
+            disabled={!userState?.uid || isBookmarking}
+            className="text-accent-300 transition hover:scale-105"
+          >
+            {bookmarked ? <FaBookmark /> : <FaRegBookmark />}
+          </button>
+          {/* 리뷰 작성자와 로그인한 유저가 같을 때만 수정/삭제 버튼 노출 */}
+          {userState?.uid && (
+            <ReviewBtnGroup
+              movieId={selectedReview.movieId}
+              postId={selectedReview.id}
+              authorId={selectedReview.uid}
+              onReviewDeleted={onReviewDeleted}
+            />
+          )}
         </div>
-        {/* 댓글 영역 */}
-        <Comments id={selectedReview.id} />
+        {/* 모달 닫기 버튼 */}
+        <IoCloseOutline
+          onClick={closeModalHandler}
+          className="cursor-pointer text-4xl text-black"
+        />
       </div>
-    </div>
+      <div className="flex items-center justify-between pb-2 text-sm">
+        <p className="text-xs text-gray-500">
+          {formatDate(selectedReview.createdAt)}
+        </p>
+        <div className="flex items-center">
+          <span className="mr-1 font-bold">{selectedReview.userName}</span>
+          님의 리뷰
+        </div>
+      </div>
+      <div className="mb-2 h-64 flex-1 overflow-y-scroll border-y-4 border-dotted pb-8 pt-2">
+        <p className="mb-1 text-xs font-bold">리뷰 내용</p>
+        <p className="break-keep">{selectedReview.reviewContent}</p>
+      </div>
+      {/* 댓글 영역 */}
+      <Comments id={selectedReview.id} />
+    </Modal>
   );
 }
