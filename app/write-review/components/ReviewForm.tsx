@@ -1,121 +1,104 @@
-import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+"use client";
+
+import { useState, useEffect } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useReviewForm } from "app/write-review/hook/useReviewForm";
-import getMovieTitle from "app/utils/getMovieTitle";
 import BackGround from "app/ui/layout/BackGround";
-import { MdDriveFileRenameOutline } from "react-icons/md";
 import Modal from "app/ui/Modal";
-import { MovieDetails } from "lib/movies/fetchMovieDetails";
-import { Review } from "lib/reviews/fetchReviews";
+import { MdDriveFileRenameOutline } from "react-icons/md";
 import ReviewFormHeader from "app/write-review/components/ReviewFormHeader";
 import ReviewFormTitle from "app/write-review/components/ReviewFormTitle";
 import ReviewFormRating from "app/write-review/components/ReviewFormRating";
 import ReviewFormContent from "app/write-review/components/ReviewFormContent";
+import type { MovieDetails } from "lib/movies/fetchMovieDetails";
+import type { ReviewFormValues } from "app/write-review/[id]/page";
+import { useReviewForm } from "app/write-review/hook/useReviewForm";
 
-export type ReviewFormValues = Pick<
-  Review,
-  "reviewTitle" | "reviewContent" | "rating"
->;
-
-type ReviewFormProps = {
-  mode: "create" | "edit";
+interface ReviewFormProps {
+  onSubmitMode: "new" | "edit";
+  movieData: MovieDetails;
   initialData?: ReviewFormValues;
-  movieInfo: MovieDetails;
-  movieId: string;
   reviewId?: string;
-};
+}
 
 export default function ReviewForm({
-  mode,
+  onSubmitMode,
   initialData,
-  movieInfo,
+  movieData,
   reviewId,
-  movieId,
 }: ReviewFormProps) {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isDirty, isValid },
-    watch,
-  } = useForm<ReviewFormValues>({
-    mode: "onChange",
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false);
+
+  const { onSubmit } = useReviewForm({
+    mode: onSubmitMode,
+    movieData,
+    reviewId,
+  });
+
+  const methods = useForm<ReviewFormValues>({
     defaultValues: initialData || {
       reviewTitle: "",
       rating: 0,
       reviewContent: "",
     },
+    mode: "onChange",
   });
-  const [showExitConfirmation, setShowExitConfirmation] = useState(false);
-  const movieTitle = getMovieTitle(movieInfo.original_title, movieInfo.title);
-  const { onSubmitHandler } = useReviewForm(mode, movieInfo, movieId, reviewId);
 
+  const {
+    handleSubmit,
+    formState: { isDirty, isValid },
+  } = methods;
+
+  // 뒤로 가기 시 확인 모달
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isDirty) {
-        event.preventDefault();
-        return "";
+        e.preventDefault();
       }
     };
-
     window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [isDirty]);
 
   return (
     <>
-      {movieInfo.backdrop_path && (
-        <BackGround imageUrl={movieInfo.backdrop_path} />
+      {movieData.backdrop_path && (
+        <BackGround imageUrl={movieData.backdrop_path} />
       )}
-
       <main className="relative mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
         <div className="mx-auto w-11/12 rounded-xl border-2 border-gray-200 bg-white md:w-2/4">
-          <form onSubmit={handleSubmit(onSubmitHandler)}>
-            <ReviewFormHeader
-              isEditMode={mode === "edit"}
-              isDirty={isDirty}
-              setShowExitConfirmation={setShowExitConfirmation}
-            />
-            <div className="p-4 pb-1">
-              <p className="text-3xl font-bold">{movieTitle}</p>
-              <p className="text-gray-400">
-                {movieInfo.release_date.replaceAll("-", ".")}
-              </p>
-            </div>
-            <div className="w-full p-4">
-              <ReviewFormTitle
-                register={register}
-                errors={errors}
-                isEditMode={mode === "edit"}
-                watch={watch}
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <ReviewFormHeader
+                isEditMode={onSubmitMode === "edit"}
+                setShowExitConfirmation={setShowExitConfirmation}
               />
-              <ReviewFormRating
-                register={register}
-                errors={errors}
-                watch={watch}
-                isEditMode={mode === "edit"}
-              />
-              <ReviewFormContent
-                register={register}
-                errors={errors}
-                isEditMode={mode === "edit"}
-                watch={watch}
-              />
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={!isValid}
-                  className="group flex w-full items-center justify-center rounded-xl bg-primary-500 p-4 font-bold text-white transition-colors duration-300 hover:bg-primary-700 disabled:text-gray-500"
-                >
-                  <MdDriveFileRenameOutline className="mr-1" size={18} />
-                  작성
-                </button>
+              <div className="p-4 pb-1">
+                <p className="text-3xl font-bold">
+                  {movieData.original_title || movieData.title}
+                </p>
+                <p className="text-gray-400">
+                  {movieData.release_date.replaceAll("-", ".")}
+                </p>
               </div>
-            </div>
-          </form>
+              <div className="w-full p-4">
+                <ReviewFormTitle />
+                <ReviewFormRating />
+                <ReviewFormContent />
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={!isValid}
+                    className="group flex w-full items-center justify-center rounded-xl bg-primary-500 p-4 font-bold text-white transition-colors duration-300 hover:bg-primary-700 disabled:text-gray-500"
+                  >
+                    <MdDriveFileRenameOutline className="mr-1" size={18} />
+                    {onSubmitMode === "new" ? "작성" : "수정"}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </FormProvider>
         </div>
       </main>
       {showExitConfirmation && (

@@ -1,29 +1,19 @@
 import { Metadata } from "next";
-import { Review } from "lib/reviews/fetchReviews";
 import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
 import ReviewContainer from "app/write-review/components/ReviewContainer";
 
 export const metadata: Metadata = {
   title: "New Write Review Ticket",
-  description: "리뷰 티켓을 수정하는 페이지입니다.",
+  description: "새로운 리뷰 티켓을 작성하는 페이지입니다.",
 };
 
-export type ReviewFormValues = Pick<
-  Review,
-  "reviewTitle" | "reviewContent" | "rating"
->;
-
-export default async function EditReviewPage({
-  params,
+export default async function NewReviewPage({
   searchParams,
 }: {
-  params: { id: string };
   searchParams: { movieId?: string };
 }) {
   const movieId = Number(searchParams.movieId!);
   const movieData = await fetchMovieDetails(movieId);
 
-  return (
-    <ReviewContainer mode="edit" reviewId={params.id} movieData={movieData} />
-  );
+  return <ReviewContainer mode="new" movieData={movieData} />;
 }

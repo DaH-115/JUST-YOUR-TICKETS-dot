@@ -1,21 +1,9 @@
-import { UseFormRegister, FieldErrors, UseFormWatch } from "react-hook-form";
-import { ReviewFormValues } from "app/write-review/components/ReviewForm";
+import { useFormContext, Controller } from "react-hook-form";
+import { ReviewFormValues } from "app/write-review/[id]/page";
 import { IoStar } from "react-icons/io5";
 
-interface ReviewFormRatingProps {
-  register: UseFormRegister<ReviewFormValues>;
-  watch: UseFormWatch<ReviewFormValues>;
-  errors: FieldErrors<ReviewFormValues>;
-  isEditMode?: boolean;
-}
-
-export default function ReviewFormRating({
-  register,
-  errors,
-  watch,
-  isEditMode = false,
-}: ReviewFormRatingProps) {
-  const watchRating = watch("rating");
+export default function ReviewFormRating() {
+  const { control, getValues } = useFormContext<ReviewFormValues>();
 
   return (
     <div className="mb-6">
@@ -26,24 +14,40 @@ export default function ReviewFormRating({
         평점
       </label>
       <div className="flex items-center">
-        <input
-          type="range"
-          id="rating"
-          min="0"
-          max="5"
-          step="0.5"
-          {...register("rating", { valueAsNumber: true })}
-          className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200"
-          disabled={isEditMode && false}
+        <Controller
+          name="rating"
+          control={control}
+          defaultValue={getValues("rating")}
+          rules={{
+            validate: (value) => value > 0 || "평점을 선택해주세요.",
+          }}
+          render={({ field, fieldState: { error } }) => (
+            <div className="flex w-full flex-col items-center justify-center">
+              <div className="w-[90%]">
+                <input
+                  {...field}
+                  type="range"
+                  id="rating"
+                  min={0}
+                  max={5}
+                  className="w-full"
+                />
+                <div
+                  className={`flex ${error ? "justify-between" : "justify-end"}`}
+                >
+                  {error && (
+                    <p className="text-sm text-red-600">{error.message}</p>
+                  )}
+                  <div className="flex items-center justify-center px-2 text-3xl font-bold">
+                    <IoStar className="mr-1 text-accent-300" />
+                    {field.value}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         />
       </div>
-      <div className="flex items-center justify-center p-2 text-center text-xl font-bold">
-        <IoStar className="mr-1 text-accent-300" size={18} />
-        {watchRating}
-      </div>
-      {errors.rating && (
-        <p className="mt-2 text-sm text-red-600">{errors.rating.message}</p>
-      )}
     </div>
   );
 }

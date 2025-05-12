@@ -1,19 +1,21 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { IoIosArrowBack } from "react-icons/io";
+import { useFormContext } from "react-hook-form";
 
 interface ReviewFormHeaderProps {
-  isDirty: boolean;
-  setShowExitConfirmation: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowExitConfirmation: (show: boolean) => void;
   isEditMode?: boolean;
 }
 
 export default function ReviewFormHeader({
-  isDirty,
   setShowExitConfirmation,
   isEditMode = false,
 }: ReviewFormHeaderProps) {
   const router = useRouter();
+  const {
+    formState: { isDirty },
+  } = useFormContext();
 
   const pageExitHandler = useCallback(() => {
     if (isDirty) {

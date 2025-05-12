@@ -28,9 +28,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
             <p className="text-gray-300">{review.reviewTitle}</p>
             <div className="mt-1 flex items-center gap-1">
               <FaStar className="text-yellow-400" />
-              <span className="text-sm text-white">
-                {review.rating.toFixed(1)}
-              </span>
+              <span className="text-sm text-white">{review.rating}</span>
             </div>
             <p className="mt-2 line-clamp-2 text-sm text-gray-300">
               {review.reviewContent}

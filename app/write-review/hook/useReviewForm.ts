@@ -5,35 +5,34 @@ import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { useAlert } from "store/context/alertContext";
-import { MovieDetails } from "lib/movies/fetchMovieDetails";
 import updateReview from "app/actions/updateReview";
-import { ReviewFormValues } from "app/write-review/components/ReviewForm";
+import { ReviewFormValues } from "app/write-review/[id]/page";
+import { ReviewContainerProps } from "app/write-review/components/ReviewContainer";
 
-export const useReviewForm = (
-  mode: "create" | "edit",
-  movieInfo: MovieDetails,
-  movieId: string,
-  reviewId?: string,
-) => {
+export const useReviewForm = ({
+  mode,
+  reviewId,
+  movieData,
+}: ReviewContainerProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.userData.auth);
   const { showErrorHanlder, showSuccessHanlder } = useAlert();
 
-  const onSubmitHandler = async (data: ReviewFormValues) => {
+  const onSubmit = async (data: ReviewFormValues) => {
     if (!userState) return;
 
     try {
       const { reviewTitle, reviewContent, rating } = data;
 
-      if (mode === "create") {
+      if (mode === "new") {
         await addDoc(collection(db, "movie-reviews"), {
           uid: userState.uid,
           userName: userState.displayName,
-          movieId,
-          movieTitle: movieInfo.title,
-          moviePosterPath: movieInfo.poster_path,
-          releaseYear: movieInfo.release_date.slice(0, 4),
+          movieId: movieData.id,
+          movieTitle: movieData.title,
+          moviePosterPath: movieData.poster_path,
+          releaseYear: movieData.release_date.slice(0, 4),
           rating,
           reviewTitle,
           reviewContent,
@@ -65,5 +64,5 @@ export const useReviewForm = (
     }
   };
 
-  return { onSubmitHandler };
+  return { onSubmit };
 };

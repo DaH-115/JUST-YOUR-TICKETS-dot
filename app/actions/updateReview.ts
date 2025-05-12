@@ -1,6 +1,6 @@
 "use server";
 
-import { ReviewFormValues } from "app/write-review/components/ReviewForm";
+import { ReviewFormValues } from "app/write-review/[id]/page";
 import { db } from "firebase-config";
 import { doc, updateDoc } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
