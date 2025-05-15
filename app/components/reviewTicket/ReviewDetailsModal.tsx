@@ -38,6 +38,10 @@ export default function ReviewDetailsModal({
   const userState = useAppSelector((state) => state.userData.auth);
 
   useEffect(() => {
+    setLikeCount(selectedReview.likeCount || 0);
+  }, [selectedReview.likeCount]);
+
+  useEffect(() => {
     if (!userState?.uid) {
       return;
     }
