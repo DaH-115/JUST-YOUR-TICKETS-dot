@@ -1,8 +1,8 @@
 "use client";
 
-import { useReviewData } from "../hook/useReviewData";
+import { useReviewData } from "app/write-review/hook/useReviewData";
 import Loading from "app/loading";
-import ReviewForm from "./ReviewForm";
+import ReviewForm from "app/write-review/components/ReviewForm";
 import { MovieDetails } from "lib/movies/fetchMovieDetails";
 
 export interface ReviewContainerProps {

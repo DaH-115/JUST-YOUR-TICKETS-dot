@@ -1,82 +1,71 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Review } from "lib/reviews/fetchReviews";
-import useReviewSearch from "hooks/useReviewSearch";
-import ReviewSearchInput from "app/components/reviewTicket/ReviewSearchInput";
+import SearchForm from "app/components/SearchForm";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 import Pagination from "app/components/Pagination";
 import EmptyState from "app/my-page/components/EmptyState";
-
-type FormValues = { search: string };
+import { useCallback } from "react";
 
 interface TicketListPageProps {
   initialReviews: Review[];
-  currentPage: number;
   totalPages: number;
 }
 
 export default function TicketListPage({
   initialReviews,
-  currentPage,
   totalPages,
 }: TicketListPageProps) {
-  const [reviews] = useState<Review[]>(initialReviews);
-  const { register, watch } = useForm<FormValues>({
-    defaultValues: { search: "" },
-  });
-  const searchTerm = watch("search");
-  const { filteredReviews, searchReviewsHandler } = useReviewSearch(reviews);
-  const displayed = searchTerm ? filteredReviews : reviews;
-
-  // 검색어 변경 시 필터 적용
-  useEffect(() => {
-    searchReviewsHandler(searchTerm);
-  }, [searchTerm, searchReviewsHandler]);
-
-  // 페이지 변경 시 URL 동기화
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
 
-  const onPageChange = (newPage: number) => {
-    const params = new URLSearchParams(Array.from(searchParams.entries()));
-    params.set("page", newPage.toString());
-    router.push(`${pathname}?${params.toString()}`);
-  };
+  const currentPage = parseInt(params.get("page") || "1", 10);
+  const searchTerm = params.get("search") || "";
+
+  const searchHandler = useCallback(
+    (searchTerm: string) => {
+      router.replace(
+        `${pathname}?&search=${encodeURIComponent(searchTerm)}&page=1`,
+      );
+    },
+    [router, pathname],
+  );
+
+  const pageChangeHandler = useCallback(
+    (page: number) => {
+      router.push(
+        `${pathname}?&search=${encodeURIComponent(searchTerm)}&page=${page}`,
+      );
+    },
+    [router, pathname, searchTerm],
+  );
 
   return (
     <div className="flex flex-col p-8">
-      <main className="w-full flex-1">
-        <section className="flex w-full flex-col items-center pb-8 md:flex-row">
-          <div className="mb-4 flex w-full items-center text-white md:mb-0">
-            <h1 className="text-2xl font-bold">ALL TICKET LIST</h1>
-            <span className="md:px-4">
-              <span className="ml-2 font-bold text-accent-300">
-                {displayed.length}장
-              </span>
-            </span>
-          </div>
-          <ReviewSearchInput
-            label="티켓 검색"
-            register={register}
-            placeholder="티켓 검색"
-          />
-        </section>
-
-        {displayed.length > 0 ? (
-          <ReviewTicket reviews={displayed} />
-        ) : (
-          <EmptyState message="등록된 리뷰 티켓이 없습니다" />
-        )}
-      </main>
-
+      <section className="flex w-full flex-col items-center pb-8 md:flex-row">
+        <div className="mb-4 flex w-full items-center text-white md:mb-0">
+          <h1 className="text-2xl font-bold">ALL TICKET LIST</h1>
+          <span className="ml-2 font-bold text-accent-300">
+            {initialReviews.length}장
+          </span>
+        </div>
+        {/* 유효성 검증 */}
+        <SearchForm onSearch={searchHandler} placeholder="티켓 검색" />
+      </section>
+      {/* 리뷰 리스트 */}
+      {initialReviews.length > 0 ? (
+        <ReviewTicket reviews={initialReviews} />
+      ) : (
+        <EmptyState message="등록된 리뷰 티켓이 없습니다" />
+      )}
+      {/* 페이지네이션 */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={onPageChange}
+        onPageChange={pageChangeHandler}
       />
     </div>
   );

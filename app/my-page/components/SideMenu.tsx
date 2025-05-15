@@ -24,22 +24,9 @@ export default function SideMenu() {
       <div className={getMenuStyle("/my-page/my-ticket-list")}>
         <Link href={`/my-page/my-ticket-list?uid=${uid}`}>MY TICKET LIST</Link>
       </div>
-      <div
-        className={getMenuStyle("/my-page/my-ticket-list/liked-ticket-list")}
-      >
-        <Link href={`/my-page/my-ticket-list/liked-ticket-list?uid=${uid}`}>
-          LIKED
-        </Link>
-      </div>
-      <div
-        className={getMenuStyle(
-          "/my-page/my-ticket-list/bookmarked-ticket-list",
-        )}
-      >
-        <Link
-          href={`/my-page/my-ticket-list/bookmarked-ticket-list?uid=${uid}`}
-        >
-          BOOKMARKED
+      <div className={getMenuStyle("/my-page/liked-ticket-list")}>
+        <Link href={`/my-page/liked-ticket-list?uid=${uid}`}>
+          LIKED TICKET LIST
         </Link>
       </div>
     </aside>

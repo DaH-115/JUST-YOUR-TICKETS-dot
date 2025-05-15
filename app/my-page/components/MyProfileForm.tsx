@@ -164,7 +164,6 @@ export default function ProfileForm() {
       <div className="block space-y-2 md:hidden">
         <div className="text-white">{"My Ticket List >"}</div>
         <div className="text-white">{"Liked Ticket List >"}</div>
-        <div className="text-white">{"Bookmarked Ticket List >"}</div>
       </div>
     </main>
   );

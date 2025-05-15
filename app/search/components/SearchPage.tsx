@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,45 +24,36 @@ export default function SearchPage({
   const router = useRouter();
   const params = useSearchParams();
   const pathname = usePathname();
-  const initialQuery = params.get("query") ?? "";
+  const searchTerm = params.get("search") ?? "";
 
   // 초기값에 URL 쿼리 반영
-  const { register, watch, reset } = useForm<SearchSchema>({
+  const { register, watch } = useForm<SearchSchema>({
     resolver: zodResolver(searchSchema),
-    defaultValues: { searchQuery: initialQuery },
+    defaultValues: { searchQuery: searchTerm },
   });
 
+  // 검색어가 바뀔 때마다 URL 쿼리 업데이트
   const watchedQuery = watch("searchQuery");
 
-  // 실제 검색에 사용할 상태
-  const [cleanedQuery, setCleanedQuery] = useState(initialQuery);
-
-  useEffect(() => {
-    // 1) effect 안에서 디바운스 함수 생성
-    const debounceHandler = debounce((query: string) => {
+  const debounceHandler = useCallback(
+    debounce((query: string) => {
       const cleanedQuery = query.trim().replace(/\s+/g, " ");
 
       if (!cleanedQuery) {
-        setCleanedQuery("");
         router.replace(pathname);
       } else {
-        setCleanedQuery(cleanedQuery);
-        router.replace(`${pathname}?query=${encodeURIComponent(cleanedQuery)}`);
+        router.replace(
+          `${pathname}?search=${encodeURIComponent(cleanedQuery)}&page=1`,
+        );
       }
-    }, 300);
+    }, 300),
+    [router, pathname, watchedQuery],
+  );
 
-    // 2) watchedQuery 변경 시 호출
-    debounceHandler(watchedQuery);
-
-    // 3) cleanup: 이전 타이머 취소
-    return () => debounceHandler.cancel();
-  }, [watchedQuery, pathname, router]);
-
-  // URL 쿼리가 바뀌면(직접 접근 등) 폼과 상태를 동기화
   useEffect(() => {
-    reset({ searchQuery: initialQuery });
-    setCleanedQuery(initialQuery);
-  }, [initialQuery, reset]);
+    debounceHandler(watchedQuery);
+    return () => debounceHandler.cancel();
+  }, [watchedQuery, debounceHandler]);
 
   return (
     <main className="p-8">
@@ -83,19 +74,19 @@ export default function SearchPage({
             placeholder="검색어를 입력하세요"
             className="w-full rounded-lg bg-white py-2 pl-4 pr-12 text-sm text-black focus:outline-none focus:ring-2 focus:ring-accent-300"
           />
-          <div className="absolute right-4">
+          <button type="submit" className="absolute right-4">
             <IoSearchOutline size={24} />
-          </div>
+          </button>
         </div>
       </section>
 
       {/* 결과 또는 Now Playing */}
-      {cleanedQuery ? (
+      {searchTerm ? (
         <section>
           <h2 className="mb-6 text-2xl font-bold text-white">
-            “{cleanedQuery}” 검색 결과
+            “{searchTerm}” 검색 결과
           </h2>
-          <SearchResultList searchQuery={cleanedQuery} />
+          <SearchResultList searchQuery={searchTerm} />
         </section>
       ) : (
         <section>

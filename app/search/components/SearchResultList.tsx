@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import Loading from "app/loading";
 import SwiperCard from "app/components/swiper/swiper-card";
 import Pagination from "app/components/Pagination";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface SearchResultListProps {
   searchQuery: string;
@@ -18,20 +19,30 @@ interface SearchMovieResponse {
 export default function SearchResultList({
   searchQuery,
 }: SearchResultListProps) {
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
+
+  const currentPage = parseInt(params.get("page") || "1", 10);
+
   const [searchResults, setSearchResults] = useState<MovieList[]>([]);
-  const [totalPages, setTotalPages] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!searchQuery) return;
+    if (searchQuery) {
+      params.set("search", searchQuery);
+    } else {
+      params.delete("search");
+    }
+
     setIsLoading(true);
+
     (async () => {
       try {
         const res = await fetch(
-          `/api/tmdb/search?query=${encodeURIComponent(
-            searchQuery,
-          )}&page=${currentPage}`,
+          `${pathname}?query=${encodeURIComponent(searchQuery)}&page=1`,
         );
         if (!res.ok) throw new Error("검색 요청 실패");
 
@@ -47,6 +58,15 @@ export default function SearchResultList({
       }
     })();
   }, [searchQuery, currentPage]);
+
+  const pageChangeHandler = useCallback(
+    (page: number) => {
+      router.push(
+        `${pathname}?search=${encodeURIComponent(searchQuery)}&page=${page}`,
+      );
+    },
+    [router, pathname, searchQuery],
+  );
 
   if (isLoading) {
     return (
@@ -77,7 +97,7 @@ export default function SearchResultList({
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        onPageChange={pageChangeHandler}
       />
     </div>
   );

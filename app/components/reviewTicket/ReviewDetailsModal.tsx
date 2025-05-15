@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Review } from "lib/reviews/fetchReviews";
-import { FaHeart, FaRegHeart, FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
 import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
 import formatDate from "app/utils/formatDate";
@@ -34,8 +34,6 @@ export default function ReviewDetailsModal({
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(selectedReview.likeCount || 0);
   const [isLiking, setIsLiking] = useState(false);
-  const [isBookmarking, setIsBookmarking] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
 
   const userState = useAppSelector((state) => state.userData.auth);
 
@@ -52,21 +50,10 @@ export default function ReviewDetailsModal({
         "liked-reviews",
         selectedReview.id,
       );
-      const bookmarkRef = doc(
-        db,
-        "users",
-        userState.uid,
-        "bookmarked-reviews",
-        selectedReview.id,
-      );
 
-      const [likeSnap, bookmarkSnap] = await Promise.all([
-        getDoc(likeRef),
-        getDoc(bookmarkRef),
-      ]);
+      const likeSnap = await getDoc(likeRef);
 
       setLiked(likeSnap.exists());
-      setBookmarked(bookmarkSnap.exists());
     };
 
     if (userState.uid && selectedReview.id) {
@@ -107,33 +94,6 @@ export default function ReviewDetailsModal({
     setIsLiking(false);
   };
 
-  const bookmarkHandler = async () => {
-    if (!userState?.uid) return;
-    setIsBookmarking(true);
-
-    const bookmarkRef = doc(
-      db,
-      "users",
-      userState.uid,
-      "bookmarked-reviews",
-      selectedReview.id,
-    );
-    const bookmarkSnap = await getDoc(bookmarkRef);
-
-    if (bookmarkSnap.exists()) {
-      // 북마크가 이미 되어있다면 삭제
-      await deleteDoc(bookmarkRef);
-      setBookmarked(false);
-    } else {
-      // 북마크가 되어있지 않다면 추가
-      await setDoc(bookmarkRef, {
-        bookmarkedAt: serverTimestamp(),
-      });
-      setBookmarked(true);
-    }
-    setIsBookmarking(false);
-  };
-
   return (
     <Modal isOpen={isModalOpen} onClose={closeModalHandler}>
       <div className="flex w-full items-center justify-between pb-2">
@@ -160,14 +120,6 @@ export default function ReviewDetailsModal({
           >
             {liked ? <FaHeart /> : <FaRegHeart />}
             <span className="ml-1 text-sm text-black">{likeCount}</span>
-          </button>
-          {/* 북마크 버튼 */}
-          <button
-            onClick={bookmarkHandler}
-            disabled={!userState?.uid || isBookmarking}
-            className="text-accent-300 transition hover:scale-105"
-          >
-            {bookmarked ? <FaBookmark /> : <FaRegBookmark />}
           </button>
           {/* 리뷰 작성자와 로그인한 유저가 같을 때만 수정/삭제 버튼 노출 */}
           {userState?.uid && (

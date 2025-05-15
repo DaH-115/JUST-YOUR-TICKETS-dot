@@ -1,14 +1,10 @@
 import { PrivateRoute } from "store/context/auth/authContext";
 import SideMenu from "app/my-page/components/SideMenu";
 
-export default function MyPageLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <PrivateRoute>
-      <div className="flex p-8">
+      <div className="flex min-h-screen w-full p-8">
         <SideMenu />
         {children}
       </div>
