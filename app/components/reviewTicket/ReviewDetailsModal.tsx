@@ -150,12 +150,12 @@ export default function ReviewDetailsModal({
           님의 리뷰
         </div>
       </div>
-      <div className="mb-2 h-64 flex-1 overflow-y-scroll border-y-4 border-dotted pb-8 pt-2">
+      <div className="mb-2 h-64 flex-1 overflow-y-scroll border-t-4 border-dotted pb-8 pt-2">
         <p className="mb-1 text-xs font-bold">리뷰 내용</p>
         <p className="break-keep">{selectedReview.reviewContent}</p>
       </div>
-      {/* 댓글 영역 */}
-      <Comments id={selectedReview.id} />
+      {/* 댓글 영역 - 모달이 열릴 때만 렌더링 */}
+      {isModalOpen && <Comments id={selectedReview.id} />}
     </Modal>
   );
 }

@@ -26,13 +26,21 @@ export default function Pagination({
   };
 
   return (
-    <nav aria-label="페이지 네비게이션" className="mt-16 flex justify-center">
-      <button onClick={() => pageChangeHandler(1)} disabled={currentPage === 1}>
+    <nav
+      aria-label="페이지 네비게이션"
+      className="mt-16 flex justify-center gap-3 text-gray-200"
+    >
+      <button
+        onClick={() => pageChangeHandler(1)}
+        disabled={currentPage === 1}
+        className={`${currentPage === 1 ? "hidden" : "block"}`}
+      >
         처음
       </button>
       <button
         onClick={() => pageChangeHandler(currentPage - 1)}
         disabled={currentPage === 1}
+        className={`${currentPage === 1 ? "hidden" : "block"}`}
       >
         <FaArrowLeft />
       </button>
@@ -41,6 +49,7 @@ export default function Pagination({
           key={p}
           onClick={() => pageChangeHandler(p)}
           aria-current={p === currentPage ? "page" : undefined}
+          className="font-bold text-accent-300"
         >
           {p}
         </button>
@@ -48,12 +57,14 @@ export default function Pagination({
       <button
         onClick={() => pageChangeHandler(currentPage + 1)}
         disabled={currentPage === totalPages}
+        className={`${currentPage === totalPages ? "hidden" : "block"}`}
       >
         <FaArrowRight />
       </button>
       <button
         onClick={() => pageChangeHandler(totalPages)}
         disabled={currentPage === totalPages}
+        className={`${currentPage === totalPages ? "hidden" : "block"}`}
       >
         마지막
       </button>
