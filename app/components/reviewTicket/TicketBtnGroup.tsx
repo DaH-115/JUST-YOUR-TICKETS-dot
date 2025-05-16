@@ -65,7 +65,7 @@ const TicketBtnGroup = React.memo(function ReviewBtnGroup({
         {/* UPDATE BUTTON */}
         <Link
           href={`/write-review/${postId}?movieId=${movieId}`}
-          className="inline-block w-full border-b border-gray-300 px-1 py-2 text-center text-sm"
+          className="inline-block w-full border-b px-1 py-2 text-center text-sm"
           onClick={() => setIsOpen(false)}
         >
           <div className="flex items-center justify-center rounded-md p-1 transition-colors ease-in-out hover:bg-gray-100 hover:font-bold">

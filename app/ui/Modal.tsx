@@ -20,7 +20,7 @@ export default function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-full max-w-md rounded-xl border-2 bg-white px-4 py-2 drop-shadow-lg">
-        <div className="mb-2 border-b border-gray-200">
+        <div className="mb-2 border-b">
           <strong className="font-bold">
             {status ? `Error ${status}` : title}
           </strong>

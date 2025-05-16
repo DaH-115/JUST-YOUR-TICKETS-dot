@@ -87,9 +87,9 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
   return (
     <>
       <div className="mx-auto my-4 flex w-2/3 items-center">
-        <div className="flex-grow border-t border-gray-400"></div>
+        <div className="flex-grow border-t"></div>
         <span className="mx-4 text-xs text-gray-500">OR</span>
-        <div className="flex-grow border-t border-gray-400"></div>
+        <div className="flex-grow border-t"></div>
       </div>
       <div className="mb-4 flex items-center justify-center">
         <div className="flex space-x-2">

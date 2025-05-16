@@ -25,32 +25,33 @@ export default function SwiperCard({
   return (
     <div className="group/card relative mb-20 drop-shadow-lg md:mb-32">
       {/* RANKING NUMBER */}
-      <div className="absolute left-0 top-0 z-50 w-full rounded-t-xl bg-gradient-to-t from-transparent to-primary-700 px-2 py-1 text-lg font-bold text-white md:px-4 md:py-2 md:text-4xl">
+      <div className="absolute left-0 top-0 z-50 flex w-full items-center justify-between rounded-t-xl bg-gradient-to-t from-transparent to-primary-700 px-3 py-2 text-lg font-bold text-white md:text-3xl">
         {idx + 1}.
+        <div className="group/tooltip relative text-xs md:ml-2 md:text-base">
+          <Link
+            href={`/movie-details/${id}`}
+            aria-label={`${movieTitle} 영화 상세정보 보기`}
+            title={`${movieTitle} 영화 상세정보 보기`}
+            role="button"
+          >
+            <FaInfoCircle aria-hidden />
+          </Link>
+          <Tooltip>영화 상세정보 보기</Tooltip>
+        </div>
       </div>
+
       {/* MOVIE POSTER */}
       <div className="overflow-hidden rounded-xl">
         <MoviePoster posterPath={poster_path} title={movieTitle} size={342} />
       </div>
       {/* MOVIE INFO CARD */}
-      <div className="absolute -bottom-20 right-0 w-full rounded-xl border-2 border-gray-200 bg-white transition-all duration-300 ease-in-out md:-bottom-32 lg:group-hover/card:-bottom-28 lg:group-hover/card:right-2">
+      <div className="absolute -bottom-20 right-0 w-full rounded-lg border-2 bg-white transition-all duration-300 ease-in-out md:-bottom-32 lg:group-hover/card:-bottom-28 lg:group-hover/card:right-2">
         {/* MOVIE TITLE & LINK */}
-        <div className="flex items-center justify-between p-2 md:px-4 md:py-3">
+        <div className="flex items-center justify-between p-3">
           <div className="truncate text-sm font-bold">{movieTitle}</div>
-          <div className="group/tooltip relative text-xs md:ml-2 md:text-base">
-            <Link
-              href={`/movie-details/${id}`}
-              aria-label={`${movieTitle} 영화 상세정보 보기`}
-              title={`${movieTitle} 영화 상세정보 보기`}
-              role="button"
-            >
-              <FaInfoCircle aria-hidden />
-            </Link>
-            <Tooltip>영화 상세정보 보기</Tooltip>
-          </div>
         </div>
         {/* GENRES */}
-        <ul className="hidden w-full gap-1 border-y-4 border-dotted border-gray-200 p-2 scrollbar-hide md:flex md:overflow-x-scroll">
+        <ul className="hidden w-full gap-1 border-y-4 border-dotted p-2 scrollbar-hide md:flex md:overflow-x-scroll">
           {genres?.length > 0 ? (
             genres.slice(0, 3).map((genre, idx) => (
               <li
@@ -68,16 +69,14 @@ export default function SwiperCard({
         </ul>
         {/* RATE */}
         <div className="flex w-full flex-col text-center md:flex-row">
-          <div className="flex items-center border-r-4 border-dotted border-gray-200 px-2 text-xs md:px-4">
+          <div className="flex items-center px-2 text-xs md:px-3">
             <IoStar className="mr-1 text-accent-300" />
             <div className="font-bold">
               {Math.round(vote_average * 10) / 10}
             </div>
           </div>
           {/* REVIEW WRITE BUTTON */}
-          <div className="flex w-full p-1">
-            <WriteBtn movieId={id} size={"small"} />
-          </div>
+          <WriteBtn movieId={id} size={"small"} />
         </div>
       </div>
     </div>

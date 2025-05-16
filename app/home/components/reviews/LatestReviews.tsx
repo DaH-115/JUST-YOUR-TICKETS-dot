@@ -6,17 +6,19 @@ import { FaArrowRight } from "react-icons/fa";
 export default function LatestReviews({ reviews }: { reviews: Review[] }) {
   return (
     <section className="mt-16">
-      <h2 className="mb-8 flex items-center text-2xl font-bold text-accent-300 md:text-4xl">
-        Latest Reviews
+      <div className="mb-8 flex items-baseline">
+        <h2 className="flex items-center text-2xl font-bold text-accent-300 md:text-4xl">
+          Latest Reviews
+        </h2>
         <Link
           href="/ticket-list"
-          className="ml-2 flex items-center justify-center rounded-full border-2 border-accent-300 p-2 transition-all hover:bg-accent-300 hover:text-white"
+          className="ml-3 text-white hover:underline"
           aria-label="티켓 목록으로 이동"
         >
-          <FaArrowRight size={20} />
+          전체 보기
         </Link>
-      </h2>
-      <div className="grid gap-4 px-8">
+      </div>
+      <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {reviews.map((review) => (
           <ReviewCard key={review.id} review={review} />
         ))}

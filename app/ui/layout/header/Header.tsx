@@ -105,7 +105,7 @@ export default function Header() {
       <div className="flex">
         {/* NAVIGATION */}
         <div
-          className={`flex w-full items-center justify-between rounded-full border-2 border-gray-200 bg-white md:w-auto md:justify-center md:px-4 md:py-3 ${
+          className={`flex w-full items-center justify-between rounded-full border-2 bg-white md:w-auto md:justify-center md:px-4 md:py-3 ${
             isSideMenuOpen ? "pointer-events-auto" : ""
           }`}
         >

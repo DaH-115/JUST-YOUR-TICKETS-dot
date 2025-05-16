@@ -34,7 +34,7 @@ export default function HeaderDropDownMenu({
             : "pointer-events-none translate-y-0 opacity-0"
         }`}
       >
-        <div className="w-full border-b-2 border-gray-200 p-1">
+        <div className="w-full border-b-2 p-1">
           <Link href="/my-page">
             <button className="w-full rounded-xl px-4 py-2 transition-all duration-300 hover:bg-gray-200 hover:font-bold">
               My Page

@@ -67,7 +67,7 @@ export default function ReviewForm({
         <BackGround imageUrl={movieData.backdrop_path} />
       )}
       <main className="relative mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
-        <div className="mx-auto w-11/12 rounded-xl border-2 border-gray-200 bg-white md:w-2/4">
+        <div className="mx-auto w-11/12 rounded-xl border-2 bg-white md:w-2/4">
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <ReviewFormHeader

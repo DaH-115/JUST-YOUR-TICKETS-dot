@@ -67,10 +67,9 @@ export default function ReviewTicket({ reviews }: { reviews: Review[] }) {
               posterPath={post.moviePosterPath}
               title={post.movieTitle}
               size={342}
-              lazy
             />
             {/* MOVIE INFO CARD */}
-            <div className="absolute -bottom-16 right-0 w-full rounded-lg border border-gray-200 bg-white p-2 transition-all duration-500 md:-bottom-16">
+            <div className="absolute -bottom-16 right-0 w-full rounded-lg border bg-white p-2 transition-all duration-500 md:-bottom-16">
               {/* RATE & NAME */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center justify-center text-xs">

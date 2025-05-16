@@ -22,7 +22,7 @@ export default function AnimatedOverview({ overview }: { overview: string }) {
   };
 
   return (
-    <div className="border-b-4 border-dotted border-gray-200 p-4">
+    <div className="border-b-4 border-dotted p-4">
       <div className="relative">
         <div
           ref={contentRef}

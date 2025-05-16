@@ -109,7 +109,7 @@ export default function HeaderSearchBar() {
           <div
             className={`${
               isSearchOpen ? "border-none" : "bg-white"
-            } absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-gray-200 transition-all duration-300 ease-in-out`}
+            } absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-300 ease-in-out`}
             onClick={iconClickHandler}
           >
             <IoSearchOutline size={18} color="black" />

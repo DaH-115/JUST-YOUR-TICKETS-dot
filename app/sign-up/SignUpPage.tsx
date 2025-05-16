@@ -204,7 +204,7 @@ export default function SignUpPage() {
 
   return (
     <main className="mt-8 w-full border-t-4 border-accent-300 bg-white pb-8 md:flex md:justify-center md:py-10">
-      <h1 className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:border-gray-200 md:pl-0 md:pt-0 md:text-4xl">
+      <h1 className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:pl-0 md:pt-0 md:text-4xl">
         SIGN UP
       </h1>
       <div className="md:w-2/3">

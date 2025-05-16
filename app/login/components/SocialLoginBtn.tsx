@@ -21,8 +21,8 @@ export default function SocialLoginButton({
       disabled={isLoading}
       className={`group relative flex items-center justify-start rounded-full border ${
         isLoading
-          ? "cursor-not-allowed border-gray-200 bg-gray-50"
-          : "border-gray-400 hover:border-gray-500 hover:bg-gray-100"
+          ? "cursor-not-allowed border-gray-300 bg-gray-50"
+          : "hover:border-gray-300 hover:bg-gray-100"
       } p-3 transition-all duration-300`}
       aria-label={`${label} 로그인`}
     >

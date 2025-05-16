@@ -26,7 +26,7 @@ export default function ReviewFormHeader({
   }, [router, isDirty]);
 
   return (
-    <div className="flex items-center justify-between border-b-2 border-gray-200 p-4">
+    <div className="flex items-center justify-between border-b-2 p-4">
       <button
         type="button"
         onClick={pageExitHandler}

@@ -118,7 +118,7 @@ export default function ProfileForm() {
 
   return (
     <main className="mx-auto w-full">
-      <div className="mb-4 rounded-xl border-2 border-gray-200 bg-white p-8">
+      <div className="mb-4 rounded-xl border-2 bg-white p-8">
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <section className="mb-8 text-center">

@@ -110,7 +110,7 @@ export default function ChangePassword() {
   };
 
   return (
-    <section className="relative rounded-xl border-2 border-gray-200 bg-white px-8 py-6 transition-transform duration-300 hover:-translate-x-1 hover:-translate-y-1">
+    <section className="relative rounded-xl border-2 bg-white px-8 py-6 transition-transform duration-300 hover:-translate-x-1 hover:-translate-y-1">
       <h2 className="mb-2 text-xl font-bold">비밀번호 변경</h2>
 
       {/* 1단계: 현재 비밀번호 확인 */}
