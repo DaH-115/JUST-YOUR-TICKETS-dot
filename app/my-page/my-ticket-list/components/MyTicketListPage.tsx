@@ -2,14 +2,16 @@
 
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
+import {
+  fetchReviewsPaginated,
+  ReviewDoc,
+} from "lib/reviews/fetchReviewsPaginated";
 import MyTicketHeader from "app/my-page/components/MyTicketPageHeader";
 import SearchForm from "app/components/SearchForm";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 import Pagination from "app/components/Pagination";
 import EmptyState from "app/my-page/components/EmptyState";
 import Loading from "app/loading";
-import { Review } from "lib/reviews/fetchReviews";
 
 const PAGE_SIZE = 10;
 
@@ -24,7 +26,7 @@ export default function MyTicketListPage() {
   const searchTerm = params.get("search") || "";
 
   // 2) 로컬 상태: 패칭 결과
-  const [userReviews, setUserReviews] = useState<Review[]>([]);
+  const [userReviews, setUserReviews] = useState<ReviewDoc[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 

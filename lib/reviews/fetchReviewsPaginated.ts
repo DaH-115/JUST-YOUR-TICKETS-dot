@@ -7,10 +7,29 @@ import {
   getDocs,
   getCountFromServer,
   Query,
-  CollectionReference,
+  DocumentData,
 } from "firebase/firestore";
 import { db } from "firebase-config";
-import { Review } from "lib/reviews/fetchReviews";
+import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
+
+// UI에게 반환할, 문자열로 변환된 타입
+export interface ReviewDoc {
+  id: string;
+  user: SerializableUser;
+  review: {
+    movieId: number;
+    movieTitle: string;
+    originalTitle: string;
+    moviePosterPath?: string;
+    releaseYear: string;
+    rating: number;
+    reviewTitle: string;
+    reviewContent: string;
+    createdAt: string; // ISO 문자열
+    updatedAt: string;
+    likeCount: number;
+  };
+}
 
 interface FetchReviewsParams {
   page: number;
@@ -24,73 +43,54 @@ export async function fetchReviewsPaginated({
   pageSize,
   uid,
   search = "",
-}: FetchReviewsParams): Promise<{ reviews: Review[]; totalPages: number }> {
-  // 1) 기본 컬렉션 또는 특정 유저 필터
-  let base: CollectionReference | Query = collection(db, "movie-reviews");
-  if (uid) {
-    base = query(base, where("uid", "==", uid));
-  }
+}: FetchReviewsParams): Promise<{ reviews: ReviewDoc[]; totalPages: number }> {
+  // 1) 컬렉션, 필터
+  let base = collection(db, "movie-reviews") as Query<DocumentData>;
+  if (uid) base = query(base, where("user.uid", "==", uid));
 
-  // 2) 검색어가 있으면 movieTitle prefix 필터를 적용
-  let countQuery = base as Query;
+  // 2) countQuery 구성 (검색 포함)
+  let countQuery = base;
   if (search) {
     const end = search + "\uf8ff";
     countQuery = query(
       countQuery,
-      where("movieTitle", ">=", search),
-      where("movieTitle", "<=", end),
+      where("review.movieTitle", ">=", search),
+      where("review.movieTitle", "<=", end),
     );
   }
-
-  // 3) 전체 개수 조회 → totalPages 계산
   const countSnap = await getCountFromServer(countQuery);
-  const totalCount = countSnap.data().count;
-  const totalPages = Math.ceil(totalCount / pageSize);
+  const totalPages = Math.ceil(countSnap.data().count / pageSize);
 
-  // 4) 문서 가져올 쿼리 구성
-  let docsQuery: Query;
-  if (search) {
-    const end = search + "\uf8ff";
-    docsQuery = query(
-      base as Query,
-      where("movieTitle", ">=", search),
-      where("movieTitle", "<=", end),
-      limit(page * pageSize), // page * pageSize 개까지 미리 불러오기
-    );
-  } else {
-    docsQuery = query(
-      base as Query,
-      orderBy("createdAt", "desc"), // 생성일 내림차순
-      limit(page * pageSize),
-    );
-  }
+  // 3) docsQuery 구성
+  let docsQuery = search
+    ? query(
+        base,
+        where("review.movieTitle", ">=", search),
+        where("review.movieTitle", "<=", search + "\uf8ff"),
+        limit(page * pageSize),
+      )
+    : query(base, orderBy("review.createdAt", "desc"), limit(page * pageSize));
 
-  // 5) 스냅샷 가져와 매핑
+  // 4) 데이터 변환
   const snap = await getDocs(docsQuery);
-  const all = snap.docs.map((doc) => {
-    const d: any = doc.data();
+
+  const all: ReviewDoc[] = snap.docs.map((doc) => {
+    const d = doc.data();
     return {
       id: doc.id,
-      uid: d.uid,
-      userName: d.userName,
-      movieId: d.movieId,
-      movieTitle: d.movieTitle,
-      moviePosterPath: d.moviePosterPath,
-      releaseYear: d.releaseYear,
-      rating: d.rating,
-      reviewTitle: d.reviewTitle,
-      reviewContent: d.reviewContent,
-      likeCount: d.likeCount,
-      createdAt: d.createdAt.toDate().toISOString(),
-    } as Review;
+      user: d.user,
+      review: {
+        ...d.review,
+        createdAt: d.review.createdAt.toDate().toISOString(),
+        updatedAt: d.review.updatedAt.toDate().toISOString(),
+      },
+    };
   });
 
-  // 6) JS에서 최종 정렬(최신순) 후 해당 페이지 슬라이스
-  const sorted = all.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
+  // 5) 페이지 슬라이스
   const start = (page - 1) * pageSize;
-  const reviews = sorted.slice(start, start + pageSize);
-
-  return { reviews, totalPages };
+  return {
+    reviews: all.slice(start, start + pageSize),
+    totalPages,
+  };
 }

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Review } from "lib/reviews/fetchReviews";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
 import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import formatDate from "app/utils/formatDate";
 import {
   deleteDoc,
@@ -21,7 +21,7 @@ import Modal from "app/components/modal/Modal";
 interface ReviewDetailsModalProps {
   isModalOpen: boolean;
   closeModalHandler: () => void;
-  selectedReview: Review;
+  selectedReview: ReviewDoc;
   onReviewDeleted: (id: string) => void;
 }
 
@@ -31,15 +31,17 @@ export default function ReviewDetailsModal({
   selectedReview,
   onReviewDeleted,
 }: ReviewDetailsModalProps) {
+  const { review, user } = selectedReview;
+
   const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(selectedReview.likeCount || 0);
+  const [likeCount, setLikeCount] = useState(review.likeCount || 0);
   const [isLiking, setIsLiking] = useState(false);
 
   const userState = useAppSelector((state) => state.userData.auth);
 
   useEffect(() => {
-    setLikeCount(selectedReview.likeCount || 0);
-  }, [selectedReview.likeCount]);
+    setLikeCount(review.likeCount || 0);
+  }, [review.likeCount]);
 
   useEffect(() => {
     if (!userState?.uid) {
@@ -82,7 +84,7 @@ export default function ReviewDetailsModal({
     if (likeSnap.exists()) {
       // 좋아요한 기록이 있으면 취소
       await deleteDoc(likeRef);
-      await updateDoc(reviewRef, { likeCount: increment(-1) });
+      await updateDoc(reviewRef, { "review.likeCount": increment(-1) });
       setLiked(false);
       setLikeCount((prev) => prev - 1);
     } else {
@@ -90,7 +92,7 @@ export default function ReviewDetailsModal({
       await setDoc(likeRef, {
         likedAt: serverTimestamp(),
       });
-      await updateDoc(reviewRef, { likeCount: increment(1) });
+      await updateDoc(reviewRef, { "review.likeCount": increment(1) });
       setLiked(true);
       setLikeCount((prev) => prev + 1);
     }
@@ -104,15 +106,13 @@ export default function ReviewDetailsModal({
         {/* 왼쪽: 별점 영역 */}
         <div className="mr-4 flex h-full items-center justify-center">
           <IoStar className="mr-1 text-accent-300" size={18} />
-          <p className="text-2xl font-bold md:text-3xl">
-            {selectedReview.rating}
-          </p>
+          <p className="text-2xl font-bold md:text-3xl">{review.rating}</p>
         </div>
         {/* 오른쪽: 타이틀 및 버튼 */}
         <div className="w-full">
-          <h1 className="font-bold">{selectedReview?.reviewTitle}</h1>
+          <h1 className="font-bold">{review?.reviewTitle}</h1>
           <div className="flex text-xs text-gray-500">
-            {selectedReview.movieTitle} - {selectedReview.releaseYear}
+            {review.movieTitle} - {review.releaseYear}
           </div>
         </div>
         <div className="mr-2 flex items-center gap-3">
@@ -128,9 +128,9 @@ export default function ReviewDetailsModal({
           {/* 리뷰 작성자와 로그인한 유저가 같을 때만 수정/삭제 버튼 노출 */}
           {userState?.uid && (
             <ReviewBtnGroup
-              movieId={selectedReview.movieId}
+              movieId={String(review.movieId)}
               postId={selectedReview.id}
-              authorId={selectedReview.uid}
+              authorId={user.uid}
               onReviewDeleted={onReviewDeleted}
             />
           )}
@@ -142,17 +142,14 @@ export default function ReviewDetailsModal({
         />
       </div>
       <div className="flex items-center justify-between pb-2 text-sm">
-        <p className="text-xs text-gray-500">
-          {formatDate(selectedReview.createdAt)}
-        </p>
+        <p className="text-xs text-gray-500">{formatDate(review.createdAt)}</p>
         <div className="flex items-center">
-          <span className="mr-1 font-bold">{selectedReview.userName}</span>
-          님의 리뷰
+          <span className="mr-1 font-bold">{user.displayName}</span>
         </div>
       </div>
       <div className="mb-2 h-64 flex-1 overflow-y-scroll border-t-4 border-dotted pb-8 pt-2">
         <p className="mb-1 text-xs font-bold">리뷰 내용</p>
-        <p className="break-keep">{selectedReview.reviewContent}</p>
+        <p className="break-keep">{review.reviewContent}</p>
       </div>
       {/* 댓글 영역 - 모달이 열릴 때만 렌더링 */}
       {isModalOpen && <Comments id={selectedReview.id} />}

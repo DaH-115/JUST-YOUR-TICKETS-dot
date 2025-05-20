@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Review } from "lib/reviews/fetchReviews";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 interface UseLikedReviewsOptions {
   uid: string;
@@ -9,7 +9,7 @@ interface UseLikedReviewsOptions {
 }
 
 interface UseLikedReviewsResult {
-  reviews: Review[];
+  reviews: ReviewDoc[];
   totalPages: number;
   loading: boolean;
   error: string | null;
@@ -21,7 +21,7 @@ export function useLikedReviews({
   page,
   pageSize = 10,
 }: UseLikedReviewsOptions): UseLikedReviewsResult {
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<ReviewDoc[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +61,7 @@ export function useLikedReviews({
         const {
           reviews,
           totalPages,
-        }: { reviews: Review[]; totalPages: number } = await res.json();
+        }: { reviews: ReviewDoc[]; totalPages: number } = await res.json();
 
         setReviews(reviews);
         setTotalPages(totalPages);

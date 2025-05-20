@@ -3,20 +3,22 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import { IoStar } from "react-icons/io5";
-import { Review } from "lib/reviews/fetchReviews";
-import ReviewDetailsModal from "app/components/reviewTicket/ReviewDetailsModal";
 import { deleteReview } from "app/actions/deleteReview";
+import ReviewDetailsModal from "app/components/reviewTicket/ReviewDetailsModal";
 import MoviePoster from "app/components/MoviePoster";
+import ProfileImage from "app/components/reviewTicket/ProfileImage";
 import { useAlert } from "store/context/alertContext";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { FaHeart } from "react-icons/fa";
 
-export default function ReviewTicket({ reviews }: { reviews: Review[] }) {
+export default function ReviewTicket({ reviews }: { reviews: ReviewDoc[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedReview, setSelectedReview] = useState<Review>();
+  const [selectedReview, setSelectedReview] = useState<ReviewDoc>();
   const { showErrorHanlder } = useAlert();
 
-  const openModalHandler = useCallback((content: Review) => {
-    setSelectedReview(content);
+  const openModalHandler = useCallback((selectedReview: ReviewDoc) => {
+    setSelectedReview(selectedReview);
     setIsModalOpen(true);
   }, []);
 
@@ -47,6 +49,7 @@ export default function ReviewTicket({ reviews }: { reviews: Review[] }) {
 
   return (
     <>
+      {/* 리뷰 상세 모달 */}
       {selectedReview && (
         <ReviewDetailsModal
           selectedReview={selectedReview}
@@ -55,50 +58,60 @@ export default function ReviewTicket({ reviews }: { reviews: Review[] }) {
           onReviewDeleted={onReviewDeleteHanlder}
         />
       )}
+      {/* 리뷰 리스트 */}
       <div className="grid grid-cols-3 gap-2 lg:grid-cols-5">
-        {reviews.map((post) => (
+        {reviews.map((data) => (
           <div
-            key={post.id}
-            onClick={() => openModalHandler(post)}
+            key={data.id}
+            onClick={() => openModalHandler(data)}
             className="relative mb-16 cursor-pointer drop-shadow-md transition-transform duration-300 hover:-translate-y-1"
           >
             {/* MOVIE POSTER */}
             <MoviePoster
-              posterPath={post.moviePosterPath}
-              title={post.movieTitle}
+              posterPath={data.review.moviePosterPath}
+              title={data.review.movieTitle}
               size={342}
             />
+
             {/* MOVIE INFO CARD */}
             <div className="absolute -bottom-16 right-0 w-full rounded-lg border bg-white p-2 transition-all duration-500 md:-bottom-16">
-              {/* RATE & NAME */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center justify-center text-xs">
-                  <IoStar className="mr-1 text-accent-300" />
-                  <p className="font-bold">{post.rating}</p>
-                </div>
-                <div className="flex-1 pl-2">
-                  <p className="truncate text-right text-xs font-bold">
-                    {post.userName ? post.userName : "Guest"}
-                  </p>
-                </div>
-              </div>
-              {/* POST NUMBER & REVIEW TITLE */}
-              <div className="w-full">
-                <p className="block w-full truncate pt-2 text-xs">
-                  {post.reviewTitle}
-                </p>
+              {/* 영화 타이틀 & 좋아요 */}
+              <div className="flex items-center justify-between border-b-4 border-dotted px-2">
                 {/* 클릭하면 영화 상세 정보로 이동 */}
                 <div
-                  className="w-full text-xs text-gray-500"
-                  onClick={(e) => e.stopPropagation()}
+                  className="truncate border-r-4 border-dotted pr-2 text-xs font-bold hover:underline"
+                  onClick={(event) => event.stopPropagation()}
                 >
-                  <Link
-                    href={`/movie-details/${post.movieId}`}
-                    className="block truncate text-gray-500 transition-all duration-300 hover:text-accent-400 hover:underline active:text-accent-400 active:underline"
-                  >
-                    {`${post.movieTitle}(${post.releaseYear})`}
+                  <Link href={`/movie-details/${data.review.movieId}`}>
+                    {`${data.review.movieTitle}(${data.review.releaseYear})`}
                   </Link>
                 </div>
+                {/* 좋아요 카운트 */}
+                <FaHeart size={32} className="mr-1 pl-2 text-red-500" />
+                <p>{data.review.likeCount}</p>
+              </div>
+
+              {/* 리뷰 제목 */}
+              <div className="flex items-center border-b-4 border-dotted p-2">
+                <div className="mr-2 flex items-center justify-center border-r-4 border-dotted pr-2">
+                  <IoStar className="text-accent-300" />
+                  <p className="font-bold">{data.review.rating}</p>
+                </div>
+                <p className="w-full truncate">{data.review.reviewTitle}</p>
+              </div>
+
+              {/* 프로필 사진 & 닉네임 & 작성 시간 */}
+              <div className="flex items-center justify-between pt-2 text-xs">
+                <div className="flex items-center">
+                  <ProfileImage
+                    photoURL={data.user.photoURL || undefined}
+                    userDisplayName={data.user.displayName || "사용자"}
+                  />
+                  <div>
+                    {data.user.displayName ? data.user.displayName : "Guest"}
+                  </div>
+                </div>
+                <p>{new Date(data.review.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
           </div>

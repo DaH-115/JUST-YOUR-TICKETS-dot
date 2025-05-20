@@ -18,12 +18,8 @@ export default function RecommendMovie({
     <section className="py-8">
       {/* SECTION TITLE */}
       <div className="pb-8 pt-6">
-        <h2 className="text-5xl font-bold text-accent-300 lg:text-6xl">
-          Movie
-          <br />
-          Pick!
-        </h2>
-        <p className="mt-4 text-white">선택하기 어렵다면 이 영화는 어때요?</p>
+        <h2 className="text-2xl font-bold text-accent-300">Movie Pick!</h2>
+        <p className="text-white">선택하기 어렵다면 이 영화는 어때요?</p>
       </div>
       {/* SECTION CONTETNS */}
       <div className="flex w-full flex-col items-center justify-center">

@@ -1,5 +1,4 @@
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
-import { Review } from "lib/reviews/fetchReviews";
 import BackGround from "app/ui/layout/BackGround";
 import RecommendMovie from "app/home/components/RecommendMovie";
 import NowPlayingList from "app/home/components/NowPlayingList";
@@ -7,13 +6,14 @@ import MovieTrailer from "app/home/components/MovieTrailer";
 import TrendingMovies from "app/home/components/trending/TrendingMovies";
 import LatestReviews from "app/home/components/reviews/LatestReviews";
 import ScrollToTopBtn from "app/components/ScrollToTopBtn";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 interface HomePageProps {
   movieList: MovieList[];
   recommendMovie: MovieList;
   trailerKey: string;
   trendingMovies: MovieList[];
-  latestReviews: Review[];
+  latestReviews: ReviewDoc[];
 }
 
 export default function HomePage({

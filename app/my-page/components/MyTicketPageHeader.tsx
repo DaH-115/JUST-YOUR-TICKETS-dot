@@ -1,11 +1,11 @@
 "use client";
 
-import { Review } from "lib/reviews/fetchReviews";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 interface ReviewSearchForm {
   title: string;
   content: string;
-  userReviews?: Review[];
+  userReviews?: ReviewDoc[];
 }
 
 export default function MyTicketHeader({
