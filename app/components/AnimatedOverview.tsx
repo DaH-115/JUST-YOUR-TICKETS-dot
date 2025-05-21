@@ -31,7 +31,7 @@ export default function AnimatedOverview({ overview }: { overview: string }) {
             !isExpanded && needsExpansion ? "mask-linear-gradient" : ""
           }`}
         >
-          <p className="break-keep text-sm font-light">{overview}</p>
+          <p className="break-keep font-light">{overview}</p>
         </div>
         {!isExpanded && needsExpansion && (
           <span className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />

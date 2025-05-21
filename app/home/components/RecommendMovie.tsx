@@ -21,22 +21,21 @@ export default function RecommendMovie({
         <h2 className="text-2xl font-bold text-accent-300">Movie Pick!</h2>
         <p className="text-white">선택하기 어렵다면 이 영화는 어때요?</p>
       </div>
-      {/* SECTION CONTETNS */}
-      <div className="flex w-full flex-col items-center justify-center">
-        <div className="flex w-full flex-col items-center justify-center md:w-2/3 md:flex-row md:items-start lg:w-4/5">
+
+      {/* SECTION CONTENTS */}
+      <div className="flex w-full justify-center">
+        <div className="flex w-full max-w-4xl gap-6">
           {/* MOVIE POSTER */}
-          {currentMovie.poster_path && (
-            <div className="w-1/2 overflow-hidden rounded-xl pb-4 drop-shadow md:mr-4 md:w-2/6 md:py-0">
-              <MoviePoster
-                posterPath={currentMovie.poster_path}
-                title={movieTitle}
-                size={500}
-              />
-            </div>
-          )}
+          <div className="aspect-[2/3] flex-none rounded-xl drop-shadow">
+            <MoviePoster
+              posterPath={currentMovie.poster_path}
+              title={movieTitle}
+              size={500}
+            />
+          </div>
 
           {/* MOVIE INFO CARD */}
-          <div className="relative h-full w-4/5 md:w-3/6">
+          <div className="h-full flex-1">
             <MovieInfoCard movie={currentMovie} />
           </div>
         </div>

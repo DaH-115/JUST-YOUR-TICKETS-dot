@@ -8,9 +8,11 @@ import {
   getCountFromServer,
   Query,
   DocumentData,
+  Timestamp,
 } from "firebase/firestore";
 import { db } from "firebase-config";
 import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
+import formatDate from "app/utils/formatDate";
 
 // UI에게 반환할, 문자열로 변환된 타입
 export interface ReviewDoc {
@@ -76,13 +78,16 @@ export async function fetchReviewsPaginated({
 
   const all: ReviewDoc[] = snap.docs.map((doc) => {
     const d = doc.data();
+    const createdIso = d.review.createdAt.toDate().toISOString();
+    const updatedIso = d.review.updatedAt.toDate().toISOString();
+
     return {
       id: doc.id,
       user: d.user,
       review: {
         ...d.review,
-        createdAt: d.review.createdAt.toDate().toISOString(),
-        updatedAt: d.review.updatedAt.toDate().toISOString(),
+        createdAt: formatDate(createdIso),
+        updatedAt: formatDate(updatedIso),
       },
     };
   });

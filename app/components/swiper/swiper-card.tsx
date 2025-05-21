@@ -23,9 +23,9 @@ export default function SwiperCard({
   );
 
   return (
-    <div className="group/card relative mb-20 drop-shadow-lg md:mb-32">
+    <div className="flex flex-col items-stretch drop-shadow-lg">
       {/* RANKING NUMBER */}
-      <div className="absolute left-0 top-0 z-50 flex w-full items-center justify-between rounded-t-xl bg-gradient-to-t from-transparent to-primary-700 px-3 py-2 text-lg font-bold text-white md:text-3xl">
+      <div className="absolute left-0 top-0 z-50 flex w-full items-center justify-between rounded-t-xl bg-gradient-to-t from-transparent to-gray-900 px-4 py-3 text-3xl font-bold text-white">
         {idx + 1}.
         <div className="group/tooltip relative text-xs md:ml-2 md:text-base">
           <Link
@@ -41,12 +41,13 @@ export default function SwiperCard({
       </div>
 
       {/* MOVIE POSTER */}
-      <div className="overflow-hidden rounded-xl">
+      <div className="aspect-[2/3] overflow-hidden rounded-xl">
         <MoviePoster posterPath={poster_path} title={movieTitle} size={342} />
       </div>
+
       {/* MOVIE INFO CARD */}
-      <div className="absolute -bottom-20 right-0 w-full rounded-lg border-2 bg-white transition-all duration-300 ease-in-out md:-bottom-32 lg:group-hover/card:-bottom-28 lg:group-hover/card:right-2">
-        {/* MOVIE TITLE & LINK */}
+      <div className="rounded-xl bg-white">
+        {/* MOVIE TITLE */}
         <div className="flex items-center justify-between p-3">
           <div className="truncate text-sm font-bold">{movieTitle}</div>
         </div>
@@ -68,8 +69,8 @@ export default function SwiperCard({
           )}
         </ul>
         {/* RATE */}
-        <div className="flex w-full flex-col text-center md:flex-row">
-          <div className="flex items-center px-2 text-xs md:px-3">
+        <div className="flex w-full p-1 text-center">
+          <div className="flex items-center px-2 text-xs">
             <IoStar className="mr-1 text-accent-300" />
             <div className="font-bold">
               {Math.round(vote_average * 10) / 10}

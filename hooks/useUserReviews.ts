@@ -1,5 +1,5 @@
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { useState, useEffect } from "react";
-import { Review } from "lib/reviews/fetchReviews";
 
 interface UseUserReviewsOptions {
   /** 유저별 조회: uid 넘김, 전체 조회: uid 생략 */
@@ -10,7 +10,7 @@ interface UseUserReviewsOptions {
 }
 
 interface UseUserReviewsResult {
-  reviews: Review[];
+  reviews: ReviewDoc[];
   totalPages: number;
   loading: boolean;
   error: string | null;
@@ -22,7 +22,7 @@ export function useUserReviews({
   page,
   pageSize = 10,
 }: UseUserReviewsOptions): UseUserReviewsResult {
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<ReviewDoc[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +44,7 @@ export function useUserReviews({
           signal: controller.signal,
         });
         if (!res.ok) throw new Error("데이터 로딩 실패");
-        const json: { reviews: Review[]; totalPages: number } =
+        const json: { reviews: ReviewDoc[]; totalPages: number } =
           await res.json();
         setReviews(json.reviews);
         setTotalPages(json.totalPages);

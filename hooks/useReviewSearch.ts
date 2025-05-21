@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
 import debounce from "lodash/debounce";
-import { Review } from "lib/reviews/fetchReviews";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 type SearchField = "reviewContent" | "reviewTitle" | "movieTitle";
 
-export default function useReviewSearch(initialReviews: Review[]) {
+export default function useReviewSearch(initialReviews: ReviewDoc[]) {
   const [filteredReviews, setFilteredReviews] =
-    useState<Review[]>(initialReviews);
+    useState<ReviewDoc[]>(initialReviews);
 
   // initialReviews 변경 시 원본으로 리셋
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function useReviewSearch(initialReviews: Review[]) {
 
     const results = initialReviews.filter((r) =>
       fields.some((f) => {
-        const v = r[f];
+        const v = (r as { [key in SearchField]?: string })[f];
         if (!v) return false;
         return v
           .toString()

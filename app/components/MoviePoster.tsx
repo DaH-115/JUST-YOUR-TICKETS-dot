@@ -14,23 +14,22 @@ export default function MoviePoster({
   lazy = false,
 }: MoviePosterProps) {
   return (
-    <div className={`relative aspect-[2/3]`}>
+    <div className="relative h-full w-full overflow-hidden rounded-lg">
       {posterPath ? (
         <Image
           src={`https://image.tmdb.org/t/p/w${size}/${posterPath}`}
           alt={title}
-          width={size}
-          height={size * 1.5}
+          fill
           quality={80}
           priority={!lazy}
           loading={lazy ? "lazy" : "eager"}
-          className="h-full w-full rounded-lg object-cover"
+          className="object-cover"
           sizes={`(max-width: 768px) 100vw, (max-width: 1200px) 50vw, ${size}px`}
           placeholder="blur"
           blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN88P/BfwAJhAPYe0YQ1AAAAABJRU5ErkJggg=="
         />
       ) : (
-        <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center rounded-xl bg-primary-700 p-4 text-center text-white">
+        <div className="absolute inset-0 flex items-center justify-center bg-primary-700 p-4 text-white">
           <span className="text-sm">
             {title || "Make a ticket for your own movie review."}
           </span>

@@ -20,8 +20,8 @@ export interface SerializableUser {
 export interface UserMetaData {
   provider: string | null;
   biography: string | null;
-  createdAt: number;
-  updatedAt: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 type UserState = {
@@ -54,8 +54,12 @@ export const fetchUserMetaData = createAsyncThunk<
     return {
       provider: data.provider,
       biography: data.biography,
-      createdAt: data.createdAt?.toMillis() ?? Date.now(),
-      updatedAt: data.updatedAt?.toMillis() ?? Date.now(),
+      createdAt: data.createdAt
+        ? new Date(data.createdAt.toMillis()).toISOString()
+        : new Date().toISOString(),
+      updatedAt: data.updatedAt
+        ? new Date(data.updatedAt.toMillis()).toISOString()
+        : new Date().toISOString(),
     };
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -64,7 +68,7 @@ export const fetchUserMetaData = createAsyncThunk<
 
 interface UpdateUserMetaDataPayload {
   biography: string;
-  updatedAt: number;
+  updatedAt: string; // number → string
 }
 
 // Firestore에서 사용자 프로필 업데이트하기 (biography 수정)
@@ -82,7 +86,7 @@ export const updateUserMetaData = createAsyncThunk<
 
     return {
       biography: data.biography,
-      updatedAt: Date.now(),
+      updatedAt: new Date().toISOString(),
     };
   } catch (error: any) {
     return rejectWithValue(error.message);

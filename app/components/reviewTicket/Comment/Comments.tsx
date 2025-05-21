@@ -17,7 +17,7 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { Review } from "lib/reviews/fetchReviews";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 const commentSchema = z.object({
   comment: z
@@ -35,7 +35,7 @@ interface Comment {
   createdAt: string;
 }
 
-export default function Comments({ id: reviewId }: Pick<Review, "id">) {
+export default function Comments({ id: reviewId }: Pick<ReviewDoc, "id">) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [isPosting, setIsPosting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null); // null 이면 새 댓글, 댓글ID면 수정 모드
@@ -216,40 +216,44 @@ export default function Comments({ id: reviewId }: Pick<Review, "id">) {
           ))}
         </ul>
       </div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="border-t-4 border-dotted pt-4"
-      >
-        <textarea
-          {...register("comment")}
-          className={`w-full rounded-md border p-2 ${errors.comment ? "border-red-500" : ""}`}
-          rows={2}
-          placeholder="댓글을 입력하세요"
-        />
-        {errors.comment && (
-          <p className="mt-1 text-sm text-red-500">{errors.comment.message}</p>
-        )}
-        <div className="mt-2 flex items-center justify-end">
-          {editingId && (
-            <button
-              type="button"
-              className="mr-4 text-gray-700 hover:underline"
-              onClick={cancelEditHandler}
-              aria-label="댓글 수정 취소"
-            >
-              취소
-            </button>
+      {userState?.uid && (
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="border-t-4 border-dotted pt-4"
+        >
+          <textarea
+            {...register("comment")}
+            className={`w-full rounded-md border p-2 ${errors.comment ? "border-red-500" : ""}`}
+            rows={2}
+            placeholder="댓글을 입력하세요"
+          />
+          {errors.comment && (
+            <p className="mt-1 text-sm text-red-500">
+              {errors.comment.message}
+            </p>
           )}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded-lg bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 active:bg-primary-700 disabled:opacity-50"
-            aria-label={editingId ? "댓글 수정 완료" : "댓글 등록"}
-          >
-            {editingId ? "수정 완료" : "등록"}
-          </button>
-        </div>
-      </form>
+          <div className="mt-2 flex items-center justify-end">
+            {editingId && (
+              <button
+                type="button"
+                className="mr-4 text-gray-700 hover:underline"
+                onClick={cancelEditHandler}
+                aria-label="댓글 수정 취소"
+              >
+                취소
+              </button>
+            )}
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-lg bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 active:bg-primary-700 disabled:opacity-50"
+              aria-label={editingId ? "댓글 수정 완료" : "댓글 등록"}
+            >
+              {editingId ? "수정 완료" : "등록"}
+            </button>
+          </div>
+        </form>
+      )}
     </>
   );
 }

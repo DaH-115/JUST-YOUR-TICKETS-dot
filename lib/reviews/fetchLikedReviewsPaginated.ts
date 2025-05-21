@@ -10,22 +10,18 @@ import {
 } from "firebase/firestore";
 import { db } from "firebase-config";
 import fetchReviewById from "lib/reviews/fetchReviewById";
-import { Review } from "lib/reviews/fetchReviews";
-
-/** Firestore 타임스탬프 → ISO 문자열 변환 유틸 */
-const convertTsToIso = (ts: any) =>
-  ts?.seconds ? new Date(ts.seconds * 1000).toISOString() : "";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import formatDate from "app/utils/formatDate";
 
 interface FetchLikedParams {
   uid: string;
   page: number;
   pageSize: number;
-  /** 검색어 (reviewTitle 또는 movieTitle) */
   search?: string;
 }
 
 interface PaginatedResult {
-  reviews: Review[];
+  reviews: ReviewDoc[];
   totalPages: number;
 }
 
@@ -54,7 +50,6 @@ export async function fetchLikedReviewsPaginated({
   const totalPages = Math.ceil(totalCount / pageSize);
 
   // 3) 실제 페이지 문서 가져오기
-  // 커서 기반 페이지네이션 예 (page > 1일 때)
   const pagedQuery = query(
     countQuery,
     orderBy("likedAt", "desc"),
@@ -65,7 +60,7 @@ export async function fetchLikedReviewsPaginated({
   // 4) 슬라이스로 한 페이지만 추출
   const allItems = snap.docs.map((doc) => ({
     id: doc.id,
-    likedAt: convertTsToIso(doc.data().likedAt), // ISO 변환 유틸 적용
+    likedAt: formatDate(doc.data().likedAt), // ISO 변환 유틸 적용
   }));
   const start = (page - 1) * pageSize;
   const pageItems = allItems.slice(start, start + pageSize);
@@ -74,7 +69,7 @@ export async function fetchLikedReviewsPaginated({
   const detailed = await Promise.all(
     pageItems.map(({ id }) => fetchReviewById(id)),
   );
-  const reviews: Review[] = detailed.filter((r): r is Review => !!r);
+  const reviews: ReviewDoc[] = detailed.filter((r): r is ReviewDoc => !!r);
 
   return { reviews, totalPages };
 }

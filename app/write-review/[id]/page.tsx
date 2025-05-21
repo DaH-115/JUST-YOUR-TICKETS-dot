@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import { Review } from "lib/reviews/fetchReviews";
 import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
 import ReviewContainer from "app/write-review/components/ReviewContainer";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 export const metadata: Metadata = {
   title: "New Write Review Ticket",
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export type ReviewFormValues = Pick<
-  Review,
+  ReviewDoc["review"],
   "reviewTitle" | "reviewContent" | "rating"
 >;
 

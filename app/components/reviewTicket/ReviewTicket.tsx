@@ -111,7 +111,7 @@ export default function ReviewTicket({ reviews }: { reviews: ReviewDoc[] }) {
                     {data.user.displayName ? data.user.displayName : "Guest"}
                   </div>
                 </div>
-                <p>{new Date(data.review.createdAt).toLocaleDateString()}</p>
+                <p>{data.review.createdAt}</p>
               </div>
             </div>
           </div>

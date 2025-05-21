@@ -40,6 +40,7 @@ export default function ReviewDetailsModal({
   const userState = useAppSelector((state) => state.userData.auth);
 
   useEffect(() => {
+    setLiked(false);
     setLikeCount(review.likeCount || 0);
   }, [review.likeCount]);
 
@@ -142,7 +143,7 @@ export default function ReviewDetailsModal({
         />
       </div>
       <div className="flex items-center justify-between pb-2 text-sm">
-        <p className="text-xs text-gray-500">{formatDate(review.createdAt)}</p>
+        <p className="text-xs text-gray-500">{review.createdAt}</p>
         <div className="flex items-center">
           <span className="mr-1 font-bold">{user.displayName}</span>
         </div>

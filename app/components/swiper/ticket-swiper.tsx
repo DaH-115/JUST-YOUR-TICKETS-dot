@@ -40,7 +40,7 @@ export default function TicketSwiper({
       }}
     >
       {movieList.map((movie, idx) => (
-        <SwiperSlide className="md:p-2" key={movie.id}>
+        <SwiperSlide key={movie.id}>
           <SwiperCard idx={idx} movie={movie} />
         </SwiperSlide>
       ))}
