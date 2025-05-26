@@ -3,7 +3,6 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
 import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
-import formatDate from "app/utils/formatDate";
 import {
   deleteDoc,
   doc,
@@ -16,7 +15,7 @@ import {
 import { db } from "firebase-config";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import Comments from "app/components/reviewTicket/Comment/Comments";
-import Modal from "app/components/modal/Modal";
+import ModalPortal from "app/components/modal/ModalPortal";
 
 interface ReviewDetailsModalProps {
   isModalOpen: boolean;
@@ -102,7 +101,7 @@ export default function ReviewDetailsModal({
   };
 
   return (
-    <Modal isOpen={isModalOpen} onClose={closeModalHandler}>
+    <ModalPortal isOpen={isModalOpen} onClose={closeModalHandler}>
       <div className="flex w-full items-center justify-between pb-2">
         {/* 왼쪽: 별점 영역 */}
         <div className="mr-4 flex h-full items-center justify-center">
@@ -154,6 +153,6 @@ export default function ReviewDetailsModal({
       </div>
       {/* 댓글 영역 - 모달이 열릴 때만 렌더링 */}
       {isModalOpen && <Comments id={selectedReview.id} />}
-    </Modal>
+    </ModalPortal>
   );
 }

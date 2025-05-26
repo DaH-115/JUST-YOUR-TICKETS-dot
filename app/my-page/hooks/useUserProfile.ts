@@ -14,7 +14,7 @@ export interface UserDoc {
 export function useUserProfile(uid: string | undefined) {
   const [userDoc, setUserDoc] = useState<UserDoc>();
   const [isLoading, setIsLoading] = useState(false);
-  const { showErrorHanlder } = useAlert();
+  const { showErrorHandler } = useAlert();
 
   useEffect(() => {
     if (!uid) return;
@@ -30,14 +30,14 @@ export function useUserProfile(uid: string | undefined) {
           const userDoc = user.data() as UserDoc;
           setUserDoc(userDoc);
         } else {
-          showErrorHanlder("오류", "사용자 정보를 찾을 수 없습니다.");
+          showErrorHandler("오류", "사용자 정보를 찾을 수 없습니다.");
         }
       } catch (error) {
         if (error instanceof Error) {
-          showErrorHanlder("오류", error.message);
+          showErrorHandler("오류", error.message);
         } else {
           const { title, message } = firebaseErrorHandler(error);
-          showErrorHanlder(title, message);
+          showErrorHandler(title, message);
         }
       } finally {
         setIsLoading(false);
@@ -45,7 +45,7 @@ export function useUserProfile(uid: string | undefined) {
     };
 
     fetchUserData();
-  }, [uid, showErrorHanlder]);
+  }, [uid, showErrorHandler]);
 
   return { userDoc, isLoading, setUserDoc };
 }

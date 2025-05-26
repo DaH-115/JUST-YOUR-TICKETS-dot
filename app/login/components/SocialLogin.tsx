@@ -28,7 +28,7 @@ export type SocialProvider = "google" | "github";
 
 export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
   const router = useRouter();
-  const { showErrorHanlder } = useAlert();
+  const { showErrorHandler } = useAlert();
   const [isLoadingProvider, setIsLoadingProvider] =
     useState<SocialProvider | null>(null);
 
@@ -76,12 +76,12 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
       } catch (error: any) {
         if (error.code === "auth/popup-closed-by-user") return;
         const { title, message } = firebaseErrorHandler(error);
-        showErrorHanlder(title, message);
+        showErrorHandler(title, message);
       } finally {
         setIsLoadingProvider(null);
       }
     },
-    [rememberMe, router, showErrorHanlder],
+    [rememberMe, router, showErrorHandler],
   );
 
   return (

@@ -36,7 +36,7 @@ type LoginInputs = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const { showErrorHanlder } = useAlert();
+  const { showErrorHandler } = useAlert();
   const {
     register,
     watch,
@@ -63,7 +63,7 @@ export default function LoginPage() {
       router.push("/");
     } catch (error) {
       const { title, message } = firebaseErrorHandler(error);
-      showErrorHanlder(title, message);
+      showErrorHandler(title, message);
     } finally {
       setIsLoading(false);
     }

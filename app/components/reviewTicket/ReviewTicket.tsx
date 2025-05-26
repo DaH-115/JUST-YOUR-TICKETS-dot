@@ -15,7 +15,7 @@ import { FaHeart } from "react-icons/fa";
 export default function ReviewTicket({ reviews }: { reviews: ReviewDoc[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewDoc>();
-  const { showErrorHanlder } = useAlert();
+  const { showErrorHandler } = useAlert();
 
   const openModalHandler = useCallback((selectedReview: ReviewDoc) => {
     setSelectedReview(selectedReview);
@@ -37,10 +37,10 @@ export default function ReviewTicket({ reviews }: { reviews: ReviewDoc[] }) {
       } catch (error) {
         if (error instanceof Error) {
           console.error("리뷰 티켓 삭제 중 오류 발생:", error.message);
-          showErrorHanlder("오류", error.message);
+          showErrorHandler("오류", error.message);
         } else {
           const { title, message } = firebaseErrorHandler(error);
-          showErrorHanlder(title, message);
+          showErrorHandler(title, message);
         }
       }
     },

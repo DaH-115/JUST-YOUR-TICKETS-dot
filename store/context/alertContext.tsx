@@ -1,12 +1,11 @@
 "use client";
 
 import { createContext, useCallback, useContext, useState } from "react";
-import Modal from "app/ui/Modal";
-import SuccessAlert from "app/ui/SuccessAlert";
+import UserAlert from "app/ui/UserAlert";
 
 interface AlertContextType {
-  showErrorHanlder: (title: string, message: string, status?: number) => void;
-  showSuccessHanlder: (
+  showErrorHandler: (title: string, message: string, status?: number) => void;
+  showSuccessHandler: (
     title: string,
     message: string,
     onConfirm?: () => void,
@@ -18,13 +17,12 @@ interface AlertContextType {
 interface ErrorType {
   title: string;
   message: string;
-  status?: number;
 }
 
 interface SuccessType {
   title: string;
   message: string;
-  onConfirm?: () => void;
+  onConfirm: () => void;
 }
 
 const AlertContext = createContext<AlertContextType | undefined>(undefined);
@@ -33,17 +31,22 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   const [errorState, setErrorState] = useState<ErrorType | null>(null);
   const [successState, setSuccessState] = useState<SuccessType | null>(null);
 
-  const showErrorHanlder = useCallback(
-    (title: string, message: string, status?: number) => {
-      setErrorState({ title, message, status });
-      setSuccessState(null); // 에러 상태일 때는 성공 메시지를 숨깁니다
-    },
-    [],
-  );
+  const showErrorHandler = useCallback((title: string, message: string) => {
+    setErrorState({ title, message });
+    setSuccessState(null); // 에러 상태일 때는 성공 메시지를 숨깁니다
+  }, []);
 
-  const showSuccessHanlder = useCallback(
-    (title: string, message: string, onConfirm?: () => void) => {
-      setSuccessState({ title, message, onConfirm });
+  const showSuccessHandler = useCallback(
+    (
+      title: string,
+      message: string,
+      onConfirm: () => void = hideSuccessHandler,
+    ) => {
+      setSuccessState({
+        title,
+        message,
+        onConfirm,
+      });
       setErrorState(null); // 성공 상태일 때는 에러 메시지를 숨깁니다
     },
     [],
@@ -60,29 +63,27 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   return (
     <AlertContext.Provider
       value={{
-        showErrorHanlder,
+        showErrorHandler,
         hideErrorHanlder,
-        showSuccessHanlder,
+        showSuccessHandler,
         hideSuccessHandler,
       }}
     >
       {children}
+      {/* Error Alert */}
       {errorState && (
-        <Modal
+        <UserAlert
           title={errorState.title}
           description={errorState.message}
-          status={errorState.status}
           onConfirm={hideErrorHanlder}
         />
       )}
+      {/* Seuccess Alert */}
       {successState && (
-        <SuccessAlert
+        <UserAlert
           title={successState.title}
           description={successState.message}
-          onConfirm={() => {
-            successState.onConfirm?.();
-            hideSuccessHandler();
-          }}
+          onConfirm={successState.onConfirm}
         />
       )}
     </AlertContext.Provider>
@@ -92,7 +93,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
 export function useAlert(): AlertContextType {
   const context = useContext(AlertContext);
   if (!context) {
-    throw new Error("useError must be used within a ErrorProvider");
+    throw new Error("useAlert must be used within a AlertProvider");
   }
   return context;
 }

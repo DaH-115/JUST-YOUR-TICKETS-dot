@@ -4,12 +4,12 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useFormContext } from "react-hook-form";
 
 interface ReviewFormHeaderProps {
-  setShowExitConfirmation: (show: boolean) => void;
+  onShowExitConfirm: (show: boolean) => void;
   isEditMode?: boolean;
 }
 
 export default function ReviewFormHeader({
-  setShowExitConfirmation,
+  onShowExitConfirm,
   isEditMode = false,
 }: ReviewFormHeaderProps) {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function ReviewFormHeader({
 
   const pageExitHandler = useCallback(() => {
     if (isDirty) {
-      setShowExitConfirmation(true);
+      onShowExitConfirm(true);
     } else {
       router.back();
     }

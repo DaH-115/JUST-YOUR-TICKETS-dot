@@ -61,7 +61,7 @@ export type SignupSchema = z.infer<typeof signupSchema>;
 
 export default function SignUpPage() {
   const router = useRouter();
-  const { showErrorHanlder, showSuccessHanlder } = useAlert();
+  const { showErrorHandler, showSuccessHandler } = useAlert();
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingName, setIsCheckingName] = useState(false);
   const [isDisplayNameAvailable, setIsDisplayNameAvailable] = useState<
@@ -99,7 +99,7 @@ export default function SignUpPage() {
   const checkDisplayName = useCallback(async () => {
     const displayName = getValues("displayName");
     if (!displayName) {
-      showErrorHanlder("알림", "닉네임을 입력해주세요.");
+      showErrorHandler("알림", "닉네임을 입력해주세요.");
       return;
     }
     setIsCheckingName(true);
@@ -112,25 +112,25 @@ export default function SignUpPage() {
       const snap = await getDocs(q);
       if (snap.empty) {
         setIsDisplayNameAvailable(true);
-        showSuccessHanlder("중복 확인", "사용 가능한 닉네임입니다.");
+        showSuccessHandler("중복 확인", "사용 가능한 닉네임입니다.");
       } else {
         setIsDisplayNameAvailable(false);
-        showErrorHanlder("중복 확인", "이미 사용 중인 닉네임입니다.");
+        showErrorHandler("중복 확인", "이미 사용 중인 닉네임입니다.");
       }
     } catch (error) {
       const { title, message } = firebaseErrorHandler(error);
-      showErrorHanlder(title, message);
+      showErrorHandler(title, message);
       setIsDisplayNameAvailable(false);
     } finally {
       setIsCheckingName(false);
     }
-  }, [getValues, showErrorHanlder, showSuccessHanlder]);
+  }, [getValues, showErrorHandler, showSuccessHandler]);
 
   // 이메일 중복 확인
   const checkEmail = useCallback(async () => {
     const email = getValues("email");
     if (!email) {
-      showErrorHanlder("알림", "이메일을 입력해주세요.");
+      showErrorHandler("알림", "이메일을 입력해주세요.");
       return;
     }
     setIsCheckingEmail(true);
@@ -138,19 +138,19 @@ export default function SignUpPage() {
       const methods = await fetchSignInMethodsForEmail(isAuth, email);
       if (methods.length === 0) {
         setIsEmailAvailable(true);
-        showSuccessHanlder("중복 확인", "사용 가능한 이메일입니다.");
+        showSuccessHandler("중복 확인", "사용 가능한 이메일입니다.");
       } else {
         setIsEmailAvailable(false);
-        showErrorHanlder("중복 확인", "이미 사용 중인 이메일입니다.");
+        showErrorHandler("중복 확인", "이미 사용 중인 이메일입니다.");
       }
     } catch (error) {
       const { title, message } = firebaseErrorHandler(error);
-      showErrorHanlder(title, message);
+      showErrorHandler(title, message);
       setIsEmailAvailable(false);
     } finally {
       setIsCheckingEmail(false);
     }
-  }, [getValues, showErrorHanlder, showSuccessHanlder]);
+  }, [getValues, showErrorHandler, showSuccessHandler]);
 
   // 회원가입 처리
   const onSubmit = useCallback(
@@ -189,17 +189,17 @@ export default function SignUpPage() {
           });
         });
 
-        showSuccessHanlder("회원가입 완료", "환영합니다!");
+        showSuccessHandler("회원가입 완료", "환영합니다!");
         router.replace("/");
       } catch (error) {
         const { title, message } = firebaseErrorHandler(error);
-        showErrorHanlder(title, message);
+        showErrorHandler(title, message);
         if (isAuth.currentUser) await isAuth.currentUser.delete();
       } finally {
         setIsLoading(false);
       }
     },
-    [router, showErrorHanlder, showSuccessHanlder],
+    [router, showErrorHandler, showSuccessHandler],
   );
 
   return (

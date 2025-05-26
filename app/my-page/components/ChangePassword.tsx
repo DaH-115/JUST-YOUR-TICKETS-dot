@@ -42,7 +42,7 @@ export default function ChangePassword() {
 
   const currentUser = isAuth.currentUser;
   const userEmail = useAppSelector((s) => s.userData.auth?.email);
-  const { showErrorHanlder, showSuccessHanlder } = useAlert();
+  const { showErrorHandler, showSuccessHandler } = useAlert();
 
   const {
     register: regCurrent,
@@ -62,7 +62,7 @@ export default function ChangePassword() {
 
   const onVerifyCurrent = async (data: CurrentPasswordForm) => {
     if (!currentUser || !userEmail) {
-      showErrorHanlder("오류", "사용자 정보가 올바르지 않습니다.");
+      showErrorHandler("오류", "사용자 정보가 올바르지 않습니다.");
       return;
     }
     setIsVerifying(true);
@@ -73,13 +73,13 @@ export default function ChangePassword() {
       );
       await reauthenticateWithCredential(currentUser, cred);
       setIsVerified(true);
-      showSuccessHanlder("확인", "비밀번호가 확인되었습니다.");
+      showSuccessHandler("확인", "비밀번호가 확인되었습니다.");
     } catch (error) {
       if (error instanceof Error) {
-        showErrorHanlder("오류", "현재 비밀번호가 일치하지 않습니다.");
+        showErrorHandler("오류", "현재 비밀번호가 일치하지 않습니다.");
       } else {
         const { title, message } = firebaseErrorHandler(error);
-        showErrorHanlder(title, message);
+        showErrorHandler(title, message);
       }
     } finally {
       setIsVerifying(false);
@@ -88,7 +88,7 @@ export default function ChangePassword() {
 
   const onChangePassword = async (data: NewPasswordForm) => {
     if (!currentUser) {
-      showErrorHanlder("오류", "사용자가 로그인되어 있지 않습니다.");
+      showErrorHandler("오류", "사용자가 로그인되어 있지 않습니다.");
       router.push("/login");
       return;
     }
@@ -96,13 +96,13 @@ export default function ChangePassword() {
     try {
       await updatePassword(currentUser, data.newPassword);
       setIsVerified(false);
-      showSuccessHanlder("성공", "비밀번호가 성공적으로 변경되었습니다.");
+      showSuccessHandler("성공", "비밀번호가 성공적으로 변경되었습니다.");
     } catch (error) {
       if (error instanceof Error) {
-        showErrorHanlder("오류", "비밀번호 변경에 실패했습니다.");
+        showErrorHandler("오류", "비밀번호 변경에 실패했습니다.");
       } else {
         const { title, message } = firebaseErrorHandler(error);
-        showErrorHanlder(title, message);
+        showErrorHandler(title, message);
       }
     } finally {
       setIsUpdating(false);

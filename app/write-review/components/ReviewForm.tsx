@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import BackGround from "app/ui/layout/BackGround";
-import Modal from "app/ui/Modal";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import ReviewFormHeader from "app/write-review/components/ReviewFormHeader";
 import ReviewFormTitle from "app/write-review/components/ReviewFormTitle";
@@ -13,6 +12,8 @@ import ReviewFormContent from "app/write-review/components/ReviewFormContent";
 import type { MovieDetails } from "lib/movies/fetchMovieDetails";
 import type { ReviewFormValues } from "app/write-review/[id]/page";
 import { useReviewForm } from "app/write-review/hook/useReviewForm";
+import UserAlert from "app/ui/UserAlert";
+import { useAlert } from "store/context/alertContext";
 
 interface ReviewFormProps {
   onSubmitMode: "new" | "edit";
@@ -28,7 +29,7 @@ export default function ReviewForm({
   reviewId,
 }: ReviewFormProps) {
   const router = useRouter();
-  const [showExitConfirmation, setShowExitConfirmation] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const { onSubmit } = useReviewForm({
     mode: onSubmitMode,
@@ -72,7 +73,7 @@ export default function ReviewForm({
             <form onSubmit={handleSubmit(onSubmit)}>
               <ReviewFormHeader
                 isEditMode={onSubmitMode === "edit"}
-                setShowExitConfirmation={setShowExitConfirmation}
+                onShowExitConfirm={setShowExitConfirm}
               />
               <div className="p-4 pb-1">
                 <p className="text-3xl font-bold">
@@ -101,12 +102,12 @@ export default function ReviewForm({
           </FormProvider>
         </div>
       </main>
-      {showExitConfirmation && (
-        <Modal
+      {showExitConfirm && (
+        <UserAlert
           title="알림"
           description="현재 내용이 사라집니다. 나가시겠습니까?"
           onConfirm={() => router.back()}
-          onClose={() => setShowExitConfirmation(false)}
+          onClose={() => setShowExitConfirm(false)}
         />
       )}
     </>

@@ -48,7 +48,7 @@ export const useReviewForm = ({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.userData.auth);
-  const { showErrorHanlder, showSuccessHanlder } = useAlert();
+  const { showErrorHandler, showSuccessHandler } = useAlert();
 
   const onSubmit = async (data: ReviewFormValues) => {
     if (!userState) return;
@@ -90,16 +90,16 @@ export const useReviewForm = ({
         await updateReview(reviewId, updateData);
       }
 
-      showSuccessHanlder("알림", "리뷰 티켓이 성공적으로 저장되었습니다.", () =>
+      showSuccessHandler("알림", "리뷰 티켓이 성공적으로 저장되었습니다.", () =>
         router.push("/"),
       );
     } catch (error) {
       if (error instanceof Error) {
         console.error("리뷰 티켓 생성 중 오류 발생:", error.message);
-        showErrorHanlder("오류", error.message);
+        showErrorHandler("오류", error.message);
       } else {
         const { title, message } = firebaseErrorHandler(error);
-        showErrorHanlder(title, message);
+        showErrorHandler(title, message);
       }
     }
   };

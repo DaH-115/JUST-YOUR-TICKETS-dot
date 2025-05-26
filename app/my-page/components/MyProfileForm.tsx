@@ -37,7 +37,7 @@ export type ProfileFormData = z.infer<typeof profileSchema>;
 export default function ProfileForm() {
   const userAuth = useAppSelector((state) => state.userData.auth);
   const userMetaData = useAppSelector((state) => state.userData.metaData);
-  const { showErrorHanlder, showSuccessHanlder } = useAlert();
+  const { showErrorHandler, showSuccessHandler } = useAlert();
   const currentUser = isAuth.currentUser;
   const dispatch = useAppDispatch();
 
@@ -70,7 +70,7 @@ export default function ProfileForm() {
   const onSubmit = useCallback(
     async (data: ProfileFormData) => {
       if (!currentUser || !userAuth) {
-        showErrorHanlder("오류", "로그인이 필요합니다.");
+        showErrorHandler("오류", "로그인이 필요합니다.");
         return;
       }
 
@@ -81,7 +81,7 @@ export default function ProfileForm() {
           await dispatch(updateUserDisplayName(data.displayName)).unwrap();
         } catch (error: any) {
           // 닉네임 중복 등 에러 처리
-          showErrorHanlder("오류", error.message);
+          showErrorHandler("오류", error.message);
           return;
         }
       }
@@ -96,14 +96,14 @@ export default function ProfileForm() {
             }),
           ).unwrap();
         } catch (err: any) {
-          showErrorHanlder("오류", err);
+          showErrorHandler("오류", err);
           return;
         }
       }
 
       // 3) 최신화된 메타데이터를 다시 불러오거나 리셋
       reset(data);
-      showSuccessHanlder("성공", "프로필 정보가 업데이트되었습니다.");
+      showSuccessHandler("성공", "프로필 정보가 업데이트되었습니다.");
     },
     [
       currentUser,
@@ -111,8 +111,8 @@ export default function ProfileForm() {
       userMetaData,
       dispatch,
       reset,
-      showErrorHanlder,
-      showSuccessHanlder,
+      showErrorHandler,
+      showSuccessHandler,
     ],
   );
 
