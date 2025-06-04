@@ -8,7 +8,6 @@ import {
   getCountFromServer,
   Query,
   DocumentData,
-  Timestamp,
 } from "firebase/firestore";
 import { db } from "firebase-config";
 import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
