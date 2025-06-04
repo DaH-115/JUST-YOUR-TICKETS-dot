@@ -22,12 +22,10 @@ export default function SideMenu() {
         <Link href="/my-page">MY PROFILE</Link>
       </div>
       <div className={getMenuStyle("/my-page/my-ticket-list")}>
-        <Link href={`/my-page/my-ticket-list?uid=${uid}`}>MY TICKET LIST</Link>
+        <Link href={`/my-page/my-ticket-list`}>MY TICKET LIST</Link>
       </div>
       <div className={getMenuStyle("/my-page/liked-ticket-list")}>
-        <Link href={`/my-page/liked-ticket-list?uid=${uid}`}>
-          LIKED TICKET LIST
-        </Link>
+        <Link href={`/my-page/liked-ticket-list`}>LIKED TICKET LIST</Link>
       </div>
     </aside>
   );

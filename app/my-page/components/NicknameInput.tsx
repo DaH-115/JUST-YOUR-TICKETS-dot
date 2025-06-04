@@ -46,7 +46,7 @@ export default function NicknameInput({
           <input
             id="displayName"
             {...register("displayName")}
-            className="w-full border-b border-black py-1 outline-none"
+            className="mt-2 w-full rounded-xl border border-black px-3 py-2"
           />
           {errors.displayName?.message && (
             <p className="mt-1 text-xs text-red-500">
@@ -58,7 +58,11 @@ export default function NicknameInput({
           )}
         </>
       ) : (
-        <p className="mt-1 text-gray-800">{originalValue || "없음"}</p>
+        <div className="mt-1">
+          <p className="border-b border-gray-500 py-2 text-gray-800">
+            {originalValue || "없음"}
+          </p>
+        </div>
       )}
     </div>
   );

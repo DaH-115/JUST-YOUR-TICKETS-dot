@@ -15,7 +15,7 @@ export default function EditableSection({
 }: EditableSectionProps) {
   return (
     <section>
-      <div className="mb-2 flex items-center space-x-2">
+      <div className="mb-6 flex items-center justify-between space-x-2">
         <h2 className="text-lg font-bold">{title}</h2>
         {/* Edit Button */}
         <div className="space-x-1">
@@ -40,7 +40,7 @@ export default function EditableSection({
             <button
               type="button"
               onClick={onEditToggle}
-              className="rounded-xl px-3 py-1 text-sm transition-colors duration-300 hover:bg-black hover:text-white active:bg-black active:text-white"
+              className="rounded-xl bg-gray-800 px-3 py-2 text-xs text-white"
             >
               수정
             </button>

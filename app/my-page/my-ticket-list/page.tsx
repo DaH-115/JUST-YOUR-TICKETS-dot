@@ -1,5 +1,6 @@
 import { Metadata } from "next";
-import MyTicketListPage from "app/my-page/my-ticket-list/components/MyTicketListPage";
+import TicketListLayout from "app/my-page/components/ticket-list-page/TicketListLayout";
+import useMyReviews from "app/my-page/hooks/useMyReviews";
 
 export const metadata: Metadata = {
   title: "My Tickets",
@@ -7,5 +8,14 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <MyTicketListPage />;
+  return (
+    <TicketListLayout
+      header={{
+        title: "My Ticket List",
+        content: "내가 작성한 티켓 목록입니다",
+      }}
+      placeholder="티켓 검색"
+      useFetchReviews={useMyReviews}
+    />
+  );
 }

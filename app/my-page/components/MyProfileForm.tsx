@@ -8,6 +8,7 @@ import { z } from "zod";
 import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { useAlert } from "store/context/alertContext";
 
+import { FaArrowRight } from "react-icons/fa";
 import EditableSection from "app/my-page/components/EditableSection";
 import NicknameInput from "app/my-page/components/NicknameInput";
 import BioInput from "app/my-page/components/BioInput";
@@ -18,6 +19,8 @@ import {
   updateUserMetaData,
 } from "store/redux-toolkit/slice/userSlice";
 import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
+import Link from "next/link";
+import AvatarUploader from "app/my-page/components/profile-avatar/AvatarUploader";
 
 export const profileSchema = z.object({
   displayName: z
@@ -36,6 +39,7 @@ export type ProfileFormData = z.infer<typeof profileSchema>;
 
 export default function ProfileForm() {
   const userAuth = useAppSelector((state) => state.userData.auth);
+  const uid = useAppSelector((state) => state.userData.auth?.uid);
   const userMetaData = useAppSelector((state) => state.userData.metaData);
   const { showErrorHandler, showSuccessHandler } = useAlert();
   const currentUser = isAuth.currentUser;
@@ -55,6 +59,7 @@ export default function ProfileForm() {
     formState: { dirtyFields },
   } = methods;
 
+  const [previewSrc, setPreviewSrc] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const hasDirty = Object.keys(dirtyFields).length > 0;
 
@@ -118,18 +123,9 @@ export default function ProfileForm() {
 
   return (
     <main className="mx-auto w-full">
-      <div className="mb-4 rounded-xl border-2 bg-white p-8">
+      <div className="mb-4 rounded-2xl border-2 bg-white px-6 py-4">
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <section className="mb-8 text-center">
-              <div className="mb-4">
-                <ProfileAvatar />
-              </div>
-              <h1 className="text-2xl font-bold">
-                {userAuth?.displayName || "사용자"}
-              </h1>
-              <p className="text-sm text-gray-400">{userAuth?.email}</p>
-            </section>
             <EditableSection
               title="Profile information"
               isEditing={isEditing}
@@ -144,6 +140,22 @@ export default function ProfileForm() {
               }}
               isSaveDisabled={!hasDirty}
             >
+              <section className="mb-4 text-center">
+                <div className="mb-4">
+                  <ProfileAvatar previewSrc={previewSrc} />
+                  <div className="mt-2">
+                    <AvatarUploader
+                      previewSrc={previewSrc}
+                      onPreview={(url) => setPreviewSrc(url)}
+                      onCancelPreview={() => setPreviewSrc(null)}
+                    />
+                  </div>
+                </div>
+                <h1 className="text-2xl font-bold">
+                  {userAuth?.displayName || "사용자"}
+                </h1>
+                <p className="text-sm text-gray-400">{userAuth?.email}</p>
+              </section>
               <NicknameInput
                 originalValue={userAuth?.displayName}
                 isEditing={isEditing}
@@ -162,8 +174,18 @@ export default function ProfileForm() {
         </section>
       )}
       <div className="block space-y-2 md:hidden">
-        <div className="text-white">{"My Ticket List >"}</div>
-        <div className="text-white">{"Liked Ticket List >"}</div>
+        <Link href={`/my-page/my-ticket-list?uid=${uid}`}>
+          <div className="flex items-center justify-between rounded-2xl p-4 text-white">
+            My Ticket List
+            <FaArrowRight />
+          </div>
+        </Link>
+        <Link href={`/my-page/liked-ticket-list?uid=${uid}`}>
+          <div className="flex items-center justify-between rounded-2xl p-4 text-white">
+            Liked Ticket List
+            <FaArrowRight />
+          </div>
+        </Link>
       </div>
     </main>
   );

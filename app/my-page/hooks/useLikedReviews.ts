@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
@@ -15,7 +17,7 @@ interface UseLikedReviewsResult {
   error: string | null;
 }
 
-export function useLikedReviews({
+export default function useLikedReviews({
   uid,
   search = "",
   page,
@@ -27,7 +29,6 @@ export function useLikedReviews({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // uid 없으면 초기화
     if (!uid) {
       setReviews([]);
       setTotalPages(0);
@@ -39,7 +40,6 @@ export function useLikedReviews({
       setError(null);
 
       try {
-        // 쿼리파라미터 조립
         const params = new URLSearchParams({
           uid,
           page: String(page),
@@ -50,14 +50,12 @@ export function useLikedReviews({
           params.set("search", search);
         }
 
-        // API 호출
         const res = await fetch(`/api/reviews/liked?${params.toString()}`);
 
         if (!res.ok) {
           throw new Error("좋아요 리뷰 로딩에 실패했습니다");
         }
 
-        // 응답 데이터 파싱
         const {
           reviews,
           totalPages,
