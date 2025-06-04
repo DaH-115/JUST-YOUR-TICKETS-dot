@@ -96,7 +96,7 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-10 flex w-full items-center justify-between p-8 text-xs md:px-8 md:pt-8 ${
+      className={`relative z-10 flex w-full items-center justify-between px-4 py-8 text-xs md:px-8 md:pt-8 ${
         isSideMenuOpen ? "pointer-events-none" : ""
       }`}
     >

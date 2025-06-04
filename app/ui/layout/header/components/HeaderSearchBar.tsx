@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import debounce from "lodash/debounce";
@@ -45,32 +45,38 @@ export default function HeaderSearchBar() {
     setVisibleCount(5);
   }, [reset]);
 
-  useEffect(() => {
-    const debounceHandler = debounce(async (query: string) => {
-      if (query.trim()) {
-        try {
-          const res = await fetch(
-            `/api/tmdb/search?query=${encodeURIComponent(query)}&page=1`,
-          );
-          if (!res.ok) throw new Error("검색 실패");
-          const data = await res.json();
-          setResults(data.movies);
-          setVisibleCount(5);
-          setIsDropdownOpen(true);
-        } catch (error) {
-          console.error("검색 실패:", error);
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (query: string) => {
+        if (query.trim()) {
+          try {
+            const res = await fetch(
+              `/api/tmdb/search?query=${encodeURIComponent(query)}&page=1`,
+            );
+            if (!res.ok) throw new Error("검색 실패");
+            const data = await res.json();
+            setResults(data.movies);
+            setVisibleCount(5);
+            setIsDropdownOpen(true);
+          } catch (error) {
+            console.error("검색 실패:", error);
+            setResults([]);
+            setIsDropdownOpen(false);
+          }
+        } else {
           setResults([]);
           setIsDropdownOpen(false);
         }
-      } else {
-        setResults([]);
-        setIsDropdownOpen(false);
-      }
-    }, 300);
+      }, 300),
+    [],
+  );
 
-    debounceHandler(searchQuery);
-    return () => debounceHandler.cancel();
-  }, [searchQuery]);
+  useEffect(() => {
+    debouncedSearch(searchQuery);
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [searchQuery, debouncedSearch]);
 
   useEffect(() => {
     const clickOutsideHandler = (event: MouseEvent) => {
