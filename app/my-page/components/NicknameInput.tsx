@@ -1,5 +1,5 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { useNicknameValidation } from "app/my-page/hooks/useNicknameValidation";
 
@@ -21,20 +21,23 @@ export default function NicknameInput({
   const watchedValue = useWatch({ name: "displayName", control });
   const { checkNicknameDuplicate } = useNicknameValidation();
 
+  const debounceHandler = useMemo(
+    () =>
+      debounce(async (value: string) => {
+        const isDup = await checkNicknameDuplicate(value);
+        setDuplicateError(isDup ? "이미 사용 중인 닉네임입니다." : null);
+      }, 500),
+    [checkNicknameDuplicate],
+  );
+
   useEffect(() => {
     if (!watchedValue || watchedValue === originalValue) {
       setDuplicateError(null);
       return;
     }
-
-    const check = debounce(async (value: string) => {
-      const isDuplicate = await checkNicknameDuplicate(value);
-      setDuplicateError(isDuplicate ? "이미 사용 중인 닉네임입니다." : null);
-    }, 500);
-
-    check(watchedValue);
-    return () => check.cancel();
-  }, [watchedValue, originalValue, checkNicknameDuplicate]);
+    debounceHandler(watchedValue);
+    return () => debounceHandler.cancel();
+  }, [watchedValue, originalValue, debounceHandler]);
 
   return (
     <div className="mb-2">

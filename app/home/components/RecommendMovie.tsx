@@ -24,9 +24,9 @@ export default function RecommendMovie({
 
       {/* SECTION CONTENTS */}
       <div className="flex w-full justify-center">
-        <div className="flex w-full max-w-4xl gap-6">
+        <div className="flex w-full max-w-4xl flex-col gap-0 md:flex-row md:gap-4">
           {/* MOVIE POSTER */}
-          <div className="aspect-[2/3] flex-none rounded-xl drop-shadow">
+          <div className="aspect-[2/3] flex-none overflow-hidden rounded-2xl drop-shadow">
             <MoviePoster
               posterPath={currentMovie.poster_path}
               title={movieTitle}

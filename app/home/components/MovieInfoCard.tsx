@@ -17,14 +17,14 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   const { genres, cast, uniqueDirectors } = useMovieDetails();
 
   return (
-    <section className="group mx-auto w-full break-keep rounded-xl bg-accent-300">
-      <div className="rounded-xl border-2 bg-white p-2 lg:transition-all lg:duration-300 lg:group-hover:-translate-x-1 lg:group-hover:-translate-y-1">
-        <div className="p-4">
+    <section className="mx-auto w-full overflow-hidden rounded-2xl border bg-white">
+      <div className="p-2">
+        <div className="p-2 md:p-4">
           <span className="mb-2 inline-block rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">
             추천 영화
           </span>
           <div className="flex">
-            <h1 className="text-xl font-bold md:text-3xl">{title}</h1>
+            <h1 className="text-3xl font-bold md:text-3xl">{title}</h1>
             <div className="group/tooltip relative ml-2">
               <Link
                 href={`/movie-details/${id}`}
@@ -38,10 +38,10 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
             </div>
           </div>
           <div className="ml-1 flex items-center">
-            <h2 className="mr-2 text-sm text-gray-500 md:text-lg">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
+            <h2 className="text-gray-500 md:text-lg">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
           </div>
         </div>
-        <ul className="flex items-center space-x-2 overflow-x-scroll border-y-4 border-dotted p-2 text-xs scrollbar-hide">
+        <ul className="flex items-center space-x-2 overflow-x-scroll border-y-4 border-dotted p-2 text-sm scrollbar-hide md:text-xs">
           {genres.length > 0 ? (
             genres.map((genre, idx) => (
               <li
@@ -59,11 +59,11 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
         </ul>
         {overview && <AnimatedOverview overview={overview} />}
         <div className="flex flex-1 items-center justify-between border-b-4 border-dotted">
-          <ul className="flex w-full items-center justify-center gap-6 p-4 text-center text-xs">
+          <ul className="flex w-full items-center justify-center gap-6 p-4 text-center text-sm md:text-xs">
             {cast.slice(0, 3).map((actor) => (
               <li key={actor.id} className="font-bold">
                 {actor.name}
-                <span className="block text-xs font-normal text-gray-500">
+                <span className="block font-normal text-gray-500">
                   {actor.character}
                 </span>
               </li>
@@ -73,11 +73,11 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
         <div className="flex p-2">
           <div className="flex-1 border-r-4 border-dotted">
             <p className="pr-2 text-xs font-bold text-black">개봉일</p>
-            <p className="p-2 text-center text-xs">{releaseDate}</p>
+            <p className="p-2 text-center text-sm md:text-xs">{releaseDate}</p>
           </div>
           <div className="flex-1 border-r-4 border-dotted">
             <p className="px-2 text-xs font-bold text-black">감독</p>
-            <ul className="p-2 text-center text-xs">
+            <ul className="p-2 text-center text-sm md:text-xs">
               {uniqueDirectors.length > 0 ? (
                 uniqueDirectors.map((director) => (
                   <li key={`director-${director.id}`}>{director.name}</li>
@@ -97,10 +97,9 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
             </div>
           </div>
         </div>
-        <div className="flex w-full border-t-4 border-dotted pt-4">
-          <WriteBtn movieId={id} />
-        </div>
       </div>
+      {/* 리뷰 작성 버튼 */}
+      <WriteBtn movieId={id} size="large" />
     </section>
   );
 }

@@ -28,9 +28,10 @@ export default function HomePage({
       {recommendMovie?.backdrop_path && (
         <BackGround imageUrl={recommendMovie.backdrop_path} />
       )}
-      <main className="p-8">
+      <main className="p-4 md:p-8">
         <NowPlayingList movieList={movieList} />
         <TrendingMovies trendingMovies={trendingMovies} />
+        {/* TEST */}
         <RecommendMovie currentMovie={recommendMovie} />
         {trailerKey && <MovieTrailer trailerKey={trailerKey} />}
         <LatestReviews reviews={latestReviews} />

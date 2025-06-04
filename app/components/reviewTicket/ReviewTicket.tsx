@@ -59,22 +59,24 @@ export default function ReviewTicket({ reviews }: { reviews: ReviewDoc[] }) {
         />
       )}
       {/* 리뷰 리스트 */}
-      <div className="grid grid-cols-3 gap-2 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-2 lg:grid-cols-5">
         {reviews.map((data) => (
           <div
             key={data.id}
             onClick={() => openModalHandler(data)}
-            className="relative mb-16 cursor-pointer drop-shadow-md transition-transform duration-300 hover:-translate-y-1"
+            className="mb-16 cursor-pointer drop-shadow-md transition-transform duration-300 hover:-translate-y-1"
           >
             {/* MOVIE POSTER */}
-            <MoviePoster
-              posterPath={data.review.moviePosterPath}
-              title={data.review.movieTitle}
-              size={342}
-            />
+            <div className="aspect-[2/3] overflow-hidden rounded-xl">
+              <MoviePoster
+                posterPath={data.review.moviePosterPath}
+                title={data.review.movieTitle}
+                size={342}
+              />
+            </div>
 
             {/* MOVIE INFO CARD */}
-            <div className="absolute -bottom-16 right-0 w-full rounded-lg border bg-white p-2 transition-all duration-500 md:-bottom-16">
+            <div className="w-full rounded-lg border bg-white p-2 transition-all duration-500 md:-bottom-16">
               {/* 영화 타이틀 & 좋아요 */}
               <div className="flex items-center justify-between border-b-4 border-dotted px-2">
                 {/* 클릭하면 영화 상세 정보로 이동 */}
@@ -92,26 +94,28 @@ export default function ReviewTicket({ reviews }: { reviews: ReviewDoc[] }) {
               </div>
 
               {/* 리뷰 제목 */}
-              <div className="flex items-center border-b-4 border-dotted p-2">
+              <div className="flex items-center border-b-4 border-dotted p-1">
                 <div className="mr-2 flex items-center justify-center border-r-4 border-dotted pr-2">
                   <IoStar className="text-accent-300" />
                   <p className="font-bold">{data.review.rating}</p>
                 </div>
-                <p className="w-full truncate">{data.review.reviewTitle}</p>
+                <p className="w-full truncate text-sm">
+                  {data.review.reviewTitle}
+                </p>
               </div>
 
               {/* 프로필 사진 & 닉네임 & 작성 시간 */}
               <div className="flex items-center justify-between pt-2 text-xs">
-                <div className="flex items-center">
+                <div className="flex w-full items-center">
                   <ProfileImage
                     photoURL={data.user.photoURL || undefined}
                     userDisplayName={data.user.displayName || "사용자"}
                   />
-                  <div>
+                  <div className="w-full">
                     {data.user.displayName ? data.user.displayName : "Guest"}
                   </div>
                 </div>
-                <p>{data.review.createdAt}</p>
+                <p className="w-full truncate">{data.review.createdAt}</p>
               </div>
             </div>
           </div>

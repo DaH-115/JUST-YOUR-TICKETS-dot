@@ -1,5 +1,5 @@
-import { useSwiper } from "swiper/react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { useSwiper } from "swiper/react";
 
 export default function SwiperButton({
   direction,
@@ -14,7 +14,9 @@ export default function SwiperButton({
       onClick={() =>
         direction === "next" ? swiper.slideNext() : swiper.slidePrev()
       }
-      className={`absolute top-1/2 z-50 hidden -translate-y-1/2 items-center justify-center rounded-full border bg-white p-3 text-sm text-primary-500 shadow-md transition-all duration-300 ease-in-out hover:scale-110 focus:border-none focus:outline-none focus:ring-2 focus:ring-accent-300 md:flex ${direction === "prev" ? "left-4" : "right-4"}`}
+      className={`absolute top-1/2 z-50 -translate-y-1/2 items-center justify-center rounded-full bg-black/90 p-3 text-sm text-white shadow-md transition-all duration-300 ease-in-out hover:scale-110 focus:border-none focus:outline-none focus:ring-1 focus:ring-accent-300 ${
+        direction === "prev" ? "left-2 md:left-4" : "right-2 md:right-4"
+      }`}
       aria-label={ariaLabel}
     >
       {direction === "next" ? (

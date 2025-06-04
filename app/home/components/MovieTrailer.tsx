@@ -4,7 +4,7 @@ export default function MovieTrailer({ trailerKey }: { trailerKey: string }) {
   return (
     <section className="py-8">
       {/* SECTION TITLE */}
-      <div className="pb-8 pt-6">
+      <div className="pb-4 pt-6 md:pb-8">
         <h2 className="text-2xl font-bold text-accent-300">Movie Trailer</h2>
         <p className="text-white">이 영화의 예고편을 확인해보세요.</p>
       </div>

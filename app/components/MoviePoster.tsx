@@ -14,7 +14,7 @@ export default function MoviePoster({
   lazy = false,
 }: MoviePosterProps) {
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-lg">
+    <div className="relative h-full w-full">
       {posterPath ? (
         <Image
           src={`https://image.tmdb.org/t/p/w${size}/${posterPath}`}

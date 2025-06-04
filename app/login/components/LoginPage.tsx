@@ -70,7 +70,7 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <main className="mt-8 w-full border-t-4 border-accent-300 bg-white pb-8 pt-4 md:flex md:justify-center md:py-10">
+    <main className="w-full border-t-4 border-accent-300 bg-white pb-8 pt-4 md:flex md:justify-center md:py-10">
       <h1 className="mb-4 w-full border-r px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:pl-0 md:pt-0 md:text-8xl">
         LOG IN
       </h1>

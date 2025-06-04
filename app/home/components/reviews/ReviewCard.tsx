@@ -17,7 +17,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
       className="group flex items-stretch" // ← 여기 items-stretch 추가
     >
       {/* Movie Poster */}
-      <div className="h-full w-[30%] overflow-hidden rounded-md">
+      <div className="aspect-[2/3] h-full overflow-hidden rounded-xl">
         <MoviePoster
           posterPath={content.moviePosterPath}
           title={content.movieTitle}
@@ -26,14 +26,14 @@ export default function ReviewCard({ review }: ReviewCardProps) {
       </div>
 
       {/* Review Content */}
-      <div className="relative flex h-full flex-1 flex-col overflow-hidden rounded-lg border-2 bg-white px-4 py-2">
+      <div className="relative flex h-full flex-1 flex-col overflow-hidden rounded-xl border-2 bg-white px-4 py-2">
         {/* 상단 제목/좋아요 */}
         <div className="flex items-center justify-between border-b-4 border-dotted pb-2">
           <div className="flex flex-col">
             <h3 className="line-clamp-1 text-base font-bold">
               {content.movieTitle}
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-xs text-gray-500 md:text-sm">
               {content.originalTitle} ({content.releaseYear})
             </p>
           </div>
