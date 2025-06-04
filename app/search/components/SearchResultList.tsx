@@ -1,56 +1,58 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import Loading from "app/loading";
 import SwiperCard from "app/components/swiper/swiper-card";
 import Pagination from "app/components/Pagination";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-
-interface SearchResultListProps {
-  searchQuery: string;
-}
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 interface SearchMovieResponse {
   movies: MovieList[];
   totalPages: number;
+  error?: string;
 }
 
 export default function SearchResultList({
   searchQuery,
-}: SearchResultListProps) {
+}: {
+  searchQuery: string;
+}) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams.toString());
-
-  const currentPage = parseInt(params.get("page") || "1", 10);
+  const params = useSearchParams();
+  const currentPage = parseInt(params.get("page") ?? "1", 10);
 
   const [searchResults, setSearchResults] = useState<MovieList[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (searchQuery) {
-      params.set("search", searchQuery);
-    } else {
-      params.delete("search");
+    if (!searchQuery) {
+      setSearchResults([]);
+      setTotalPages(0);
+      return;
     }
 
     setIsLoading(true);
-
     (async () => {
       try {
         const res = await fetch(
-          `${pathname}?query=${encodeURIComponent(searchQuery)}&page=1`,
+          `/api/tmdb/search?query=${encodeURIComponent(
+            searchQuery,
+          )}&page=${currentPage}`,
         );
-        if (!res.ok) throw new Error("검색 요청 실패");
+        const data: SearchMovieResponse = await res.json();
 
-        const { movies, totalPages }: SearchMovieResponse = await res.json();
-        setSearchResults(movies);
-        setTotalPages(totalPages);
+        // 에러 응답 처리
+        if (!res.ok || data.error) {
+          throw new Error(data.error || "검색 요청 실패");
+        }
+
+        setSearchResults(data.movies);
+        setTotalPages(data.totalPages);
       } catch (error) {
-        console.error(`영화 검색 중 오류: ${(error as Error).message}`);
+        console.error("영화 검색 중 오류:", (error as Error).message);
         setSearchResults([]);
         setTotalPages(0);
       } finally {
@@ -58,15 +60,6 @@ export default function SearchResultList({
       }
     })();
   }, [searchQuery, currentPage]);
-
-  const pageChangeHandler = useCallback(
-    (page: number) => {
-      router.push(
-        `${pathname}?search=${encodeURIComponent(searchQuery)}&page=${page}`,
-      );
-    },
-    [router, pathname, searchQuery],
-  );
 
   if (isLoading) {
     return (
@@ -86,19 +79,27 @@ export default function SearchResultList({
     );
   }
 
+  const pageChangeHandler = useCallback(
+    (page: number) => {
+      router.replace(
+        `${pathname}?query=${encodeURIComponent(searchQuery)}&page=${page}`,
+      );
+    },
+    [pathname, searchQuery],
+  );
+
   return (
-    <div>
+    <>
       <div className="grid grid-cols-3 gap-4 lg:grid-cols-4 xl:grid-cols-5">
         {searchResults.map((movie, idx) => (
           <SwiperCard key={movie.id} movie={movie} idx={idx} />
         ))}
       </div>
-      {/* 페이지네이션 */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={pageChangeHandler}
       />
-    </div>
+    </>
   );
 }
