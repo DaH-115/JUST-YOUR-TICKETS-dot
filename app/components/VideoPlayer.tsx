@@ -16,7 +16,7 @@ const ReactPlayer = dynamic(() => import("react-player/lazy"), {
 
 interface VideoPlayerProps {
   trailerKey: string;
-  thubmnailSize?: "large" | "small";
+  thumbnailSize?: "large" | "small";
   className?: string;
   onReady?: () => void;
   onStart?: () => void;
@@ -27,7 +27,7 @@ interface VideoPlayerProps {
 
 const VideoPlayer = ({
   trailerKey,
-  thubmnailSize = "small",
+  thumbnailSize = "small",
   onReady,
   onStart,
   onPlay,
@@ -73,7 +73,7 @@ const VideoPlayer = ({
             height="100%"
             controls
             // 썸네일 모드 활성화
-            light={`https://img.youtube.com/vi/${trailerKey}/${thubmnailSize === "large" ? "maxresdefault" : "mqdefault"}.jpg`}
+            light={`https://img.youtube.com/vi/${trailerKey}/${thumbnailSize === "large" ? "maxresdefault" : "mqdefault"}.jpg`}
             // 플레이어 설정 최적화
             config={{
               youtube: {

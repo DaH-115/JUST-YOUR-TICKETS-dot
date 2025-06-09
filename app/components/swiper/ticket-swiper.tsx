@@ -15,8 +15,7 @@ export default function TicketSwiper({
 }) {
   return (
     <Swiper
-      slidesPerView={1}
-      speed={600}
+      speed={500}
       loop={true}
       navigation={false}
       modules={[Navigation]}

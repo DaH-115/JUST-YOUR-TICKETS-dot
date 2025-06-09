@@ -5,7 +5,7 @@ import { fetchMovieCredits } from "lib/movies/fetchMovieCredits";
 import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
 import { fetchSimilarMovies } from "lib/movies/fetchSimilarMovies";
 import getMovieTitle from "app/utils/getMovieTitle";
-import BackGround from "app/ui/layout/BackGround";
+import Background from "app/ui/layout/Background";
 import SimilarMovies from "app/movie-details/components/SimilarMovies";
 import AllMovieTrailers from "app/movie-details/components/MovieTrailers";
 import MovieDetailCard from "app/movie-details/components/MovieDetails";
@@ -82,7 +82,7 @@ export default async function MovieDetailPage({
 
     return (
       <>
-        <BackGround imageUrl={backdrop_path || ""} />
+        <Background imageUrl={backdrop_path || ""} />
         <MovieDetailCard
           movieDetails={movieDetails}
           movieCredits={movieCredits}

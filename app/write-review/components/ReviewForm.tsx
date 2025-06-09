@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import BackGround from "app/ui/layout/BackGround";
+import Background from "app/ui/layout/Background";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import ReviewFormHeader from "app/write-review/components/ReviewFormHeader";
 import ReviewFormTitle from "app/write-review/components/ReviewFormTitle";
@@ -65,7 +65,7 @@ export default function ReviewForm({
   return (
     <>
       {movieData.backdrop_path && (
-        <BackGround imageUrl={movieData.backdrop_path} />
+        <Background imageUrl={movieData.backdrop_path} />
       )}
       <main className="relative mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
         <div className="mx-auto w-11/12 rounded-xl border-2 bg-white md:w-2/4">

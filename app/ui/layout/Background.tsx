@@ -1,10 +1,10 @@
 import Image from "next/image";
 
-interface BackGroundProps {
+interface BackgroundProps {
   imageUrl: string;
 }
 
-export default function BackGround({ imageUrl }: BackGroundProps) {
+export default function Background({ imageUrl }: BackgroundProps) {
   const blurImageUrl = `https://image.tmdb.org/t/p/w342/${imageUrl}`;
 
   return (

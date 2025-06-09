@@ -10,7 +10,7 @@ export default function MovieTrailer({ trailerKey }: { trailerKey: string }) {
       </div>
       {/* SECTION CONTETNS */}
       <div className="mx-auto aspect-video w-full md:w-4/6">
-        <VideoPlayer trailerKey={trailerKey} thubmnailSize={"large"} />
+        <VideoPlayer trailerKey={trailerKey} thumbnailSize={"large"} />
       </div>
     </section>
   );
