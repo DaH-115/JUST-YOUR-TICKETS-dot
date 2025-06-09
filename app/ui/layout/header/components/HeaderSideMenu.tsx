@@ -12,7 +12,6 @@ interface HeaderSideMenuProps {
   newReviewAlertState: boolean;
   userDisplayName: string;
   isOpen: boolean;
-  onLogout: () => void;
   onClose: () => void;
 }
 
@@ -20,7 +19,6 @@ export default function HeaderSideMenu({
   newReviewAlertState,
   userDisplayName,
   isOpen,
-  onLogout,
   onClose,
 }: HeaderSideMenuProps) {
   const sideMenuRef = useRef<HTMLDivElement>(null);
@@ -108,12 +106,6 @@ export default function HeaderSideMenu({
                     <FaArrowRight aria-hidden />
                   )}
                 </Link>
-                <button
-                  className="rounded-full border border-white px-4 py-2 transition-all duration-300 hover:bg-white hover:font-bold hover:text-black"
-                  onClick={onLogout}
-                >
-                  Logout
-                </button>
               </div>
             </div>
           </div>

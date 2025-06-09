@@ -118,13 +118,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className={`${nanumGothic.className} ${roboto.className}`}>
-      <body className="w-full min-w-[320px] bg-[#121212]">
+      <body className="flex min-h-screen w-full min-w-[320px] flex-col bg-[#121212]">
         {/* RTK Provider */}
         <Providers>
           <AuthProvider>
             <AlertProvider>
               <Header />
-              {children}
+              <main className="flex-1">{children}</main>
               <div id="modal-root" />
               <div id="alert-root" />
               <Footer />
