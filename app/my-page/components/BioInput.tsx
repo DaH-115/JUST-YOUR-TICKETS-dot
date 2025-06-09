@@ -13,15 +13,20 @@ export default function BioInput({ isEditing, originalValue }: BioInputProps) {
 
   return (
     <div>
-      <label htmlFor="biography" className="text-xs font-semibold">
-        바이오
+      <label
+        htmlFor="biography"
+        className="mb-2 block text-sm font-medium text-gray-700"
+      >
+        소개
       </label>
       {isEditing ? (
         <>
-          <input
+          <textarea
             id="biography"
             {...register("biography")}
-            className="mt-2 w-full rounded-xl border border-black px-3 py-2"
+            rows={3}
+            className="w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            placeholder="자신을 소개해보세요"
           />
           {errors.biography?.message && (
             <p className="mt-1 text-xs text-red-500">

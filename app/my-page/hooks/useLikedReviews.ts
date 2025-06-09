@@ -15,6 +15,7 @@ interface UseLikedReviewsResult {
   totalPages: number;
   loading: boolean;
   error: string | null;
+  removeReview: (reviewId: string) => void;
 }
 
 export default function useLikedReviews({
@@ -73,5 +74,11 @@ export default function useLikedReviews({
     fetchData();
   }, [uid, search, page, pageSize]);
 
-  return { reviews, totalPages, loading, error };
+  const removeReview = (reviewId: string) => {
+    setReviews((prevReviews) =>
+      prevReviews.filter((review) => review.id !== reviewId),
+    );
+  };
+
+  return { reviews, totalPages, loading, error, removeReview };
 }

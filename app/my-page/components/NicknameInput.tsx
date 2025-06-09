@@ -40,8 +40,11 @@ export default function NicknameInput({
   }, [watchedValue, originalValue, debounceHandler]);
 
   return (
-    <div className="mb-2">
-      <label htmlFor="displayName" className="text-xs font-semibold">
+    <div>
+      <label
+        htmlFor="displayName"
+        className="mb-2 block text-sm font-medium text-gray-700"
+      >
         닉네임
       </label>
       {isEditing ? (
@@ -49,7 +52,8 @@ export default function NicknameInput({
           <input
             id="displayName"
             {...register("displayName")}
-            className="mt-2 w-full rounded-xl border border-black px-3 py-2"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            placeholder="닉네임을 입력하세요"
           />
           {errors.displayName?.message && (
             <p className="mt-1 text-xs text-red-500">

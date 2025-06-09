@@ -9,12 +9,14 @@ interface AvatarUploaderProps {
   previewSrc: string | null;
   onPreview: (url: string | null) => void;
   onCancelPreview: () => void;
+  onImageChange?: (hasChanged: boolean) => void;
 }
 
 export default function AvatarUploader({
   previewSrc,
   onPreview,
   onCancelPreview,
+  onImageChange,
 }: AvatarUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -25,6 +27,17 @@ export default function AvatarUploader({
     setIsEditing((prev) => !prev);
     setFile(null);
     onCancelPreview();
+    onImageChange?.(false); // 편집 취소 시 변경 상태 초기화
+    if (inputRef.current) {
+      inputRef.current.value = ""; // 파일 선택 초기화
+    }
+  };
+
+  const onUploadComplete = () => {
+    setIsEditing(false);
+    setFile(null);
+    onCancelPreview();
+    // 업로드 완료 후에는 이미지 변경 상태를 초기화하지 않음
     if (inputRef.current) {
       inputRef.current.value = ""; // 파일 선택 초기화
     }
@@ -37,8 +50,10 @@ export default function AvatarUploader({
     if (file) {
       const url = URL.createObjectURL(file);
       onPreview(url);
+      // 파일 선택 시점에서는 아직 업로드되지 않았으므로 변경 상태를 true로 하지 않음
     } else {
       onCancelPreview();
+      onImageChange?.(false); // 이미지 선택 취소 시 변경 상태 false
     }
   };
 
@@ -71,8 +86,9 @@ export default function AvatarUploader({
     await updateDoc(userRef, { photoKey: key });
 
     setUploading(false);
-    onEditToggle();
     alert("프로필 이미지 업로드 완료");
+    onImageChange?.(true); // 업로드 완료 시 변경 상태 true로 설정
+    onUploadComplete();
   };
 
   return (

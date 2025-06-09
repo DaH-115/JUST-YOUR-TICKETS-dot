@@ -18,7 +18,7 @@ export default function Avatar({
       : "/images/fallback-avatar.png";
 
   return (
-    <div className="relative mx-auto h-20 w-20 overflow-hidden rounded-full">
+    <div className="relative mx-auto h-24 w-24 overflow-hidden rounded-full">
       <Image
         src={src}
         alt={userDisplayName}
