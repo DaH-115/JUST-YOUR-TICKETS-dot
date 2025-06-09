@@ -63,14 +63,26 @@ export async function fetchReviewsPaginated({
   const totalPages = Math.ceil(countSnap.data().count / pageSize);
 
   // 3) docsQuery 구성
-  let docsQuery = search
-    ? query(
-        base,
-        where("review.movieTitle", ">=", search),
-        where("review.movieTitle", "<=", search + "\uf8ff"),
-        limit(page * pageSize),
-      )
-    : query(base, orderBy("review.createdAt", "desc"), limit(page * pageSize));
+  let docsQuery: Query<DocumentData>;
+
+  if (search) {
+    // 검색어가 있을 때는 movieTitle로 먼저 정렬 (범위 쿼리 제약사항)
+    docsQuery = query(
+      base,
+      where("review.movieTitle", ">=", search),
+      where("review.movieTitle", "<=", search + "\uf8ff"),
+      orderBy("review.movieTitle", "asc"),
+      orderBy("review.createdAt", "desc"),
+      limit(page * pageSize),
+    );
+  } else {
+    // 검색어가 없을 때는 createdAt로만 정렬
+    docsQuery = query(
+      base,
+      orderBy("review.createdAt", "desc"),
+      limit(page * pageSize),
+    );
+  }
 
   // 4) 데이터 변환
   const snap = await getDocs(docsQuery);

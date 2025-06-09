@@ -36,12 +36,11 @@ export async function fetchLikedReviewsPaginated({
   // /users/{uid}/liked-reviews
   const baseRef = collection(db, "users", uid, "liked-reviews");
 
-  // 2. 검색어 유무에 따른 카운트 쿼리
+  // 2. 검색어 유무에 따른 쿼리 구성
   let countQuery: Query<DocumentData> = baseRef;
 
   if (search) {
     const end = search + "\uf8ff";
-    // "movieTitle" 필드가 'search'로 시작하는 리뷰들을 필터링
     countQuery = query(
       baseRef,
       where("movieTitle", ">=", search),
@@ -50,20 +49,33 @@ export async function fetchLikedReviewsPaginated({
   }
 
   // 3. 총 개수 및 페이지 수 계산
-  const countSnap = await getCountFromServer(countQuery); // 쿼리 결과의 문서 개수를 서버 사이드에서 세어주는 함수
+  const countSnap = await getCountFromServer(countQuery);
   const totalCount = countSnap.data().count;
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  // 4. 페이징해서 liked-reviews 문서 가져오기
-  const pagedQuery = query(
-    countQuery,
-    orderBy("likedAt", "desc"),
-    limit(page * pageSize),
-  );
+  // 4. 페이징 쿼리
+  let pagedQuery: Query<DocumentData>;
+
+  if (search) {
+    // 검색어가 있을 때는 movieTitle로 먼저 정렬
+    pagedQuery = query(
+      countQuery,
+      orderBy("movieTitle", "asc"),
+      orderBy("likedAt", "desc"),
+      limit(page * pageSize),
+    );
+  } else {
+    // 검색어가 없을 때는 likedAt로만 정렬
+    pagedQuery = query(
+      countQuery,
+      orderBy("likedAt", "desc"),
+      limit(page * pageSize),
+    );
+  }
+
   const snap = await getDocs(pagedQuery);
 
-  // 5) liked-reviews 문서에서 ID 리스트만 뽑은 뒤, "fetchReviewById" 호출
-  //    (fetchReviewById에서 Timestamp → string 변환을 해 줌)
+  // 5. 리뷰 상세 정보 가져오기
   const likedReviews = await Promise.all(
     snap.docs.map(async (docSnap) => {
       const reviewId = docSnap.id;
@@ -72,10 +84,10 @@ export async function fetchLikedReviewsPaginated({
     }),
   );
 
-  // 6) null 제거
+  // 6. null 제거
   const reviews = likedReviews.filter((review) => review !== null);
 
-  // 7) 가져온 데이터 페이지 슬라이스 (필요한 만큼 슬라이스 적용)
+  // 7. 페이지 슬라이스
   const start = (page - 1) * pageSize;
   const pagedReviews = reviews.slice(start, start + pageSize);
 

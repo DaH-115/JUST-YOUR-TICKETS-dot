@@ -12,7 +12,13 @@ import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { FaHeart } from "react-icons/fa";
 
-export default function ReviewTicket({ reviews }: { reviews: ReviewDoc[] }) {
+export default function ReviewTicket({
+  reviews,
+  onLikeToggled,
+}: {
+  reviews: ReviewDoc[];
+  onLikeToggled?: (reviewId: string, isLiked: boolean) => void;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewDoc>();
   const { showErrorHandler } = useAlert();
@@ -56,6 +62,7 @@ export default function ReviewTicket({ reviews }: { reviews: ReviewDoc[] }) {
           isModalOpen={isModalOpen}
           closeModalHandler={closeModalHandler}
           onReviewDeleted={onReviewDeleteHanlder}
+          onLikeToggled={onLikeToggled}
         />
       )}
       {/* 리뷰 리스트 */}

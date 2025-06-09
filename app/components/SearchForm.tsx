@@ -1,15 +1,13 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IoSearchOutline } from "react-icons/io5";
 
 const schema = z.object({
-  search: z
-    .string()
-    .min(1, "검색어를 입력하세요")
-    .max(30, "최대 30자 이하로 입력"),
+  search: z.string().max(30, "최대 30자 이하로 입력"),
 });
 type FormData = z.infer<typeof schema>;
 
@@ -25,14 +23,27 @@ export default function SearchForm({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { search: "" },
   });
 
+  const searchValue = watch("search");
+
+  // watch로 검색어 변화 감지
+  useEffect(() => {
+    if (searchValue === "") {
+      onSearch("");
+    }
+  }, [searchValue, onSearch]);
+
   const onSubmit = (data: FormData) => {
-    onSearch(data.search.trim());
+    const trimmedSearch = data.search.trim();
+    if (trimmedSearch) {
+      onSearch(trimmedSearch);
+    }
   };
 
   return (

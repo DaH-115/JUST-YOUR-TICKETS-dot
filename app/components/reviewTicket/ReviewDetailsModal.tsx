@@ -22,6 +22,7 @@ interface ReviewDetailsModalProps {
   closeModalHandler: () => void;
   selectedReview: ReviewDoc;
   onReviewDeleted: (id: string) => void;
+  onLikeToggled?: (reviewId: string, isLiked: boolean) => void;
 }
 
 export default function ReviewDetailsModal({
@@ -29,6 +30,7 @@ export default function ReviewDetailsModal({
   closeModalHandler,
   selectedReview,
   onReviewDeleted,
+  onLikeToggled,
 }: ReviewDetailsModalProps) {
   const { review, user } = selectedReview;
 
@@ -87,14 +89,19 @@ export default function ReviewDetailsModal({
       await updateDoc(reviewRef, { "review.likeCount": increment(-1) });
       setLiked(false);
       setLikeCount((prev) => prev - 1);
+      // 좋아요 취소 콜백 호출
+      onLikeToggled?.(selectedReview.id, false);
     } else {
       // 좋아요한 기록이 없다면 추가
       await setDoc(likeRef, {
         likedAt: serverTimestamp(),
+        movieTitle: review.movieTitle,
       });
       await updateDoc(reviewRef, { "review.likeCount": increment(1) });
       setLiked(true);
       setLikeCount((prev) => prev + 1);
+      // 좋아요 추가 콜백 호출
+      onLikeToggled?.(selectedReview.id, true);
     }
 
     setIsLiking(false);
