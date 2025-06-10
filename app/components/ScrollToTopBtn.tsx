@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { FaArrowUp } from "react-icons/fa";
 
 const ScrollToTopBtn = () => {
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
@@ -28,13 +29,17 @@ const ScrollToTopBtn = () => {
   return (
     <button
       onClick={scrollToTopHandler}
-      className={`fixed bottom-10 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full border border-white bg-primary-700 text-xs font-bold text-white shadow-lg transition-all duration-300 hover:bg-white hover:text-black md:h-20 md:w-20 lg:right-10 lg:text-base ${
+      className={`fixed bottom-6 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:from-primary-700 hover:to-primary-800 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-accent-300 sm:bottom-8 sm:right-6 md:h-16 md:w-16 lg:right-10 ${
         showScrollTopButton
           ? "pointer-events-auto translate-y-0 opacity-100"
           : "pointer-events-none translate-y-5 opacity-0"
       }`}
+      aria-label="맨 위로 스크롤"
     >
-      Top
+      <div className="flex flex-col items-center">
+        <FaArrowUp className="text-lg md:text-xl" />
+        <span className="text-xs font-medium">TOP</span>
+      </div>
     </button>
   );
 };
