@@ -96,43 +96,41 @@ export default function HeaderSearchBar() {
   }, []);
 
   return (
-    <div className="ml-4 hidden h-10 lg:flex" ref={dropdownRef}>
-      <div className="relative flex h-full items-center justify-end">
+    <div className="ml-4 hidden lg:flex" ref={dropdownRef}>
+      <div className="relative flex items-center justify-end">
         <div
-          className={`relative flex items-center transition-all duration-300 ease-in-out ${
-            isSearchOpen ? "w-64" : "w-10"
+          className={`relative flex items-center rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm transition-all duration-300 ease-in-out hover:border-white/50 hover:bg-white/20 ${
+            isSearchOpen ? "w-64" : "w-12"
           }`}
         >
           <input
             {...register("search")}
             type="search"
             placeholder="영화 검색"
-            className={`h-10 w-full rounded-full border border-black pl-4 pr-12 text-sm transition-all duration-300 ease-in-out focus:border-none focus:outline-none focus:ring-2 focus:ring-accent-300 ${
+            className={`h-12 w-full rounded-full bg-transparent pl-4 pr-14 text-sm text-white placeholder-white/70 transition-all duration-300 ease-in-out focus:outline-none ${
               isSearchOpen ? "opacity-100" : "opacity-0"
             }`}
             onFocus={inputFocusHandler}
           />
           <div
-            className={`${
-              isSearchOpen ? "border-none" : "bg-white"
-            } absolute right-0 top-0 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-300 ease-in-out`}
+            className="absolute right-0 top-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full transition-all duration-300 ease-in-out hover:bg-white/10"
             onClick={iconClickHandler}
           >
-            <IoSearchOutline size={18} color="black" />
+            <IoSearchOutline size={18} color="white" />
           </div>
         </div>
 
         {isDropdownOpen && results.length > 0 && (
-          <div className="absolute right-0 top-full z-10 mt-1 max-h-96 w-64 overflow-auto rounded-md border border-gray-300 bg-white shadow-lg scrollbar-hide">
+          <div className="absolute right-0 top-full z-10 mt-2 max-h-96 w-64 overflow-auto rounded-xl border border-white/20 bg-black/90 shadow-xl backdrop-blur-md scrollbar-hide">
             {results.slice(0, visibleCount).map((result, idx) => (
               <div
                 key={idx}
-                className="px-3 py-2 hover:bg-gray-100"
+                className="px-4 py-3 text-white transition-colors duration-200 hover:bg-white/10"
                 onClick={resultsClickHandler}
               >
                 <Link href={`/movie-details/${result.id}`}>
-                  <p>{result.title}</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="font-medium">{result.title}</p>
+                  <p className="text-sm text-white/70">
                     ({result.release_date?.slice(0, 4)})
                   </p>
                 </Link>
@@ -143,7 +141,7 @@ export default function HeaderSearchBar() {
             {visibleCount < results.length && (
               <button
                 onClick={() => setVisibleCount((prev) => prev + 5)}
-                className="w-full px-3 py-2 text-sm text-gray-500 hover:bg-gray-100"
+                className="w-full px-4 py-3 text-sm text-white/70 transition-colors duration-200 hover:bg-white/10"
               >
                 더 보기
               </button>
@@ -152,9 +150,9 @@ export default function HeaderSearchBar() {
             {/* 전체 검색 페이지로 이동 */}
             {results.length >= 20 && (
               <Link href={`/search?query=${encodeURIComponent(searchQuery)}`}>
-                <div className="flex w-full items-center bg-gray-100 px-3 py-2 text-sm text-gray-500 hover:bg-gray-200">
+                <div className="flex w-full items-center bg-white/5 px-4 py-3 text-sm text-white/70 transition-colors duration-200 hover:bg-white/10">
                   전체 검색 결과 보기
-                  <FaArrowRight className="ml-1 text-gray-400" />
+                  <FaArrowRight className="ml-2 text-white/50" />
                 </div>
               </Link>
             )}

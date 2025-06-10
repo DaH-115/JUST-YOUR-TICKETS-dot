@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { IoIosArrowDown, IoMdClose } from "react-icons/io";
 import HeaderSideMenuLi from "app/ui/layout/header/components/HeaderSideMenuLi";
 import { FaArrowRight } from "react-icons/fa";
@@ -11,6 +12,7 @@ import { useAppSelector } from "store/redux-toolkit/hooks";
 interface HeaderSideMenuProps {
   newReviewAlertState: boolean;
   userDisplayName: string;
+  userPhotoURL: string | null | undefined;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -18,6 +20,7 @@ interface HeaderSideMenuProps {
 export default function HeaderSideMenu({
   newReviewAlertState,
   userDisplayName,
+  userPhotoURL,
   isOpen,
   onClose,
 }: HeaderSideMenuProps) {
@@ -75,10 +78,29 @@ export default function HeaderSideMenu({
               onClick={toggleMenuHandler}
               className="mb-2 flex w-full items-center justify-between border-b border-white pb-2"
             >
-              <div className="text-sm">
+              <div className="flex items-center gap-3 text-sm">
+                <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-white/20">
+                  {userPhotoURL ? (
+                    <Image
+                      src={`/api/s3?key=${encodeURIComponent(userPhotoURL)}`}
+                      alt={userDisplayName || "Guest"}
+                      fill
+                      sizes="32px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="text-xs font-bold text-white">
+                      {userDisplayName
+                        ? userDisplayName.charAt(0).toUpperCase()
+                        : "G"}
+                    </span>
+                  )}
+                </div>
                 <span className="font-bold">{userDisplayName}</span>님
               </div>
-              <div className={`px-1 ${menuIsOpen ? "rotate-180" : ""}`}>
+              <div
+                className={`px-1 transition-transform duration-200 ${menuIsOpen ? "rotate-180" : ""}`}
+              >
                 <IoIosArrowDown size={16} />
               </div>
             </button>

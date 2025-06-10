@@ -35,8 +35,10 @@ export default function Header() {
   const userDisplayName = useAppSelector(
     (state) => state.userData.auth?.displayName,
   );
+  const userPhotoURL = useAppSelector((state) => state.userData.auth?.photoURL);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const logoutHandler = useCallback(async () => {
     try {
@@ -63,6 +65,16 @@ export default function Header() {
 
   const toggleSideMenu = useCallback(() => {
     setIsSideMenuOpen((prev) => !prev);
+  }, []);
+
+  // 스크롤 감지 효과
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -107,27 +119,32 @@ export default function Header() {
 
   return (
     <header
-      className={`relative z-10 flex w-full items-center justify-between px-4 py-8 text-xs md:px-8 md:pt-8 ${
-        isSideMenuOpen ? "pointer-events-none" : ""
-      }`}
+      className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-4 py-8 text-xs transition-all duration-300 ease-in-out md:px-8 md:pt-8 ${
+        isScrolled
+          ? "bg-gradient-to-b from-black/90 via-black/70 to-transparent backdrop-blur-sm"
+          : "bg-transparent"
+      } ${isSideMenuOpen ? "pointer-events-none" : ""}`}
     >
       {/* LOGO */}
-      <h1 className="mr-4 text-4xl font-bold text-white">Just Movie Tickets</h1>
-      <div className="flex">
-        {/* NAVIGATION */}
+      <h1 className="mr-2 text-base font-bold sm:mr-4 sm:text-lg md:text-xl">
+        <span className="hidden text-white sm:inline">Just Movie Tickets</span>
+        <span className="text-white sm:hidden">JMT</span>
+      </h1>
+      <div className="flex items-center space-x-4">
+        {/* MAIN NAVIGATION */}
         <div
-          className={`flex w-full items-center justify-between rounded-full border-2 bg-white md:w-auto md:justify-center md:px-4 md:py-3 ${
+          className={`flex items-center justify-center rounded-full border-2 border-white/30 bg-white/10 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/20 ${
             isSideMenuOpen ? "pointer-events-auto" : ""
           }`}
         >
-          {/* MENU */}
+          {/* DESKTOP MENU */}
           <nav className="hidden md:flex">
-            <ul className="flex items-center justify-center gap-3">
+            <ul className="flex items-center justify-center gap-2">
               {navItems.map(({ href, label, showAlert }) => (
                 <li key={href} className="group relative">
                   <Link
                     href={href}
-                    className="rounded-full p-2 transition-all duration-500 ease-in-out hover:bg-gray-200"
+                    className="rounded-full px-3 py-2 font-medium text-white/90 transition-all duration-300 ease-in-out hover:bg-white/20 hover:text-white"
                   >
                     {label}
                     {showAlert && newReviewAlertState && (
@@ -141,38 +158,46 @@ export default function Header() {
               ))}
             </ul>
           </nav>
-          {/* MOBILE/ HAMBURGER MENU */}
+
+          {/* MOBILE HAMBURGER MENU */}
           <div
             onClick={toggleSideMenu}
-            className="flex w-full justify-end md:hidden"
+            className="flex w-full justify-center md:hidden"
           >
             <button
-              className="rounded-full px-4 py-2 transition-colors duration-300 active:bg-gray-200"
+              className="rounded-full px-4 py-2 text-white transition-colors duration-300 hover:bg-white/20"
               aria-label="메뉴 열기"
             >
-              <IoIosMenu size={28} aria-hidden />
+              <IoIosMenu size={24} aria-hidden />
             </button>
           </div>
+        </div>
 
-          {/* PROFILE MENU */}
-          <div className="hidden md:flex">
-            {userDisplayName ? (
+        {/* USER PROFILE/LOGIN SECTION */}
+        <div className="hidden md:flex">
+          {userDisplayName ? (
+            <div className="px-6 py-3">
               <HeaderDropDownMenu
                 dropdownRef={dropdownRef}
                 userDisplayName={userDisplayName}
+                userPhotoURL={userPhotoURL}
                 isDropdownOpen={isDropdownOpen}
                 dropDownHandler={dropDownHandler}
                 logoutHandler={logoutHandler}
               />
-            ) : (
-              <Link href="/login">
-                <button type="button" className="mx-3 font-bold">
-                  로그인
-                </button>
-              </Link>
-            )}
-          </div>
+            </div>
+          ) : (
+            <Link href="/login">
+              <button
+                type="button"
+                className="rounded-full border-2 border-white bg-white px-6 py-3 font-bold text-black shadow-lg transition-all duration-300 hover:bg-gray-100 hover:shadow-xl"
+              >
+                로그인
+              </button>
+            </Link>
+          )}
         </div>
+
         {/* SEARCH BAR */}
         <HeaderSearchBar />
       </div>
@@ -181,6 +206,7 @@ export default function Header() {
       <HeaderSideMenu
         newReviewAlertState={newReviewAlertState}
         userDisplayName={userDisplayName || ""}
+        userPhotoURL={userPhotoURL}
         isOpen={isSideMenuOpen}
         onClose={() => setIsSideMenuOpen(false)}
       />
