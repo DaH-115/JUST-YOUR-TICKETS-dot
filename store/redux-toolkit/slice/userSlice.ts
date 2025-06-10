@@ -155,6 +155,11 @@ const userSlice = createSlice({
       state.auth = action.payload;
       state.authStatus = "succeeded";
     },
+    updatePhotoURL(state, action: PayloadAction<string>) {
+      if (state.auth) {
+        state.auth.photoURL = action.payload;
+      }
+    },
     clearUser(state) {
       state.auth = null;
       state.metaData = null;
@@ -215,5 +220,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setAuthUser, clearUser } = userSlice.actions;
+export const { setAuthUser, clearUser, updatePhotoURL } = userSlice.actions;
 export default userSlice.reducer;

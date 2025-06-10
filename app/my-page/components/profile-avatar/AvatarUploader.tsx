@@ -4,6 +4,8 @@ import { useState, ChangeEvent, useRef } from "react";
 import { updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { db, isAuth } from "firebase-config";
+import { useAppDispatch } from "store/redux-toolkit/hooks";
+import { updatePhotoURL } from "store/redux-toolkit/slice/userSlice";
 
 interface AvatarUploaderProps {
   previewSrc: string | null;
@@ -22,6 +24,7 @@ export default function AvatarUploader({
   const [uploading, setUploading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const dispatch = useAppDispatch();
 
   const onEditToggle = () => {
     setIsEditing((prev) => !prev);
@@ -61,34 +64,46 @@ export default function AvatarUploader({
     if (!file || !isAuth.currentUser) return;
     setUploading(true);
 
-    // 1) Presigned URL 발급
-    const res = await fetch("/api/s3", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        filename: file.name,
-        contentType: file.type,
-        userId: isAuth.currentUser.uid,
-      }),
-    });
-    const { url, key } = await res.json();
+    try {
+      // 1) Presigned URL 발급
+      const res = await fetch("/api/s3", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filename: file.name,
+          contentType: file.type,
+          userId: isAuth.currentUser.uid,
+        }),
+      });
+      const { url, key } = await res.json();
 
-    // 2) S3에 직접 PUT
-    await fetch(url, {
-      method: "PUT",
-      headers: { "Content-Type": file.type },
-      body: file,
-    });
+      // 2) S3에 직접 PUT
+      await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
 
-    // 3) 프로필에 key 저장 (Firebase Auth & Firestore)
-    await updateProfile(isAuth.currentUser, { photoURL: key });
-    const userRef = doc(db, "users", isAuth.currentUser.uid);
-    await updateDoc(userRef, { photoKey: key });
+      // 3) 프로필에 key 저장 (Firebase Auth & Firestore)
+      await updateProfile(isAuth.currentUser, { photoURL: key });
+      const userRef = doc(db, "users", isAuth.currentUser.uid);
+      await updateDoc(userRef, { photoKey: key });
 
-    setUploading(false);
-    alert("프로필 이미지 업로드 완료");
-    onImageChange?.(true); // 업로드 완료 시 변경 상태 true로 설정
-    onUploadComplete();
+      // 4) Redux 상태 업데이트
+      dispatch(updatePhotoURL(key));
+
+      // 5) Firebase Auth 사용자 정보 새로고침
+      await isAuth.currentUser.reload();
+
+      setUploading(false);
+      alert("프로필 이미지 업로드 완료");
+      onImageChange?.(true); // 업로드 완료 시 변경 상태 true로 설정
+      onUploadComplete();
+    } catch (error) {
+      console.error("프로필 이미지 업로드 실패:", error);
+      setUploading(false);
+      alert("프로필 이미지 업로드에 실패했습니다.");
+    }
   };
 
   return (
