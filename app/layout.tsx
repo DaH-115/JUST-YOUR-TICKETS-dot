@@ -3,8 +3,7 @@ import "app/globals.css";
 import Providers from "store/redux-toolkit/Providers";
 import { AlertProvider } from "store/context/alertContext";
 import { AuthProvider } from "store/context/auth/authContext";
-import Header from "app/ui/layout/header/Header";
-import Footer from "app/ui/layout/Footer";
+import ConditionalLayout from "app/components/ConditionalLayout";
 import { Nanum_Gothic, Montserrat } from "next/font/google";
 
 const nanumGothic = Nanum_Gothic({
@@ -123,11 +122,7 @@ export default function RootLayout({
         <Providers>
           <AuthProvider>
             <AlertProvider>
-              <Header />
-              <main className="flex-1">{children}</main>
-              <div id="modal-root" />
-              <div id="alert-root" />
-              <Footer />
+              <ConditionalLayout>{children}</ConditionalLayout>
             </AlertProvider>
           </AuthProvider>
         </Providers>

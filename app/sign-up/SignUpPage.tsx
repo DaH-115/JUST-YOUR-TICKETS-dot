@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useAlert } from "store/context/alertContext";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import InputField from "app/components/InputField";
+import DuplicateCheckButton from "app/components/DuplicateCheckButton";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
@@ -203,131 +204,161 @@ export default function SignUpPage() {
   );
 
   return (
-    <main className="mt-8 w-full border-t-4 border-accent-300 bg-white pb-8 md:flex md:justify-center md:py-10">
-      <h1 className="mb-4 w-full px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:border-r-2 md:pl-0 md:pt-0 md:text-4xl">
-        SIGN UP
-      </h1>
-      <div className="md:w-2/3">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="mx-auto px-8 md:w-2/3 md:px-0"
-        >
-          <div className="space-y-6">
-            <InputField
-              id="name"
-              label="이름"
-              type="text"
-              placeholder="이름을 입력해 주세요"
-              register={register}
-              error={errors.name?.message}
-              touched={touchedFields.name}
-              disabled={isLoading}
-              autoComplete={"name"}
-            />
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-accent-900 via-black to-accent-800 px-4 py-10">
+      <div className="w-full max-w-md">
+        {/* 티켓 컨테이너 */}
+        <div className="relative">
+          {/* 티켓 메인 부분 */}
+          <div className="relative rounded-3xl border-2 border-accent-300/30 bg-white p-8 shadow-2xl">
+            {/* 티켓 헤더 */}
+            <div className="mb-8 border-b-2 border-dashed border-accent-300/50 pb-6 text-center">
+              <div className="mb-2 font-mono text-xs font-bold tracking-wider text-accent-600">
+                ADMIT ONE
+              </div>
+              <h3 className="mb-1 text-2xl font-bold text-gray-800">
+                회원가입
+              </h3>
+              <p className="text-sm text-gray-600">
+                새로운 계정을 만들어 시작하세요
+              </p>
+            </div>
 
-            <div className="flex items-center space-x-2">
-              <div className="w-full">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="space-y-4">
                 <InputField
-                  id="displayName"
-                  label="닉네임"
+                  id="name"
+                  label="이름"
                   type="text"
-                  placeholder="사용하실 닉네임을 입력해 주세요"
+                  placeholder="이름을 입력해 주세요"
                   register={register}
-                  error={errors.displayName?.message}
-                  touched={touchedFields.displayName}
+                  error={errors.name?.message}
+                  touched={touchedFields.name}
                   disabled={isLoading}
-                  autoComplete={"displayName"}
+                  autoComplete={"name"}
                 />
-              </div>
-              <button
-                type="button"
-                onClick={checkDisplayName}
-                disabled={isCheckingName || !displayNameValue}
-                className={`flex-shrink-0 rounded-lg px-4 py-2 text-sm transition-all duration-200 ease-in-out hover:underline ${isCheckingName || !displayNameValue ? "cursor-not-allowed opacity-50" : "bg-black text-white"}`}
-              >
-                {isCheckingName ? "검사 중..." : "중복 확인"}
-              </button>
-            </div>
-            {isDisplayNameAvailable !== null && (
-              <p
-                className={`text-sm ${isDisplayNameAvailable ? "text-green-600" : "text-red-600"}`}
-              >
-                {isDisplayNameAvailable
-                  ? "사용 가능한 닉네임입니다."
-                  : "이미 사용 중인 닉네임입니다."}
-              </p>
-            )}
 
-            <div className="flex items-center space-x-2">
-              <div className="w-full">
+                <div className="flex items-end space-x-2">
+                  <div className="flex-1">
+                    <InputField
+                      id="displayName"
+                      label="닉네임"
+                      type="text"
+                      placeholder="사용하실 닉네임을 입력해 주세요"
+                      register={register}
+                      error={errors.displayName?.message}
+                      touched={touchedFields.displayName}
+                      disabled={isLoading}
+                      autoComplete={"displayName"}
+                    />
+                    {isDisplayNameAvailable !== null && (
+                      <p
+                        className={`mt-1 text-xs ${
+                          isDisplayNameAvailable
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {isDisplayNameAvailable
+                          ? "사용 가능한 닉네임입니다."
+                          : "이미 사용 중인 닉네임입니다."}
+                      </p>
+                    )}
+                    <DuplicateCheckButton
+                      onClick={checkDisplayName}
+                      disabled={isCheckingName || !displayNameValue}
+                      isChecking={isCheckingName}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-end space-x-2">
+                  <div className="flex-1">
+                    <InputField
+                      id="email"
+                      label="이메일"
+                      type="email"
+                      placeholder="이메일을 입력해 주세요"
+                      register={register}
+                      error={errors.email?.message}
+                      touched={touchedFields.email}
+                      disabled={isLoading}
+                      autoComplete={"email"}
+                    />
+                    {isEmailAvailable !== null && (
+                      <p
+                        className={`mt-1 text-xs ${
+                          isEmailAvailable ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        {isEmailAvailable
+                          ? "사용 가능한 이메일입니다."
+                          : "이미 사용 중인 이메일입니다."}
+                      </p>
+                    )}
+                    <DuplicateCheckButton
+                      onClick={checkEmail}
+                      disabled={isCheckingEmail || !emailValue}
+                      isChecking={isCheckingEmail}
+                    />
+                  </div>
+                </div>
+
                 <InputField
-                  id="email"
-                  label="이메일"
-                  type="email"
-                  placeholder="이메일을 입력해 주세요"
+                  id="password"
+                  label="비밀번호"
+                  type="password"
+                  placeholder="비밀번호를 입력해 주세요"
                   register={register}
-                  error={errors.email?.message}
-                  touched={touchedFields.email}
+                  error={errors.password?.message}
+                  touched={touchedFields.password}
                   disabled={isLoading}
-                  autoComplete={"email"}
+                  autoComplete={"password"}
+                />
+
+                <InputField
+                  id="confirmPassword"
+                  label="비밀번호 확인"
+                  type="password"
+                  placeholder="비밀번호를 한 번 더 입력해 주세요"
+                  register={register}
+                  error={errors.confirmPassword?.message}
+                  touched={touchedFields.confirmPassword}
+                  disabled={isLoading}
+                  autoComplete={"confirmPassword"}
                 />
               </div>
+
               <button
-                type="button"
-                onClick={checkEmail}
-                disabled={isCheckingEmail || !emailValue}
-                className={`flex-shrink-0 rounded-lg px-4 py-2 text-sm transition-all duration-200 ease-in-out hover:underline ${isCheckingEmail || !emailValue ? "cursor-not-allowed opacity-50" : "bg-black text-white"}`}
+                type="submit"
+                disabled={
+                  isLoading ||
+                  isDisplayNameAvailable !== true ||
+                  isEmailAvailable !== true
+                }
+                className={`w-full rounded-2xl bg-accent-400 p-4 font-semibold text-white transition-all duration-300 ${
+                  isLoading ||
+                  isDisplayNameAvailable !== true ||
+                  isEmailAvailable !== true
+                    ? "cursor-not-allowed opacity-50"
+                    : "hover:bg-accent-500 hover:shadow-lg"
+                }`}
               >
-                {isCheckingEmail ? "검사 중..." : "중복 확인"}
+                {isLoading ? "가입 중..." : "회원가입"}
               </button>
+            </form>
+
+            {/* 티켓 하단 정보 */}
+            <div className="mt-8 border-t-2 border-dashed border-accent-300/50 pt-6 text-center">
+              <div className="space-y-1 font-mono text-xs text-gray-500">
+                <div>NEW MEMBER REGISTRATION</div>
+                <div>TERMS & CONDITIONS APPLY</div>
+                <div className="font-bold text-accent-600">
+                  ★ WELCOME ABOARD ★
+                </div>
+              </div>
             </div>
-            {isEmailAvailable !== null && (
-              <p
-                className={`text-sm ${isEmailAvailable ? "text-green-600" : "text-red-600"}`}
-              >
-                {isEmailAvailable
-                  ? "사용 가능한 이메일입니다."
-                  : "이미 사용 중인 이메일입니다."}
-              </p>
-            )}
-
-            <InputField
-              id="password"
-              label="비밀번호"
-              type="password"
-              placeholder="비밀번호를 입력해 주세요"
-              register={register}
-              error={errors.password?.message}
-              touched={touchedFields.password}
-              disabled={isLoading}
-              autoComplete={"password"}
-            />
-
-            <InputField
-              id="confirmPassword"
-              label="비밀번호 확인"
-              type="password"
-              placeholder="비밀번호를 한 번 더 입력해 주세요"
-              register={register}
-              error={errors.confirmPassword?.message}
-              touched={touchedFields.confirmPassword}
-              disabled={isLoading}
-              autoComplete={"confirmPassword"}
-            />
           </div>
-
-          <button
-            type="submit"
-            disabled={
-              isLoading ||
-              isDisplayNameAvailable !== true ||
-              isEmailAvailable !== true
-            }
-            className={`mt-10 w-full rounded-full bg-primary-500 p-4 text-sm text-white transition-all duration-300 ease-in-out hover:bg-primary-700 ${isLoading || isDisplayNameAvailable !== true || isEmailAvailable !== true ? "cursor-not-allowed opacity-50" : ""}`}
-          >
-            {isLoading ? "가입 중" : "회원가입"}
-          </button>
-        </form>
+        </div>
       </div>
     </main>
   );

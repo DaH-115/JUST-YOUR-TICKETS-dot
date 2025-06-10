@@ -70,81 +70,111 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <main className="w-full border-t-4 border-accent-300 bg-white pb-8 pt-4 md:flex md:justify-center md:py-10">
-      <h1 className="mb-4 w-full border-r px-4 py-2 text-xl font-bold md:mb-0 md:ml-8 md:w-1/3 md:pl-0 md:pt-0 md:text-8xl">
-        LOG IN
-      </h1>
-      <div className="md:w-2/3">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="mx-auto px-8 md:mt-16 md:w-2/3 md:px-0"
-        >
-          <InputField
-            id="email"
-            label="이메일"
-            type="email"
-            placeholder="example@domain.com"
-            register={register}
-            error={errors.email?.message}
-            touched={touchedFields.email}
-            disabled={isLoading}
-            autoComplete={"email"}
-          />
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-accent-900 via-black to-accent-800 px-4 py-10">
+      <div className="w-full max-w-md">
+        {/* 티켓 컨테이너 */}
+        <div className="relative">
+          {/* 티켓 메인 부분 */}
+          <div className="relative rounded-3xl border-2 border-accent-300/30 bg-white p-8 shadow-2xl">
+            {/* 티켓 헤더 */}
+            <div className="mb-8 border-b-2 border-dashed border-accent-300/50 pb-6 text-center">
+              <div className="mb-2 font-mono text-xs font-bold tracking-wider text-accent-600">
+                ADMIT ONE
+              </div>
+              <h3 className="mb-1 text-2xl font-bold text-gray-800">로그인</h3>
+              <p className="text-sm text-gray-600">
+                계정에 로그인하여 시작하세요
+              </p>
+            </div>
 
-          <InputField
-            id="password"
-            label="비밀번호"
-            type="password"
-            placeholder=""
-            register={register}
-            error={errors.password?.message}
-            touched={touchedFields.password}
-            disabled={isLoading}
-            autoComplete={"password"}
-          />
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <InputField
+                  id="email"
+                  label="이메일"
+                  type="email"
+                  placeholder="example@domain.com"
+                  register={register}
+                  error={errors.email?.message}
+                  touched={touchedFields.email}
+                  disabled={isLoading}
+                  autoComplete={"email"}
+                />
 
-          {/* Remember Me */}
-          <div className="my-4 flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              {...register("rememberMe")}
-              className="h-4 w-4"
-              disabled={isLoading}
-            />
-            <label htmlFor="rememberMe" className="text-xs text-gray-600">
-              로그인 상태 유지
-            </label>
+                <InputField
+                  id="password"
+                  label="비밀번호"
+                  type="password"
+                  placeholder="비밀번호를 입력하세요"
+                  register={register}
+                  error={errors.password?.message}
+                  touched={touchedFields.password}
+                  disabled={isLoading}
+                  autoComplete={"password"}
+                />
+              </div>
+
+              {/* 로그인 상태 유지 */}
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  id="rememberMe"
+                  {...register("rememberMe")}
+                  className="h-4 w-4 rounded border-gray-300 bg-white text-accent-500 focus:ring-2 focus:ring-accent-500"
+                  disabled={isLoading}
+                />
+                <label htmlFor="rememberMe" className="text-sm text-gray-600">
+                  로그인 상태 유지
+                </label>
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  className={`w-full rounded-2xl bg-accent-400 p-4 font-semibold text-white transition-all duration-300 ${
+                    isLoading
+                      ? "cursor-not-allowed opacity-50"
+                      : "hover:bg-accent-500 hover:shadow-lg"
+                  }`}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "로그인 중..." : "로그인"}
+                </button>
+
+                <Link href="/sign-up" className="mt-4 block">
+                  <button
+                    type="button"
+                    className={`flex w-full items-center justify-center rounded-2xl border border-gray-300 bg-gray-50 p-4 font-semibold text-gray-700 transition-all duration-300 ${
+                      isLoading
+                        ? "cursor-not-allowed opacity-50"
+                        : "hover:border-gray-400 hover:bg-gray-100"
+                    }`}
+                    disabled={isLoading}
+                  >
+                    회원가입
+                    <FaArrowRight size={16} className="ml-2" />
+                  </button>
+                </Link>
+              </div>
+            </form>
+
+            {/* 소셜 로그인 */}
+            <div className="mt-8">
+              <SocialLogin rememberMe={isRememberMe} />
+            </div>
+
+            {/* 티켓 하단 정보 */}
+            <div className="mt-8 border-t-2 border-dashed border-accent-300/50 pt-6 text-center">
+              <div className="space-y-1 font-mono text-xs text-gray-500">
+                <div>VALID FOR ONE SESSION</div>
+                <div>NO REFUND • NO EXCHANGE</div>
+                <div className="font-bold text-accent-600">
+                  ★ PREMIUM ACCESS ★
+                </div>
+              </div>
+            </div>
           </div>
-
-          <button
-            type="submit"
-            className={`w-full rounded-full bg-primary-500 p-4 text-sm text-white transition-colors duration-300 ease-in-out ${
-              isLoading
-                ? "cursor-not-allowed opacity-50"
-                : "hover:bg-primary-700"
-            }`}
-            disabled={isLoading}
-          >
-            {isLoading ? "로그인 중" : "로그인"}
-          </button>
-
-          <Link href="/sign-up">
-            <button
-              type="button"
-              className={`mt-2 flex w-full items-center justify-center rounded-full bg-white p-4 text-sm text-black transition-colors duration-300 ease-in-out ${
-                isLoading ? "cursor-not-allowed opacity-50" : ""
-              }`}
-              disabled={isLoading}
-            >
-              회원가입
-              <FaArrowRight size={16} className="ml-2 text-primary-700" />
-            </button>
-          </Link>
-        </form>
-
-        {/* Social Login */}
-        <SocialLogin rememberMe={isRememberMe} />
+        </div>
       </div>
     </main>
   );

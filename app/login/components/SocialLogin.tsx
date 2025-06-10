@@ -85,30 +85,29 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
   );
 
   return (
-    <>
-      <div className="mx-auto my-4 flex w-2/3 items-center">
-        <div className="flex-grow border-t"></div>
-        <span className="mx-4 text-xs text-gray-500">OR</span>
-        <div className="flex-grow border-t"></div>
+    <div className="space-y-6">
+      <div className="flex items-center">
+        <div className="flex-grow border-t-2 border-dashed border-gray-300"></div>
+        <span className="mx-4 font-mono text-sm text-gray-500">또는</span>
+        <div className="flex-grow border-t-2 border-dashed border-gray-300"></div>
       </div>
-      <div className="mb-4 flex items-center justify-center">
-        <div className="flex space-x-2">
-          <SocialLoginBtn
-            provider="google"
-            icon={<FcGoogle size={24} />}
-            label="Google"
-            onSocialLogin={socialLoginHandler}
-            isLoading={isLoadingProvider === "google"}
-          />
-          <SocialLoginBtn
-            provider="github"
-            icon={<FaGithub size={24} />}
-            label="GitHub"
-            onSocialLogin={socialLoginHandler}
-            isLoading={isLoadingProvider === "github"}
-          />
-        </div>
+
+      <div className="flex flex-col space-y-3">
+        <SocialLoginBtn
+          provider="google"
+          icon={<FcGoogle size={20} />}
+          label="Google로 계속하기"
+          onSocialLogin={socialLoginHandler}
+          isLoading={isLoadingProvider === "google"}
+        />
+        <SocialLoginBtn
+          provider="github"
+          icon={<FaGithub size={20} />}
+          label="GitHub로 계속하기"
+          onSocialLogin={socialLoginHandler}
+          isLoading={isLoadingProvider === "github"}
+        />
       </div>
-    </>
+    </div>
   );
 }

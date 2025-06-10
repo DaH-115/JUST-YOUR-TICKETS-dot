@@ -24,22 +24,31 @@ export default function InputField<TFormValues extends FieldValues>({
   autoComplete,
 }: InputFieldProps<TFormValues>) {
   return (
-    <>
-      <div className="py-3">
-        <label htmlFor={id} className="block text-xs font-bold text-gray-700">
-          {label}
-        </label>
-        <input
-          id={id}
-          type={type}
-          placeholder={placeholder}
-          disabled={disabled}
-          {...register(id)}
-          className={`w-full appearance-none border-b border-black bg-transparent py-2 leading-tight text-gray-700 focus:outline-none ${disabled ? "cursor-not-allowed opacity-50" : ""} ${touched && error ? "border-b-2 border-red-500" : ""}`}
-          autoComplete={autoComplete}
-        />
-      </div>
-      {touched && error && <p className="text-sm text-red-600">{error}</p>}
-    </>
+    <div className="space-y-2">
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+        {label}
+      </label>
+      <input
+        id={id}
+        type={type}
+        placeholder={placeholder}
+        disabled={disabled}
+        {...register(id)}
+        className={`w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3 text-gray-800 placeholder-gray-400 transition-all duration-300 focus:border-accent-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent-500/50 ${
+          disabled ? "cursor-not-allowed opacity-50" : ""
+        } ${
+          touched && error
+            ? "border-red-500 bg-red-50 ring-2 ring-red-500/30"
+            : ""
+        }`}
+        autoComplete={autoComplete}
+      />
+      {touched && error && (
+        <p className="flex items-center space-x-1 text-sm text-red-600">
+          <span>⚠</span>
+          <span>{error}</span>
+        </p>
+      )}
+    </div>
   );
 }
