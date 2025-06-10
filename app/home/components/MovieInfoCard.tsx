@@ -20,23 +20,25 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
     <section className="mx-auto w-full overflow-hidden rounded-2xl border bg-white">
       <div className="p-2">
         <div className="p-2 md:p-4">
-          <span className="mb-2 inline-block rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">
-            추천 영화
-          </span>
-          <div className="flex">
-            <h1 className="text-3xl font-bold md:text-3xl">{title}</h1>
-            <div className="group/tooltip relative ml-2">
-              <Link
-                href={`/movie-details/${id}`}
-                aria-label={`${title}(${original_title}) 영화 상세정보 보기`}
-                title={`${title}(${original_title}) 영화 상세정보 보기`}
-                role="button"
-              >
-                <FaInfoCircle className="text-lg" aria-hidden />
-              </Link>
-              <Tooltip>영화 상세정보 보기</Tooltip>
-            </div>
+          <div className="mb-4 flex justify-between">
+            <span className="inline-block rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">
+              추천 영화
+            </span>
+            <Link
+              href={`/movie-details/${id}`}
+              aria-label={`${title}(${original_title}) 영화 상세정보 보기`}
+              role="button"
+              className="inline-block text-gray-600 transition-all duration-300 ease-in-out hover:scale-110 hover:text-accent-300 hover:drop-shadow-lg active:scale-95 active:text-accent-400"
+            >
+              <FaInfoCircle className="text-lg" aria-hidden />
+            </Link>
+            <Tooltip>
+              {title}({original_title}) 영화 상세정보 보기
+            </Tooltip>
           </div>
+
+          <h1 className="text-3xl font-bold md:text-3xl">{title}</h1>
+
           <div className="ml-1 flex items-center">
             <h2 className="text-gray-500 md:text-lg">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
           </div>

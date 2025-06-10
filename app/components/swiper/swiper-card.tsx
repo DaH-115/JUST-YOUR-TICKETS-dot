@@ -23,20 +23,20 @@ export default function SwiperCard({
   );
 
   return (
-    <div className="flex flex-col items-stretch drop-shadow-lg">
+    <div className="relative flex flex-col items-stretch drop-shadow-lg">
       {/* RANKING NUMBER */}
       <div className="absolute left-0 top-0 z-50 flex w-full items-center justify-between rounded-t-xl bg-gradient-to-t from-transparent to-black px-2 py-1 text-2xl font-bold text-white md:px-4 md:py-3 md:text-3xl">
         {idx + 1}.
-        <div className="group/tooltip relative text-lg md:ml-2">
+        <div className="relative text-lg md:ml-2">
           <Link
             href={`/movie-details/${id}`}
             aria-label={`${movieTitle} 영화 상세정보 보기`}
-            title={`${movieTitle} 영화 상세정보 보기`}
             role="button"
+            className="inline-block text-white/70 transition-all duration-300 ease-in-out hover:scale-110 hover:text-accent-300 hover:drop-shadow-lg active:scale-95 active:text-accent-400"
           >
             <FaInfoCircle aria-hidden />
           </Link>
-          <Tooltip>영화 상세정보 보기</Tooltip>
+          <Tooltip>{movieTitle} 영화 상세정보 보기</Tooltip>
         </div>
       </div>
 
