@@ -23,7 +23,7 @@ export default function Background({ imageUrl }: BackgroundProps) {
           className="h-full w-full object-cover object-center"
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-[#121212]/100 via-[#121212]/60 to-[#121212]/100" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#121212]/80 via-[#121212]/40 to-[#121212]/80" />
     </div>
   );
 }

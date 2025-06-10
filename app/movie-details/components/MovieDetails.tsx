@@ -27,10 +27,10 @@ export default function MovieDetailCard({
   const crews = movieCredits?.crew || [];
 
   return (
-    <main className="relative mb-8 flex w-full items-center justify-center px-4 md:my-8 md:px-0">
-      <div className="flex flex-col justify-center md:w-2/3 md:flex-row">
+    <main className="relative mb-12 flex w-full items-center justify-center px-4 md:my-12 md:px-0">
+      <div className="flex flex-col justify-center gap-6 md:w-2/3 md:flex-row md:gap-8">
         {/* MOVIE POSTER */}
-        <section className="w-full md:mr-6 md:w-2/3">
+        <section className="w-full md:w-2/3">
           <div className="aspect-[2/3] w-full overflow-hidden rounded-2xl">
             {movieDetails.poster_path ? (
               <MoviePoster
@@ -45,12 +45,12 @@ export default function MovieDetailCard({
         </section>
 
         {/* MOVIE INFO */}
-        <div className="mx-auto w-full overflow-hidden rounded-2xl border shadow-lg">
-          <div className="bg-white p-2">
+        <div className="mx-auto w-full overflow-hidden rounded-2xl shadow-lg">
+          <div className="bg-white p-4">
             {/* 기본 정보 영역 */}
-            <div className="p-4 pb-2">
-              <h1 className="mb-2 inline-block rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">
-                영화 정보
+            <div className="mb-6">
+              <h1 className="mb-3 inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
+                MOVIE DETAILS
               </h1>
               <h2 className="break-keep text-3xl font-bold">
                 {movieDetails.title}
@@ -64,12 +64,12 @@ export default function MovieDetailCard({
             </div>
 
             {/* 장르 영역 */}
-            <div className="border-y-4 border-dotted p-2">
+            <div className="border-y-4 border-dotted py-4">
               <ul className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide">
                 {movieDetails.genres.map((genre) => (
                   <li
                     key={genre.id}
-                    className="rounded-full border border-primary-500 bg-primary-500 px-2 py-1 text-xs text-white transition-colors duration-300 hover:bg-white hover:text-black active:bg-white active:text-black lg:text-xs"
+                    className="rounded-full border border-black px-3 py-1.5 text-xs lg:text-xs"
                   >
                     {genre.name}
                   </li>
@@ -78,9 +78,9 @@ export default function MovieDetailCard({
             </div>
 
             {/* 평점 영역 */}
-            <div className="p-4 font-bold">
+            <div className="py-6 font-bold">
               <div className="flex items-center text-2xl md:text-4xl">
-                <IoStar className="mr-1 text-accent-300" />
+                <IoStar className="mr-2 text-accent-300" />
                 <p className="text-2xl md:text-4xl">
                   {Math.round(movieDetails.vote_average * 10) / 10}
                   <span className="text-xl font-normal text-gray-300 md:text-2xl">
@@ -92,19 +92,21 @@ export default function MovieDetailCard({
 
             {/* 줄거리 영역 */}
             {movieDetails.overview && (
-              <div className="mb-8 px-4">
-                <p className="break-keep">{movieDetails.overview}</p>
+              <div className="mb-6 py-2">
+                <p className="break-keep leading-relaxed">
+                  {movieDetails.overview}
+                </p>
               </div>
             )}
 
             {/* 출연진 영역 */}
-            <div className="border-t-4 border-dotted p-2">
-              <h3 className="text-xs font-bold md:text-sm">출연진</h3>
+            <div className="border-t-4 border-dotted py-4">
+              <h3 className="mb-3 text-sm font-bold md:text-base">출연진</h3>
               {casts.length > 0 ? (
-                <ul className="space-y-1 p-4">
+                <ul className="space-y-2">
                   {casts.slice(0, 5).map((cast) => (
                     <li key={cast.id} className="text-sm">
-                      {cast.name}
+                      <span className="font-medium">{cast.name}</span>
                       <p className="text-gray-500">{cast.character}</p>
                     </li>
                   ))}
@@ -117,22 +119,20 @@ export default function MovieDetailCard({
             </div>
 
             {/* 기타 정보 영역 */}
-            <div className="flex w-full items-stretch justify-between border-t-4 border-dotted text-xs md:text-sm">
+            <div className="flex w-full items-stretch justify-between border-t-4 border-dotted py-4 text-xs md:text-sm">
               <div className="flex flex-1 flex-col">
-                <h3 className="p-2 pb-0 font-bold">개봉일</h3>
-                <div className="overflow-y-auto p-2 pb-4 text-center">
+                <h3 className="mb-2 font-bold">개봉일</h3>
+                <div className="text-center">
                   <p className="break-keep">{movieDate}</p>
                 </div>
               </div>
-              <div className="flex flex-1 flex-col border-x-4 border-dotted">
-                <h3 className="p-2 pb-0 font-bold">러닝 타임</h3>
-                <p className="overflow-y-auto p-2 pb-4 text-center">
-                  {convertedRuntime}
-                </p>
+              <div className="flex flex-1 flex-col border-x-4 border-dotted px-4">
+                <h3 className="mb-2 font-bold">러닝 타임</h3>
+                <p className="text-center">{convertedRuntime}</p>
               </div>
               <div className="flex flex-1 flex-col">
-                <h3 className="p-2 pb-0 text-xs font-bold md:text-sm">감독</h3>
-                <div className="overflow-y-auto p-2 pb-4 text-center">
+                <h3 className="mb-2 text-xs font-bold md:text-sm">감독</h3>
+                <div className="text-center">
                   {crews.length > 0 ? (
                     <ul className="space-y-1">
                       {crews
@@ -151,9 +151,9 @@ export default function MovieDetailCard({
             </div>
 
             {/* 제작사 정보 */}
-            <div className="flex items-center border-t-4 border-dotted p-4">
-              <h3 className="text-xs font-bold md:text-sm">제작</h3>
-              <div className="ml-4 space-y-1">
+            <div className="border-t-4 border-dotted pt-4">
+              <h3 className="mb-3 text-sm font-bold md:text-base">제작</h3>
+              <div className="space-y-1">
                 {movieDetails.production_companies.map((company, idx) => (
                   <div key={idx} className="text-sm">
                     <span>{company.name}</span>

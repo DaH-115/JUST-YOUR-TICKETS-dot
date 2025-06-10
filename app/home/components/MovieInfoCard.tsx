@@ -17,12 +17,12 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   const { genres, cast, uniqueDirectors } = useMovieDetails();
 
   return (
-    <section className="mx-auto w-full overflow-hidden rounded-2xl border bg-white">
+    <section className="mx-auto w-full overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50">
       <div className="p-2">
         <div className="p-2 md:p-4">
           <div className="mb-4 flex justify-between">
-            <span className="inline-block rounded-lg bg-primary-500 p-1 text-xs font-bold text-accent-50">
-              추천 영화
+            <span className="inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
+              RECOMMEND MOVIE
             </span>
             <Link
               href={`/movie-details/${id}`}

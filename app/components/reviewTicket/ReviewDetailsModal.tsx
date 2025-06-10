@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoCloseOutline, IoStar } from "react-icons/io5";
-import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import {
   deleteDoc,
@@ -16,6 +15,8 @@ import { db } from "firebase-config";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import Comments from "app/components/reviewTicket/Comment/Comments";
 import ModalPortal from "app/components/modal/ModalPortal";
+import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
+import formatDate from "app/utils/formatDate";
 
 interface ReviewDetailsModalProps {
   isModalOpen: boolean;
@@ -149,7 +150,9 @@ export default function ReviewDetailsModal({
         />
       </div>
       <div className="flex items-center justify-between pb-2 text-sm">
-        <p className="text-xs text-gray-500">{review.createdAt}</p>
+        <span className="text-xs text-gray-500">
+          {formatDate(review.createdAt)}
+        </span>
         <div className="flex items-center">
           <span className="mr-1 font-bold">{user.displayName}</span>
         </div>

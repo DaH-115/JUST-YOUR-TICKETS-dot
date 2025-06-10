@@ -11,6 +11,7 @@ import { useAlert } from "store/context/alertContext";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { FaHeart } from "react-icons/fa";
+import formatDateOnly from "app/utils/formatDateOnly";
 
 export default function ReviewTicket({
   reviews,
@@ -88,7 +89,7 @@ export default function ReviewTicket({
               <div className="flex items-center justify-between border-b-4 border-dotted px-2">
                 {/* 클릭하면 영화 상세 정보로 이동 */}
                 <div
-                  className="truncate border-r-4 border-dotted pr-2 text-xs font-bold hover:underline"
+                  className="truncate border-r-4 border-dotted pr-2 text-xs hover:underline"
                   onClick={(event) => event.stopPropagation()}
                 >
                   <Link href={`/movie-details/${data.review.movieId}`}>
@@ -106,7 +107,7 @@ export default function ReviewTicket({
                   <IoStar className="text-accent-300" />
                   <p className="font-bold">{data.review.rating}</p>
                 </div>
-                <p className="w-full truncate text-sm">
+                <p className="w-full truncate text-sm font-bold">
                   {data.review.reviewTitle}
                 </p>
               </div>
@@ -118,11 +119,13 @@ export default function ReviewTicket({
                     photoURL={data.user.photoURL || undefined}
                     userDisplayName={data.user.displayName || "사용자"}
                   />
-                  <div className="w-full">
+                  <p className="w-full truncate">
                     {data.user.displayName ? data.user.displayName : "Guest"}
-                  </div>
+                  </p>
                 </div>
-                <p className="w-full truncate">{data.review.createdAt}</p>
+                <p className="w-full text-right">
+                  {formatDateOnly(data.review.createdAt)}
+                </p>
               </div>
             </div>
           </div>

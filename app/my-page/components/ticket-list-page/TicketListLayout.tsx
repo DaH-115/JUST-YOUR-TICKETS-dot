@@ -126,13 +126,11 @@ export default function TicketListLayout({
       )}
 
       {/* 페이지네이션 */}
-      {!loading && !error && totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={pageChangeHandler}
-        />
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={pageChangeHandler}
+      />
     </main>
   );
 }

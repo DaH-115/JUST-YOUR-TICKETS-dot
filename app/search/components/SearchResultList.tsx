@@ -90,7 +90,7 @@ export default function SearchResultList({
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-4 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
         {searchResults.map((movie, idx) => (
           <SwiperCard key={movie.id} movie={movie} idx={idx} />
         ))}

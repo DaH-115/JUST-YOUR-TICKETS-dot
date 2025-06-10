@@ -11,7 +11,6 @@ import {
 } from "firebase/firestore";
 import { db } from "firebase-config";
 import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
-import formatDate from "app/utils/formatDate";
 
 // UI에게 반환할, 문자열로 변환된 타입
 export interface ReviewDoc {
@@ -97,8 +96,8 @@ export async function fetchReviewsPaginated({
       user: d.user,
       review: {
         ...d.review,
-        createdAt: formatDate(createdIso),
-        updatedAt: formatDate(updatedIso),
+        createdAt: createdIso,
+        updatedAt: updatedIso,
       },
     };
   });

@@ -7,9 +7,14 @@ export default function AllMovieTrailers({
   movieTrailer: MovieTrailer[];
 }) {
   return (
-    <section className="px-8 py-4 lg:p-8">
-      <h2 className="mb-4 text-2xl font-bold text-white">이 영화의 예고편</h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <section className="px-8 py-12 lg:px-12 lg:py-16">
+      <div className="mb-8">
+        <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
+          Movie Trailers
+        </h2>
+        <p className="text-sm text-gray-300">이 영화의 예고편을 확인해보세요</p>
+      </div>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {movieTrailer.length > 0 ? (
           movieTrailer.map((trailer) => (
             <div key={trailer.id} className="aspect-video">

@@ -11,25 +11,25 @@ interface MovieSectionProps {
   maxItems?: number;
 }
 
-function MovieSection({
+const MovieSection = memo(function MovieSection({
   title,
   description,
   movieList,
-  maxItems = 10,
+  maxItems,
 }: MovieSectionProps) {
-  const slicedMovieList = movieList.slice(0, maxItems);
+  const displayMovies = maxItems ? movieList.slice(0, maxItems) : movieList;
 
   return (
-    <section className="py-8">
-      {/* SECTION TITLE */}
-      <div className="mb-4 text-white">
-        <h2 className="text-2xl font-bold">{title}</h2>
-        <p className="text-sm">{description}</p>
+    <section className="py-20 md:py-16">
+      <div className="mb-6 md:mb-4">
+        <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
+          {title}
+        </h2>
+        <p className="text-sm text-gray-300">{description}</p>
       </div>
-      {/* SECTION CONTENTS */}
-      <TicketSwiper movieList={slicedMovieList} />
+      <TicketSwiper movieList={displayMovies} />
     </section>
   );
-}
+});
 
-export default memo(MovieSection);
+export default MovieSection;

@@ -46,14 +46,23 @@ export default function TicketListPage({
   return (
     <div className="flex flex-col p-8">
       <section className="flex w-full flex-col items-center pb-8 md:flex-row">
-        <div className="mb-4 flex w-full items-center text-white md:mb-0">
-          <h1 className="text-2xl font-bold">ALL TICKET LIST</h1>
-          <span className="ml-2 font-bold text-accent-300">
-            {initialReviews.length}장
-          </span>
+        <div className="mb-4 flex w-full flex-col md:mb-0">
+          <div className="mb-2 flex items-center space-x-3">
+            <h1 className="text-2xl font-bold tracking-tight text-white">
+              All Ticket List
+            </h1>
+            <span className="ml-2 font-bold text-accent-300">
+              {initialReviews.length}장
+            </span>
+          </div>
+          <p className="text-sm text-gray-300">
+            모든 사용자들의 리뷰 티켓을 확인해보세요
+          </p>
         </div>
         {/* 유효성 검증 */}
-        <SearchForm onSearch={searchHandler} placeholder="티켓 검색" />
+        <div className="mt-4 md:mt-0">
+          <SearchForm onSearch={searchHandler} placeholder="티켓 검색" />
+        </div>
       </section>
       {/* 리뷰 리스트 */}
       {initialReviews.length > 0 ? (

@@ -55,11 +55,13 @@ export default function SearchPage({
   }, [watchedQuery, debounceHandler]);
 
   return (
-    <main className="p-4 md:p-8">
+    <main className="px-3 py-4 sm:px-4 md:px-6 md:py-8 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-accent-300">Search</h1>
-        <p className="text-sm text-white">
-          찾고 싶은 영화가 있다면 검색해 보세요.
+        <h1 className="mb-2 text-2xl font-bold tracking-tight text-white">
+          Search
+        </h1>
+        <p className="text-sm text-gray-300">
+          찾고 싶은 영화가 있다면 검색해 보세요
         </p>
       </div>
 
@@ -81,17 +83,27 @@ export default function SearchPage({
       {/* 결과 또는 Now Playing */}
       {searchTerm ? (
         <section>
-          <h2 className="mb-6 text-2xl font-bold text-white">
-            “{searchTerm}” 검색 결과
-          </h2>
+          <div className="mb-6">
+            <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
+              Search Results
+            </h2>
+            <p className="text-sm text-gray-300">
+              "{searchTerm}" 검색 결과입니다
+            </p>
+          </div>
           <SearchResultList searchQuery={searchTerm} />
         </section>
       ) : (
         <section>
-          <h2 className="mb-4 text-2xl font-bold text-accent-300">
-            Now Playing
-          </h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="mb-4">
+            <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
+              Now Playing
+            </h2>
+            <p className="text-sm text-gray-300">
+              지금 상영 중인 영화들을 확인하고 리뷰를 작성하세요
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
             {nowPlayingMovies.map((movie, idx) => (
               <SwiperCard key={movie.id} movie={movie} idx={idx} />
             ))}

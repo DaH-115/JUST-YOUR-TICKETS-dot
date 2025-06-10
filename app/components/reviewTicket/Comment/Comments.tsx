@@ -211,7 +211,9 @@ export default function Comments({ id: reviewId }: Pick<ReviewDoc, "id">) {
                 )}
               </div>
               <p className="py-2 text-sm">{c.content}</p>
-              <p className="text-xs text-gray-500">{formatDate(c.createdAt)}</p>
+              <span className="text-xs text-gray-500">
+                {formatDate(c.createdAt)}
+              </span>
             </li>
           ))}
         </ul>

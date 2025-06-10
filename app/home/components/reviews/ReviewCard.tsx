@@ -3,19 +3,24 @@ import ProfileImage from "app/components/reviewTicket/ProfileImage";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import Link from "next/link";
 import { FaStar, FaHeart } from "react-icons/fa";
+import formatDateOnly from "app/utils/formatDateOnly";
 
 interface ReviewCardProps {
   review: ReviewDoc;
+  onReviewClick?: (review: ReviewDoc) => void;
 }
 
-export default function ReviewCard({ review }: ReviewCardProps) {
+export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
   const { review: content, user } = review;
 
+  const handleReviewTitleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onReviewClick?.(review);
+  };
+
   return (
-    <Link
-      href={`/movie-details/${content.movieId}`}
-      className="group flex items-stretch" // ← 여기 items-stretch 추가
-    >
+    <div className="group flex items-stretch">
       {/* Movie Poster */}
       <div className="aspect-[2/3] h-full overflow-hidden rounded-xl">
         <MoviePoster
@@ -26,14 +31,17 @@ export default function ReviewCard({ review }: ReviewCardProps) {
       </div>
 
       {/* Review Content */}
-      <div className="relative flex h-full flex-1 flex-col overflow-hidden rounded-xl border-2 bg-white px-4 py-2">
+      <div className="relative flex h-full flex-1 flex-col overflow-hidden rounded-xl border bg-white px-3 py-2 sm:px-4">
         {/* 상단 제목/좋아요 */}
         <div className="flex items-center justify-between border-b-4 border-dotted pb-2">
-          <div className="flex flex-col">
-            <h3 className="line-clamp-1 text-base font-bold">
-              {content.movieTitle}
-            </h3>
-            <p className="text-xs text-gray-500 md:text-sm">
+          <div className="flex flex-col text-xs">
+            <Link
+              href={`/movie-details/${content.movieId}`}
+              className="transition-colors hover:text-accent-300"
+            >
+              <h3 className="line-clamp-1 font-bold">{content.movieTitle}</h3>
+            </Link>
+            <p className="line-clamp-1 text-gray-500">
               {content.originalTitle} ({content.releaseYear})
             </p>
           </div>
@@ -51,7 +59,12 @@ export default function ReviewCard({ review }: ReviewCardProps) {
             <FaStar className="text-yellow-400" />
             <span className="text-lg font-bold">{content.rating}</span>
           </div>
-          <p className="line-clamp-1">{content.reviewTitle}</p>
+          <button
+            onClick={handleReviewTitleClick}
+            className="line-clamp-1 flex-1 cursor-pointer text-left transition-colors hover:text-accent-300"
+          >
+            {content.reviewTitle}
+          </button>
         </div>
 
         {/* 하단 프로필 & 날짜 */}
@@ -64,10 +77,10 @@ export default function ReviewCard({ review }: ReviewCardProps) {
             <div className="line-clamp-1 max-w-[60%]">{user.displayName}</div>
           </div>
           <span className="text-xs font-medium text-gray-500">
-            {content.createdAt}
+            {formatDateOnly(content.createdAt)}
           </span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

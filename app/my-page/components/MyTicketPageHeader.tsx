@@ -10,14 +10,16 @@ export default function MyTicketHeader({
   reviewsCount,
 }: ReviewSearchForm) {
   return (
-    <header className="mb-4 flex items-center justify-between">
-      <div className="text-white">
-        <div className="flex font-bold text-accent-300">
-          <h1 className="text-3xl">{title}</h1>
-          <p className="mx-1 text-xl">{reviewsCount}</p>
-        </div>
-        <p className="pt-1">{content}</p>
+    <header className="mb-4">
+      <div className="mb-2 flex items-center space-x-3">
+        <h1 className="text-2xl font-bold tracking-tight text-white">
+          {title}
+        </h1>
+        {reviewsCount !== undefined && (
+          <span className="font-bold text-accent-300">{reviewsCount}장</span>
+        )}
       </div>
+      <p className="text-sm text-gray-300">{content}</p>
     </header>
   );
 }
