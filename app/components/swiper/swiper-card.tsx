@@ -23,7 +23,7 @@ export default function SwiperCard({
   );
 
   return (
-    <div className="relative flex flex-col items-stretch drop-shadow-lg">
+    <div className="relative flex flex-col items-stretch drop-shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:drop-shadow-2xl">
       {/* RANKING NUMBER */}
       <div className="absolute left-0 top-0 z-50 flex w-full items-center justify-between rounded-t-xl bg-gradient-to-t from-transparent to-black px-2 py-1 text-2xl font-bold text-white md:px-4 md:py-3 md:text-3xl">
         {idx + 1}.
@@ -46,7 +46,7 @@ export default function SwiperCard({
       </div>
 
       {/* MOVIE INFO CARD */}
-      <div className="overflow-hidden rounded-xl border bg-white">
+      <div className="overflow-hidden rounded-xl bg-gradient-to-br from-white to-gray-50">
         {/* MOVIE TITLE */}
         <div className="border-b-4 border-dotted p-2 pb-1 md:p-3 md:pb-2">
           <div className="truncate text-sm font-bold">{title}</div>
