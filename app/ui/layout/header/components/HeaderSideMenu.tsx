@@ -1,160 +1,175 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { IoIosArrowDown, IoMdClose } from "react-icons/io";
-import HeaderSideMenuLi from "app/ui/layout/header/components/HeaderSideMenuLi";
-import { FaArrowRight } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 
 interface HeaderSideMenuProps {
-  newReviewAlertState: boolean;
   userDisplayName: string;
   userPhotoURL: string | null | undefined;
   isOpen: boolean;
   onClose: () => void;
 }
 
+const menuItems = [
+  { href: "/", label: "Home" },
+  { href: "/search", label: "Search" },
+  { href: "/ticket-list", label: "Ticket List" },
+];
+
 export default function HeaderSideMenu({
-  newReviewAlertState,
   userDisplayName,
   userPhotoURL,
   isOpen,
   onClose,
 }: HeaderSideMenuProps) {
-  const sideMenuRef = useRef<HTMLDivElement>(null);
   const userUid = useAppSelector((state) => state.userData.auth?.uid);
   const pathname = usePathname();
-  const [menuIsOpen, setMenuIsOpen] = useState(false);
 
+  // 메뉴가 열릴 때 스크롤 방지
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        sideMenuRef.current &&
-        !sideMenuRef.current.contains(event.target as Node)
-      ) {
-        onClose();
-      }
-    };
-
     if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "unset";
     };
-  }, [isOpen, onClose]);
-
-  const toggleMenuHandler = useCallback(() => {
-    setMenuIsOpen((prev) => !prev);
-  }, []);
+  }, [isOpen]);
 
   return (
     <div
-      ref={sideMenuRef}
-      className={`pointer-events-auto fixed right-0 top-0 z-[100] h-full w-2/3 transform bg-black text-gray-100 drop-shadow-lg transition-transform duration-300 ease-in-out ${
-        isOpen ? "translate-x-0" : "translate-x-full"
+      className={`fixed inset-0 z-50 transition-all duration-300 ${
+        isOpen ? "visible opacity-100" : "invisible opacity-0"
       }`}
     >
-      <div className="flex justify-end p-4 pb-8">
-        <button
-          onClick={onClose}
-          className="transition-colors hover:text-accent-300"
-          aria-label="메뉴 닫기"
-        >
-          <IoMdClose size={24} aria-hidden />
-        </button>
-      </div>
+      {/* 배경 오버레이 */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
-      {/* My Page 메뉴 */}
-      <div className="px-4">
-        {userDisplayName ? (
-          <div className="cursor-pointer">
-            {/* Dropdown Button */}
-            <button
-              onClick={toggleMenuHandler}
-              className="mb-2 flex w-full items-center justify-between border-b border-white pb-2"
-            >
-              <div className="flex items-center gap-3 text-sm">
-                <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-white/20">
-                  {userPhotoURL ? (
-                    <Image
-                      src={`/api/s3?key=${encodeURIComponent(userPhotoURL)}`}
-                      alt={userDisplayName || "Guest"}
-                      fill
-                      sizes="32px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <span className="text-xs font-bold text-white">
-                      {userDisplayName
-                        ? userDisplayName.charAt(0).toUpperCase()
-                        : "G"}
-                    </span>
-                  )}
-                </div>
-                <span className="font-bold">{userDisplayName}</span>님
-              </div>
-              <div
-                className={`px-1 transition-transform duration-200 ${menuIsOpen ? "rotate-180" : ""}`}
-              >
-                <IoIosArrowDown size={16} />
-              </div>
-            </button>
+      {/* 메뉴 패널 */}
+      <div
+        className={`absolute right-0 top-0 h-full w-full bg-black/90 backdrop-blur-md transition-transform duration-300 ease-out sm:w-80 ${
+          isOpen ? "translate-y-0" : "-translate-y-full"
+        }`}
+      >
+        {/* 헤더 */}
+        <div className="flex items-center justify-between border-b border-white/20 p-6">
+          <h2 className="text-2xl font-semibold text-white">메뉴</h2>
+          <button
+            onClick={onClose}
+            className="rounded-full p-2 text-white transition-colors hover:bg-white/20"
+          >
+            <IoMdClose size={24} />
+          </button>
+        </div>
 
-            {/* Dropdown Menu */}
-            <div
-              className={`transition-all duration-300 ease-in-out ${menuIsOpen ? "pointer-events-auto mb-4 max-h-36 opacity-100" : "pointer-events-none mb-2 max-h-0 opacity-0"} `}
-            >
-              <div className="space-y-2 text-sm">
-                <Link
-                  href="/my-page"
-                  onClick={onClose}
-                  className="flex items-center justify-between rounded-full border border-white bg-white px-4 py-2 text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
-                >
-                  My Page
-                  {pathname !== "/my-page" && <FaArrowRight aria-hidden />}
-                </Link>
-                <Link
-                  href={`/my-page/my-ticket-list?uid=${userUid}`}
-                  onClick={onClose}
-                  className="flex items-center justify-between rounded-full border border-white bg-white px-4 py-2 text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
-                >
-                  My Ticket List
-                  {pathname !== "/my-page/my-ticket-list" && (
-                    <FaArrowRight aria-hidden />
-                  )}
-                </Link>
+        {/* 사용자 프로필 */}
+        <div className="border-b border-white/20 p-6">
+          {userUid ? (
+            <div className="flex items-center space-x-4">
+              <div className="h-12 w-12 overflow-hidden rounded-full">
+                <Image
+                  src={
+                    userPhotoURL
+                      ? `/api/s3?key=${encodeURIComponent(userPhotoURL)}`
+                      : "/default-profile.png"
+                  }
+                  alt="프로필"
+                  width={48}
+                  height={48}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div>
+                <p className="text-lg font-medium text-white">
+                  {userDisplayName}
+                </p>
+                <p className="text-base text-gray-400">환영합니다!</p>
               </div>
             </div>
-          </div>
-        ) : (
-          // 로그인 되어 있지 않은 경우 로그인 화면 이동 버튼 표시
-          <Link
-            href="/login"
-            onClick={onClose}
-            className="mb-2 flex w-full items-center justify-between rounded-full border border-white bg-white p-3 text-black transition-all duration-300 hover:bg-black hover:font-bold hover:text-white"
-          >
-            Login
-            {pathname !== "/login" && <FaArrowRight aria-hidden />}
-          </Link>
-        )}
+          ) : (
+            <Link
+              href="/login"
+              onClick={onClose}
+              className="block w-full rounded-full bg-primary-600 py-4 text-center text-lg font-medium text-white transition-colors hover:bg-primary-700"
+            >
+              로그인
+            </Link>
+          )}
+        </div>
+
+        {/* 메인 메뉴 */}
+        <div className="p-6">
+          <nav>
+            <ul className="space-y-2">
+              {menuItems.map(({ href, label }) => {
+                const isActive = pathname === href;
+                return (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      onClick={onClose}
+                      className={`block w-full rounded-full px-6 py-4 text-left text-lg transition-colors ${
+                        isActive
+                          ? "bg-white/20 text-white"
+                          : "text-gray-300 hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          {/* 사용자 메뉴 (로그인된 경우) */}
+          {userUid && (
+            <div className="mt-8 border-t border-white/20 pt-6">
+              <h3 className="mb-4 text-base font-medium text-gray-400">
+                My Menu
+              </h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    href="/my-page"
+                    onClick={onClose}
+                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    My Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/my-page/my-ticket-list"
+                    onClick={onClose}
+                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    My Tickets
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/my-page/liked-reviews"
+                    onClick={onClose}
+                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    Liked Reviews
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
-      <nav className="cursor-pointer px-4 text-sm">
-        <ul onClick={onClose} className="flex flex-col space-y-2">
-          <HeaderSideMenuLi href={"/"}>Home</HeaderSideMenuLi>
-          <HeaderSideMenuLi href={"/search"}>Search</HeaderSideMenuLi>
-          <HeaderSideMenuLi
-            href={"/ticket-list"}
-            showAlert={newReviewAlertState}
-          >
-            Ticket List
-          </HeaderSideMenuLi>
-        </ul>
-      </nav>
     </div>
   );
 }

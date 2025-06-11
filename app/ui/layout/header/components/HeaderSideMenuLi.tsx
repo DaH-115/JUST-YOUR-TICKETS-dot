@@ -7,13 +7,11 @@ import { FaArrowRight } from "react-icons/fa";
 interface HeaderSideMenuLiProps {
   href: string;
   children: React.ReactNode;
-  showAlert?: boolean;
 }
 
 export default function HeaderSideMenuLi({
   href,
   children,
-  showAlert,
 }: HeaderSideMenuLiProps) {
   const pathname = usePathname();
   const isCurrentPage = pathname === href;
@@ -26,13 +24,6 @@ export default function HeaderSideMenuLi({
       >
         <div className="relative flex items-center justify-between">
           {children}
-          {/* 리뷰가 새롭게 추가 되면 알림 표시 */}
-          {showAlert && (
-            <span className="absolute right-[8.5rem] top-0 flex h-3 w-3">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
-            </span>
-          )}
           {!isCurrentPage && <FaArrowRight aria-hidden />}
         </div>
       </Link>

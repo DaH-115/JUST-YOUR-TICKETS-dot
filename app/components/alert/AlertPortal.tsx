@@ -29,8 +29,8 @@ export default function Alert({ onConfirm, children }: AlertProps) {
   if (!root) return null;
 
   return ReactDOM.createPortal(
-    <div className="fixed inset-0 flex items-center justify-center">
-      {children}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
+      <div className="animate-in fade-in-0 duration-300">{children}</div>
     </div>,
     root,
   );

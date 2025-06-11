@@ -16,32 +16,40 @@ export default function UserAlert({
 }: UserAlertProps) {
   return (
     <AlertPortal onConfirm={onConfirm}>
-      <div className="max-w-md rounded-xl border-2 border-emerald-500 bg-white p-4 drop-shadow-lg">
+      <div className="animate-in fade-in-0 zoom-in-95 mx-4 w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl ring-1 ring-gray-200/50 backdrop-blur-sm duration-300">
         {/* Alert Header */}
-        <div className="mb-4 flex items-center gap-2 border-b-4 border-dotted pb-1">
-          <FaCheck className="text-base text-emerald-500" />
-          <strong className="font-bold">{title}</strong>
+        <div className="mb-4 text-center">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg">
+            <FaCheck className="text-lg text-white" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900">{title}</h3>
         </div>
-        {/* Alert Desc */}
-        <p className="mb-4 break-keep text-base lg:mb-6">{description}</p>
+
+        {/* Alert Description */}
+        <div className="mb-5 text-center">
+          <p className="break-keep text-sm leading-relaxed text-gray-600">
+            {description}
+          </p>
+        </div>
+
         {/* Buttons */}
-        <div className="flex justify-end gap-2 text-sm">
+        <div className="flex flex-col gap-2">
+          <button
+            type="button"
+            className="w-full rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:from-emerald-600 hover:to-emerald-700 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-emerald-500/30"
+            onClick={onConfirm}
+          >
+            확인
+          </button>
           {onClose && (
             <button
               type="button"
-              className="rounded-lg bg-red-500 px-3 py-2 text-white transition-all duration-300 hover:bg-red-700 lg:px-4 lg:py-2"
+              className="w-full rounded-2xl border-2 border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-500/20"
               onClick={onClose}
             >
               취소
             </button>
           )}
-          <button
-            type="button"
-            className="rounded-lg bg-emerald-500 px-3 py-2 text-white transition-all duration-300 hover:bg-emerald-600 lg:px-4 lg:py-2"
-            onClick={onConfirm}
-          >
-            확인
-          </button>
         </div>
       </div>
     </AlertPortal>

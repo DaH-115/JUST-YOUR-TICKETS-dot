@@ -7,14 +7,13 @@ import {
   Timestamp,
   FieldValue,
 } from "firebase/firestore";
-import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
-import { addNewReviewAlertHandler } from "store/redux-toolkit/slice/newReviewAlertSlice";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { useAlert } from "store/context/alertContext";
 import updateReview from "app/actions/updateReview";
 import { ReviewFormValues } from "app/write-review/[id]/page";
 import { ReviewContainerProps } from "app/write-review/components/ReviewContainer";
 import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
+import { useAppSelector } from "store/redux-toolkit/hooks";
 
 interface FirestoreReviewData {
   user: SerializableUser;
@@ -46,9 +45,9 @@ export const useReviewForm = ({
   movieData,
 }: ReviewContainerProps) => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.userData.auth);
-  const { showErrorHandler, showSuccessHandler } = useAlert();
+  const { showErrorHandler, showSuccessHandler, hideSuccessHandler } =
+    useAlert();
 
   const onSubmit = async (data: ReviewFormValues) => {
     if (!userState) return;
@@ -79,7 +78,6 @@ export const useReviewForm = ({
 
       if (mode === "new") {
         await addDoc(collection(db, "movie-reviews"), newData);
-        dispatch(addNewReviewAlertHandler());
       } else if (mode === "edit" && reviewId) {
         const updateData: FirestoreReviewUpdate = {
           reviewTitle,
@@ -90,8 +88,13 @@ export const useReviewForm = ({
         await updateReview(reviewId, updateData);
       }
 
-      showSuccessHandler("알림", "리뷰 티켓이 성공적으로 저장되었습니다.", () =>
-        router.push("/"),
+      showSuccessHandler(
+        "알림",
+        "리뷰 티켓이 성공적으로 저장되었습니다.",
+        () => {
+          hideSuccessHandler();
+          router.push("/");
+        },
       );
     } catch (error) {
       if (error instanceof Error) {
