@@ -15,7 +15,7 @@ export default function Avatar({
     ? previewSrc
     : photoKey
       ? `/api/s3?key=${encodeURIComponent(photoKey)}`
-      : "/images/fallback-avatar.png";
+      : "/images/fallback-avatar.svg";
 
   return (
     <div className="relative mx-auto h-24 w-24 overflow-hidden rounded-full">

@@ -15,7 +15,7 @@ export default function ProfileImage({
 
   const imageSrc = hasValidPhoto
     ? `/api/s3?key=${encodeURIComponent(photoURL)}`
-    : "/default-profile.png";
+    : "/default-profile.svg";
 
   return (
     <Image

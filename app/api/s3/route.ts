@@ -6,7 +6,8 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-export const runtime = "edge";
+// Edge Runtime 제거 - Node.js Runtime 사용
+// export const runtime = "edge";
 
 // S3Client를 파일 최상단에서 한 번만 생성
 const s3 = new S3Client({
@@ -30,10 +31,31 @@ export async function GET(request: Request) {
       }),
     );
 
+    if (!Body) {
+      return NextResponse.json(
+        { error: true, message: "이미지를 찾을 수 없습니다." },
+        { status: 404 },
+      );
+    }
+
+    // ReadableStream을 Buffer로 변환
+    const chunks: Uint8Array[] = [];
+    const reader = Body.transformToWebStream().getReader();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+    }
+
+    const buffer = Buffer.concat(chunks);
+
     const headers = new Headers({
-      "Content-Type": ContentType ?? "application/octet-stream",
+      "Content-Type": ContentType ?? "image/jpeg",
+      "Cache-Control": "public, max-age=31536000, immutable",
     });
-    return new NextResponse(Body as ReadableStream, { headers });
+
+    return new NextResponse(buffer, { headers });
   } catch (err: any) {
     console.error("S3 streaming error:", err);
     return NextResponse.json(

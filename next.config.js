@@ -22,11 +22,11 @@ const nextConfig = {
         hostname: "lh3.googleusercontent.com",
         pathname: "/a/**",
       },
-      // S3에 업로드된 프로필 이미지
+      // S3에 업로드된 프로필 이미지 - 경로 수정
       {
         protocol: "https",
         hostname: s3Host,
-        pathname: "/profiles/**",
+        pathname: "/profile-img/**",
       },
     ],
     deviceSizes: [320, 480, 640, 750, 828, 1080, 1200, 1920],

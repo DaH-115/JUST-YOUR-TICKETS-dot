@@ -80,7 +80,7 @@ export default function HeaderSideMenu({
                   src={
                     userPhotoURL
                       ? `/api/s3?key=${encodeURIComponent(userPhotoURL)}`
-                      : "/default-profile.png"
+                      : "/default-profile.svg"
                   }
                   alt="프로필"
                   width={48}
