@@ -47,6 +47,41 @@ const nextConfig = {
       test: /\.svg$/,
       use: ["@svgr/webpack"],
     });
+
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: {
+        ...config.optimization.splitChunks,
+        cacheGroups: {
+          ...config.optimization.splitChunks?.cacheGroups,
+          firebase: {
+            test: /[\\/]node_modules[\\/](firebase|@firebase)[\\/]/,
+            name: "firebase",
+            chunks: "all",
+            priority: 30,
+          },
+          aws: {
+            test: /[\\/]node_modules[\\/]@aws-sdk[\\/]/,
+            name: "aws-sdk",
+            chunks: "all",
+            priority: 25,
+          },
+          ui: {
+            test: /[\\/]node_modules[\\/](@headlessui|swiper|react-icons)[\\/]/,
+            name: "ui-libs",
+            chunks: "all",
+            priority: 20,
+          },
+          utils: {
+            test: /[\\/]node_modules[\\/](lodash|zod)[\\/]/,
+            name: "utils",
+            chunks: "all",
+            priority: 15,
+          },
+        },
+      },
+    };
+
     return config;
   },
 };

@@ -1,122 +1,115 @@
-# Just Your Tickets
+# Just Your Tickets 🎬
 
 > 영화 리뷰 검색 및 공유 플랫폼
 
-## 🔗 링크
+[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://just-movie-tickets.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
+[![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=for-the-badge&logo=amazon-s3&logoColor=white)](https://aws.amazon.com/s3/)
 
-- [Website](https://just-movie-tickets.vercel.app)
-- [GitHub](https://github.com/DaH-115/JUST-MOVIE-TICKETS-dot)
+## 🚀 Quick Start
 
-## 👨‍💻 개발 정보
+```bash
+# 의존성 설치
+yarn install
 
-- 개발 기간: 2022 - 2024
-- 개발 형태: 단독 개발
-- 배포 환경: Vercel 호스팅
+# 개발 서버 실행
+yarn dev
 
-### 버전 기록
+# 프로덕션 빌드
+yarn build
+```
 
-#### Version 2.0.0 (2025.01.07)
+## ✨ 주요 기능
 
-- Next.js 14 기반 전면 업데이트 및 성능 최적화
-- 주요 개선사항:
-  - 번들 사이즈 62% 감소 (234KB → 88.3KB)
-  - Lighthouse 성능 점수 개선 (웹: 84 → 98, 모바일: 66 → 94)
-  - 최대 콘텐츠풀 페인트(LCP) 62% 개선 (8.1s → 3.1s)
-  - 총 차단 시간(TBT) 96% 감소 (280ms → 10ms)
+- 🔍 **실시간 영화 검색** - TMDB API 기반 자동완성 검색 (debounce 최적화)
+- 🎫 **티켓 형태 리뷰** - 독창적인 영화 티켓 디자인의 리뷰 시스템
+- 👤 **소셜 로그인** - Google, GitHub 연동 인증 + 닉네임 중복 검사
+- 📸 **프로필 이미지 관리** - AWS S3 Presigned URL 보안 업로드
+- 💬 **커뮤니티** - 리뷰 댓글 및 좋아요 시스템 (실시간 동기화)
+- 📱 **앱 설치 지원** - 홈 화면에 추가 가능 (manifest.json)
+- 🎬 **동영상 플레이어** - YouTube 트레일러 재생 (lazy loading)
+- 📊 **페이지네이션** - 효율적인 데이터 로딩
 
-#### Version 1.1.0 (2024.08.27)
-
-- Next.js Pages Router에서 App Router로 마이그레이션
-- Server Components 도입으로 초기 로딩 성능 최적화
-- 클라이언트/서버 컴포넌트 분리 아키텍처 적용
-
-#### Version 1.0.0 (2022.12.24)
-
-- 서비스 첫 Vercel 배포
-- 기본 기능 구현:
-  - TMDB API 기반 영화 검색 및 추천
-  - Firebase Authentication 기반 사용자 인증
-  - Firestore 실시간 리뷰 시스템
-
-## 📌 프로젝트 개요
-
-Just Your Tickets는 TMDB API를 기반으로 한 영화 리뷰 커뮤니티 플랫폼입니다. Next.js 14의 SSR 기능을 활용하여 초기 로딩 최적화와 SEO 개선을 구현했으며, Firebase를 통한 효율적인 백엔드 구축으로 실시간 데이터 처리가 가능한 서비스를 구현했습니다.
-
-## 🛠 기술 스택 및 선택 이유
+## 🛠 기술 스택
 
 ### Frontend
 
-- **Next.js 14**
+- **Next.js 14** - App Router, Server Components
+- **TypeScript** - 타입 안전성
+- **Tailwind CSS** - 유틸리티 기반 스타일링 + 커스텀 애니메이션
+- **React Hook Form + Zod** - 폼 관리 및 유효성 검증
+- **Redux Toolkit** - 전역 상태 관리
+- **Headless UI** - 접근성 최적화 컴포넌트
+- **React Player** - 동영상 재생 (lazy loading)
 
-  - SSR을 통한 초기 로딩 최적화 및 SEO 개선
-  - App Router를 활용한 효율적인 라우팅 시스템 구축
-  - Client/Server Components 분리를 통한 성능 최적화
+### Backend & Database
 
-- **TypeScript**
+- **Firebase Authentication** - 소셜 로그인 (Google, GitHub)
+- **Firestore** - 실시간 NoSQL 데이터베이스
+- **AWS S3** - Presigned URL 기반 이미지 저장
+- **TMDB API** - 영화 정보 및 트레일러
 
-  - 정적 타입 시스템을 통한 코드 안정성 확보
-  - 개발 시 타입 추론을 통한 생산성 향상
+### Deployment & Tools
 
-- **Redux Toolkit**
+- **Vercel** - 배포 및 호스팅
+- **Bundle Analyzer** - 번들 크기 최적화 분석
+- **Sharp** - 이미지 최적화 (WebP 변환)
 
-  - 중앙 집중식 상태 관리로 데이터 일관성 유지
+## 📊 성능 최적화 성과
 
-- **React-hook-form & Zod**
+| 지표                | Before | After  | 개선율    |
+| ------------------- | ------ | ------ | --------- |
+| 번들 사이즈         | 234KB  | 88.3KB | **62% ↓** |
+| Lighthouse (웹)     | 84     | 98     | **16% ↑** |
+| Lighthouse (모바일) | 66     | 94     | **42% ↑** |
+| LCP                 | 8.1s   | 3.1s   | **62% ↓** |
+| TBT                 | 280ms  | 10ms   | **96% ↓** |
 
-  - 선언적이고 효율적인 폼 상태 관리 및 유효성 검증
+## 🌟 주요 특징
 
-- **Tailwind CSS**
-  - 유틸리티 클래스 기반의 효율적인 스타일링
-  - 반응형 디자인 구현의 용이성
+- **Server Components** 활용한 초기 로딩 최적화
+- **실시간 데이터 동기화** Firestore 기반
+- **Presigned URL** AWS S3 보안 이미지 업로드
+- **SEO 최적화** 동적 메타데이터, robots.txt, Open Graph
+- **앱 설치 지원** 홈 화면에 추가 가능 (manifest.json)
+- **성능 최적화** Intersection Observer, lazy loading, WebP 이미지
+- **접근성** Headless UI 컴포넌트, ARIA 속성
+- **타입 안전성** TypeScript + Zod 스키마 검증
+- **번들 분석** Webpack Bundle Analyzer 통합
 
-### Backend
+## 📁 프로젝트 구조
 
-- **Firebase**
-  - Firebase Authentication을 통한 안전한 사용자 인증
-  - Firestore의 실시간 데이터 동기화 기능 활용
-  - 신속한 백엔드 구축 및 확장성 확보
+```
+├── app/                 # Next.js App Router
+│   ├── components/      # 공통 컴포넌트
+│   ├── api/            # API 라우트 (S3, TMDB)
+│   └── [pages]/        # 페이지 컴포넌트
+├── lib/                # 유틸리티 함수
+├── store/              # 상태 관리 (Redux, Context)
+└── firebase-config/    # Firebase 설정
+```
 
-## 🎯 주요 기능 및 구현 화면
+## 📝 버전 히스토리
 
-### 1. 메인 페이지 및 영화 검색
+### v2.0.0 (2025.01.07)
 
-- Swiper 기반의 반응형 캐러셀로 최신 영화 슬라이드 구현
-- 헤더에 실시간 영화 검색 기능 구현
+- Next.js 14 전면 업데이트
+- 성능 최적화 (번들 크기 62% 감소)
+- Lighthouse 점수 대폭 개선
 
-### 2. 영화 상세 정보 및 리뷰 시스템
+### v1.1.0 (2024.08.27)
 
-- 동적 라우팅으로 SEO 최적화된 상세 페이지
-- Firestore 실시간 동기화로 즉각적인 데이터 반영
-- 선택한 영화와 비슷한 영화 추천 기능
+- App Router 마이그레이션
+- Server Components 도입
 
-### 3. 사용자 인증 및 프로필 관리
+### v1.0.0 (2022.12.24)
 
-- Firebase Authentication 기반 소셜 로그인
-- React-hook-form과 Zod를 활용한 폼 검증
-- 개인화된 프로필 페이지 및 리뷰 관리
+- 첫 배포
+- 기본 기능 구현
 
-## 🔍 핵심 기술적 성과
+## 🔗 링크
 
-- Next.js 13에서 14로의 성공적인 마이그레이션 및 성능 최적화
-
-  - 번들 사이즈 62% 감소 (234KB → 88.3KB)
-  - Lighthouse 성능 점수 개선 (웹: 84 → 98, 모바일: 66 → 94)
-  - 최대 콘텐츠풀 페인트(LCP) 62% 개선 (8.1s → 3.1s)
-  - 총 차단 시간(TBT) 96% 감소 (280ms → 10ms)
-
-- Server Components를 도입하여 초기 페이지 로딩 최적화 구현
-
-- Firebase Firestore 기반 실시간 리뷰 시스템 구축
-
-  - useContext를 활용한 실시간 데이터 동기화 구현
-  - Redux Toolkit으로 클라이언트 상태 관리 최적화
-
-- TMDB API 연동 및 최적화
-
-  - RESTful API 기반 영화 정보 검색 및 추천 시스템 구현
-  - 효율적인 캐싱 전략으로 API 호출 최소화
-
-- TypeScript와 정적 타입 시스템을 통한 코드 안정성 확보
-
-- React Hook Form과 Zod를 활용한 폼 시스템 고도화
-  - 로그인/회원가입과 리뷰 작성의 실시간 유효성 검증 구현
+- **배포 사이트**: [just-movie-tickets.vercel.app](https://just-movie-tickets.vercel.app)
+- **상세 포트폴리오**: [포트폴리오.md](./포트폴리오.md)
