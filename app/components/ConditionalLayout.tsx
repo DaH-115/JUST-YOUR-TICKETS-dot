@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Header from "app/ui/layout/header/Header";
 import Footer from "app/ui/layout/Footer";
 import LoginHeader from "app/login/components/LoginHeader";
+import ScrollToTopBtn from "app/components/ScrollToTopBtn";
 
 interface ConditionalLayoutProps {
   children: React.ReactNode;
@@ -24,6 +25,7 @@ export default function ConditionalLayout({
         <div id="modal-root" />
         <div id="alert-root" />
         <Footer />
+        <ScrollToTopBtn />
       </>
     );
   }
@@ -36,6 +38,7 @@ export default function ConditionalLayout({
       <div id="modal-root" />
       <div id="alert-root" />
       <Footer />
+      <ScrollToTopBtn />
     </div>
   );
 }

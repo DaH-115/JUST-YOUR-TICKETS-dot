@@ -16,27 +16,21 @@ import HeaderDropDownMenu from "app/ui/layout/header/components/HeaderDropDownMe
 interface NavItem {
   href: string;
   label: string;
-  showAlert?: boolean;
 }
 
 const navItems: NavItem[] = [
   { href: "/", label: "Home" },
   { href: "/search", label: "Search" },
-  { href: "/ticket-list", label: "Ticket List", showAlert: true },
+  { href: "/ticket-list", label: "Ticket List" },
 ];
 
 export default function Header() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const newReviewAlertState = useAppSelector(
-    (state) => state.newReviewAlert.newReviewAlertState,
-  );
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const userDisplayName = useAppSelector(
     (state) => state.userData.auth?.displayName,
   );
   const userPhotoURL = useAppSelector((state) => state.userData.auth?.photoURL);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -59,10 +53,6 @@ export default function Header() {
     }
   }, [dispatch, router]);
 
-  const dropDownHandler = useCallback(() => {
-    setIsDropdownOpen((prev) => !prev);
-  }, []);
-
   const toggleSideMenu = useCallback(() => {
     setIsSideMenuOpen((prev) => !prev);
   }, []);
@@ -78,111 +68,59 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    const clickOutsideHandler = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", clickOutsideHandler);
-    return () => {
-      document.removeEventListener("mousedown", clickOutsideHandler);
-    };
-  }, [dropdownRef]);
-
-  useEffect(() => {
     if (isSideMenuOpen) {
-      document.body.classList.add(
-        "overflow-hidden",
-        "h-full",
-        "pointer-events-none",
-      );
+      document.body.classList.add("overflow-hidden");
     } else {
-      document.body.classList.remove(
-        "overflow-hidden",
-        "h-full",
-        "pointer-events-none",
-      );
+      document.body.classList.remove("overflow-hidden");
     }
 
     return () => {
-      document.body.classList.remove(
-        "overflow-hidden",
-        "h-full",
-        "pointer-events-none",
-      );
+      document.body.classList.remove("overflow-hidden");
     };
   }, [isSideMenuOpen]);
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-4 py-8 text-xs transition-all duration-300 ease-in-out md:px-8 md:pt-8 ${
+      className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-4 py-4 text-xs transition-all duration-300 ease-in-out md:px-8 md:py-8 ${
         isScrolled
           ? "bg-gradient-to-b from-black/90 via-black/70 to-transparent backdrop-blur-sm"
           : "bg-transparent"
-      } ${isSideMenuOpen ? "pointer-events-none" : ""}`}
+      }`}
     >
       {/* LOGO */}
-      <h1 className="mr-2 text-base font-bold sm:mr-4 sm:text-lg md:text-xl">
+      <h1 className="mr-2 text-lg font-bold sm:mr-4 sm:text-lg md:text-xl">
         <span className="hidden text-white sm:inline">Just Movie Tickets</span>
         <span className="text-white sm:hidden">JMT</span>
       </h1>
-      <div className="flex items-center space-x-4">
-        {/* MAIN NAVIGATION */}
-        <div
-          className={`flex items-center justify-center rounded-full border-2 border-white/30 bg-white/10 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/20 ${
-            isSideMenuOpen ? "pointer-events-auto" : ""
-          }`}
-        >
-          {/* DESKTOP MENU */}
-          <nav className="hidden md:flex">
+
+      {/* DESKTOP NAVIGATION - 중앙 배치 */}
+      <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block">
+        <div className="flex items-center justify-center rounded-full border-2 border-white/30 bg-white/10 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/20">
+          <nav>
             <ul className="flex items-center justify-center gap-2">
-              {navItems.map(({ href, label, showAlert }) => (
+              {navItems.map(({ href, label }) => (
                 <li key={href} className="group relative">
                   <Link
                     href={href}
                     className="rounded-full px-3 py-2 font-medium text-white/90 transition-all duration-300 ease-in-out hover:bg-white/20 hover:text-white"
                   >
                     {label}
-                    {showAlert && newReviewAlertState && (
-                      <span className="absolute right-[0.1rem] top-1 flex h-3 w-3">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                        <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
-                      </span>
-                    )}
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
-
-          {/* MOBILE HAMBURGER MENU */}
-          <div
-            onClick={toggleSideMenu}
-            className="flex w-full justify-center md:hidden"
-          >
-            <button
-              className="rounded-full px-4 py-2 text-white transition-colors duration-300 hover:bg-white/20"
-              aria-label="메뉴 열기"
-            >
-              <IoIosMenu size={24} aria-hidden />
-            </button>
-          </div>
         </div>
+      </div>
 
+      <div className="flex items-center space-x-4">
         {/* USER PROFILE/LOGIN SECTION */}
         <div className="hidden md:flex">
           {userDisplayName ? (
             <div className="px-6 py-3">
               <HeaderDropDownMenu
-                dropdownRef={dropdownRef}
                 userDisplayName={userDisplayName}
                 userPhotoURL={userPhotoURL}
-                isDropdownOpen={isDropdownOpen}
-                dropDownHandler={dropDownHandler}
                 logoutHandler={logoutHandler}
               />
             </div>
@@ -200,11 +138,19 @@ export default function Header() {
 
         {/* SEARCH BAR */}
         <HeaderSearchBar />
+
+        {/* MOBILE HAMBURGER MENU - 오른쪽 끝 배치 */}
+        <button
+          onClick={toggleSideMenu}
+          className="rounded-full p-2 text-white transition-colors duration-300 hover:bg-white/20 md:hidden"
+          aria-label="메뉴 열기"
+        >
+          <IoIosMenu size={20} aria-hidden />
+        </button>
       </div>
 
       {/* MOBILE SIDE MENU */}
       <HeaderSideMenu
-        newReviewAlertState={newReviewAlertState}
         userDisplayName={userDisplayName || ""}
         userPhotoURL={userPhotoURL}
         isOpen={isSideMenuOpen}

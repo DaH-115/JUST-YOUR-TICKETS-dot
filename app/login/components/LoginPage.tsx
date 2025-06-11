@@ -70,14 +70,14 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-accent-900 via-black to-accent-800 px-4 py-10">
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-accent-900 via-black to-accent-800 px-4 py-10 pt-32 md:pt-36 lg:pt-28">
       <div className="w-full max-w-md">
         {/* 티켓 컨테이너 */}
         <div className="relative">
           {/* 티켓 메인 부분 */}
           <div className="relative rounded-3xl border-2 border-accent-300/30 bg-white p-8 shadow-2xl">
             {/* 티켓 헤더 */}
-            <div className="mb-8 border-b-2 border-dashed border-accent-300/50 pb-6 text-center">
+            <div className="mb-8 border-b-4 border-dotted border-accent-300/50 pb-6 text-center">
               <div className="mb-2 font-mono text-xs font-bold tracking-wider text-accent-600">
                 ADMIT ONE
               </div>
@@ -120,10 +120,13 @@ export default function LoginPage() {
                   type="checkbox"
                   id="rememberMe"
                   {...register("rememberMe")}
-                  className="h-4 w-4 rounded border-gray-300 bg-white text-accent-500 focus:ring-2 focus:ring-accent-500"
+                  className="h-5 w-5 rounded-md border-2 border-gray-300 bg-white text-accent-500 transition-all duration-200 checked:border-accent-500 checked:bg-accent-500 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/20"
                   disabled={isLoading}
                 />
-                <label htmlFor="rememberMe" className="text-sm text-gray-600">
+                <label
+                  htmlFor="rememberMe"
+                  className="cursor-pointer select-none text-sm font-medium text-gray-700"
+                >
                   로그인 상태 유지
                 </label>
               </div>
@@ -164,7 +167,7 @@ export default function LoginPage() {
             </div>
 
             {/* 티켓 하단 정보 */}
-            <div className="mt-8 border-t-2 border-dashed border-accent-300/50 pt-6 text-center">
+            <div className="mt-8 border-t-4 border-dotted border-accent-300/50 pt-6 text-center">
               <div className="space-y-1 font-mono text-xs text-gray-500">
                 <div>VALID FOR ONE SESSION</div>
                 <div>NO REFUND • NO EXCHANGE</div>

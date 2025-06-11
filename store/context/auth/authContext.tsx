@@ -17,6 +17,8 @@ import {
   setAuthUser,
 } from "store/redux-toolkit/slice/userSlice";
 import { useRouter } from "next/navigation";
+import { useAlert } from "store/context/alertContext";
+import Loading from "app/loading";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -68,16 +70,18 @@ export function useAuth() {
 export function PrivateRoute({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
+  const { showSuccessHandler } = useAlert();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      alert("로그인이 필요합니다.");
-      router.replace("/login");
+      showSuccessHandler("로그인 필요", "로그인이 필요합니다.", () => {
+        router.replace("/login");
+      });
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [isLoading, isAuthenticated, router, showSuccessHandler]);
 
   if (isLoading || !isAuthenticated) {
-    return null;
+    return <Loading />;
   }
 
   return <>{children}</>;

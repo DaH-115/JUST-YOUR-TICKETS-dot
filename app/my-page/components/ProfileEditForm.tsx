@@ -128,7 +128,7 @@ export default function ProfileEditForm() {
   };
 
   return (
-    <main className="flex min-h-full w-3/4 flex-col pl-4">
+    <main className="flex min-h-full w-full flex-col pl-0 md:w-3/4 md:pl-4">
       {/* 헤더 */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">

@@ -1,48 +1,84 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 
-export default function AnimatedOverview({ overview }: { overview: string }) {
+interface AnimatedOverviewProps {
+  overview: string;
+  maxLines?: number;
+  className?: string;
+}
+
+export default function AnimatedOverview({
+  overview,
+  maxLines = 3,
+  className = "",
+}: AnimatedOverviewProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [maxHeight, setMaxHeight] = useState("");
-  const [needsExpansion, setNeedsExpansion] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const [contentHeight, setContentHeight] = useState<number>(0);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (contentRef.current) {
-      const scrollHeight = contentRef.current.scrollHeight;
-      const clientHeight = contentRef.current.clientHeight;
-      setMaxHeight(`${scrollHeight}px`);
-      setNeedsExpansion(scrollHeight > clientHeight);
-    }
-  }, [overview]);
+  // 실제 높이를 정확히 측정하기 위한 useLayoutEffect
+  useLayoutEffect(() => {
+    if (!contentRef.current) return;
 
-  const toggleExpandHandler = () => {
+    const element = contentRef.current;
+
+    // 임시로 높이 제한 해제
+    const originalHeight = element.style.height;
+    element.style.height = "auto";
+
+    // 실제 높이 측정
+    const fullHeight = element.scrollHeight;
+    setContentHeight(fullHeight);
+
+    // 원래 높이 복원
+    element.style.height = originalHeight;
+
+    // 3줄 높이와 비교하여 버튼 표시 여부 결정
+    const lineHeight = 24; // 대략적인 line-height
+    const maxHeight = lineHeight * maxLines;
+    setShowButton(fullHeight > maxHeight);
+  }, [overview, maxLines]);
+
+  const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
   };
 
+  if (!overview?.trim()) {
+    return null;
+  }
+
+  const collapsedHeight = `${maxLines * 1.5}rem`; // 3줄 = 4.5rem
+
   return (
-    <div className="border-b-4 border-dotted p-4">
+    <div className={`border-b-4 border-dotted p-4 ${className}`}>
+      {/* 실제 표시되는 콘텐츠 */}
       <div className="relative">
         <div
           ref={contentRef}
-          style={{ maxHeight: isExpanded ? maxHeight : "4rem" }}
-          className={`overflow-hidden transition-[max-height] duration-300 ease-in-out ${
-            !isExpanded && needsExpansion ? "mask-linear-gradient" : ""
-          }`}
+          className="overflow-hidden transition-all duration-500 ease-out"
+          style={{
+            height: isExpanded ? `${contentHeight}px` : collapsedHeight,
+          }}
         >
-          <p className="break-keep font-light">{overview}</p>
+          <p className="break-keep font-light leading-relaxed">{overview}</p>
         </div>
-        {!isExpanded && needsExpansion && (
-          <span className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
+
+        {/* 그라데이션 오버레이 */}
+        {!isExpanded && showButton && (
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent" />
         )}
       </div>
 
-      {needsExpansion && (
+      {/* 더 보기/접기 버튼 */}
+      {showButton && (
         <div className="flex justify-end">
           <button
-            onClick={toggleExpandHandler}
-            className="mt-2 rounded-lg p-1 text-xs text-gray-600 transition-all duration-200 hover:bg-primary-600 hover:text-white"
+            onClick={toggleExpanded}
+            className="mt-2 rounded-lg px-3 py-1 text-xs text-gray-600 transition-all duration-200 hover:bg-primary-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1"
+            aria-expanded={isExpanded}
+            aria-label={isExpanded ? "줄거리 접기" : "줄거리 더 보기"}
           >
             {isExpanded ? "접기" : "더 보기"}
           </button>

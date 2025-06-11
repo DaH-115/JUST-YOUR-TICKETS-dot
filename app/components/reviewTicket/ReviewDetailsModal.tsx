@@ -16,6 +16,7 @@ import { useAppSelector } from "store/redux-toolkit/hooks";
 import Comments from "app/components/reviewTicket/Comment/Comments";
 import ModalPortal from "app/components/modal/ModalPortal";
 import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
+import ProfileImage from "app/components/reviewTicket/ProfileImage";
 import formatDate from "app/utils/formatDate";
 
 interface ReviewDetailsModalProps {
@@ -149,20 +150,32 @@ export default function ReviewDetailsModal({
           className="cursor-pointer text-4xl text-black"
         />
       </div>
-      <div className="flex items-center justify-between pb-2 text-sm">
+      <div className="flex items-center justify-between pb-4 pt-2 text-sm">
         <span className="text-xs text-gray-500">
           {formatDate(review.createdAt)}
         </span>
         <div className="flex items-center">
-          <span className="mr-1 font-bold">{user.displayName}</span>
+          <ProfileImage
+            photoURL={user.photoURL || undefined}
+            userDisplayName={user.displayName || "익명"}
+          />
+          <span className="font-bold">{user.displayName}</span>
         </div>
       </div>
-      <div className="mb-2 h-64 flex-1 overflow-y-scroll border-t-4 border-dotted pb-8 pt-2">
-        <p className="mb-1 text-xs font-bold">리뷰 내용</p>
-        <p className="break-keep">{review.reviewContent}</p>
+      <div className="mb-4 max-h-64 overflow-y-auto border-t-4 border-dotted pb-4 pt-4 scrollbar-hide">
+        <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-gray-800">
+          리뷰 내용
+        </h2>
+        <div className="rounded-lg bg-gray-50 p-4">
+          <p className="break-keep leading-relaxed text-gray-700">
+            {review.reviewContent}
+          </p>
+        </div>
       </div>
       {/* 댓글 영역 - 모달이 열릴 때만 렌더링 */}
-      {isModalOpen && <Comments id={selectedReview.id} />}
+      {isModalOpen && (
+        <Comments id={selectedReview.id} reviewAuthorId={user.uid} />
+      )}
     </ModalPortal>
   );
 }

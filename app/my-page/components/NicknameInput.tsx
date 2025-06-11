@@ -1,6 +1,6 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import { useEffect, useMemo, useState } from "react";
-import { debounce } from "lodash";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import debounce from "lodash/debounce";
 import { useNicknameValidation } from "app/my-page/hooks/useNicknameValidation";
 
 interface NicknameInputProps {

@@ -31,27 +31,6 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   const [errorState, setErrorState] = useState<ErrorType | null>(null);
   const [successState, setSuccessState] = useState<SuccessType | null>(null);
 
-  const showErrorHandler = useCallback((title: string, message: string) => {
-    setErrorState({ title, message });
-    setSuccessState(null); // 에러 상태일 때는 성공 메시지를 숨깁니다
-  }, []);
-
-  const showSuccessHandler = useCallback(
-    (
-      title: string,
-      message: string,
-      onConfirm: () => void = hideSuccessHandler,
-    ) => {
-      setSuccessState({
-        title,
-        message,
-        onConfirm,
-      });
-      setErrorState(null); // 성공 상태일 때는 에러 메시지를 숨깁니다
-    },
-    [],
-  );
-
   const hideErrorHanlder = useCallback(() => {
     setErrorState(null);
   }, []);
@@ -59,6 +38,23 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   const hideSuccessHandler = useCallback(() => {
     setSuccessState(null);
   }, []);
+
+  const showErrorHandler = useCallback((title: string, message: string) => {
+    setErrorState({ title, message });
+    setSuccessState(null); // 에러 상태일 때는 성공 메시지를 숨깁니다
+  }, []);
+
+  const showSuccessHandler = useCallback(
+    (title: string, message: string, onConfirm?: () => void) => {
+      setSuccessState({
+        title,
+        message,
+        onConfirm: onConfirm || hideSuccessHandler,
+      });
+      setErrorState(null); // 성공 상태일 때는 에러 메시지를 숨깁니다
+    },
+    [hideSuccessHandler],
+  );
 
   return (
     <AlertContext.Provider
@@ -78,7 +74,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
           onConfirm={hideErrorHanlder}
         />
       )}
-      {/* Seuccess Alert */}
+      {/* Success Alert */}
       {successState && (
         <UserAlert
           title={successState.title}

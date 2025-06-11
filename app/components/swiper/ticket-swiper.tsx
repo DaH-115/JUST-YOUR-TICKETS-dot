@@ -14,7 +14,7 @@ export default function TicketSwiper({
   movieList: MovieList[];
 }) {
   return (
-    <div className="pt-2">
+    <div className="pt-8">
       <Swiper
         speed={500}
         loop={true}
@@ -48,7 +48,7 @@ export default function TicketSwiper({
         }}
       >
         {movieList.map((movie, idx) => (
-          <SwiperSlide key={movie.id} className="pt-2">
+          <SwiperSlide key={movie.id} className="pt-8">
             <SwiperCard idx={idx} movie={movie} />
           </SwiperSlide>
         ))}

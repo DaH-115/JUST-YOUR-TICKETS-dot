@@ -33,12 +33,35 @@ module.exports = {
       },
       animation: {
         scroll: "scroll 40s linear infinite",
+        "fade-in-up": "fadeInUp 0.8s ease-out forwards",
+        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        bounce: "bounce 3s ease-in-out infinite",
       },
       keyframes: {
         scroll: {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        fadeInUp: {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(30px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+      },
+      animationDelay: {
+        200: "200ms",
+        300: "300ms",
+        400: "400ms",
+        500: "500ms",
+        600: "600ms",
+        700: "700ms",
+        1000: "1000ms",
+        2000: "2000ms",
       },
     },
   },
@@ -51,6 +74,30 @@ module.exports = {
             "linear-gradient(to bottom, black 60%, transparent 100%)",
           "-webkit-mask-image":
             "linear-gradient(to bottom, black 60%, transparent 100%)",
+        },
+        ".animation-delay-200": {
+          "animation-delay": "200ms",
+        },
+        ".animation-delay-300": {
+          "animation-delay": "300ms",
+        },
+        ".animation-delay-400": {
+          "animation-delay": "400ms",
+        },
+        ".animation-delay-500": {
+          "animation-delay": "500ms",
+        },
+        ".animation-delay-600": {
+          "animation-delay": "600ms",
+        },
+        ".animation-delay-700": {
+          "animation-delay": "700ms",
+        },
+        ".animation-delay-1000": {
+          "animation-delay": "1000ms",
+        },
+        ".animation-delay-2000": {
+          "animation-delay": "2000ms",
         },
       };
       addUtilities(newUtilities);

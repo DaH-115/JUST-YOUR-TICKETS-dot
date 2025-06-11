@@ -4,6 +4,7 @@ import { useAppSelector } from "store/redux-toolkit/hooks";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import formatDate from "app/utils/formatDate";
+import ProfileImage from "app/components/reviewTicket/ProfileImage";
 import { db } from "firebase-config";
 import {
   collection,
@@ -31,11 +32,15 @@ interface Comment {
   id: string;
   authorId: string;
   displayName: string;
+  photoURL?: string;
   content: string;
   createdAt: string;
 }
 
-export default function Comments({ id: reviewId }: Pick<ReviewDoc, "id">) {
+export default function Comments({
+  id: reviewId,
+  reviewAuthorId,
+}: Pick<ReviewDoc, "id"> & { reviewAuthorId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [isPosting, setIsPosting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null); // null 이면 새 댓글, 댓글ID면 수정 모드
@@ -65,17 +70,21 @@ export default function Comments({ id: reviewId }: Pick<ReviewDoc, "id">) {
       const commentList = snap.docs.map((doc) => {
         const data = doc.data() as {
           authorId: string;
-          displayName: string;
+          displayName?: string;
+          photoURL?: string;
           content: string;
-          createdAt: Timestamp;
+          createdAt: Timestamp | null;
         };
 
         return {
           id: doc.id,
           authorId: data.authorId,
-          displayName: data.displayName,
+          displayName: data.displayName || "익명",
+          photoURL: data.photoURL,
           content: data.content,
-          createdAt: data.createdAt.toDate().toISOString(),
+          createdAt: data.createdAt
+            ? data.createdAt.toDate().toISOString()
+            : new Date().toISOString(),
         };
       });
 
@@ -94,7 +103,7 @@ export default function Comments({ id: reviewId }: Pick<ReviewDoc, "id">) {
   // 댓글 등록 핸들러
   const onSubmit = useCallback(
     async (data: CommentForm) => {
-      if (!data.comment.trim() || isPosting) {
+      if (!data.comment.trim() || isPosting || !userState) {
         return;
       }
       setIsPosting(true);
@@ -117,7 +126,9 @@ export default function Comments({ id: reviewId }: Pick<ReviewDoc, "id">) {
       } else {
         try {
           await addDoc(collection(db, "movie-reviews", reviewId, "comments"), {
-            authorId: userState?.uid,
+            authorId: userState.uid,
+            displayName: userState.displayName || "익명",
+            photoURL: userState.photoURL,
             content,
             createdAt: serverTimestamp(),
           });
@@ -180,17 +191,42 @@ export default function Comments({ id: reviewId }: Pick<ReviewDoc, "id">) {
 
   return (
     <>
+      {comments.length > 0 && (
+        <div className="mb-2 flex items-center justify-between border-t-4 border-dotted pt-2">
+          <p className="text-sm font-medium text-gray-700">
+            댓글 {comments.length}개
+          </p>
+        </div>
+      )}
       <div
-        className={`${comments.length > 0 ? "h-40 flex-1 overflow-y-scroll border-t-4 border-dotted" : "hidden"}`}
+        className={`${comments.length > 0 ? "max-h-60 overflow-y-auto scrollbar-hide" : "hidden"}`}
       >
         <ul className="space-y-2">
           {comments.map((c, idx) => (
-            <li key={c.id} className="border-b py-2">
+            <li
+              key={c.id}
+              className={`py-2 ${idx < comments.length - 1 ? "border-b" : ""}`}
+            >
               <div className="flex items-center justify-between pt-1">
-                <p className="text-xs font-bold text-gray-800">
-                  <span className="mr-1 font-normal">{idx + 1}.</span>
-                  {c.displayName}
-                </p>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs font-normal text-gray-800">
+                      {idx + 1}.
+                    </span>
+                    <ProfileImage
+                      photoURL={c.photoURL}
+                      userDisplayName={c.displayName || "익명"}
+                    />
+                    <p className="text-xs font-bold text-gray-800">
+                      {c.displayName || "익명"}
+                    </p>
+                  </div>
+                  {c.authorId === reviewAuthorId && (
+                    <span className="rounded-md bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">
+                      작성자
+                    </span>
+                  )}
+                </div>
                 {userState?.uid === c.authorId && (
                   <div className="flex items-center space-x-2">
                     {/* 댓글 수정 버튼 */}
@@ -211,7 +247,7 @@ export default function Comments({ id: reviewId }: Pick<ReviewDoc, "id">) {
                 )}
               </div>
               <p className="py-2 text-sm">{c.content}</p>
-              <span className="text-xs text-gray-500">
+              <span className="mt-2 block text-xs text-gray-500">
                 {formatDate(c.createdAt)}
               </span>
             </li>

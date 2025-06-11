@@ -40,10 +40,10 @@ export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
               className="transition-colors hover:text-accent-300"
             >
               <h3 className="line-clamp-1 font-bold">{content.movieTitle}</h3>
+              <p className="line-clamp-1 text-gray-500">
+                {content.originalTitle} ({content.releaseYear})
+              </p>
             </Link>
-            <p className="line-clamp-1 text-gray-500">
-              {content.originalTitle} ({content.releaseYear})
-            </p>
           </div>
           <p className="flex items-center border-l-4 border-dotted pl-4 text-sm">
             <FaHeart className="mr-1 text-red-500" />
