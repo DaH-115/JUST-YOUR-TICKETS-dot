@@ -6,9 +6,6 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-// Edge Runtime 제거 - Node.js Runtime 사용
-// export const runtime = "edge";
-
 // S3Client를 파일 최상단에서 한 번만 생성
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -67,8 +64,28 @@ export async function GET(request: Request) {
 
 // POST: presigned URL 생성
 export async function POST(request: Request) {
-  const { filename, contentType, userId } = await request.json();
+  const { filename, contentType, userId, action, key } = await request.json();
 
+  // 조회용 presigned URL 생성
+  if (action === "download" && key) {
+    const command = new GetObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET!,
+      Key: key,
+    });
+
+    try {
+      const url = await getSignedUrl(s3, command, { expiresIn: 60 * 60 }); // 1시간
+      return NextResponse.json({ url });
+    } catch (err: any) {
+      console.error("S3 download presign error:", err);
+      return NextResponse.json(
+        { error: true, message: err.message, code: err.name },
+        { status: 500 },
+      );
+    }
+  }
+
+  // 업로드용 presigned URL 생성 (기존 로직)
   if (!filename || !contentType || !userId) {
     return NextResponse.json(
       {
@@ -79,16 +96,16 @@ export async function POST(request: Request) {
     );
   }
 
-  const key = `profile-img/${userId}/${Date.now()}_${filename}`;
+  const uploadKey = `profile-img/${userId}/${Date.now()}_${filename}`;
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET!,
-    Key: key,
+    Key: uploadKey,
     ContentType: contentType,
   });
 
   try {
     const url = await getSignedUrl(s3, command, { expiresIn: 60 * 5 });
-    return NextResponse.json({ url, key });
+    return NextResponse.json({ url, key: uploadKey });
   } catch (err: any) {
     console.error("S3 presign error:", err);
     return NextResponse.json(
