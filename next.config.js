@@ -9,6 +9,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
+    unoptimized: true,
     remotePatterns: [
       // 기존 TMDB
       {
