@@ -85,7 +85,7 @@ export async function POST(request: Request) {
     }
   }
 
-  // 업로드용 presigned URL 생성 (기존 로직)
+  // 업로드용 presigned URL 생성 - 필수 파라미터 검증
   if (!filename || !contentType || !userId) {
     return NextResponse.json(
       {
