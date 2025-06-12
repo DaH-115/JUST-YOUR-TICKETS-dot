@@ -44,7 +44,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-white">
-                Just Movie Tickets
+                Just Your Tickets
               </h2>
               <p className="mt-2 text-sm text-gray-300">
                 나만의 영화 티켓을 만들어보세요

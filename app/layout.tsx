@@ -19,7 +19,7 @@ const roboto = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://just-movie-tickets.vercel.app"),
+  metadataBase: new URL("https://just-your-tickets.vercel.app"),
   alternates: {
     canonical: "/",
   },

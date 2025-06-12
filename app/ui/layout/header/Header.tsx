@@ -87,8 +87,8 @@ export default function Header() {
     >
       {/* LOGO */}
       <h1 className="mr-2 text-lg font-bold sm:mr-4 sm:text-lg md:text-xl">
-        <span className="hidden text-white sm:inline">Just Movie Tickets</span>
-        <span className="text-white sm:hidden">JMT</span>
+        <span className="hidden text-white sm:inline">Just Your Tickets</span>
+        <span className="text-white sm:hidden">JYT</span>
       </h1>
 
       {/* DESKTOP NAVIGATION - 중앙 배치 */}
