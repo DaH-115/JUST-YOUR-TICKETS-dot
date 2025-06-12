@@ -22,15 +22,24 @@ export default function ReviewTicket({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewDoc>();
+  const [canClick, setCanClick] = useState(true);
   const { showErrorHandler } = useAlert();
 
-  const openModalHandler = useCallback((selectedReview: ReviewDoc) => {
-    setSelectedReview(selectedReview);
-    setIsModalOpen(true);
-  }, []);
+  const openModalHandler = useCallback(
+    (selectedReview: ReviewDoc) => {
+      if (!canClick) return;
+      setSelectedReview(selectedReview);
+      setIsModalOpen(true);
+    },
+    [canClick],
+  );
 
   const closeModalHandler = useCallback(() => {
     setIsModalOpen(false);
+    setCanClick(false);
+    setTimeout(() => {
+      setCanClick(true);
+    }, 100);
   }, []);
 
   const onReviewDeleteHanlder = useCallback(
@@ -66,13 +75,14 @@ export default function ReviewTicket({
           onLikeToggled={onLikeToggled}
         />
       )}
+
       {/* 리뷰 리스트 */}
-      <div className="grid grid-cols-2 gap-2 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5">
         {reviews.map((data) => (
           <div
             key={data.id}
             onClick={() => openModalHandler(data)}
-            className="mb-16 cursor-pointer drop-shadow-md transition-transform duration-300 hover:-translate-y-1"
+            className="cursor-pointer drop-shadow-md transition-transform duration-300 hover:-translate-y-1"
           >
             {/* MOVIE POSTER */}
             <div className="aspect-[2/3] overflow-hidden rounded-xl">
@@ -84,12 +94,12 @@ export default function ReviewTicket({
             </div>
 
             {/* MOVIE INFO CARD */}
-            <div className="w-full rounded-lg border bg-white p-2 transition-all duration-500 md:-bottom-16">
+            <div className="w-full rounded-lg border bg-white p-1.5 transition-all duration-500">
               {/* 영화 타이틀 & 좋아요 */}
-              <div className="flex items-center justify-between border-b-4 border-dotted px-2">
+              <div className="flex items-center justify-between border-b-4 border-dotted px-1 py-1">
                 {/* 클릭하면 영화 상세 정보로 이동 */}
                 <div
-                  className="truncate border-r-4 border-dotted pr-2 text-xs hover:underline"
+                  className="truncate border-r-4 border-dotted pr-1.5 text-xs hover:underline"
                   onClick={(event) => event.stopPropagation()}
                 >
                   <Link href={`/movie-details/${data.review.movieId}`}>
@@ -97,33 +107,35 @@ export default function ReviewTicket({
                   </Link>
                 </div>
                 {/* 좋아요 카운트 */}
-                <FaHeart size={32} className="mr-1 pl-2 text-red-500" />
-                <p>{data.review.likeCount}</p>
+                <div className="flex items-center pl-1.5">
+                  <FaHeart size={16} className="mr-1 text-red-500" />
+                  <p className="text-xs">{data.review.likeCount}</p>
+                </div>
               </div>
 
               {/* 리뷰 제목 */}
-              <div className="flex items-center border-b-4 border-dotted p-1">
-                <div className="mr-2 flex items-center justify-center border-r-4 border-dotted pr-2">
-                  <IoStar className="text-accent-300" />
-                  <p className="font-bold">{data.review.rating}</p>
+              <div className="flex items-center border-b-4 border-dotted px-1 py-1">
+                <div className="mr-1.5 flex items-center justify-center border-r-4 border-dotted pr-1.5">
+                  <IoStar className="text-accent-300" size={14} />
+                  <p className="ml-1 text-xs font-bold">{data.review.rating}</p>
                 </div>
-                <p className="w-full truncate text-sm font-bold">
+                <p className="w-full truncate text-xs font-bold">
                   {data.review.reviewTitle}
                 </p>
               </div>
 
               {/* 프로필 사진 & 닉네임 & 작성 시간 */}
-              <div className="flex items-center justify-between pt-2 text-xs">
-                <div className="flex w-full items-center">
+              <div className="flex items-center justify-between px-1 pt-1.5 text-xs">
+                <div className="flex min-w-0 flex-1 items-center">
                   <ProfileImage
                     photoURL={data.user.photoURL || undefined}
                     userDisplayName={data.user.displayName || "사용자"}
                   />
-                  <p className="w-full truncate">
+                  <p className="min-w-0 flex-1 truncate px-1 text-xs">
                     {data.user.displayName ? data.user.displayName : "Guest"}
                   </p>
                 </div>
-                <p className="w-full text-right">
+                <p className="ml-1 flex-shrink-0 text-xs">
                   {formatDateOnly(data.review.createdAt)}
                 </p>
               </div>

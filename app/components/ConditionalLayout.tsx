@@ -32,7 +32,7 @@ export default function ConditionalLayout({
 
   // 일반 페이지: 헤더/푸터 포함, 상단 패딩 적용
   return (
-    <div className="pt-24 md:pt-28">
+    <div className="pt-12 md:pt-28">
       <Header />
       <main className="flex-1">{children}</main>
       <div id="modal-root" />

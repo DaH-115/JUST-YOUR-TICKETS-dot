@@ -111,7 +111,7 @@ export default function ReviewDetailsModal({
 
   return (
     <ModalPortal isOpen={isModalOpen} onClose={closeModalHandler}>
-      <div className="flex w-full items-center justify-between pb-2">
+      <div className="flex w-full items-center justify-between pb-4">
         {/* 왼쪽: 별점 영역 */}
         <div className="mr-4 flex h-full items-center justify-center">
           <IoStar className="mr-1 text-accent-300" size={18} />
@@ -124,7 +124,7 @@ export default function ReviewDetailsModal({
             {review.movieTitle} - {review.releaseYear}
           </div>
         </div>
-        <div className="mr-2 flex items-center gap-3">
+        <div className="mr-2 flex items-center gap-1">
           {/* 좋아요 버튼 */}
           <button
             onClick={likeHandler}
@@ -150,7 +150,7 @@ export default function ReviewDetailsModal({
           className="cursor-pointer text-4xl text-black"
         />
       </div>
-      <div className="flex items-center justify-between pb-4 pt-2 text-sm">
+      <div className="flex items-center justify-between pb-4 text-sm">
         <span className="text-xs text-gray-500">
           {formatDate(review.createdAt)}
         </span>

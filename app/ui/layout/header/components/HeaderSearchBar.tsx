@@ -13,7 +13,13 @@ import {
   ComboboxOption,
 } from "@headlessui/react";
 
-export default function HeaderSearchBar() {
+interface HeaderSearchBarProps {
+  isSideMenuOpen: boolean;
+}
+
+export default function HeaderSearchBar({
+  isSideMenuOpen,
+}: HeaderSearchBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<MovieList[]>([]);
   const [visibleCount, setVisibleCount] = useState(5);
@@ -74,9 +80,9 @@ export default function HeaderSearchBar() {
       <Combobox value={selectedMovie} onChange={handleMovieSelect}>
         <div className="relative flex items-center justify-end">
           <div
-            className={`relative flex items-center rounded-full border-2 border-white/30 bg-white/10 backdrop-blur-sm transition-all duration-300 ease-in-out hover:border-white/50 hover:bg-white/20 ${
-              isSearchOpen ? "w-64" : "w-12"
-            }`}
+            className={`relative flex items-center rounded-full border-2 border-white/30 bg-white/10 transition-all duration-300 ease-in-out hover:border-white/50 hover:bg-white/20 ${
+              !isSideMenuOpen ? "backdrop-blur-sm" : ""
+            } ${isSearchOpen ? "w-64" : "w-12"}`}
           >
             <ComboboxInput
               value={searchQuery}
@@ -99,7 +105,9 @@ export default function HeaderSearchBar() {
             <ComboboxOptions
               modal={false}
               transition
-              className="absolute right-0 top-full z-10 mt-2 max-h-96 w-64 origin-top-right overflow-auto rounded-xl border border-white/20 bg-black/90 shadow-xl backdrop-blur-md transition duration-200 ease-out scrollbar-hide focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150"
+              className={`absolute right-0 top-full z-10 mt-2 max-h-96 w-64 origin-top-right overflow-auto rounded-xl border border-white/20 bg-black/90 shadow-xl transition duration-200 ease-out scrollbar-hide focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 ${
+                !isSideMenuOpen ? "backdrop-blur-md" : ""
+              }`}
             >
               {results.slice(0, visibleCount).map((result) => (
                 <ComboboxOption

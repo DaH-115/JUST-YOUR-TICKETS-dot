@@ -27,7 +27,7 @@ export default function MovieDetailCard({
   const crews = movieCredits?.crew || [];
 
   return (
-    <main className="relative mb-12 flex w-full items-center justify-center px-4 md:my-12 md:px-0">
+    <main className="relative mb-12 flex w-full items-center justify-center px-4 pt-8 md:my-12 md:px-0 md:pt-16">
       <div className="flex flex-col justify-center gap-6 md:w-2/3 md:flex-row md:gap-8">
         {/* MOVIE POSTER */}
         <section className="w-full md:w-2/3">

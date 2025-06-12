@@ -284,7 +284,7 @@ export default function Comments({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-lg bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 active:bg-primary-700 disabled:opacity-50"
+              className="rounded-xl bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 active:bg-primary-700 disabled:opacity-50"
               aria-label={editingId ? "댓글 수정 완료" : "댓글 등록"}
             >
               {editingId ? "수정 완료" : "등록"}

@@ -7,7 +7,6 @@ import { signOut } from "firebase/auth";
 import { isAuth } from "firebase-config";
 import { useRouter } from "next/navigation";
 import { clearUser } from "store/redux-toolkit/slice/userSlice";
-import { removeCookie } from "app/utils/cookieUtils";
 import HeaderSearchBar from "app/ui/layout/header/components/HeaderSearchBar";
 import { IoIosMenu } from "react-icons/io";
 import HeaderSideMenu from "app/ui/layout/header/components/HeaderSideMenu";
@@ -40,7 +39,6 @@ export default function Header() {
       await signOut(isAuth);
 
       // 2. 모든 인증 관련 데이터 정리
-      removeCookie();
       localStorage.removeItem("rememberMe");
 
       // 3. Redux 상태 초기화
@@ -82,7 +80,7 @@ export default function Header() {
   return (
     <header
       className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-4 py-4 text-xs transition-all duration-300 ease-in-out md:px-8 md:py-8 ${
-        isScrolled
+        isScrolled && !isSideMenuOpen
           ? "bg-gradient-to-b from-black/90 via-black/70 to-transparent backdrop-blur-sm"
           : "bg-transparent"
       }`}
@@ -95,7 +93,11 @@ export default function Header() {
 
       {/* DESKTOP NAVIGATION - 중앙 배치 */}
       <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block">
-        <div className="flex items-center justify-center rounded-full border-2 border-white/30 bg-white/10 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/20">
+        <div
+          className={`flex items-center justify-center rounded-full border-2 border-white/30 bg-white/10 px-6 py-3 transition-all duration-300 hover:border-white/50 hover:bg-white/20 ${
+            !isSideMenuOpen ? "backdrop-blur-sm" : ""
+          }`}
+        >
           <nav>
             <ul className="flex items-center justify-center gap-2">
               {navItems.map(({ href, label }) => (
@@ -137,7 +139,7 @@ export default function Header() {
         </div>
 
         {/* SEARCH BAR */}
-        <HeaderSearchBar />
+        <HeaderSearchBar isSideMenuOpen={isSideMenuOpen} />
 
         {/* MOBILE HAMBURGER MENU - 오른쪽 끝 배치 */}
         <button

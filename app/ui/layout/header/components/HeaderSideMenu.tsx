@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { IoMdClose } from "react-icons/io";
@@ -28,36 +29,45 @@ export default function HeaderSideMenu({
 }: HeaderSideMenuProps) {
   const userUid = useAppSelector((state) => state.userData.auth?.uid);
   const pathname = usePathname();
+  const [isMounted, setIsMounted] = useState(false);
 
-  // 메뉴가 열릴 때 스크롤 방지
+  // 클라이언트에서만 포털 렌더링
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // 스크롤 방지
+  useEffect(() => {
+    if (!isMounted) return;
+
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     }
-
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     };
-  }, [isOpen]);
+  }, [isOpen, isMounted]);
 
-  return (
+  // 서버에서는 렌더링하지 않음
+  if (!isMounted) {
+    return null;
+  }
+
+  return createPortal(
     <div
-      className={`fixed inset-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-0 z-[9999] transition-all duration-300 ${
         isOpen ? "visible opacity-100" : "invisible opacity-0"
       }`}
     >
       {/* 배경 오버레이 */}
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 bg-black" onClick={onClose} />
 
       {/* 메뉴 패널 */}
       <div
-        className={`absolute right-0 top-0 h-full w-full bg-black/90 backdrop-blur-md transition-transform duration-300 ease-out sm:w-80 ${
-          isOpen ? "translate-y-0" : "-translate-y-full"
+        className={`fixed right-0 top-0 h-full w-full bg-black transition-transform duration-300 ease-out sm:w-80 ${
+          isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* 헤더 */}
@@ -65,7 +75,7 @@ export default function HeaderSideMenu({
           <h2 className="text-2xl font-semibold text-white">메뉴</h2>
           <button
             onClick={onClose}
-            className="rounded-full p-2 text-white transition-colors hover:bg-white/20"
+            className="rounded-full p-2 text-white hover:bg-white/20"
           >
             <IoMdClose size={24} />
           </button>
@@ -99,7 +109,7 @@ export default function HeaderSideMenu({
             <Link
               href="/login"
               onClick={onClose}
-              className="block w-full rounded-full bg-primary-600 py-4 text-center text-lg font-medium text-white transition-colors hover:bg-primary-700"
+              className="block w-full rounded-full bg-primary-600 py-4 text-center text-lg font-medium text-white hover:bg-primary-700"
             >
               로그인
             </Link>
@@ -117,7 +127,7 @@ export default function HeaderSideMenu({
                     <Link
                       href={href}
                       onClick={onClose}
-                      className={`block w-full rounded-full px-6 py-4 text-left text-lg transition-colors ${
+                      className={`block w-full rounded-full px-6 py-4 text-left text-lg ${
                         isActive
                           ? "bg-white/20 text-white"
                           : "text-gray-300 hover:bg-white/10 hover:text-white"
@@ -131,7 +141,7 @@ export default function HeaderSideMenu({
             </ul>
           </nav>
 
-          {/* 사용자 메뉴 (로그인된 경우) */}
+          {/* 사용자 메뉴 */}
           {userUid && (
             <div className="mt-8 border-t border-white/20 pt-6">
               <h3 className="mb-4 text-base font-medium text-gray-400">
@@ -142,7 +152,7 @@ export default function HeaderSideMenu({
                   <Link
                     href="/my-page"
                     onClick={onClose}
-                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 hover:bg-white/10 hover:text-white"
                   >
                     My Profile
                   </Link>
@@ -151,16 +161,16 @@ export default function HeaderSideMenu({
                   <Link
                     href="/my-page/my-ticket-list"
                     onClick={onClose}
-                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 hover:bg-white/10 hover:text-white"
                   >
                     My Tickets
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/my-page/liked-reviews"
+                    href="/my-page/liked-ticket-list"
                     onClick={onClose}
-                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 hover:bg-white/10 hover:text-white"
                   >
                     Liked Reviews
                   </Link>
@@ -170,6 +180,7 @@ export default function HeaderSideMenu({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -45,31 +45,43 @@ export default function TicketListPage({
 
   return (
     <div className="flex flex-col p-8">
-      <section className="flex w-full flex-col items-center pb-8 md:flex-row">
-        <div className="mb-4 flex w-full flex-col md:mb-0">
-          <div className="mb-2 flex items-center space-x-3">
-            <h1 className="text-2xl font-bold tracking-tight text-white">
-              All Ticket List
-            </h1>
-            <span className="ml-2 font-bold text-accent-300">
-              {initialReviews.length}장
-            </span>
-          </div>
-          <p className="text-sm text-gray-300">
-            모든 사용자들의 리뷰 티켓을 확인해보세요
-          </p>
+      {/* 헤더 */}
+      <section className="mb-4">
+        <div className="mb-2 flex items-center space-x-3">
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            All Ticket List
+          </h1>
+          <span className="ml-2 font-bold text-accent-300">
+            {initialReviews.length}장
+          </span>
         </div>
-        {/* 유효성 검증 */}
-        <div className="mt-4 md:mt-0">
+        <p className="text-sm text-gray-300">
+          모든 사용자들의 리뷰 티켓을 확인해보세요
+        </p>
+      </section>
+
+      {/* 검색 폼 & 결과 정보 */}
+      <div className="my-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex-1">
+          {searchTerm && (
+            <div className="text-sm text-gray-600">
+              <span className="font-medium">"{searchTerm}"</span> 검색 결과:
+              {initialReviews.length}개
+            </div>
+          )}
+        </div>
+        <div className="flex justify-end">
           <SearchForm onSearch={searchHandler} placeholder="티켓 검색" />
         </div>
-      </section>
+      </div>
+
       {/* 리뷰 리스트 */}
       {initialReviews.length > 0 ? (
         <ReviewTicket reviews={initialReviews} />
       ) : (
         <EmptyState message="등록된 리뷰 티켓이 없습니다" />
       )}
+
       {/* 페이지네이션 */}
       <Pagination
         currentPage={currentPage}
