@@ -27,6 +27,15 @@ export default function SearchResultList({
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
+  const pageChangeHandler = useCallback(
+    (page: number) => {
+      router.replace(
+        `${pathname}?query=${encodeURIComponent(searchQuery)}&page=${page}`,
+      );
+    },
+    [pathname, searchQuery, router],
+  );
+
   useEffect(() => {
     if (!searchQuery) {
       setSearchResults([]);
@@ -78,15 +87,6 @@ export default function SearchResultList({
       </div>
     );
   }
-
-  const pageChangeHandler = useCallback(
-    (page: number) => {
-      router.replace(
-        `${pathname}?query=${encodeURIComponent(searchQuery)}&page=${page}`,
-      );
-    },
-    [pathname, searchQuery],
-  );
 
   return (
     <>
