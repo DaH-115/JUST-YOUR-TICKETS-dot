@@ -13,8 +13,6 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   fetchSignInMethodsForEmail,
-  setPersistence,
-  browserLocalPersistence,
 } from "firebase/auth";
 import { db, isAuth } from "firebase-config";
 import {
@@ -159,17 +157,15 @@ export default function SignUpPage() {
       setIsLoading(true);
       try {
         const { displayName, email, password } = data;
-        // 1. 로컬 영속성 설정
-        await setPersistence(isAuth, browserLocalPersistence);
-        // 2. 계정 생성
+        // 1. 계정 생성
         const { user } = await createUserWithEmailAndPassword(
           isAuth,
           email,
           password,
         );
-        // 3. 프로필에 디스플레이네임 설정
+        // 2. 프로필에 디스플레이네임 설정
         await updateProfile(user, { displayName });
-        // 4. Firestore 트랜잭션
+        // 3. Firestore 트랜잭션
         await runTransaction(db, async (transaction) => {
           const usernameRef = doc(db, "usernames", displayName);
           const usernameSnap = await transaction.get(usernameRef);

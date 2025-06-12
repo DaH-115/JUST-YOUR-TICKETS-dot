@@ -3,11 +3,8 @@ import { useRouter } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import {
-  browserLocalPersistence,
-  browserSessionPersistence,
   GithubAuthProvider,
   GoogleAuthProvider,
-  setPersistence,
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
@@ -21,6 +18,7 @@ import {
 import { db, isAuth } from "firebase-config";
 import { useAlert } from "store/context/alertContext";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
+import { setRememberMe } from "app/utils/authPersistence";
 import SocialLoginBtn from "app/login/components/SocialLoginBtn";
 import generateUniqueNickname from "app/login/utils/generateUniqueNickname";
 
@@ -36,18 +34,15 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
     async (provider: SocialProvider) => {
       setIsLoadingProvider(provider);
       try {
-        // 1. Persistence 설정
-        await setPersistence(
-          isAuth,
-          rememberMe ? browserLocalPersistence : browserSessionPersistence,
-        );
-
-        // 2. 소셜 로그인
+        // 1. 소셜 로그인
         const authProvider =
           provider === "google"
             ? new GoogleAuthProvider()
             : new GithubAuthProvider();
         const { user } = await signInWithPopup(isAuth, authProvider);
+
+        // 2. 로그인 상태 유지 설정 저장
+        setRememberMe(rememberMe);
 
         const userRef = doc(db, "users", user.uid);
         const snapshot = await getDoc(userRef);

@@ -8,7 +8,7 @@ import { useCallback } from "react";
 import { signOut } from "firebase/auth";
 import { isAuth } from "firebase-config";
 import { clearUser } from "store/redux-toolkit/slice/userSlice";
-import { removeCookie } from "app/utils/cookieUtils";
+import { clearAuthPersistence } from "app/utils/authPersistence";
 import formatDate from "app/utils/formatDate";
 import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
 import useProfileStats from "app/my-page/hooks/useProfileStats";
@@ -67,8 +67,7 @@ export default function ProfileView() {
       await signOut(isAuth);
 
       // 2. 모든 인증 관련 데이터 정리
-      removeCookie();
-      localStorage.removeItem("rememberMe");
+      clearAuthPersistence();
 
       // 3. Redux 상태 초기화
       dispatch(clearUser());

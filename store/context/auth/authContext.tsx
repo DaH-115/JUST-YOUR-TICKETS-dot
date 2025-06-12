@@ -7,7 +7,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { isAuth } from "firebase-config";
 import { useAppDispatch } from "store/redux-toolkit/hooks";
 import {
@@ -18,6 +18,10 @@ import {
 } from "store/redux-toolkit/slice/userSlice";
 import { useRouter } from "next/navigation";
 import { useAlert } from "store/context/alertContext";
+import {
+  getCurrentPersistence,
+  clearAuthPersistence,
+} from "app/utils/authPersistence";
 import Loading from "app/loading";
 
 interface AuthContextType {
@@ -35,6 +39,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
+    // 페이지 로드 시 persistence 설정 확인
+    const checkPersistence = () => {
+      const persistence = getCurrentPersistence();
+
+      // 세션 기반 로그인이었는데 브라우저가 재시작된 경우
+      if (
+        persistence === "session" &&
+        !sessionStorage.getItem("authPersistence")
+      ) {
+        // 세션 스토리지가 비어있다면 브라우저가 재시작된 것으로 간주
+        signOut(isAuth);
+        clearAuthPersistence();
+        return;
+      }
+    };
+
+    checkPersistence();
+
     const unsubscribe = onAuthStateChanged(isAuth, (user) => {
       if (user) {
         const userData: SerializableUser = {

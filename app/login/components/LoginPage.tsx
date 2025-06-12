@@ -5,14 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { isAuth } from "firebase-config";
-import {
-  browserLocalPersistence,
-  browserSessionPersistence,
-  setPersistence,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useAlert } from "store/context/alertContext";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
+import { setRememberMe } from "app/utils/authPersistence";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import SocialLogin from "app/login/components/SocialLogin";
@@ -48,26 +44,28 @@ export default function LoginPage() {
   });
   const isRememberMe = watch("rememberMe");
 
-  const onSubmit: SubmitHandler<LoginInputs> = useCallback(async (data) => {
-    setIsLoading(true);
+  const onSubmit: SubmitHandler<LoginInputs> = useCallback(
+    async (data) => {
+      setIsLoading(true);
 
-    try {
-      // 1. Persistence 설정 (로컬 스토리지 또는 세션 스토리지)
-      await setPersistence(
-        isAuth,
-        data.rememberMe ? browserLocalPersistence : browserSessionPersistence,
-      );
-      // 2. 로그인 시도
-      await signInWithEmailAndPassword(isAuth, data.email, data.password);
-      // 3. 로그인 성공시 리다이렉트
-      router.push("/");
-    } catch (error) {
-      const { title, message } = firebaseErrorHandler(error);
-      showErrorHandler(title, message);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+      try {
+        // 1. 로그인 시도
+        await signInWithEmailAndPassword(isAuth, data.email, data.password);
+
+        // 2. 로그인 상태 유지 설정 저장
+        setRememberMe(data.rememberMe);
+
+        // 3. 로그인 성공시 리다이렉트
+        router.push("/");
+      } catch (error) {
+        const { title, message } = firebaseErrorHandler(error);
+        showErrorHandler(title, message);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [router, showErrorHandler],
+  );
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-accent-900 via-black to-accent-800 px-4 py-10 pt-32 md:pt-36 lg:pt-28">
