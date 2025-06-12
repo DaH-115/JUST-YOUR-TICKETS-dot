@@ -20,6 +20,14 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const key = searchParams.get("key") ?? "profile-img/default.png";
 
+  console.log("🔍 S3 GET Request:", {
+    key,
+    bucket: process.env.AWS_S3_BUCKET,
+    region: process.env.AWS_REGION,
+    hasAccessKey: !!process.env.AWS_ACCESS_KEY_ID,
+    hasSecretKey: !!process.env.AWS_SECRET_ACCESS_KEY,
+  });
+
   try {
     const { Body, ContentType } = await s3.send(
       new GetObjectCommand({
@@ -29,11 +37,14 @@ export async function GET(request: Request) {
     );
 
     if (!Body) {
+      console.log("❌ S3 Body is null for key:", key);
       return NextResponse.json(
         { error: true, message: "이미지를 찾을 수 없습니다." },
         { status: 404 },
       );
     }
+
+    console.log("✅ S3 Body received for key:", key);
 
     // ReadableStream을 Buffer로 변환
     const chunks: Uint8Array[] = [];
@@ -47,6 +58,8 @@ export async function GET(request: Request) {
 
     const buffer = Buffer.concat(chunks);
 
+    console.log("✅ Buffer created, size:", buffer.length);
+
     const headers = new Headers({
       "Content-Type": ContentType ?? "image/jpeg",
       "Cache-Control": "public, max-age=31536000, immutable",
@@ -54,7 +67,12 @@ export async function GET(request: Request) {
 
     return new NextResponse(buffer, { headers });
   } catch (err: any) {
-    console.error("S3 streaming error:", err);
+    console.error("❌ S3 streaming error:", {
+      message: err.message,
+      code: err.name,
+      stack: err.stack,
+      key,
+    });
     return NextResponse.json(
       { error: true, message: err.message, code: err.name },
       { status: err.name === "NoSuchKey" ? 404 : 500 },
