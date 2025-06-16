@@ -36,11 +36,11 @@ export default async function Page() {
     return notFound();
   }
 
-  const MAX_MOVIES = 10;
-  const randomIndex = Math.floor(
-    Math.random() * Math.min(nowPlayingMovies.length, MAX_MOVIES),
-  );
-  const recommendMovie = nowPlayingMovies[randomIndex];
+  // 오늘 날짜로 1~10 사이에서 "랜덤" 선택 (매일 다른 영화)
+  const today = new Date().getDate(); // 1~31
+  const randomLikeIndex = today % 10; // 0~9
+  const recommendMovie =
+    nowPlayingMovies[randomLikeIndex] || nowPlayingMovies[0];
 
   const [trailerData, credits, genreResponse] = await Promise.all([
     fetchVideosMovies(recommendMovie.id).catch((error) => {

@@ -1,6 +1,5 @@
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { HeroSection, MovieSection, LatestReviews } from "app/home/components";
-import ScrollToTopBtn from "app/components/ScrollToTopBtn";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 interface HomePageProps {
@@ -42,8 +41,6 @@ export default function HomePage({
         {/* Latest Reviews */}
         <LatestReviews reviews={latestReviews} />
       </main>
-
-      <ScrollToTopBtn />
     </>
   );
 }
