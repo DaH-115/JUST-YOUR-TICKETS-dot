@@ -166,7 +166,7 @@ export default function LoginPage() {
 
             {/* 티켓 하단 정보 */}
             <div className="mt-8 border-t-4 border-dotted border-accent-300/50 pt-6 text-center">
-              <div className="space-y-1 font-mono text-xs text-gray-500">
+              <div className="space-y-1 font-mono text-xs text-gray-600">
                 <div>VALID FOR ONE SESSION</div>
                 <div>NO REFUND • NO EXCHANGE</div>
                 <div className="font-bold text-accent-600">

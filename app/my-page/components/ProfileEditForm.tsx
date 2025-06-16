@@ -179,7 +179,7 @@ export default function ProfileEditForm() {
                 <label className="mb-2 block text-sm font-medium text-gray-700">
                   이메일
                 </label>
-                <div className="rounded-lg bg-gray-50 px-3 py-2 text-gray-500">
+                <div className="rounded-lg bg-gray-50 px-3 py-2 text-gray-600">
                   {userAuth?.email}
                 </div>
                 <p className="mt-1 text-xs text-gray-400">

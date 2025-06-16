@@ -35,7 +35,6 @@ export default function MovieDetailCard({
             {movieDetails.poster_path ? (
               <MoviePoster
                 posterPath={movieDetails.poster_path}
-                size={500}
                 title={movieTitle}
               />
             ) : (
@@ -56,7 +55,7 @@ export default function MovieDetailCard({
                 {movieDetails.title}
               </h2>
               <div className="flex items-center">
-                <p className="text-gray-500">
+                <p className="text-gray-600">
                   {movieDetails.original_title}(
                   {movieDetails.release_date.slice(0, 4)})
                 </p>
@@ -107,7 +106,7 @@ export default function MovieDetailCard({
                   {casts.slice(0, 5).map((cast) => (
                     <li key={cast.id} className="text-sm">
                       <span className="font-medium">{cast.name}</span>
-                      <p className="text-gray-500">{cast.character}</p>
+                      <p className="text-gray-600">{cast.character}</p>
                     </li>
                   ))}
                 </ul>

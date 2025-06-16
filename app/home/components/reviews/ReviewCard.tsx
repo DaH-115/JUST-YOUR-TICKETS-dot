@@ -26,7 +26,6 @@ export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
         <MoviePoster
           posterPath={content.moviePosterPath}
           title={content.movieTitle}
-          size={342}
         />
       </div>
 
@@ -40,7 +39,7 @@ export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
               className="transition-colors hover:text-accent-300"
             >
               <h3 className="line-clamp-1 font-bold">{content.movieTitle}</h3>
-              <p className="line-clamp-1 text-gray-500">
+              <p className="line-clamp-1 text-gray-600">
                 {content.originalTitle} ({content.releaseYear})
               </p>
             </Link>
@@ -76,7 +75,7 @@ export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
             />
             <div className="line-clamp-1 max-w-[60%]">{user.displayName}</div>
           </div>
-          <span className="text-xs font-medium text-gray-500">
+          <span className="text-xs font-medium text-gray-600">
             {formatDateOnly(content.createdAt)}
           </span>
         </div>

@@ -120,7 +120,7 @@ export default function ReviewDetailsModal({
         {/* 오른쪽: 타이틀 및 버튼 */}
         <div className="w-full">
           <h1 className="font-bold">{review?.reviewTitle}</h1>
-          <div className="flex text-xs text-gray-500">
+          <div className="flex text-xs text-gray-600">
             {review.movieTitle} - {review.releaseYear}
           </div>
         </div>
@@ -151,7 +151,7 @@ export default function ReviewDetailsModal({
         />
       </div>
       <div className="flex items-center justify-between pb-4 text-sm">
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-gray-600">
           {formatDate(review.createdAt)}
         </span>
         <div className="flex items-center">

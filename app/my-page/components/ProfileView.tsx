@@ -30,7 +30,7 @@ export default function ProfileView() {
     if (statsLoading)
       return {
         label: "...",
-        badgeColor: "bg-gray-100 text-gray-500",
+        badgeColor: "bg-gray-100 text-gray-600",
         bgGradient: "from-gray-50 to-gray-100",
       };
 
@@ -106,7 +106,7 @@ export default function ProfileView() {
                     {activityLevel.label}
                   </div>
                 </div>
-                <p className="text-sm text-gray-500">{userAuth?.email}</p>
+                <p className="text-sm text-gray-600">{userAuth?.email}</p>
               </div>
               <div className="flex items-center">
                 <Link
@@ -130,7 +130,7 @@ export default function ProfileView() {
                 <div className="text-lg font-bold text-gray-800">
                   {statsLoading ? "..." : myTicketsCount}
                 </div>
-                <div className="text-xs text-gray-500">내 티켓</div>
+                <div className="text-xs text-gray-600">내 티켓</div>
               </Link>
               <div className="border-l-2 border-dotted pl-6">
                 <Link
@@ -140,7 +140,7 @@ export default function ProfileView() {
                   <div className="text-lg font-bold text-gray-800">
                     {statsLoading ? "..." : likedTicketsCount}
                   </div>
-                  <div className="text-xs text-gray-500">좋아요</div>
+                  <div className="text-xs text-gray-600">좋아요</div>
                 </Link>
               </div>
             </div>
@@ -158,7 +158,7 @@ export default function ProfileView() {
             {/* 가입일 */}
             <div className="mt-4 border-t-4 border-dotted pt-3">
               <div className="text-xs text-gray-400">가입일</div>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-600">
                 {userMetaData?.createdAt
                   ? formatDate(new Date(userMetaData.createdAt).toISOString())
                   : "정보 없음"}

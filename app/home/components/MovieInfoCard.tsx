@@ -24,23 +24,25 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
             <span className="inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
               RECOMMEND MOVIE
             </span>
-            <Link
-              href={`/movie-details/${id}`}
-              aria-label={`${title}(${original_title}) 영화 상세정보 보기`}
-              role="button"
-              className="inline-block text-gray-600 transition-all duration-300 ease-in-out hover:scale-110 hover:text-accent-300 hover:drop-shadow-lg active:scale-95 active:text-accent-400"
-            >
-              <FaInfoCircle className="text-lg" aria-hidden />
-            </Link>
-            <Tooltip>
-              {title}({original_title}) 영화 상세정보 보기
-            </Tooltip>
+            <div className="relative">
+              <Link
+                href={`/movie-details/${id}`}
+                aria-label={`${title}(${original_title}) 영화 상세정보 보기`}
+                role="button"
+                className="inline-block text-gray-600 transition-all duration-300 ease-in-out hover:scale-110 hover:text-accent-300 hover:drop-shadow-lg active:scale-95 active:text-accent-400"
+              >
+                <FaInfoCircle className="text-lg" aria-hidden />
+              </Link>
+              <Tooltip>
+                {title}({original_title}) 영화 상세정보 보기
+              </Tooltip>
+            </div>
           </div>
 
           <h1 className="text-3xl font-bold md:text-3xl">{title}</h1>
 
           <div className="ml-1 flex items-center">
-            <h2 className="text-gray-500 md:text-lg">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
+            <h2 className="text-gray-600 md:text-lg">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
           </div>
         </div>
         <ul className="flex items-center space-x-2 overflow-x-scroll border-y-4 border-dotted p-2 text-sm scrollbar-hide md:text-xs">
@@ -65,7 +67,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
             {cast.slice(0, 3).map((actor) => (
               <li key={actor.id} className="font-bold">
                 {actor.name}
-                <span className="block font-normal text-gray-500">
+                <span className="block font-normal text-gray-600">
                   {actor.character}
                 </span>
               </li>

@@ -23,10 +23,10 @@ export default function SwiperCard({
   );
 
   return (
-    <div className="relative flex flex-col items-stretch drop-shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-6 hover:drop-shadow-2xl">
-      {/* RANKING NUMBER */}
-      <div className="absolute left-0 top-0 z-50 flex w-full items-center justify-between rounded-t-xl bg-gradient-to-t from-transparent to-black px-2 py-1 text-2xl font-bold text-white md:px-4 md:py-3 md:text-3xl">
-        {idx + 1}.
+    <article className="relative flex flex-col items-stretch drop-shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-6 hover:drop-shadow-2xl">
+      {/* RANKING NUMBER & INFO BUTTON */}
+      <header className="absolute left-0 top-0 z-50 flex w-full items-center justify-between rounded-t-xl bg-gradient-to-t from-transparent to-black px-2 py-1 text-2xl font-bold text-white md:px-4 md:py-3 md:text-3xl">
+        <span>{idx + 1}.</span>
         <div className="relative text-lg md:ml-2">
           <Link
             href={`/movie-details/${id}`}
@@ -38,28 +38,29 @@ export default function SwiperCard({
           </Link>
           <Tooltip>{movieTitle} 영화 상세정보 보기</Tooltip>
         </div>
-      </div>
+      </header>
 
       {/* MOVIE POSTER */}
       <div className="aspect-[2/3] overflow-hidden rounded-xl">
-        <MoviePoster posterPath={poster_path} title={movieTitle} size={342} />
+        <MoviePoster posterPath={poster_path} title={movieTitle} />
       </div>
 
       {/* MOVIE INFO CARD */}
-      <div className="overflow-hidden rounded-xl bg-gradient-to-br from-white to-gray-50">
+      <footer className="overflow-hidden rounded-xl bg-gradient-to-br from-white to-gray-50">
         {/* MOVIE TITLE */}
-        <div className="border-b-4 border-dotted p-2 pb-1 md:p-3 md:pb-2">
-          <div className="truncate text-sm font-bold">{title}</div>
-          <p className="truncate text-xs text-gray-500">{original_title}</p>
-        </div>
+        <section className="border-b-4 border-dotted p-2 pb-1 md:p-3 md:pb-2">
+          <h3 className="truncate text-sm font-bold">{title}</h3>
+          <p className="truncate text-xs text-gray-600">{original_title}</p>
+        </section>
 
-        <div className="flex items-center p-1 px-2 md:p-2">
+        {/* RATING & GENRES */}
+        <section className="flex items-center p-1 px-2 md:p-2">
           {/* RATE */}
           <div className="flex items-center border-r-4 border-dotted pr-2 text-xs md:text-sm">
             <IoStar className="text-accent-300 md:mr-1" />
-            <div className="font-bold">
+            <span className="font-bold">
               {vote_average ? Math.round(vote_average * 10) / 10 : 0}
-            </div>
+            </span>
           </div>
           {/* GENRES */}
           <ul className="flex w-full gap-1 overflow-x-scroll pl-2 scrollbar-hide">
@@ -78,10 +79,10 @@ export default function SwiperCard({
               </li>
             )}
           </ul>
-        </div>
+        </section>
         {/* REVIEW WRITE BUTTON */}
         <WriteBtn movieId={id} size={"small"} />
-      </div>
-    </div>
+      </footer>
+    </article>
   );
 }

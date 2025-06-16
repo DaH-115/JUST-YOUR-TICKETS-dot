@@ -345,7 +345,7 @@ export default function SignUpPage() {
 
             {/* 티켓 하단 정보 */}
             <div className="mt-8 border-t-2 border-dashed border-accent-300/50 pt-6 text-center">
-              <div className="space-y-1 font-mono text-xs text-gray-500">
+              <div className="space-y-1 font-mono text-xs text-gray-600">
                 <div>NEW MEMBER REGISTRATION</div>
                 <div>TERMS & CONDITIONS APPLY</div>
                 <div className="font-bold text-accent-600">

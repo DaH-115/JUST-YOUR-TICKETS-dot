@@ -83,7 +83,7 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
     <div className="space-y-6">
       <div className="flex items-center">
         <div className="flex-grow border-t-4 border-dotted border-gray-300"></div>
-        <span className="mx-4 font-mono text-sm text-gray-500">또는</span>
+        <span className="mx-4 font-mono text-sm text-gray-600">또는</span>
         <div className="flex-grow border-t-4 border-dotted border-gray-300"></div>
       </div>
 

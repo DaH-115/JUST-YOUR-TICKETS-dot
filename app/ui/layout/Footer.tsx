@@ -30,7 +30,7 @@ export default function Footer() {
       label: "이력서",
     },
     {
-      href: "https://github.com/DaH-115/JUST-MOVIE-TICKETS-dot",
+      href: "https://github.com/DaH-115/JUST-YOUR-TICKETS-dot",
       label: "GitHub",
     },
   ];
@@ -122,7 +122,7 @@ export default function Footer() {
             <span>© {new Date().getFullYear()} GWAK DA HYUN</span>
             <span className="hidden md:inline">•</span>
             <span className="hidden md:inline">All rights reserved</span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-300">
               포트폴리오 목적으로 제작된 프로젝트
             </span>
           </div>

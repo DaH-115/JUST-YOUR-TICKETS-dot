@@ -247,7 +247,7 @@ export default function Comments({
                 )}
               </div>
               <p className="py-2 text-sm">{c.content}</p>
-              <span className="mt-2 block text-xs text-gray-500">
+              <span className="mt-2 block text-xs text-gray-600">
                 {formatDate(c.createdAt)}
               </span>
             </li>
