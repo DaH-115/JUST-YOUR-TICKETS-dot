@@ -24,21 +24,35 @@ export default function AnimatedOverview({
 
     const element = contentRef.current;
 
-    // 임시로 높이 제한 해제
-    const originalHeight = element.style.height;
-    element.style.height = "auto";
+    // requestAnimationFrame으로 DOM 측정 최적화
+    const measureHeight = () => {
+      // 임시로 높이 제한 해제
+      const originalHeight = element.style.height;
+      const originalMaxHeight = element.style.maxHeight;
 
-    // 실제 높이 측정
-    const fullHeight = element.scrollHeight;
-    setContentHeight(fullHeight);
+      element.style.height = "auto";
+      element.style.maxHeight = "none";
 
-    // 원래 높이 복원
-    element.style.height = originalHeight;
+      // 실제 높이 측정 (한 번에 처리)
+      const fullHeight = element.scrollHeight;
 
-    // 3줄 높이와 비교하여 버튼 표시 여부 결정
-    const lineHeight = 24; // 대략적인 line-height
-    const maxHeight = lineHeight * maxLines;
-    setShowButton(fullHeight > maxHeight);
+      // 원래 높이 복원
+      element.style.height = originalHeight;
+      element.style.maxHeight = originalMaxHeight;
+
+      // 상태 업데이트를 배치로 처리
+      requestAnimationFrame(() => {
+        setContentHeight(fullHeight);
+
+        // 3줄 높이와 비교하여 버튼 표시 여부 결정
+        const lineHeight = 24; // 대략적인 line-height
+        const maxHeight = lineHeight * maxLines;
+        setShowButton(fullHeight > maxHeight);
+      });
+    };
+
+    // DOM 측정을 다음 프레임으로 지연
+    requestAnimationFrame(measureHeight);
   }, [overview, maxLines]);
 
   const toggleExpanded = () => {

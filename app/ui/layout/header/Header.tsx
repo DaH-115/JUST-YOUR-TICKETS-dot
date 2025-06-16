@@ -11,6 +11,7 @@ import HeaderSearchBar from "app/ui/layout/header/components/HeaderSearchBar";
 import { IoIosMenu } from "react-icons/io";
 import HeaderSideMenu from "app/ui/layout/header/components/HeaderSideMenu";
 import HeaderDropDownMenu from "app/ui/layout/header/components/HeaderDropDownMenu";
+import { createOptimizedScrollHandler } from "app/utils/performanceOptimization";
 
 interface NavItem {
   href: string;
@@ -57,11 +58,11 @@ export default function Header() {
 
   // 스크롤 감지 효과
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+    const handleScroll = createOptimizedScrollHandler((scrollY) => {
+      setIsScrolled(scrollY > 20);
+    });
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 

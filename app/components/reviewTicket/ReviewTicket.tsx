@@ -89,7 +89,6 @@ export default function ReviewTicket({
               <MoviePoster
                 posterPath={data.review.moviePosterPath}
                 title={data.review.movieTitle}
-                size={342}
               />
             </div>
 

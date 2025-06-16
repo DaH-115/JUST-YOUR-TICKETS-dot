@@ -2,20 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { FaArrowUp } from "react-icons/fa";
+import { createOptimizedScrollHandler } from "app/utils/performanceOptimization";
 
 const ScrollToTopBtn = () => {
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
 
   useEffect(() => {
-    const scrollHandler = () => {
-      if (window.scrollY > 300) {
-        setShowScrollTopButton(true);
-      } else {
-        setShowScrollTopButton(false);
-      }
-    };
+    const scrollHandler = createOptimizedScrollHandler((scrollY) => {
+      setShowScrollTopButton(scrollY > 300);
+    });
 
-    window.addEventListener("scroll", scrollHandler);
+    window.addEventListener("scroll", scrollHandler, { passive: true });
 
     return () => {
       window.removeEventListener("scroll", scrollHandler);

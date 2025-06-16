@@ -12,6 +12,29 @@ interface HeroSectionProps {
   trailerKey?: string;
 }
 
+// 애니메이션 도트 컴포넌트 분리 (DOM 중복 제거)
+const AnimatedDots = ({
+  isHydrated,
+  className = "",
+}: {
+  isHydrated: boolean;
+  className?: string;
+}) => (
+  <div className={`flex space-x-1 ${className}`}>
+    {Array.from({ length: 4 }, (_, i) => (
+      <div
+        key={i}
+        className={`h-2 w-2 rounded-full bg-accent-300 ${
+          isHydrated ? "animate-pulse" : ""
+        }`}
+        style={{
+          animationDelay: isHydrated ? `${i * 200}ms` : "0ms",
+        }}
+      />
+    ))}
+  </div>
+);
+
 export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -35,28 +58,34 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
             zIndex: -1,
           }}
         >
-          <div className="absolute inset-0 bg-black/60"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-blue-900/20"></div>
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-blue-900/20" />
         </div>
       )}
 
       {/* 데스크톱에서만 배경 애니메이션 표시 */}
       <div className="absolute inset-0 hidden overflow-hidden md:block">
         <div
-          className={`absolute -left-4 -top-4 h-72 w-72 rounded-full bg-gradient-to-r from-accent-300/10 to-primary-500/10 blur-3xl ${isHydrated ? "animate-pulse" : ""}`}
-        ></div>
+          className={`absolute -left-4 -top-4 h-72 w-72 rounded-full bg-gradient-to-r from-accent-300/10 to-primary-500/10 blur-3xl ${
+            isHydrated ? "animate-pulse" : ""
+          }`}
+        />
         <div
-          className={`absolute -bottom-4 -right-4 h-96 w-96 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 blur-3xl ${isHydrated ? "animate-pulse animation-delay-2000" : ""}`}
-        ></div>
+          className={`absolute -bottom-4 -right-4 h-96 w-96 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 blur-3xl ${
+            isHydrated ? "animate-pulse animation-delay-2000" : ""
+          }`}
+        />
         <div
-          className={`absolute left-1/4 top-1/2 h-48 w-48 rounded-full bg-gradient-to-r from-pink-500/5 to-yellow-500/5 blur-2xl ${isHydrated ? "animate-bounce animation-delay-1000" : ""}`}
-        ></div>
+          className={`absolute left-1/4 top-1/2 h-48 w-48 rounded-full bg-gradient-to-r from-pink-500/5 to-yellow-500/5 blur-2xl ${
+            isHydrated ? "animate-bounce animation-delay-1000" : ""
+          }`}
+        />
       </div>
 
-      <div className="relative z-10 flex min-h-screen items-center px-3 pb-12 pt-16 sm:px-4 md:px-6 lg:px-8">
+      <main className="relative z-10 flex min-h-screen items-center px-3 pb-12 pt-16 sm:px-4 md:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-6xl">
-          <div className="mb-16">
+          <header className="mb-16">
             <div className="pb-10 md:pb-8">
               <div
                 className={`duration-800 mb-2 flex items-center justify-center space-x-3 transition-all ease-out md:justify-start ${
@@ -65,23 +94,10 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
                     : "translate-y-8 opacity-0"
                 }`}
               >
-                <div className="flex space-x-1">
-                  <div
-                    className={`h-2 w-2 rounded-full bg-accent-300 ${isHydrated ? "animate-pulse" : ""}`}
-                  ></div>
-                  <div
-                    className={`h-2 w-2 rounded-full bg-accent-300 ${isHydrated ? "animate-pulse animation-delay-200" : ""}`}
-                  ></div>
-                  <div
-                    className={`h-2 w-2 rounded-full bg-accent-300 ${isHydrated ? "animate-pulse animation-delay-400" : ""}`}
-                  ></div>
-                  <div
-                    className={`h-2 w-2 rounded-full bg-accent-300 ${isHydrated ? "animate-pulse animation-delay-600" : ""}`}
-                  ></div>
-                </div>
-                <h2 className="bg-gradient-to-r from-white via-accent-200 to-white bg-clip-text text-3xl font-bold tracking-tight text-transparent md:text-4xl">
+                <AnimatedDots isHydrated={isHydrated} />
+                <h1 className="bg-gradient-to-r from-white via-accent-200 to-white bg-clip-text text-3xl font-bold tracking-tight text-transparent md:text-4xl">
                   Recommend Movie
-                </h2>
+                </h1>
               </div>
               <p
                 className={`duration-800 text-center text-base text-gray-300 transition-all ease-out md:ml-14 md:text-left ${
@@ -103,32 +119,29 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
               }`}
               style={{ transitionDelay: isHydrated ? "500ms" : "0ms" }}
             >
-              <div className="flex w-full max-w-4xl flex-col gap-4 md:flex-row md:gap-4">
-                <div className="group aspect-[2/3] flex-none overflow-hidden rounded-2xl drop-shadow-2xl transition-all duration-500 ease-out hover:rotate-1 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)]">
+              <div className="group flex w-full max-w-4xl flex-col gap-4 md:flex-row md:gap-4">
+                <div className="aspect-[2/3] flex-none overflow-hidden rounded-2xl drop-shadow-2xl transition-all duration-500 ease-out hover:rotate-1 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)]">
                   <div className="relative h-full w-full">
-                    <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-100 transition-opacity duration-500 group-hover:opacity-0"></div>
+                    <span className="absolute inset-0 z-10 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-100 transition-opacity duration-500 group-hover:opacity-0" />
                     <MoviePoster
                       posterPath={movie.poster_path}
                       title={movieTitle}
-                      size={500}
                     />
                   </div>
                 </div>
 
                 <div className="h-full flex-1 transition-all duration-500 ease-out md:hover:scale-105">
                   <div className="relative h-full">
-                    <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-accent-300/20 via-primary-500/20 to-blue-500/20 opacity-0 blur transition-opacity duration-500 group-hover:opacity-100"></div>
-                    <div className="relative h-full">
-                      <MovieInfoCard movie={movie} />
-                    </div>
+                    <span className="pointer-events-none absolute -inset-1 -z-10 rounded-2xl bg-gradient-to-r from-accent-300/20 via-primary-500/20 to-blue-500/20 opacity-0 blur transition-opacity duration-500 group-hover:opacity-100" />
+                    <MovieInfoCard movie={movie} />
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </header>
 
           {trailerKey && (
-            <div
+            <section
               className={`duration-800 w-full transition-all ease-out ${
                 isHydrated
                   ? "translate-y-0 opacity-100"
@@ -136,35 +149,22 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
               }`}
               style={{ transitionDelay: isHydrated ? "700ms" : "0ms" }}
             >
-              <div className="pb-6 md:pb-8">
+              <header className="pb-6 md:pb-8">
                 <div className="mb-2 flex items-center justify-center space-x-3 md:justify-start">
-                  <div className="flex space-x-1">
-                    <div
-                      className={`h-2 w-2 rounded-full bg-accent-300 ${isHydrated ? "animate-pulse" : ""}`}
-                    ></div>
-                    <div
-                      className={`h-2 w-2 rounded-full bg-accent-300 ${isHydrated ? "animate-pulse animation-delay-200" : ""}`}
-                    ></div>
-                    <div
-                      className={`h-2 w-2 rounded-full bg-accent-300 ${isHydrated ? "animate-pulse animation-delay-400" : ""}`}
-                    ></div>
-                    <div
-                      className={`h-2 w-2 rounded-full bg-accent-300 ${isHydrated ? "animate-pulse animation-delay-600" : ""}`}
-                    ></div>
-                  </div>
-                  <h3 className="bg-gradient-to-r from-white via-accent-200 to-white bg-clip-text text-3xl font-bold tracking-tight text-transparent md:text-4xl">
+                  <AnimatedDots isHydrated={isHydrated} />
+                  <h2 className="bg-gradient-to-r from-white via-accent-200 to-white bg-clip-text text-3xl font-bold tracking-tight text-transparent md:text-4xl">
                     Movie Trailer
-                  </h3>
+                  </h2>
                 </div>
                 <p className="text-center text-base text-gray-300 md:ml-14 md:text-left">
                   이 영화의 예고편을 확인해보세요
                 </p>
-              </div>
+              </header>
 
               <div className="flex justify-center">
                 <div className="group aspect-video w-full max-w-4xl transition-all duration-500 ease-out hover:scale-105">
                   <div className="relative h-full w-full">
-                    <div className="absolute -inset-2 rounded-xl bg-white/10 opacity-0 blur transition-opacity duration-500 group-hover:opacity-100"></div>
+                    <span className="absolute -inset-2 rounded-xl bg-white/10 opacity-0 blur transition-opacity duration-500 group-hover:opacity-100" />
                     <div className="relative h-full w-full overflow-hidden rounded-xl">
                       <VideoPlayer
                         trailerKey={trailerKey}
@@ -174,10 +174,10 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
           )}
         </div>
-      </div>
+      </main>
     </section>
   );
 }

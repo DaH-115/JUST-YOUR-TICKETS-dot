@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { MovieTrailer } from "lib/movies/fetchVideosMovies";
 import VideoPlayer from "app/components/VideoPlayer";
+import { createOptimizedResizeHandler } from "app/utils/performanceOptimization";
 
 export default function AllMovieTrailers({
   movieTrailer,
@@ -23,31 +24,36 @@ export default function AllMovieTrailers({
 
   // 화면 크기에 따른 한 줄 개수 계산 (Tailwind 브레이크포인트 기준)
   useEffect(() => {
-    const updateItemsPerRow = () => {
-      const width = window.innerWidth;
+    const updateItemsPerRow = createOptimizedResizeHandler((width) => {
+      let newItemsPerRow;
+
       if (width < BREAKPOINTS.sm) {
         // sm 미만 (모바일)
-        setCurrentItemsPerRow(1);
+        newItemsPerRow = 1;
       } else if (width < BREAKPOINTS.lg) {
         // sm 이상 lg 미만 (태블릿)
-        setCurrentItemsPerRow(2);
+        newItemsPerRow = 2;
       } else if (width < BREAKPOINTS.xl) {
         // lg 이상 xl 미만 (데스크톱)
-        setCurrentItemsPerRow(3);
+        newItemsPerRow = 3;
       } else {
         // xl 이상 (대형 화면)
-        setCurrentItemsPerRow(4);
+        newItemsPerRow = 4;
       }
-    };
+
+      if (newItemsPerRow !== currentItemsPerRow) {
+        setCurrentItemsPerRow(newItemsPerRow);
+      }
+    });
 
     // 초기 설정
     updateItemsPerRow();
 
     // 리사이즈 이벤트 리스너
-    window.addEventListener("resize", updateItemsPerRow);
+    window.addEventListener("resize", updateItemsPerRow, { passive: true });
 
     return () => window.removeEventListener("resize", updateItemsPerRow);
-  }, []);
+  }, [currentItemsPerRow]);
 
   const shouldShowMoreButton = movieTrailer.length > currentItemsPerRow;
   const displayedTrailers = showAll

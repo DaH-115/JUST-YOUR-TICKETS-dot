@@ -10,12 +10,14 @@ const nanumGothic = Nanum_Gothic({
   subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",
+  preload: true,
 });
 
 const roboto = Montserrat({
   subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
