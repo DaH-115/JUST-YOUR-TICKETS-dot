@@ -4,6 +4,7 @@ import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import Link from "next/link";
 import { FaStar, FaHeart } from "react-icons/fa";
 import formatDateOnly from "app/utils/formatDateOnly";
+import ActivityBadge from "app/components/ActivityBadge";
 
 interface ReviewCardProps {
   review: ReviewDoc;
@@ -66,14 +67,15 @@ export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
           </button>
         </div>
 
-        {/* 하단 프로필 & 날짜 */}
+        {/* 하단 프로필 & 등급 & 날짜 */}
         <div className="mt-auto flex items-center justify-between pt-2 text-xs font-bold">
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <ProfileImage
               photoURL={user.photoURL || undefined}
               userDisplayName={user.displayName || "사용자"}
             />
             <div className="line-clamp-1 max-w-[60%]">{user.displayName}</div>
+            <ActivityBadge uid={user.uid} size="tiny" />
           </div>
           <span className="text-xs font-medium text-gray-600">
             {formatDateOnly(content.createdAt)}

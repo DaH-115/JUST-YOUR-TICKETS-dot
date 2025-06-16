@@ -12,6 +12,7 @@ import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { FaHeart } from "react-icons/fa";
 import formatDateOnly from "app/utils/formatDateOnly";
+import ActivityBadge from "app/components/ActivityBadge";
 
 export default function ReviewTicket({
   reviews,
@@ -93,7 +94,7 @@ export default function ReviewTicket({
             </div>
 
             {/* MOVIE INFO CARD */}
-            <div className="w-full rounded-lg border bg-white p-1.5 transition-all duration-500">
+            <div className="w-full rounded-xl border bg-white p-2 transition-all duration-500">
               {/* 영화 타이틀 & 좋아요 */}
               <div className="flex items-center justify-between border-b-4 border-dotted px-1 py-1">
                 {/* 클릭하면 영화 상세 정보로 이동 */}
@@ -123,16 +124,17 @@ export default function ReviewTicket({
                 </p>
               </div>
 
-              {/* 프로필 사진 & 닉네임 & 작성 시간 */}
+              {/* 프로필 사진 & 닉네임 & 등급 & 작성 시간 */}
               <div className="flex items-center justify-between px-1 pt-1.5 text-xs">
-                <div className="flex min-w-0 flex-1 items-center">
+                <div className="flex min-w-0 flex-1 items-center gap-1">
                   <ProfileImage
                     photoURL={data.user.photoURL || undefined}
                     userDisplayName={data.user.displayName || "사용자"}
                   />
-                  <p className="min-w-0 flex-1 truncate px-1 text-xs">
+                  <p className="min-w-0 truncate text-xs">
                     {data.user.displayName ? data.user.displayName : "Guest"}
                   </p>
+                  <ActivityBadge uid={data.user.uid} size="tiny" />
                 </div>
                 <p className="ml-1 flex-shrink-0 text-xs">
                   {formatDateOnly(data.review.createdAt)}

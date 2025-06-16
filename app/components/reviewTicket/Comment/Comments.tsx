@@ -4,6 +4,7 @@ import { useAppSelector } from "store/redux-toolkit/hooks";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import formatDate from "app/utils/formatDate";
+import ActivityBadge from "app/components/ActivityBadge";
 import ProfileImage from "app/components/reviewTicket/ProfileImage";
 import { db } from "firebase-config";
 import {
@@ -220,6 +221,7 @@ export default function Comments({
                     <p className="text-xs font-bold text-gray-800">
                       {c.displayName || "익명"}
                     </p>
+                    <ActivityBadge uid={c.authorId} size="tiny" />
                   </div>
                   {c.authorId === reviewAuthorId && (
                     <span className="rounded-md bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">

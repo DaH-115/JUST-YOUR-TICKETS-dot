@@ -18,6 +18,7 @@ import ModalPortal from "app/components/modal/ModalPortal";
 import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
 import ProfileImage from "app/components/reviewTicket/ProfileImage";
 import formatDate from "app/utils/formatDate";
+import ActivityBadge from "app/components/ActivityBadge";
 
 interface ReviewDetailsModalProps {
   isModalOpen: boolean;
@@ -154,12 +155,13 @@ export default function ReviewDetailsModal({
         <span className="text-xs text-gray-600">
           {formatDate(review.createdAt)}
         </span>
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <ProfileImage
             photoURL={user.photoURL || undefined}
             userDisplayName={user.displayName || "익명"}
           />
           <span className="font-bold">{user.displayName}</span>
+          <ActivityBadge uid={user.uid} size="tiny" />
         </div>
       </div>
       <div className="mb-4 max-h-64 overflow-y-auto border-t-4 border-dotted pb-4 pt-4 scrollbar-hide">
