@@ -60,9 +60,8 @@ export default function LatestReviews({ reviews }: { reviews: ReviewDoc[] }) {
             <Link
               href="/ticket-list"
               className="ml-2 text-sm text-accent-300 transition-colors duration-300 hover:text-accent-200"
-              aria-label="티켓 목록으로 이동"
             >
-              전체 보기
+              모든 리뷰 티켓 보기
             </Link>
           </div>
         </div>
