@@ -120,7 +120,7 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
               style={{ transitionDelay: isHydrated ? "500ms" : "0ms" }}
             >
               <div className="group flex w-full max-w-4xl flex-col items-center gap-4 md:flex-row md:items-start md:gap-4">
-                <div className="aspect-[2/3] w-64 flex-none overflow-hidden rounded-2xl drop-shadow-2xl transition-all duration-500 ease-out hover:rotate-1 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)] sm:w-72 md:w-auto">
+                <div className="aspect-[2/3] w-64 flex-none overflow-hidden rounded-2xl drop-shadow-2xl transition-all duration-500 ease-out hover:rotate-1 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)] sm:w-72 md:w-80 lg:w-96">
                   <div className="relative h-full w-full">
                     <span className="absolute inset-0 z-10 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-100 transition-opacity duration-500 group-hover:opacity-0" />
                     <MoviePoster
