@@ -33,6 +33,7 @@ export default function Header() {
   const userPhotoURL = useAppSelector((state) => state.userData.auth?.photoURL);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const logoutHandler = useCallback(async () => {
     try {
@@ -118,7 +119,9 @@ export default function Header() {
 
       <div className="flex items-center space-x-4">
         {/* USER PROFILE/LOGIN SECTION */}
-        <div className="hidden md:flex">
+        <div
+          className={`hidden transition-all duration-300 md:flex ${isSearchOpen ? "invisible opacity-0" : "visible opacity-100"}`}
+        >
           {userDisplayName ? (
             <div className="px-6 py-3">
               <HeaderDropDownMenu
@@ -140,7 +143,10 @@ export default function Header() {
         </div>
 
         {/* SEARCH BAR */}
-        <HeaderSearchBar isSideMenuOpen={isSideMenuOpen} />
+        <HeaderSearchBar
+          isSideMenuOpen={isSideMenuOpen}
+          onSearchOpenChange={setIsSearchOpen}
+        />
 
         {/* MOBILE HAMBURGER MENU - 오른쪽 끝 배치 */}
         <button

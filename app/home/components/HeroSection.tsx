@@ -83,7 +83,7 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
         />
       </div>
 
-      <main className="relative z-10 flex min-h-screen items-center px-3 pb-12 pt-16 sm:px-4 md:px-6 lg:px-8">
+      <main className="relative z-10 flex min-h-screen items-center px-4 pb-8 pt-16 md:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-6xl">
           <header className="mb-16">
             <div className="pb-10 md:pb-8">
@@ -120,7 +120,7 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
               style={{ transitionDelay: isHydrated ? "500ms" : "0ms" }}
             >
               <div className="group flex w-full max-w-4xl flex-col items-center gap-4 md:flex-row md:items-start md:gap-4">
-                <div className="aspect-[2/3] w-64 flex-none overflow-hidden rounded-2xl drop-shadow-2xl transition-all duration-500 ease-out hover:rotate-1 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)] sm:w-72 md:w-80 lg:w-96">
+                <div className="aspect-[2/3] w-72 flex-none overflow-hidden rounded-2xl drop-shadow-2xl transition-all duration-500 ease-in-out hover:rotate-1 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)] md:w-80 lg:w-96">
                   <div className="relative h-full w-full">
                     <span className="absolute inset-0 z-10 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-100 transition-opacity duration-500 group-hover:opacity-0" />
                     <MoviePoster
@@ -130,9 +130,8 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
                   </div>
                 </div>
 
-                <div className="h-full flex-1 transition-all duration-500 ease-out md:hover:scale-105">
+                <div className="h-full flex-1 transition-all duration-500 ease-in-out md:hover:scale-105">
                   <div className="relative h-full">
-                    <span className="pointer-events-none absolute -inset-1 -z-10 rounded-2xl bg-gradient-to-r from-accent-300/20 via-primary-500/20 to-blue-500/20 opacity-0 blur transition-opacity duration-500 group-hover:opacity-100" />
                     <MovieInfoCard movie={movie} />
                   </div>
                 </div>

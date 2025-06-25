@@ -11,7 +11,6 @@ import { useAlert } from "store/context/alertContext";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { FaHeart } from "react-icons/fa";
-import formatDateOnly from "app/utils/formatDateOnly";
 import ActivityBadge from "app/components/ActivityBadge";
 
 export default function ReviewTicket({
@@ -124,9 +123,9 @@ export default function ReviewTicket({
                 </p>
               </div>
 
-              {/* 프로필 사진 & 닉네임 & 등급 & 작성 시간 */}
+              {/* 프로필 사진 & 닉네임 & 등급 */}
               <div className="flex items-center justify-between px-1 pt-1.5 text-xs">
-                <div className="flex min-w-0 flex-1 items-center gap-1">
+                <div className="flex min-w-0 flex-1 items-center">
                   <ProfileImage
                     photoURL={data.user.photoURL || undefined}
                     userDisplayName={data.user.displayName || "사용자"}
@@ -136,9 +135,6 @@ export default function ReviewTicket({
                   </p>
                   <ActivityBadge uid={data.user.uid} size="tiny" />
                 </div>
-                <p className="ml-1 flex-shrink-0 text-xs">
-                  {formatDateOnly(data.review.createdAt)}
-                </p>
               </div>
             </div>
           </div>

@@ -77,10 +77,10 @@ export default function MovieDetailCard({
             </div>
 
             {/* 평점 영역 */}
-            <div className="py-6 font-bold">
-              <div className="flex items-center text-2xl md:text-4xl">
+            <div className="py-4">
+              <div className="flex items-center">
                 <IoStar className="mr-2 text-accent-300" />
-                <p className="text-2xl md:text-4xl">
+                <p className="text-2xl font-bold md:text-3xl">
                   {Math.round(movieDetails.vote_average * 10) / 10}
                   <span className="text-xl font-normal text-gray-300 md:text-2xl">
                     /10
@@ -91,8 +91,8 @@ export default function MovieDetailCard({
 
             {/* 줄거리 영역 */}
             {movieDetails.overview && (
-              <div className="mb-6 py-2">
-                <p className="break-keep leading-relaxed">
+              <div className="mb-6">
+                <p className="break-keep leading-relaxed text-gray-800">
                   {movieDetails.overview}
                 </p>
               </div>
