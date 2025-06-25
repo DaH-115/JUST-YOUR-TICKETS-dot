@@ -15,10 +15,12 @@ import {
 
 interface HeaderSearchBarProps {
   isSideMenuOpen: boolean;
+  onSearchOpenChange?: (isOpen: boolean) => void;
 }
 
 export default function HeaderSearchBar({
   isSideMenuOpen,
+  onSearchOpenChange,
 }: HeaderSearchBarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<MovieList[]>([]);
@@ -27,8 +29,12 @@ export default function HeaderSearchBar({
   const [selectedMovie, setSelectedMovie] = useState<MovieList | null>(null);
 
   const iconClickHandler = useCallback(() => {
-    setIsSearchOpen((prev) => !prev);
-  }, []);
+    setIsSearchOpen((prev) => {
+      const newState = !prev;
+      onSearchOpenChange?.(newState);
+      return newState;
+    });
+  }, [onSearchOpenChange]);
 
   const handleMovieSelect = useCallback((movie: MovieList | null) => {
     if (movie) {
@@ -43,7 +49,8 @@ export default function HeaderSearchBar({
     setVisibleCount(5);
     setSelectedMovie(null);
     setIsSearchOpen(false);
-  }, []);
+    onSearchOpenChange?.(false);
+  }, [onSearchOpenChange]);
 
   const debouncedSearch = useMemo(
     () =>
