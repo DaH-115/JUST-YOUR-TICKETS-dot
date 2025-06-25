@@ -7,6 +7,7 @@ import Image from "next/image";
 import { IoMdClose } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "store/redux-toolkit/hooks";
+import { usePresignedUrl } from "app/hooks/usePresignedUrl";
 
 interface HeaderSideMenuProps {
   userDisplayName: string;
@@ -30,6 +31,10 @@ export default function HeaderSideMenu({
   const userUid = useAppSelector((state) => state.userData.auth?.uid);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
+
+  const { url: presignedUrl, loading } = usePresignedUrl({
+    key: userPhotoURL,
+  });
 
   // 클라이언트에서만 포털 렌더링
   useEffect(() => {
@@ -86,17 +91,22 @@ export default function HeaderSideMenu({
           {userUid ? (
             <div className="flex items-center space-x-4">
               <div className="h-12 w-12 overflow-hidden rounded-full">
-                <Image
-                  src={
-                    userPhotoURL
-                      ? `/api/s3?key=${encodeURIComponent(userPhotoURL)}`
-                      : "/default-profile.svg"
-                  }
-                  alt="프로필"
-                  width={48}
-                  height={48}
-                  className="h-full w-full object-cover"
-                />
+                {loading ? (
+                  <div className="flex h-full w-full items-center justify-center bg-gray-200">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
+                  </div>
+                ) : (
+                  <Image
+                    src={presignedUrl}
+                    alt="프로필"
+                    width={48}
+                    height={48}
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = "/default-profile.svg";
+                    }}
+                  />
+                )}
               </div>
               <div>
                 <p className="text-lg font-medium text-white">

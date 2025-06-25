@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { IoIosArrowDown } from "react-icons/io";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
+import { usePresignedUrl } from "app/hooks/usePresignedUrl";
 
 interface HeaderDropDownMenuProps {
   userDisplayName: string | undefined;
@@ -14,17 +17,36 @@ export default function HeaderDropDownMenu({
   userPhotoURL,
   logoutHandler,
 }: HeaderDropDownMenuProps) {
+  const { url: presignedUrl, loading } = usePresignedUrl({
+    key: userPhotoURL,
+  });
+
+  // userPhotoURL이 있는지 여부로 이미지 표시 결정
+  const shouldShowImage =
+    userPhotoURL &&
+    typeof userPhotoURL === "string" &&
+    userPhotoURL.trim().length > 0;
+
   return (
     <Menu as="div" className="relative">
       <MenuButton className="flex items-center gap-3 transition-opacity hover:opacity-80">
         <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-white/20">
-          {userPhotoURL ? (
+          {loading ? (
+            <div className="h-4 w-4 animate-spin rounded-full border border-white border-t-transparent"></div>
+          ) : shouldShowImage ? (
             <Image
-              src={`/api/s3?key=${encodeURIComponent(userPhotoURL)}`}
+              src={presignedUrl}
               alt={userDisplayName || "Guest"}
               fill
               sizes="32px"
               className="object-cover"
+              onError={(e) => {
+                // 에러 시 부모 div를 숨기고 아바타 문자를 보여주기 위해
+                const parent = e.currentTarget.parentElement;
+                if (parent) {
+                  parent.innerHTML = `<span class="text-sm font-bold text-white">${userDisplayName ? userDisplayName.charAt(0).toUpperCase() : "G"}</span>`;
+                }
+              }}
             />
           ) : (
             <span className="text-sm font-bold text-white">

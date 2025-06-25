@@ -3,15 +3,13 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-const s3Host = `${process.env.NEXT_PUBLIC_AWS_S3_BUCKET}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com`;
-
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
     unoptimized: true,
     remotePatterns: [
-      // 기존 TMDB
+      // TMDB 이미지
       {
         protocol: "https",
         hostname: "image.tmdb.org",
@@ -23,11 +21,11 @@ const nextConfig = {
         hostname: "lh3.googleusercontent.com",
         pathname: "/a/**",
       },
-      // S3에 업로드된 프로필 이미지 - 경로 수정
+      // AWS S3 Presigned URL (동적 도메인)
       {
         protocol: "https",
-        hostname: s3Host,
-        pathname: "/profile-img/**",
+        hostname: "*.s3.*.amazonaws.com",
+        pathname: "/**",
       },
     ],
     deviceSizes: [320, 480, 640, 750, 828, 1080, 1200, 1920],
