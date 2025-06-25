@@ -93,7 +93,15 @@ export const updateUserMetaData = createAsyncThunk<
   }
 });
 
-// Firebase User displayName 수정
+/**
+ * Firebase User displayName 수정
+ * 1. Firebase Auth의 displayName 업데이트
+ * 2. Firestore usernames 컬렉션에서 닉네임 중복 검사 및 관리
+ * 3. 기존 닉네임 삭제 후 새 닉네임 등록
+ *
+ * @param newDisplayName - 새로 설정할 닉네임
+ * @returns 성공 시 새 닉네임, 실패 시 에러 메시지
+ */
 export const updateUserDisplayName = createAsyncThunk<
   string,
   string,
@@ -104,22 +112,30 @@ export const updateUserDisplayName = createAsyncThunk<
 >(
   "user/updateUserDisplayName",
   async (newDisplayName, { rejectWithValue, getState }) => {
+    // 1. Redux 스토어에서 현재 사용자 정보 가져오기
     const auth = getState().userData.auth;
     if (!auth) return rejectWithValue("사용자 정보가 없습니다.");
+
+    // 2. Firebase Auth에서 현재 로그인된 사용자 확인
     const firebaseUser = isAuth.currentUser;
     if (!firebaseUser) return rejectWithValue("Firebase Auth 정보가 없습니다.");
 
     try {
+      // 3. Firebase Auth의 displayName 업데이트
       await updateProfile(firebaseUser, { displayName: newDisplayName });
 
+      // 4. Firestore 트랜잭션으로 닉네임 중복 검사 및 업데이트
       await runTransaction(db, async (transaction) => {
         const oldDisplayName = auth.displayName;
+
+        // 4-1. 새 닉네임이 이미 사용 중인지 확인
         const newDisplayNameRef = doc(db, "usernames", newDisplayName);
         const newDisplayNameSnapshot = await transaction.get(newDisplayNameRef);
         if (newDisplayNameSnapshot.exists()) {
           throw new Error("이미 사용 중인 닉네임입니다.");
         }
 
+        // 4-2. 기존 닉네임이 있다면 usernames 컬렉션에서 삭제
         if (oldDisplayName) {
           const oldDisplayNameRef = doc(db, "usernames", oldDisplayName);
           const oldDisplayNameSnapshot =
@@ -129,17 +145,20 @@ export const updateUserDisplayName = createAsyncThunk<
           }
         }
 
+        // 4-3. 새 닉네임을 usernames 컬렉션에 등록
         transaction.set(newDisplayNameRef, {
           uid: auth.uid,
           createdAt: serverTimestamp(),
         });
 
+        // 4-4. users 컬렉션의 updatedAt 필드 업데이트
         const userRef = doc(db, "users", auth.uid);
         transaction.update(userRef, {
           updatedAt: serverTimestamp(),
         });
       });
 
+      // 5. 성공 시 새 닉네임 반환
       return newDisplayName;
     } catch (error: any) {
       return rejectWithValue(error.message);

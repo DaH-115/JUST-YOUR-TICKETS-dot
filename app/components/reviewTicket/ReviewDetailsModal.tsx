@@ -17,7 +17,6 @@ import Comments from "app/components/reviewTicket/Comment/Comments";
 import ModalPortal from "app/components/modal/ModalPortal";
 import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
 import ProfileImage from "app/components/reviewTicket/ProfileImage";
-import formatDate from "app/utils/formatDate";
 import ActivityBadge from "app/components/ActivityBadge";
 
 interface ReviewDetailsModalProps {
@@ -152,9 +151,7 @@ export default function ReviewDetailsModal({
         />
       </div>
       <div className="flex items-center justify-between pb-4 text-sm">
-        <span className="text-xs text-gray-600">
-          {formatDate(review.createdAt)}
-        </span>
+        <span className="text-xs text-gray-600">{review.createdAt}</span>
         <div className="flex items-center gap-2">
           <ProfileImage
             photoURL={user.photoURL || undefined}
