@@ -39,7 +39,12 @@ export default function Avatar({
           sizes="100%"
           className="object-cover"
           onError={(e) => {
-            console.error("Image load error:", error);
+            console.error(
+              "Image load error:",
+              e.currentTarget.src,
+              e.type,
+              e.target,
+            );
             // 에러 시 fallback 이미지로 교체
             e.currentTarget.src = "/images/fallback-avatar.svg";
           }}

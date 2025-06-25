@@ -29,6 +29,14 @@ export default function ProfileImage({
       width={24}
       height={24}
       className="mr-1 h-6 w-6 rounded-full border object-cover"
+      onError={(e) => {
+        console.warn(
+          `프로필 이미지 로딩 실패: ${userDisplayName}`,
+          e.currentTarget.src,
+          e.type,
+        );
+        e.currentTarget.src = "/images/fallback-avatar.svg";
+      }}
     />
   );
 }

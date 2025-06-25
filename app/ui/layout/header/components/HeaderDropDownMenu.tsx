@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { usePresignedUrl } from "app/hooks/usePresignedUrl";
@@ -17,6 +18,7 @@ export default function HeaderDropDownMenu({
   userPhotoURL,
   logoutHandler,
 }: HeaderDropDownMenuProps) {
+  const [imageError, setImageError] = useState(false);
   const { url: presignedUrl, loading } = usePresignedUrl({
     key: userPhotoURL,
   });
@@ -25,7 +27,8 @@ export default function HeaderDropDownMenu({
   const shouldShowImage =
     userPhotoURL &&
     typeof userPhotoURL === "string" &&
-    userPhotoURL.trim().length > 0;
+    userPhotoURL.trim().length > 0 &&
+    !imageError;
 
   return (
     <Menu as="div" className="relative">
@@ -41,11 +44,12 @@ export default function HeaderDropDownMenu({
               sizes="32px"
               className="object-cover"
               onError={(e) => {
-                // 에러 시 부모 div를 숨기고 아바타 문자를 보여주기 위해
-                const parent = e.currentTarget.parentElement;
-                if (parent) {
-                  parent.innerHTML = `<span class="text-sm font-bold text-white">${userDisplayName ? userDisplayName.charAt(0).toUpperCase() : "G"}</span>`;
-                }
+                console.warn(
+                  `헤더 프로필 이미지 로딩 실패: ${userDisplayName}`,
+                  e.currentTarget.src,
+                  e.type,
+                );
+                setImageError(true);
               }}
             />
           ) : (
