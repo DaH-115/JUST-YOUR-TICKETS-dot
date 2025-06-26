@@ -52,10 +52,9 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
     <section className="relative min-h-screen overflow-hidden">
       {movie?.backdrop_path && (
         <div
-          className="fixed inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-out"
+          className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-out"
           style={{
             backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
-            zIndex: -1,
           }}
         >
           <div className="absolute inset-0 bg-black/60" />
