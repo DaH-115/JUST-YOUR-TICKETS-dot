@@ -2,7 +2,7 @@
 
 import { ReviewFormValues } from "app/write-review/[id]/page";
 import { db } from "firebase-config";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
 
 export default async function updateReview(
@@ -11,7 +11,10 @@ export default async function updateReview(
 ) {
   try {
     await updateDoc(doc(db, "movie-reviews", reviewId), {
-      ...reviewData,
+      "review.reviewTitle": reviewData.reviewTitle,
+      "review.reviewContent": reviewData.reviewContent,
+      "review.rating": reviewData.rating,
+      "review.updatedAt": serverTimestamp(),
     });
 
     revalidatePath("/ticket-list");

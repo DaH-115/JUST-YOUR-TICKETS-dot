@@ -15,7 +15,7 @@ export default function ReviewFormTitle() {
       <Controller
         name="reviewTitle"
         control={control}
-        defaultValue={getValues("reviewTitle")}
+        defaultValue={getValues("reviewTitle") || ""}
         rules={{
           required: "제목을 입력해주세요.",
           maxLength: {
@@ -41,7 +41,7 @@ export default function ReviewFormTitle() {
                 </p>
               )}
               <p className="ml-auto text-sm text-gray-400">
-                {field.value.length}/50
+                {(field.value || "").length}/50
               </p>
             </div>
           </div>
