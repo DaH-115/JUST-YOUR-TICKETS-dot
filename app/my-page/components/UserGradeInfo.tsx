@@ -15,6 +15,7 @@ const gradeInfo = [
     color: "bg-yellow-100 text-yellow-700",
     bgGradient: "from-yellow-50 to-yellow-100",
     range: "0-4개",
+    minThreshold: 0,
     description: "영화 리뷰를 시작한 신입 리뷰어입니다.",
     nextGoal: "5개의 리뷰를 작성하면 REGULAR 등급으로 승급됩니다!",
   },
@@ -23,6 +24,7 @@ const gradeInfo = [
     color: "bg-green-100 text-green-700",
     bgGradient: "from-green-50 to-green-100",
     range: "5-19개",
+    minThreshold: 5,
     description: "꾸준히 리뷰를 작성하는 일반 리뷰어입니다.",
     nextGoal: "20개의 리뷰를 작성하면 ACTIVE 등급으로 승급됩니다!",
   },
@@ -31,6 +33,7 @@ const gradeInfo = [
     color: "bg-blue-100 text-blue-700",
     bgGradient: "from-blue-50 to-blue-100",
     range: "20-49개",
+    minThreshold: 20,
     description: "활발하게 리뷰 활동을 하는 액티브 리뷰어입니다.",
     nextGoal: "50개의 리뷰를 작성하면 EXPERT 등급으로 승급됩니다!",
   },
@@ -39,6 +42,7 @@ const gradeInfo = [
     color: "bg-purple-100 text-purple-700",
     bgGradient: "from-purple-50 to-purple-100",
     range: "50개+",
+    minThreshold: 50,
     description: "최고 등급의 전문 리뷰어입니다. 축하합니다!",
     nextGoal: "최고 등급에 도달했습니다! 계속해서 훌륭한 리뷰를 작성해주세요.",
   },
@@ -64,26 +68,13 @@ export default function UserGradeInfo({
   };
 
   const getProgressToNext = () => {
+    const currentGrade = getCurrentGradeInfo();
     const nextGrade = getNextGradeInfo();
-    if (!nextGrade) return 100;
 
-    let nextThreshold = 0;
-    let currentThreshold = 0;
+    if (!nextGrade || !currentGrade) return 100;
 
-    switch (nextGrade.label) {
-      case "REGULAR":
-        nextThreshold = 5;
-        currentThreshold = 0;
-        break;
-      case "ACTIVE":
-        nextThreshold = 20;
-        currentThreshold = 5;
-        break;
-      case "EXPERT":
-        nextThreshold = 50;
-        currentThreshold = 20;
-        break;
-    }
+    const currentThreshold = currentGrade.minThreshold;
+    const nextThreshold = nextGrade.minThreshold;
 
     const progress =
       ((currentReviewCount - currentThreshold) /
