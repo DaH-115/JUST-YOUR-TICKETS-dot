@@ -32,13 +32,6 @@ interface FirestoreReviewData {
   };
 }
 
-export interface FirestoreReviewUpdate {
-  reviewTitle: string;
-  reviewContent: string;
-  rating: number;
-  updatedAt: FieldValue;
-}
-
 export const useReviewForm = ({
   mode,
   reviewId,
@@ -79,11 +72,10 @@ export const useReviewForm = ({
       if (mode === "new") {
         await addDoc(collection(db, "movie-reviews"), newData);
       } else if (mode === "edit" && reviewId) {
-        const updateData: FirestoreReviewUpdate = {
+        const updateData: ReviewFormValues = {
           reviewTitle,
           reviewContent,
           rating,
-          updatedAt: serverTimestamp(),
         };
         await updateReview(reviewId, updateData);
       }

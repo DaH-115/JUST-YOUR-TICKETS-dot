@@ -47,7 +47,7 @@ export default function LatestReviews({ reviews }: { reviews: ReviewDoc[] }) {
         />
       )}
 
-      <section className="py-20 md:py-16">
+      <section className="py-8 md:py-16">
         <div className="mb-6 md:mb-4">
           <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
             Latest Reviews
@@ -66,7 +66,7 @@ export default function LatestReviews({ reviews }: { reviews: ReviewDoc[] }) {
           </div>
         </div>
 
-        <div className="mx-auto grid grid-cols-1 gap-6 py-6 md:grid-cols-2 md:gap-4 md:py-4 lg:grid-cols-3">
+        <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4 md:py-4 lg:grid-cols-3">
           {reviews.map((review) => (
             <ReviewCard
               key={review.id}

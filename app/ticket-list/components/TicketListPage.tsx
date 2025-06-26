@@ -44,7 +44,7 @@ export default function TicketListPage({
   );
 
   return (
-    <div className="flex flex-col p-8">
+    <div className="flex flex-col p-6">
       {/* 헤더 */}
       <section className="mb-4">
         <div className="mb-2 flex items-center space-x-3">

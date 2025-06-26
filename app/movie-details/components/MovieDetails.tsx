@@ -45,7 +45,7 @@ export default function MovieDetailCard({
 
         {/* MOVIE INFO */}
         <div className="mx-auto w-full overflow-hidden rounded-2xl shadow-lg">
-          <div className="bg-white p-4">
+          <div className="bg-white p-6">
             {/* 기본 정보 영역 */}
             <div className="mb-6">
               <h1 className="mb-3 inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
@@ -68,7 +68,7 @@ export default function MovieDetailCard({
                 {movieDetails.genres.map((genre) => (
                   <li
                     key={genre.id}
-                    className="rounded-full border border-black px-3 py-1.5 text-xs lg:text-xs"
+                    className="rounded-full border border-black px-3 py-1.5 text-xs md:text-sm"
                   >
                     {genre.name}
                   </li>

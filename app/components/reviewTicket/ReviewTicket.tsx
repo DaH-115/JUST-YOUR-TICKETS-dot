@@ -95,10 +95,10 @@ export default function ReviewTicket({
             {/* MOVIE INFO CARD */}
             <div className="w-full rounded-xl border bg-white p-2 transition-all duration-500">
               {/* 영화 타이틀 & 좋아요 */}
-              <div className="flex items-center justify-between border-b-4 border-dotted px-1 py-1">
+              <div className="flex items-center justify-between border-b-4 border-dotted p-1">
                 {/* 클릭하면 영화 상세 정보로 이동 */}
                 <div
-                  className="truncate border-r-4 border-dotted pr-1.5 text-xs hover:underline"
+                  className="flex-1 truncate border-r-4 border-dotted pr-1.5 text-sm text-gray-600 hover:underline"
                   onClick={(event) => event.stopPropagation()}
                 >
                   <Link href={`/movie-details/${data.review.movieId}`}>
@@ -107,7 +107,7 @@ export default function ReviewTicket({
                 </div>
                 {/* 좋아요 카운트 */}
                 <div className="flex items-center pl-1.5">
-                  <FaHeart size={16} className="mr-1 text-red-500" />
+                  <FaHeart size={10} className="mr-1 text-red-500" />
                   <p className="text-xs">{data.review.likeCount}</p>
                 </div>
               </div>
@@ -118,14 +118,14 @@ export default function ReviewTicket({
                   <IoStar className="text-accent-300" size={14} />
                   <p className="ml-1 text-xs font-bold">{data.review.rating}</p>
                 </div>
-                <p className="w-full truncate text-xs font-bold">
+                <p className="w-full truncate text-sm">
                   {data.review.reviewTitle}
                 </p>
               </div>
 
               {/* 프로필 사진 & 닉네임 & 등급 */}
               <div className="flex items-center justify-between px-1 pt-1.5 text-xs">
-                <div className="flex min-w-0 flex-1 items-center">
+                <div className="flex min-w-0 flex-1 items-center gap-1">
                   <ProfileImage
                     photoURL={data.user.photoURL || undefined}
                     userDisplayName={data.user.displayName || "사용자"}

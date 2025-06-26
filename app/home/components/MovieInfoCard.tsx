@@ -17,7 +17,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   const { genres, cast, uniqueDirectors } = useMovieDetails();
 
   return (
-    <section className="mx-auto w-full overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50">
+    <section className="mx-auto w-full overflow-hidden break-keep rounded-2xl bg-gradient-to-br from-white to-gray-50">
       <div className="p-2">
         <div className="p-2 md:p-4">
           <div className="mb-4 flex justify-between">
@@ -63,7 +63,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
         </ul>
         {overview && <AnimatedOverview overview={overview} />}
         <div className="flex flex-1 items-center justify-between border-b-4 border-dotted">
-          <ul className="flex w-full items-center justify-center gap-6 p-4 text-center text-sm md:text-xs">
+          <ul className="flex w-full items-center justify-center gap-4 py-4 text-center text-sm md:text-xs">
             {cast.slice(0, 3).map((actor) => (
               <li key={actor.id} className="font-bold">
                 {actor.name}

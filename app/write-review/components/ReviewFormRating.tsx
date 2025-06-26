@@ -39,6 +39,7 @@ export default function ReviewFormRating() {
       <Controller
         name="rating"
         control={control}
+        defaultValue={5}
         rules={{ validate: (value) => value > 0 || "평점을 선택해주세요." }}
         render={({ field, fieldState: { error } }) => {
           const selected = ratingOptions.find(

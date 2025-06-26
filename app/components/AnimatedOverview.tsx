@@ -71,12 +71,12 @@ export default function AnimatedOverview({
       <div className="relative">
         <div
           ref={contentRef}
-          className="overflow-hidden transition-all duration-500 ease-out"
+          className="overflow-hidden transition-all duration-300 ease-in-out"
           style={{
             height: isExpanded ? `${contentHeight}px` : collapsedHeight,
           }}
         >
-          <p className="break-keep font-light leading-relaxed">{overview}</p>
+          <p className="break-keep leading-relaxed text-gray-800">{overview}</p>
         </div>
 
         {/* 그라데이션 오버레이 */}

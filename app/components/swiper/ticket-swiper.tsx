@@ -14,7 +14,7 @@ export default function TicketSwiper({
   movieList: MovieList[];
 }) {
   return (
-    <div className="pt-8">
+    <div className="pt-0">
       <Swiper
         speed={500}
         loop={true}

@@ -20,7 +20,7 @@ const MovieSection = memo(function MovieSection({
   const displayMovies = maxItems ? movieList.slice(0, maxItems) : movieList;
 
   return (
-    <section className="py-20 md:py-16">
+    <section className="py-8 md:py-16">
       <div className="mb-6 md:mb-4">
         <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
           {title}

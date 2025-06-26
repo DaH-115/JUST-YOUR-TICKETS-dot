@@ -34,7 +34,7 @@ export default function ReviewForm({
   });
 
   const methods = useForm<ReviewFormValues>({
-    defaultValues: initialData || {
+    defaultValues: {
       reviewTitle: "",
       rating: 5,
       reviewContent: "",
@@ -44,8 +44,16 @@ export default function ReviewForm({
 
   const {
     handleSubmit,
+    reset,
     formState: { isDirty, isValid },
   } = methods;
+
+  // initialData가 변경되면 폼을 리셋
+  useEffect(() => {
+    if (initialData) {
+      reset(initialData);
+    }
+  }, [initialData, reset]);
 
   // 페이지 이탈 방지 기능
   useEffect(() => {

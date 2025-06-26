@@ -17,7 +17,15 @@ export function useReviewData({ mode, reviewId }: useReviewDataProps) {
       try {
         if (mode === "edit" && reviewId) {
           const snap = await getDoc(doc(db, "movie-reviews", reviewId));
-          if (snap.exists()) setInitialData(snap.data() as ReviewFormValues);
+          if (snap.exists()) {
+            const data = snap.data();
+            // Firestore 문서 구조에서 review 객체 안의 데이터 추출
+            setInitialData({
+              reviewTitle: data.review?.reviewTitle || "",
+              reviewContent: data.review?.reviewContent || "",
+              rating: data.review?.rating || 5,
+            });
+          }
         }
       } catch (error) {
         console.error(error);
