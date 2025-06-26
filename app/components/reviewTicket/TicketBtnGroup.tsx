@@ -39,12 +39,12 @@ const TicketBtnGroup = React.memo(function ReviewBtnGroup({
       <MenuItems
         modal={false}
         transition
-        className="absolute right-0 top-8 z-10 min-w-20 origin-top-right overflow-hidden rounded-lg border border-black bg-white shadow-md transition duration-200 ease-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150"
+        className="absolute right-0 top-8 z-10 min-w-20 origin-top-right overflow-hidden rounded-lg bg-white shadow-md transition duration-200 ease-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150"
       >
         <MenuItem>
           <Link
             href={`/write-review/${postId}?movieId=${movieId}`}
-            className="flex w-full items-center justify-center border-b px-1 py-2 text-center text-sm transition-colors data-[focus]:bg-gray-100 data-[focus]:font-bold"
+            className="flex w-full items-center justify-center px-1 py-2 text-center text-sm transition-colors data-[focus]:bg-gray-100 data-[focus]:font-bold"
           >
             <div className="flex items-center justify-center rounded-md p-1">
               <MdOutlineEdit className="mr-1 text-lg" />

@@ -4,6 +4,7 @@
 
 @layer base {
   html {
+    font-size: 16px; /* 1rem = 16px (표준 수치) */
     font-family:
       "Pretendard",
       -apple-system,
@@ -18,12 +19,6 @@
       "Segoe UI Emoji",
       "Segoe UI Symbol",
       "Noto Color Emoji";
-    font-display: swap;
-  }
-
-  /* 폰트 로딩 최적화 */
-  @font-face {
-    font-family: "Pretendard";
     font-display: swap;
   }
 }

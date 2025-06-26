@@ -89,19 +89,20 @@ export default function HeaderSearchBar({
           <div
             className={`relative flex items-center rounded-full border-2 border-white/30 bg-white/10 transition-all duration-300 ease-in-out hover:border-white/50 hover:bg-white/20 ${
               !isSideMenuOpen ? "backdrop-blur-sm" : ""
-            } ${isSearchOpen ? "w-64" : "w-12"}`}
+            } ${isSearchOpen ? "h-12 w-64" : "h-12 w-12"}`}
           >
             <ComboboxInput
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="영화 검색"
-              className={`h-12 w-full rounded-full bg-transparent pl-4 pr-14 text-sm text-white placeholder-white/70 transition-all duration-300 ease-in-out focus:outline-none ${
+              className={`w-full rounded-full bg-transparent pl-4 pr-12 text-sm text-white placeholder-white/70 transition-all duration-300 ease-in-out focus:outline-none ${
                 isSearchOpen ? "opacity-100" : "opacity-0"
               }`}
               displayValue={() => searchQuery}
             />
             <div
-              className="absolute right-0 top-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full transition-all duration-300 ease-in-out hover:bg-white/10"
+              className="absolute right-0 top-0 flex cursor-pointer items-center justify-center rounded-full transition-all duration-300 ease-in-out hover:bg-white/10"
+              style={{ width: "48px", height: "48px" }}
               onClick={iconClickHandler}
             >
               <IoSearchOutline size={18} color="white" />

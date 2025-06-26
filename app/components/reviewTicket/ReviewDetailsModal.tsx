@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { IoCloseOutline, IoStar } from "react-icons/io5";
+import { IoStar } from "react-icons/io5";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import {
   deleteDoc,
@@ -18,6 +18,7 @@ import ModalPortal from "app/components/modal/ModalPortal";
 import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
 import ProfileImage from "app/components/reviewTicket/ProfileImage";
 import ActivityBadge from "app/components/ActivityBadge";
+import formatDate from "app/utils/formatDate";
 
 interface ReviewDetailsModalProps {
   isModalOpen: boolean;
@@ -124,7 +125,7 @@ export default function ReviewDetailsModal({
             {review.movieTitle} - {review.releaseYear}
           </div>
         </div>
-        <div className="mr-2 flex items-center gap-1">
+        <div className="flex items-center gap-1">
           {/* 좋아요 버튼 */}
           <button
             onClick={likeHandler}
@@ -145,13 +146,18 @@ export default function ReviewDetailsModal({
           )}
         </div>
         {/* 모달 닫기 버튼 */}
-        <IoCloseOutline
+        <button
           onClick={closeModalHandler}
-          className="cursor-pointer text-4xl text-black"
-        />
+          className="cursor-pointer text-3xl text-black transition-colors hover:text-gray-600"
+          aria-label="모달 닫기"
+        >
+          ×
+        </button>
       </div>
       <div className="flex items-center justify-between pb-4 text-sm">
-        <span className="text-xs text-gray-600">{review.createdAt}</span>
+        <span className="text-xs text-gray-600">
+          {formatDate(review.createdAt)}
+        </span>
         <div className="flex items-center gap-2">
           <ProfileImage
             photoURL={user.photoURL || undefined}
@@ -166,7 +172,7 @@ export default function ReviewDetailsModal({
           리뷰 내용
         </h2>
         <div className="rounded-lg bg-gray-50 p-4">
-          <p className="break-keep leading-relaxed text-gray-700">
+          <p className="break-keep text-sm leading-relaxed text-gray-700">
             {review.reviewContent}
           </p>
         </div>
