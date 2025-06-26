@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaTimes } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import {
@@ -148,10 +148,10 @@ export default function ReviewDetailsModal({
         {/* 모달 닫기 버튼 */}
         <button
           onClick={closeModalHandler}
-          className="cursor-pointer text-3xl text-black transition-colors hover:text-gray-600"
+          className="text-gray-400 transition-colors hover:text-gray-600"
           aria-label="모달 닫기"
         >
-          ×
+          <FaTimes size={16} />
         </button>
       </div>
       <div className="flex items-center justify-between pb-4 text-sm">

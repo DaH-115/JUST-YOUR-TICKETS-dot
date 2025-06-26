@@ -12,6 +12,7 @@ import { clearAuthPersistence } from "app/utils/authPersistence";
 import formatDate from "app/utils/formatDate";
 import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
 import useProfileStats from "app/my-page/hooks/useProfileStats";
+import UserGradeInfo from "app/my-page/components/UserGradeInfo";
 import {
   getActivityLevel,
   getLoadingActivityLevel,
@@ -76,11 +77,10 @@ export default function ProfileView() {
                   <h1 className="text-xl font-bold text-gray-800">
                     {userAuth?.displayName || "사용자"}
                   </h1>
-                  <div
-                    className={`rounded-full px-3 py-1 text-xs font-medium ${activityLevel.badgeColor}`}
-                  >
-                    {activityLevel.label}
-                  </div>
+                  <UserGradeInfo
+                    currentLevel={activityLevel}
+                    currentReviewCount={myTicketsCount}
+                  />
                 </div>
                 <p className="text-sm text-gray-600">{userAuth?.email}</p>
               </div>
