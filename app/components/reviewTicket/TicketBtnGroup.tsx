@@ -39,31 +39,29 @@ const TicketBtnGroup = React.memo(function ReviewBtnGroup({
       <MenuItems
         modal={false}
         transition
-        className="absolute right-0 top-8 z-10 min-w-20 origin-top-right overflow-hidden rounded-lg bg-white shadow-md transition duration-200 ease-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150"
+        className="absolute right-0 top-8 z-10 min-w-32 origin-top-right overflow-hidden rounded-lg bg-white shadow-xl transition duration-200 ease-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150"
       >
         <MenuItem>
           <Link
             href={`/write-review/${postId}?movieId=${movieId}`}
-            className="flex w-full items-center justify-center px-1 py-2 text-center text-sm transition-colors data-[focus]:bg-gray-100 data-[focus]:font-bold"
+            className="flex w-full items-center px-4 py-3 text-left text-xs font-medium text-gray-700 transition-colors data-[focus]:bg-gray-50 data-[focus]:text-gray-900"
           >
-            <div className="flex items-center justify-center rounded-md p-1">
-              <MdOutlineEdit className="mr-1 text-lg" />
-              수정
-            </div>
+            <MdOutlineEdit className="mr-2 text-sm" />
+            Edit
           </Link>
         </MenuItem>
 
-        <MenuItem>
-          <button
-            onClick={handleDelete}
-            className="flex w-full items-center justify-center px-1 py-2 text-center text-sm text-red-600 transition-colors data-[focus]:bg-gray-100 data-[focus]:font-bold"
-          >
-            <div className="flex items-center justify-center rounded-md p-1">
-              <MdDeleteOutline className="mr-1 text-lg text-red-500" />
-              삭제
-            </div>
-          </button>
-        </MenuItem>
+        <div className="border-t border-gray-100">
+          <MenuItem>
+            <button
+              onClick={handleDelete}
+              className="flex w-full items-center px-4 py-3 text-left text-xs font-medium text-red-600 transition-colors data-[focus]:bg-gray-50 data-[focus]:text-red-700"
+            >
+              <MdDeleteOutline className="mr-2 text-sm" />
+              Delete
+            </button>
+          </MenuItem>
+        </div>
       </MenuItems>
     </Menu>
   );

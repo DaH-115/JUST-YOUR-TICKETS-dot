@@ -132,7 +132,7 @@ export default function ReviewForm({
                     <button
                       type="submit"
                       disabled={!isValid}
-                      className="w-full rounded-2xl bg-accent-400 p-4 font-semibold text-white transition-all duration-300 hover:bg-accent-500 hover:shadow-lg disabled:cursor-not-allowed disabled:text-gray-500 disabled:opacity-50"
+                      className="w-full rounded-xl bg-accent-400 p-4 font-semibold text-white transition-all duration-300 hover:bg-accent-500 hover:shadow-lg disabled:cursor-not-allowed disabled:text-gray-500 disabled:opacity-50"
                     >
                       <MdDriveFileRenameOutline
                         className="mr-2 inline"

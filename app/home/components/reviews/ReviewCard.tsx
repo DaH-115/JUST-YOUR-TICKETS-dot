@@ -57,11 +57,11 @@ export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
         <div className="flex items-center border-b-4 border-dotted py-1">
           <div className="mr-4 flex items-center gap-1 border-r-4 border-dotted pr-4">
             <FaStar className="text-yellow-400" />
-            <span className="text-lg font-bold">{content.rating}</span>
+            <span className="font-bold">{content.rating}</span>
           </div>
           <button
             onClick={handleReviewTitleClick}
-            className="line-clamp-1 flex-1 cursor-pointer text-left transition-colors hover:text-accent-300"
+            className="line-clamp-1 flex-1 cursor-pointer text-left text-sm transition-colors hover:text-accent-300"
           >
             {content.reviewTitle}
           </button>

@@ -95,7 +95,7 @@ export default function HeaderSearchBar({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="영화 검색"
-              className={`w-full rounded-full bg-transparent pl-4 pr-12 text-sm text-white placeholder-white/70 transition-all duration-300 ease-in-out focus:outline-none ${
+              className={`w-full rounded-full bg-transparent py-3 pl-6 pr-14 text-sm text-white placeholder-white/70 transition-all duration-300 ease-in-out focus:outline-none ${
                 isSearchOpen ? "opacity-100" : "opacity-0"
               }`}
               displayValue={() => searchQuery}
