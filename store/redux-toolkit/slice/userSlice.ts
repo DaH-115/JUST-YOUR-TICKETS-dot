@@ -1,13 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { db, isAuth } from "firebase-config";
-import { updateProfile } from "firebase/auth";
-import {
-  doc,
-  getDoc,
-  runTransaction,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { isAuth } from "firebase-config";
 import { RootState } from "..";
 
 export interface SerializableUser {
@@ -47,19 +39,33 @@ export const fetchUserMetaData = createAsyncThunk<
   { rejectValue: string }
 >("user/fetchUserMetaData", async (uid, { rejectWithValue }) => {
   try {
-    const snap = await getDoc(doc(db, "users", uid));
-    if (!snap.exists()) throw new Error("사용자 정보가 없습니다.");
-    const data = snap.data();
+    // Firebase 사용자 토큰 가져오기
+    const user = isAuth.currentUser;
+    if (!user) {
+      return rejectWithValue("사용자가 로그인되어 있지 않습니다.");
+    }
+
+    const idToken = await user.getIdToken();
+
+    const response = await fetch(`/api/users/${uid}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "사용자 정보 조회에 실패했습니다.");
+    }
+
+    const data = await response.json();
 
     return {
       provider: data.provider,
       biography: data.biography,
-      createdAt: data.createdAt
-        ? new Date(data.createdAt.toMillis()).toISOString()
-        : new Date().toISOString(),
-      updatedAt: data.updatedAt
-        ? new Date(data.updatedAt.toMillis()).toISOString()
-        : new Date().toISOString(),
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
     };
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -71,22 +77,40 @@ interface UpdateUserMetaDataPayload {
   updatedAt: string; // number → string
 }
 
-// Firestore에서 사용자 프로필 업데이트하기 (biography 수정)
+// API를 통한 사용자 프로필 업데이트 (biography 수정)
 export const updateUserMetaData = createAsyncThunk<
   UpdateUserMetaDataPayload,
   { uid: string; data: { biography: string } },
   { rejectValue: string }
 >("user/updateUserMetaData", async ({ uid, data }, { rejectWithValue }) => {
   try {
-    const ref = doc(db, "users", uid);
-    await updateDoc(ref, {
-      biography: data.biography,
-      updatedAt: serverTimestamp(),
+    // Firebase 사용자 토큰 가져오기
+    const user = isAuth.currentUser;
+    if (!user) {
+      return rejectWithValue("사용자가 로그인되어 있지 않습니다.");
+    }
+
+    const idToken = await user.getIdToken();
+
+    const response = await fetch(`/api/users/${uid}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: JSON.stringify({ biography: data.biography }),
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "프로필 업데이트에 실패했습니다.");
+    }
+
+    const result = await response.json();
+
     return {
-      biography: data.biography,
-      updatedAt: new Date().toISOString(),
+      biography: result.data.biography,
+      updatedAt: result.data.updatedAt,
     };
   } catch (error: any) {
     return rejectWithValue(error.message);
@@ -121,45 +145,27 @@ export const updateUserDisplayName = createAsyncThunk<
     if (!firebaseUser) return rejectWithValue("Firebase Auth 정보가 없습니다.");
 
     try {
-      // 3. Firebase Auth의 displayName 업데이트
-      await updateProfile(firebaseUser, { displayName: newDisplayName });
+      // 3. API를 통한 displayName 업데이트
+      const idToken = await firebaseUser.getIdToken();
 
-      // 4. Firestore 트랜잭션으로 닉네임 중복 검사 및 업데이트
-      await runTransaction(db, async (transaction) => {
-        const oldDisplayName = auth.displayName;
-
-        // 4-1. 새 닉네임이 이미 사용 중인지 확인
-        const newDisplayNameRef = doc(db, "usernames", newDisplayName);
-        const newDisplayNameSnapshot = await transaction.get(newDisplayNameRef);
-        if (newDisplayNameSnapshot.exists()) {
-          throw new Error("이미 사용 중인 닉네임입니다.");
-        }
-
-        // 4-2. 기존 닉네임이 있다면 usernames 컬렉션에서 삭제
-        if (oldDisplayName) {
-          const oldDisplayNameRef = doc(db, "usernames", oldDisplayName);
-          const oldDisplayNameSnapshot =
-            await transaction.get(oldDisplayNameRef);
-          if (oldDisplayNameSnapshot.exists()) {
-            transaction.delete(oldDisplayNameRef);
-          }
-        }
-
-        // 4-3. 새 닉네임을 usernames 컬렉션에 등록
-        transaction.set(newDisplayNameRef, {
-          uid: auth.uid,
-          createdAt: serverTimestamp(),
-        });
-
-        // 4-4. users 컬렉션의 updatedAt 필드 업데이트
-        const userRef = doc(db, "users", auth.uid);
-        transaction.update(userRef, {
-          updatedAt: serverTimestamp(),
-        });
+      const response = await fetch(`/api/users/${auth.uid}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({ displayName: newDisplayName }),
       });
 
-      // 5. 성공 시 새 닉네임 반환
-      return newDisplayName;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "닉네임 업데이트에 실패했습니다.");
+      }
+
+      const result = await response.json();
+
+      // 4. 성공 시 새 닉네임 반환
+      return result.data.displayName;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }

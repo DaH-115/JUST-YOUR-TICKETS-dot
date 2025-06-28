@@ -29,12 +29,8 @@ export default function HeaderSearchBar({
   const [selectedMovie, setSelectedMovie] = useState<MovieList | null>(null);
 
   const iconClickHandler = useCallback(() => {
-    setIsSearchOpen((prev) => {
-      const newState = !prev;
-      onSearchOpenChange?.(newState);
-      return newState;
-    });
-  }, [onSearchOpenChange]);
+    setIsSearchOpen((prev) => !prev);
+  }, []);
 
   const handleMovieSelect = useCallback((movie: MovieList | null) => {
     if (movie) {
@@ -49,8 +45,7 @@ export default function HeaderSearchBar({
     setVisibleCount(5);
     setSelectedMovie(null);
     setIsSearchOpen(false);
-    onSearchOpenChange?.(false);
-  }, [onSearchOpenChange]);
+  }, []);
 
   const debouncedSearch = useMemo(
     () =>
@@ -81,6 +76,11 @@ export default function HeaderSearchBar({
       debouncedSearch.cancel();
     };
   }, [searchQuery, debouncedSearch]);
+
+  // isSearchOpen 상태 변경을 부모에게 알림
+  useEffect(() => {
+    onSearchOpenChange?.(isSearchOpen);
+  }, [isSearchOpen, onSearchOpenChange]);
 
   return (
     <div className="ml-4 hidden lg:flex">

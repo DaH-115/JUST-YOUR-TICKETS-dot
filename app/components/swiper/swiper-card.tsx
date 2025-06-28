@@ -48,7 +48,7 @@ export default function SwiperCard({
       {/* MOVIE INFO CARD */}
       <footer className="overflow-hidden rounded-xl bg-gradient-to-br from-white to-gray-50">
         {/* MOVIE TITLE */}
-        <section className="border-b-4 border-dotted p-2 pb-1 md:p-3 md:pb-2">
+        <section className="border-b-4 border-dotted p-1 md:p-2">
           <h3 className="truncate text-sm font-bold">{title}</h3>
           <p className="truncate text-xs text-gray-600">{original_title}</p>
         </section>
@@ -81,7 +81,9 @@ export default function SwiperCard({
           </ul>
         </section>
         {/* REVIEW WRITE BUTTON */}
-        <WriteBtn movieId={id} size={"small"} />
+        <div className="p-1">
+          <WriteBtn movieId={id} size={"small"} />
+        </div>
       </footer>
     </article>
   );

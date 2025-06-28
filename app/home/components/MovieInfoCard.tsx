@@ -102,8 +102,10 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
           </div>
         </div>
       </div>
-      {/* 리뷰 작성 버튼 */}
-      <WriteBtn movieId={id} size="large" />
+      <div className="p-2">
+        {/* 리뷰 작성 버튼 */}
+        <WriteBtn movieId={id} size="large" />
+      </div>
     </section>
   );
 }

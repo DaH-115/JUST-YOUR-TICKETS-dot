@@ -12,9 +12,9 @@ export default function WriteBtn({ movieId, size = "large" }: WriteBtnProps) {
       href={`/write-review/new?movieId=${movieId}`}
       className={`${
         size === "large"
-          ? "p-4 text-sm md:text-base"
-          : "px-3 py-2 text-xs md:text-sm"
-      } group relative flex w-full items-center justify-between overflow-hidden rounded-b-xl bg-gradient-to-r from-primary-600 to-primary-700 text-white transition-all duration-300 hover:from-primary-700 hover:to-primary-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-accent-300`}
+          ? "rounded-2xl p-4 text-sm md:text-base"
+          : "rounded-lg px-3 py-2 text-xs md:text-sm"
+      } group relative flex w-full items-center justify-between overflow-hidden bg-gradient-to-r from-primary-600 to-primary-700 text-white transition-all duration-300 hover:from-primary-700 hover:to-primary-800 hover:shadow-lg focus:outline-none`}
     >
       <FaPen
         className={`${
@@ -22,7 +22,7 @@ export default function WriteBtn({ movieId, size = "large" }: WriteBtnProps) {
         } mr-2 transition-transform duration-300 group-hover:scale-110`}
         aria-hidden
       />
-      <span className="font-medium">리뷰 작성</span>
+      <p className="font-medium">리뷰 작성</p>
 
       <FaArrowRight
         className={`${
