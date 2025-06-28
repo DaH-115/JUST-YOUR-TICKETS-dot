@@ -46,8 +46,8 @@ export async function GET(request: Request) {
   });
 
   try {
-    // 3. 1시간 유효한 다운로드용 presigned URL 생성
-    const url = await getSignedUrl(s3, command, { expiresIn: 60 * 60 }); // 1시간
+    // 3. 24시간 유효한 다운로드용 presigned URL 생성
+    const url = await getSignedUrl(s3, command, { expiresIn: 60 * 60 * 24 }); // 24시간
     return NextResponse.json({ url });
   } catch (err: any) {
     console.error("S3 download presign error:", err);
