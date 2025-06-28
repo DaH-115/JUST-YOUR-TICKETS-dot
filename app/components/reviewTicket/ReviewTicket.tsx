@@ -2,8 +2,8 @@
 
 import { useCallback, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { IoStar } from "react-icons/io5";
-import { deleteReview } from "app/actions/deleteReview";
 import ReviewDetailsModal from "app/components/reviewTicket/ReviewDetailsModal";
 import MoviePoster from "app/components/MoviePoster";
 import ProfileImage from "app/components/reviewTicket/ProfileImage";
@@ -12,6 +12,8 @@ import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { FaHeart } from "react-icons/fa";
 import ActivityBadge from "app/components/ActivityBadge";
+import { useAppSelector } from "store/redux-toolkit/hooks";
+import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
 
 export default function ReviewTicket({
   reviews,
@@ -23,7 +25,9 @@ export default function ReviewTicket({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewDoc>();
   const [canClick, setCanClick] = useState(true);
-  const { showErrorHandler } = useAlert();
+  const { showSuccessHandler, showErrorHandler } = useAlert();
+  const router = useRouter();
+  const userState = useAppSelector((state) => state.userData.auth);
 
   const openModalHandler = useCallback(
     (selectedReview: ReviewDoc) => {
@@ -44,12 +48,37 @@ export default function ReviewTicket({
 
   const onReviewDeleteHanlder = useCallback(
     async (id: string) => {
+      if (!userState?.uid) {
+        showErrorHandler("오류", "로그인이 필요합니다.");
+        return;
+      }
+
       const confirmed = window.confirm("정말 삭제하시겠습니까?");
       if (!confirmed) return;
 
+      // confirm 확인 즉시 모달 닫기
+      closeModalHandler();
+
       try {
-        await deleteReview(id);
-        closeModalHandler();
+        await apiCallWithTokenRefresh(async (authHeaders) => {
+          const response = await fetch(`/api/reviews/${id}`, {
+            method: "DELETE",
+            headers: {
+              ...authHeaders,
+            },
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "삭제에 실패했습니다.");
+          }
+
+          return response.json();
+        });
+
+        showSuccessHandler("알림", "리뷰가 성공적으로 삭제되었습니다.", () => {
+          router.refresh();
+        });
       } catch (error) {
         if (error instanceof Error) {
           console.error("리뷰 티켓 삭제 중 오류 발생:", error.message);
@@ -60,7 +89,13 @@ export default function ReviewTicket({
         }
       }
     },
-    [closeModalHandler],
+    [
+      closeModalHandler,
+      showErrorHandler,
+      showSuccessHandler,
+      router,
+      userState,
+    ],
   );
 
   return (
@@ -77,7 +112,7 @@ export default function ReviewTicket({
       )}
 
       {/* 리뷰 리스트 */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {reviews.map((data) => (
           <div
             key={data.id}

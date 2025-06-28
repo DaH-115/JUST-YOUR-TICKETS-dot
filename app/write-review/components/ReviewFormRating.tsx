@@ -1,5 +1,5 @@
 import { useFormContext, Controller } from "react-hook-form";
-import { ReviewFormValues } from "app/write-review/[id]/page";
+import { ReviewFormValues } from "app/write-review/types";
 import { IoStar, IoChevronDown } from "react-icons/io5";
 import {
   Listbox,

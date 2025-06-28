@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "firebase-config";
-import type { ReviewFormValues } from "app/write-review/[id]/page";
+import type { ReviewFormValues } from "app/write-review/types";
 import type { ReviewContainerProps } from "app/write-review/components/ReviewContainer";
 
 type useReviewDataProps = Pick<ReviewContainerProps, "mode" | "reviewId">;
@@ -28,7 +28,7 @@ export function useReviewData({ mode, reviewId }: useReviewDataProps) {
           }
         }
       } catch (error) {
-        console.error(error);
+        console.error("리뷰 데이터 로딩 실패:", error);
       } finally {
         setLoading(false);
       }

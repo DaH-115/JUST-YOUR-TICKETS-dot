@@ -1,5 +1,5 @@
 import { useFormContext, Controller } from "react-hook-form";
-import { ReviewFormValues } from "app/write-review/[id]/page";
+import { ReviewFormValues } from "app/write-review/types";
 
 export default function ReviewFormContent() {
   const { control, getValues } = useFormContext<ReviewFormValues>();

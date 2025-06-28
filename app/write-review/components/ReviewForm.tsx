@@ -9,7 +9,7 @@ import ReviewFormTitle from "app/write-review/components/ReviewFormTitle";
 import ReviewFormRating from "app/write-review/components/ReviewFormRating";
 import ReviewFormContent from "app/write-review/components/ReviewFormContent";
 import type { MovieDetails } from "lib/movies/fetchMovieDetails";
-import type { ReviewFormValues } from "app/write-review/[id]/page";
+import type { ReviewFormValues } from "app/write-review/types";
 import { useReviewForm } from "app/write-review/hook/useReviewForm";
 
 interface ReviewFormProps {
