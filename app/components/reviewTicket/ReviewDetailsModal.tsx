@@ -60,9 +60,10 @@ export default function ReviewDetailsModal({
           if (response.ok) {
             const data = await response.json();
             setLiked(data.isLiked);
+            return data;
           }
 
-          return response.json();
+          return null;
         });
       } catch (error) {
         console.error("좋아요 상태 확인 실패:", error);
@@ -194,7 +195,10 @@ export default function ReviewDetailsModal({
             userDisplayName={user.displayName || "익명"}
           />
           <span className="font-bold">{user.displayName}</span>
-          <ActivityBadge uid={user.uid} size="tiny" />
+          <ActivityBadge
+            activityLevel={(user as any).activityLevel}
+            size="tiny"
+          />
         </div>
       </div>
       <div className="mb-4 max-h-80 overflow-y-auto border-t-4 border-dotted pb-4 pt-4 scrollbar-hide">

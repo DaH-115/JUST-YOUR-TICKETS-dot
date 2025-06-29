@@ -14,6 +14,7 @@ import { FaHeart } from "react-icons/fa";
 import ActivityBadge from "app/components/ActivityBadge";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
+import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
 
 export default function ReviewTicket({
   reviews,
@@ -168,7 +169,16 @@ export default function ReviewTicket({
                   <p className="min-w-0 truncate text-xs">
                     {data.user.displayName ? data.user.displayName : "Guest"}
                   </p>
-                  <ActivityBadge uid={data.user.uid} size="tiny" />
+                  <ActivityBadge
+                    activityLevel={
+                      (
+                        data.user as SerializableUser & {
+                          activityLevel?: string;
+                        }
+                      ).activityLevel
+                    }
+                    size="tiny"
+                  />
                 </div>
               </div>
             </div>

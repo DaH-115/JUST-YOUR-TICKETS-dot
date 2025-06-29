@@ -247,7 +247,10 @@ export default function Comments({
                     <p className="text-xs font-bold text-gray-800">
                       {c.displayName || "익명"}
                     </p>
-                    <ActivityBadge uid={c.authorId} size="tiny" />
+                    <ActivityBadge
+                      activityLevel={(c as any).activityLevel}
+                      size="tiny"
+                    />
                   </div>
                   {c.authorId === reviewAuthorId && (
                     <span className="rounded-md bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">

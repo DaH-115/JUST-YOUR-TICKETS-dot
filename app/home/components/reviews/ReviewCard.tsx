@@ -75,7 +75,10 @@ export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
               userDisplayName={user.displayName || "사용자"}
             />
             <div className="line-clamp-1 max-w-[60%]">{user.displayName}</div>
-            <ActivityBadge uid={user.uid} size="tiny" />
+            <ActivityBadge
+              activityLevel={(user as any).activityLevel}
+              size="tiny"
+            />
           </div>
           <span className="text-xs font-medium text-gray-600">
             {formatDateOnly(content.createdAt)}

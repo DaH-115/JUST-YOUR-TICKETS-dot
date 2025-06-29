@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "firebase-config";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-  serverTimestamp,
-} from "firebase/firestore";
+import { adminFirestore } from "firebase-admin-config";
+import { FieldValue } from "firebase-admin/firestore";
 import { revalidatePath } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 
@@ -17,28 +10,43 @@ export async function GET(
   { params }: { params: { reviewId: string } },
 ) {
   try {
-    const commentsCol = collection(
-      db,
-      "movie-reviews",
-      params.reviewId,
-      "comments",
-    );
-    const q = query(commentsCol, orderBy("createdAt", "asc"));
-    const querySnapshot = await getDocs(q);
+    const commentsCol = adminFirestore
+      .collection("movie-reviews")
+      .doc(params.reviewId)
+      .collection("comments");
 
-    const comments = querySnapshot.docs.map((doc) => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        authorId: data.authorId,
-        displayName: data.displayName || "익명",
-        photoURL: data.photoURL,
-        content: data.content,
-        createdAt:
-          data.createdAt?.toDate().toISOString() || new Date().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString(),
-      };
-    });
+    const querySnapshot = await commentsCol.orderBy("createdAt", "asc").get();
+
+    const comments = await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        const data = doc.data();
+
+        // 댓글 작성자의 activityLevel 조회
+        let userActivityLevel = "NEWBIE"; // 기본값
+        try {
+          const userRef = adminFirestore.collection("users").doc(data.authorId);
+          const userSnap = await userRef.get();
+          if (userSnap.exists) {
+            const userData = userSnap.data();
+            userActivityLevel = userData?.activityLevel || "NEWBIE";
+          }
+        } catch (error) {
+          console.warn(`사용자 ${data.authorId}의 등급 조회 실패:`, error);
+        }
+
+        return {
+          id: doc.id,
+          authorId: data.authorId,
+          displayName: data.displayName || "익명",
+          photoURL: data.photoURL,
+          content: data.content,
+          activityLevel: userActivityLevel,
+          createdAt:
+            data.createdAt?.toDate().toISOString() || new Date().toISOString(),
+          updatedAt: data.updatedAt?.toDate().toISOString(),
+        };
+      }),
+    );
 
     return NextResponse.json({ comments });
   } catch (error) {
@@ -90,13 +98,14 @@ export async function POST(
       displayName: displayName || "익명",
       photoURL: photoURL || null,
       content: content.trim(),
-      createdAt: serverTimestamp(),
+      createdAt: FieldValue.serverTimestamp(),
     };
 
-    const docRef = await addDoc(
-      collection(db, "movie-reviews", params.reviewId, "comments"),
-      newComment,
-    );
+    const docRef = await adminFirestore
+      .collection("movie-reviews")
+      .doc(params.reviewId)
+      .collection("comments")
+      .add(newComment);
 
     // 캐시 재검증 (필요한 경우)
     revalidatePath("/ticket-list");

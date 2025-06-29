@@ -1,14 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "firebase-config";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { adminFirestore } from "firebase-admin-config";
+import { FieldValue } from "firebase-admin/firestore";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
+import { updateUserActivityLevel } from "lib/users/updateUserActivityLevel";
 
 // GET /api/reviews/[id] - 개별 리뷰 조회
 export async function GET(
@@ -16,10 +11,10 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   try {
-    const reviewRef = doc(db, "movie-reviews", params.id);
-    const reviewSnap = await getDoc(reviewRef);
+    const reviewRef = adminFirestore.collection("movie-reviews").doc(params.id);
+    const reviewSnap = await reviewRef.get();
 
-    if (!reviewSnap.exists()) {
+    if (!reviewSnap.exists) {
       return NextResponse.json(
         { error: "리뷰를 찾을 수 없습니다." },
         { status: 404 },
@@ -69,11 +64,11 @@ export async function PUT(
       );
     }
 
-    const reviewRef = doc(db, "movie-reviews", params.id);
+    const reviewRef = adminFirestore.collection("movie-reviews").doc(params.id);
 
     // 문서 존재 확인
-    const reviewSnap = await getDoc(reviewRef);
-    if (!reviewSnap.exists()) {
+    const reviewSnap = await reviewRef.get();
+    if (!reviewSnap.exists) {
       return NextResponse.json(
         { error: "리뷰를 찾을 수 없습니다." },
         { status: 404 },
@@ -84,7 +79,7 @@ export async function PUT(
     const reviewData = reviewSnap.data();
     const ownershipResult = verifyResourceOwnership(
       authResult.uid!,
-      reviewData.user.uid,
+      reviewData!.user.uid,
     );
     if (!ownershipResult.success) {
       return NextResponse.json(
@@ -94,11 +89,11 @@ export async function PUT(
     }
 
     // 리뷰 업데이트
-    await updateDoc(reviewRef, {
+    await reviewRef.update({
       "review.reviewTitle": updateData.reviewTitle,
       "review.reviewContent": updateData.reviewContent,
       "review.rating": updateData.rating,
-      "review.updatedAt": serverTimestamp(),
+      "review.updatedAt": FieldValue.serverTimestamp(),
     });
 
     // 캐시 재검증
@@ -135,11 +130,11 @@ export async function DELETE(
       );
     }
 
-    const reviewRef = doc(db, "movie-reviews", params.id);
+    const reviewRef = adminFirestore.collection("movie-reviews").doc(params.id);
 
     // 문서 존재 확인
-    const reviewSnap = await getDoc(reviewRef);
-    if (!reviewSnap.exists()) {
+    const reviewSnap = await reviewRef.get();
+    if (!reviewSnap.exists) {
       return NextResponse.json(
         { error: "리뷰를 찾을 수 없습니다." },
         { status: 404 },
@@ -150,7 +145,7 @@ export async function DELETE(
     const reviewData = reviewSnap.data();
     const ownershipResult = verifyResourceOwnership(
       authResult.uid!,
-      reviewData.user.uid,
+      reviewData!.user.uid,
     );
     if (!ownershipResult.success) {
       return NextResponse.json(
@@ -159,8 +154,19 @@ export async function DELETE(
       );
     }
 
+    // 리뷰 삭제 전에 사용자 UID 저장
+    const userUid = reviewData!.user.uid;
+
     // 리뷰 삭제
-    await deleteDoc(reviewRef);
+    await reviewRef.delete();
+
+    // 사용자 등급 업데이트
+    try {
+      await updateUserActivityLevel(userUid);
+    } catch (error) {
+      console.error("사용자 등급 업데이트 실패:", error);
+      // 등급 업데이트 실패는 리뷰 삭제에 영향을 주지 않음
+    }
 
     // 캐시 재검증
     revalidatePath("/ticket-list");

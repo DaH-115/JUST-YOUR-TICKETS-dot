@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminFirestore } from "firebase-admin-config";
 import { revalidatePath } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
+import { fetchUserReviewCount } from "lib/users/fetchUserReviewCount";
 
 // GET /api/users/[uid] - 사용자 프로필 조회
 export async function GET(
@@ -9,6 +10,10 @@ export async function GET(
   { params }: { params: { uid: string } },
 ) {
   try {
+    const { searchParams } = new URL(req.url);
+    const includeStats = searchParams.get("includeStats") === "true";
+    const includeFullStats = searchParams.get("includeFullStats") === "true";
+
     // Firebase Admin SDK로 토큰 검증
     const authResult = await verifyAuthToken(req);
     if (!authResult.success) {
@@ -41,15 +46,87 @@ export async function GET(
     }
 
     const userData = userSnap.data();
-
-    return NextResponse.json({
+    const responseData: any = {
       provider: userData?.provider,
       biography: userData?.biography,
       createdAt:
         userData?.createdAt?.toDate().toISOString() || new Date().toISOString(),
       updatedAt:
         userData?.updatedAt?.toDate().toISOString() || new Date().toISOString(),
-    });
+    };
+
+    // 기본 통계 정보가 요청된 경우 리뷰 개수 추가
+    if (includeStats) {
+      // DB에 저장된 reviewCount가 있으면 사용, 없으면 계산
+      if (userData?.reviewCount !== undefined) {
+        responseData.reviewCount = userData.reviewCount;
+      } else {
+        responseData.reviewCount = await fetchUserReviewCount(params.uid);
+      }
+
+      // activityLevel도 함께 반환
+      if (userData?.activityLevel) {
+        responseData.activityLevel = userData.activityLevel;
+      }
+    }
+
+    // 전체 통계 정보가 요청된 경우
+    if (includeFullStats) {
+      // 1. 내가 쓴 리뷰 개수 - DB에 저장된 값 우선 사용
+      let myReviewsCount;
+      if (userData?.reviewCount !== undefined) {
+        myReviewsCount = userData.reviewCount;
+      } else {
+        myReviewsCount = await fetchUserReviewCount(params.uid);
+      }
+
+      // 2. 좋아요한 리뷰 개수 (실제 존재하는 리뷰만 카운트)
+      const likesQuery = adminFirestore
+        .collection("review-likes")
+        .where("uid", "==", params.uid);
+
+      const likesSnapshot = await likesQuery.get();
+      const likedReviewIds = likesSnapshot.docs.map(
+        (doc) => doc.data().reviewId,
+      );
+
+      // 실제 존재하는 리뷰들만 필터링
+      let validLikedCount = 0;
+      const cleanupPromises: Promise<void>[] = [];
+
+      for (const reviewId of likedReviewIds) {
+        const reviewDoc = await adminFirestore
+          .collection("movie-reviews")
+          .doc(reviewId)
+          .get();
+
+        if (reviewDoc.exists) {
+          validLikedCount++;
+        } else {
+          // 존재하지 않는 리뷰에 대한 좋아요 데이터 정리
+          const likeDoc = likesSnapshot.docs.find(
+            (doc) => doc.data().reviewId === reviewId,
+          );
+          if (likeDoc) {
+            cleanupPromises.push(likeDoc.ref.delete().then(() => {}));
+          }
+        }
+      }
+
+      // 백그라운드에서 정리 작업 실행
+      if (cleanupPromises.length > 0) {
+        Promise.all(cleanupPromises).catch((error) => {
+          console.warn("좋아요 데이터 정리 중 오류:", error);
+        });
+      }
+
+      responseData.stats = {
+        myTicketsCount: myReviewsCount,
+        likedTicketsCount: validLikedCount,
+      };
+    }
+
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error("사용자 프로필 조회 실패:", error);
     return NextResponse.json(

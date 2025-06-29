@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
-import { db } from "firebase-config";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { adminFirestore } from "firebase-admin-config";
+import { FieldValue } from "firebase-admin/firestore";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
+import { updateUserActivityLevel } from "lib/users/updateUserActivityLevel";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -53,13 +54,23 @@ export async function POST(req: NextRequest) {
       user: reviewData.user,
       review: {
         ...reviewData.review,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
         likeCount: 0,
       },
     };
 
-    const docRef = await addDoc(collection(db, "movie-reviews"), newReview);
+    const docRef = await adminFirestore
+      .collection("movie-reviews")
+      .add(newReview);
+
+    // 사용자 등급 업데이트
+    try {
+      await updateUserActivityLevel(reviewData.user.uid);
+    } catch (error) {
+      console.error("사용자 등급 업데이트 실패:", error);
+      // 등급 업데이트 실패는 리뷰 생성에 영향을 주지 않음
+    }
 
     // 캐시 재검증
     revalidatePath("/ticket-list");
