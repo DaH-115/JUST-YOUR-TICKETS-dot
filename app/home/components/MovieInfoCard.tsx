@@ -9,6 +9,7 @@ import { IoStar } from "react-icons/io5";
 import AnimatedOverview from "app/components/AnimatedOverview";
 import WriteBtn from "app/components/WriteBtn";
 import Tooltip from "app/components/Tooltip";
+import MovieRating from "app/components/MovieRating";
 
 export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   const { id, title, original_title, release_date, vote_average, overview } =
@@ -41,8 +42,9 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
 
           <h1 className="text-3xl font-bold md:text-3xl">{title}</h1>
 
-          <div className="ml-1 flex items-center">
+          <div className="flex items-center gap-2">
             <h2 className="text-gray-600 md:text-lg">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
+            {movie.rating && <MovieRating rating={movie.rating} />}
           </div>
         </div>
         <ul className="flex items-center space-x-2 overflow-x-scroll border-y-4 border-dotted p-2 text-sm scrollbar-hide md:text-xs">
@@ -102,8 +104,10 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
           </div>
         </div>
       </div>
-      {/* 리뷰 작성 버튼 */}
-      <WriteBtn movieId={id} size="large" />
+      <div className="p-2">
+        {/* 리뷰 작성 버튼 */}
+        <WriteBtn movieId={id} size="large" />
+      </div>
     </section>
   );
 }

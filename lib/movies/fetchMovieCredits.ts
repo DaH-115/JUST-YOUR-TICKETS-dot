@@ -41,7 +41,7 @@ export async function fetchMovieCredits(id: number): Promise<MovieCredits> {
 
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${TMDB_API_KEY}&language=ko-KR`,
-    { cache: "force-cache" },
+    { next: { revalidate: 86400 } }, // 24시간 캐시
   );
 
   if (!response.ok) {

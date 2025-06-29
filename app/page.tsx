@@ -6,6 +6,10 @@ import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
 import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
 import { fetchTrendingMovies } from "lib/movies/fetchTrendingMovies";
 import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
+import {
+  fetchMovieReleaseDates,
+  getKoreanRating,
+} from "lib/movies/fetchMovieReleaseDates";
 
 import { MovieDetailsProvider } from "store/context/movieDetailsContext";
 
@@ -42,38 +46,53 @@ export default async function Page() {
   const recommendMovie =
     nowPlayingMovies[randomLikeIndex] || nowPlayingMovies[0];
 
-  const [trailerData, credits, genreResponse] = await Promise.all([
-    fetchVideosMovies(recommendMovie.id).catch((error) => {
-      console.error(
-        `영화 ID ${recommendMovie.id}의 예고편 영상을 불러오는 중 오류가 발생했습니다:`,
-        error,
-      );
-      return { results: [] };
-    }),
-    fetchMovieCredits(recommendMovie.id).catch((error) => {
-      console.error(
-        `영화 ID ${recommendMovie.id}의 출연진 정보를 불러오는 중 오류가 발생했습니다:`,
-        error,
-      );
-      return { cast: [], crew: [] };
-    }),
-    fetchMovieDetails(recommendMovie.id).catch((error) => {
-      console.error(
-        `영화 ID ${recommendMovie.id}의 상세 정보를 불러오는 중 오류가 발생했습니다:`,
-        error,
-      );
-      return { genres: [] };
-    }),
-  ]);
+  const [trailerData, credits, genreResponse, releaseDates] = await Promise.all(
+    [
+      fetchVideosMovies(recommendMovie.id).catch((error) => {
+        console.error(
+          `영화 ID ${recommendMovie.id}의 예고편 영상을 불러오는 중 오류가 발생했습니다:`,
+          error,
+        );
+        return { results: [] };
+      }),
+      fetchMovieCredits(recommendMovie.id).catch((error) => {
+        console.error(
+          `영화 ID ${recommendMovie.id}의 출연진 정보를 불러오는 중 오류가 발생했습니다:`,
+          error,
+        );
+        return { cast: [], crew: [] };
+      }),
+      fetchMovieDetails(recommendMovie.id).catch((error) => {
+        console.error(
+          `영화 ID ${recommendMovie.id}의 상세 정보를 불러오는 중 오류가 발생했습니다:`,
+          error,
+        );
+        return { genres: [] };
+      }),
+      fetchMovieReleaseDates(recommendMovie.id).catch((error) => {
+        console.error(
+          `영화 ID ${recommendMovie.id}의 등급 정보를 불러오는 중 오류가 발생했습니다:`,
+          error,
+        );
+        return { id: recommendMovie.id, results: [] };
+      }),
+    ],
+  );
 
   const trailerKey = trailerData?.results?.[0]?.key || "";
   const genres = genreResponse?.genres?.map((genre) => genre.name) || [];
+
+  // 추천 영화에 한국 등급 정보 추가
+  const recommendMovieWithRating = {
+    ...recommendMovie,
+    koreanRating: getKoreanRating(releaseDates),
+  };
 
   return (
     <MovieDetailsProvider credits={credits} genres={genres}>
       <HomePage
         movieList={nowPlayingMovies}
-        recommendMovie={recommendMovie}
+        recommendMovie={recommendMovieWithRating}
         trailerKey={trailerKey}
         trendingMovies={trendingMovies}
         latestReviews={latestReviews}

@@ -1,98 +1,102 @@
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  limit,
-  getDocs,
-  getCountFromServer,
-  Query,
-  DocumentData,
-} from "firebase/firestore";
-import { db } from "firebase-config";
-import fetchReviewById from "lib/reviews/fetchReviewById";
+import { adminFirestore } from "firebase-admin-config";
+import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
-interface FetchLikedParams {
-  uid: string;
+interface FetchLikedReviewsParams {
   page: number;
   pageSize: number;
+  uid: string;
   search?: string;
 }
 
-// 1) liked-reviews 컬렉션 참조: 사용자가 '좋아요'한 리뷰의 ID 목록을 가져온다
-// 2) 쿼리 결과를 페이지네이션: page × pageSize 개수만큼 먼저 뽑고,
-//    JS slice로 실제 그 페이지 구간만 잘라서 반환
-// 3) 잘라낸 ID 목록으로 "fetchReviewById" 호출 → 상세 리뷰 가져온 뒤 Timestamp를 문자열로 변환
-// 4) 최종 ReviewDoc[] 형태로 반환
-
 export async function fetchLikedReviewsPaginated({
-  uid,
   page,
   pageSize,
+  uid,
   search = "",
-}: FetchLikedParams): Promise<{ reviews: ReviewDoc[]; totalPages: number }> {
-  // 1. uid 하위 liked-reviews 컬렉션 참조
-  // /users/{uid}/liked-reviews
-  const baseRef = collection(db, "users", uid, "liked-reviews");
+}: FetchLikedReviewsParams): Promise<{
+  reviews: ReviewDoc[];
+  totalPages: number;
+}> {
+  try {
+    // 1) 사용자가 좋아요한 리뷰 ID 목록 조회
+    const likesQuery = adminFirestore
+      .collection("review-likes")
+      .where("uid", "==", uid)
+      .orderBy("createdAt", "desc");
 
-  // 2. 검색어 유무에 따른 쿼리 구성
-  let countQuery: Query<DocumentData> = baseRef;
+    const likesSnapshot = await likesQuery.get();
+    const likedReviewIds = likesSnapshot.docs.map((doc) => doc.data().reviewId);
 
-  if (search) {
-    const end = search + "\uf8ff";
-    countQuery = query(
-      baseRef,
-      where("movieTitle", ">=", search),
-      where("movieTitle", "<=", end),
+    if (likedReviewIds.length === 0) {
+      return { reviews: [], totalPages: 0 };
+    }
+
+    // 2) 해당 리뷰들의 상세 정보 조회 및 사용자 등급 정보 추가
+    const reviewPromises = likedReviewIds.map(async (reviewId) => {
+      const reviewDoc = await adminFirestore
+        .collection("movie-reviews")
+        .doc(reviewId)
+        .get();
+
+      if (!reviewDoc.exists) return null;
+
+      const data = reviewDoc.data()!;
+      const createdIso = data.review.createdAt.toDate().toISOString();
+      const updatedIso = data.review.updatedAt.toDate().toISOString();
+
+      // 사용자의 activityLevel 조회
+      let userActivityLevel = "NEWBIE"; // 기본값
+      try {
+        const userRef = adminFirestore.collection("users").doc(data.user.uid);
+        const userSnap = await userRef.get();
+        if (userSnap.exists) {
+          const userData = userSnap.data();
+          userActivityLevel = userData?.activityLevel || "NEWBIE";
+        }
+      } catch (error) {
+        console.warn(`사용자 ${data.user.uid}의 등급 조회 실패:`, error);
+      }
+
+      return {
+        id: reviewDoc.id,
+        user: {
+          ...data.user,
+          activityLevel: userActivityLevel,
+        },
+        review: {
+          ...data.review,
+          createdAt: createdIso,
+          updatedAt: updatedIso,
+        },
+      };
+    });
+
+    const allReviews = (await Promise.all(reviewPromises)).filter(
+      (review): review is ReviewDoc => review !== null,
     );
+
+    // 3) 검색 필터링 (클라이언트 사이드에서 처리)
+    let filteredReviews = allReviews;
+    if (search) {
+      const searchLower = search.toLowerCase();
+      filteredReviews = allReviews.filter(
+        (review) =>
+          review.review.movieTitle.toLowerCase().includes(searchLower) ||
+          review.review.reviewTitle.toLowerCase().includes(searchLower) ||
+          review.review.reviewContent.toLowerCase().includes(searchLower),
+      );
+    }
+
+    // 4) 페이지네이션
+    const totalPages = Math.ceil(filteredReviews.length / pageSize);
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    const paginatedReviews = filteredReviews.slice(start, end);
+
+    return { reviews: paginatedReviews, totalPages };
+  } catch (error) {
+    console.error("좋아요한 리뷰 목록 조회 실패:", error);
+    return { reviews: [], totalPages: 0 };
   }
-
-  // 3. 총 개수 및 페이지 수 계산
-  const countSnap = await getCountFromServer(countQuery);
-  const totalCount = countSnap.data().count;
-  const totalPages = Math.ceil(totalCount / pageSize);
-
-  // 4. 페이징 쿼리
-  let pagedQuery: Query<DocumentData>;
-
-  if (search) {
-    // 검색어가 있을 때는 movieTitle로 먼저 정렬
-    pagedQuery = query(
-      countQuery,
-      orderBy("movieTitle", "asc"),
-      orderBy("likedAt", "desc"),
-      limit(page * pageSize),
-    );
-  } else {
-    // 검색어가 없을 때는 likedAt로만 정렬
-    pagedQuery = query(
-      countQuery,
-      orderBy("likedAt", "desc"),
-      limit(page * pageSize),
-    );
-  }
-
-  const snap = await getDocs(pagedQuery);
-
-  // 5. 리뷰 상세 정보 가져오기
-  const likedReviews = await Promise.all(
-    snap.docs.map(async (docSnap) => {
-      const reviewId = docSnap.id;
-      const reviewDoc = await fetchReviewById({ reviewId, uid });
-      return reviewDoc;
-    }),
-  );
-
-  // 6. null 제거
-  const reviews = likedReviews.filter((review) => review !== null);
-
-  // 7. 페이지 슬라이스
-  const start = (page - 1) * pageSize;
-  const pagedReviews = reviews.slice(start, start + pageSize);
-
-  return {
-    reviews: pagedReviews,
-    totalPages,
-  };
 }

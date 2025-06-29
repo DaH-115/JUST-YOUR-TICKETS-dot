@@ -1,15 +1,5 @@
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  limit,
-  getDocs,
-  getCountFromServer,
-  Query,
-  DocumentData,
-} from "firebase/firestore";
-import { db } from "firebase-config";
+import { adminFirestore } from "firebase-admin-config";
+import type { Query, DocumentData } from "firebase-admin/firestore";
 import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
 
 // UI에게 반환할, 문자열로 변환된 타입
@@ -44,65 +34,84 @@ export async function fetchReviewsPaginated({
   uid,
   search = "",
 }: FetchReviewsParams): Promise<{ reviews: ReviewDoc[]; totalPages: number }> {
-  // 1) 컬렉션, 필터
-  let base = collection(db, "movie-reviews") as Query<DocumentData>;
-  if (uid) base = query(base, where("user.uid", "==", uid));
+  // 1) 기본 컬렉션 참조
+  const baseCollection = adminFirestore.collection("movie-reviews");
 
-  // 2) countQuery 구성 (검색 포함)
-  let countQuery = base;
+  // 2) 쿼리 구성
+  let query: Query<DocumentData> = baseCollection;
+
+  // 사용자 필터 적용
+  if (uid) {
+    query = query.where("user.uid", "==", uid);
+  }
+
+  // 검색어가 있는 경우 필터 추가
   if (search) {
     const end = search + "\uf8ff";
-    countQuery = query(
-      countQuery,
-      where("review.movieTitle", ">=", search),
-      where("review.movieTitle", "<=", end),
-    );
+    query = query
+      .where("review.movieTitle", ">=", search)
+      .where("review.movieTitle", "<=", end);
   }
-  const countSnap = await getCountFromServer(countQuery);
-  const totalPages = Math.ceil(countSnap.data().count / pageSize);
 
-  // 3) docsQuery 구성
-  let docsQuery: Query<DocumentData>;
+  // 3) 전체 개수 조회
+  const countSnapshot = await query.count().get();
+  const totalPages = Math.ceil(countSnapshot.data().count / pageSize);
+
+  // 4) 데이터 조회 쿼리 구성
+  let docsQuery: Query<DocumentData> = query;
 
   if (search) {
     // 검색어가 있을 때는 movieTitle로 먼저 정렬 (범위 쿼리 제약사항)
-    docsQuery = query(
-      base,
-      where("review.movieTitle", ">=", search),
-      where("review.movieTitle", "<=", search + "\uf8ff"),
-      orderBy("review.movieTitle", "asc"),
-      orderBy("review.createdAt", "desc"),
-      limit(page * pageSize),
-    );
+    docsQuery = docsQuery
+      .orderBy("review.movieTitle", "asc")
+      .orderBy("review.createdAt", "desc")
+      .limit(page * pageSize);
   } else {
     // 검색어가 없을 때는 createdAt로만 정렬
-    docsQuery = query(
-      base,
-      orderBy("review.createdAt", "desc"),
-      limit(page * pageSize),
-    );
+    docsQuery = docsQuery
+      .orderBy("review.createdAt", "desc")
+      .limit(page * pageSize);
   }
 
-  // 4) 데이터 변환
-  const snap = await getDocs(docsQuery);
+  // 5) 데이터 조회
+  const snapshot = await docsQuery.get();
 
-  const all: ReviewDoc[] = snap.docs.map((doc) => {
-    const d = doc.data();
-    const createdIso = d.review.createdAt.toDate().toISOString();
-    const updatedIso = d.review.updatedAt.toDate().toISOString();
+  // 6) 데이터 변환 및 사용자 등급 정보 추가
+  const all: ReviewDoc[] = await Promise.all(
+    snapshot.docs.map(async (doc) => {
+      const data = doc.data();
+      const createdIso = data.review.createdAt.toDate().toISOString();
+      const updatedIso = data.review.updatedAt.toDate().toISOString();
 
-    return {
-      id: doc.id,
-      user: d.user,
-      review: {
-        ...d.review,
-        createdAt: createdIso,
-        updatedAt: updatedIso,
-      },
-    };
-  });
+      // 사용자의 activityLevel 조회
+      let userActivityLevel = "NEWBIE"; // 기본값
+      try {
+        const userRef = adminFirestore.collection("users").doc(data.user.uid);
+        const userSnap = await userRef.get();
+        if (userSnap.exists) {
+          const userData = userSnap.data();
+          userActivityLevel = userData?.activityLevel || "NEWBIE";
+        }
+      } catch (error) {
+        console.warn(`사용자 ${data.user.uid}의 등급 조회 실패:`, error);
+      }
 
-  // 5) 페이지 슬라이스
+      return {
+        id: doc.id,
+        user: {
+          ...data.user,
+          activityLevel: userActivityLevel,
+        },
+        review: {
+          ...data.review,
+          createdAt: createdIso,
+          updatedAt: updatedIso,
+        },
+      };
+    }),
+  );
+
+  // 7) 페이지 슬라이스
   const start = (page - 1) * pageSize;
   return {
     reviews: all.slice(start, start + pageSize),

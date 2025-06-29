@@ -72,7 +72,7 @@ export default function SearchPage({
             {...register("searchQuery")}
             type="search"
             placeholder="검색어를 입력하세요"
-            className="w-full rounded-full bg-white py-3 pl-4 pr-12 text-sm text-black focus:outline-none focus:ring-2 focus:ring-accent-300"
+            className="w-full rounded-full bg-white py-3 pl-4 pr-12 text-sm text-black focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1"
           />
           <button type="button" className="absolute right-4">
             <IoSearchOutline size={24} />
@@ -103,7 +103,7 @@ export default function SearchPage({
               지금 상영 중인 영화들을 확인하고 리뷰를 작성하세요
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-5 xl:grid-cols-6">
             {nowPlayingMovies.map((movie, idx) => (
               <SwiperCard key={movie.id} movie={movie} idx={idx} />
             ))}

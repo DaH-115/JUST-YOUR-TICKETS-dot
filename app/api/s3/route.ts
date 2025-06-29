@@ -39,15 +39,18 @@ export async function GET(request: Request) {
     );
   }
 
-  // 2. S3에서 파일을 가져오는 명령 생성
+  // 2. TTL 설정 (환경 변수 또는 기본 1시간)
+  const ttl = parseInt(process.env.S3_DOWNLOAD_URL_TTL || "3600", 10);
+
+  // 3. S3에서 파일을 가져오는 명령 생성
   const command = new GetObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET!,
     Key: key, // S3에 저장된 파일의 경로
   });
 
   try {
-    // 3. 1시간 유효한 다운로드용 presigned URL 생성
-    const url = await getSignedUrl(s3, command, { expiresIn: 60 * 60 }); // 1시간
+    // 4. 환경 변수로 설정된 TTL로 다운로드용 presigned URL 생성
+    const url = await getSignedUrl(s3, command, { expiresIn: ttl });
     return NextResponse.json({ url });
   } catch (err: any) {
     console.error("S3 download presign error:", err);

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
+import { MdPerson, MdLogout } from "react-icons/md";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { usePresignedUrl } from "app/hooks/usePresignedUrl";
 
@@ -70,13 +71,14 @@ export default function HeaderDropDownMenu({
       <MenuItems
         modal={false}
         transition
-        className="absolute -right-4 top-full z-10 mt-4 min-w-40 origin-top overflow-hidden rounded-lg bg-white shadow-xl transition duration-200 ease-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150"
+        className="absolute -right-4 top-full z-10 mt-4 min-w-32 origin-top overflow-hidden rounded-lg bg-white shadow-xl transition duration-200 ease-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150"
       >
         <MenuItem>
           <Link
             href="/my-page"
-            className="block w-full px-4 py-3 text-left text-sm font-medium text-gray-700 transition-colors data-[focus]:bg-gray-50 data-[focus]:text-gray-900"
+            className="flex w-full items-center px-4 py-3 text-left text-xs font-medium text-gray-700 transition-colors data-[focus]:bg-gray-50 data-[focus]:text-gray-900"
           >
+            <MdPerson className="mr-2 text-sm" />
             My Page
           </Link>
         </MenuItem>
@@ -85,8 +87,9 @@ export default function HeaderDropDownMenu({
           <MenuItem>
             <button
               onClick={logoutHandler}
-              className="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 transition-colors data-[focus]:bg-gray-50 data-[focus]:text-red-600"
+              className="flex w-full items-center px-4 py-3 text-left text-xs font-medium text-gray-700 transition-colors data-[focus]:bg-gray-50 data-[focus]:text-red-600"
             >
+              <MdLogout className="mr-2 text-sm" />
               Logout
             </button>
           </MenuItem>

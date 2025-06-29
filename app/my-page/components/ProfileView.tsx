@@ -27,16 +27,50 @@ export default function ProfileView() {
   const {
     myTicketsCount,
     likedTicketsCount,
+    activityLevel: dbActivityLevel,
     loading: statsLoading,
   } = useProfileStats(uid);
 
-  // 활동 레벨 계산
+  // 활동 레벨 - DB에서 가져온 값 우선 사용, 없으면 계산
   const activityLevel = useMemo(() => {
     if (statsLoading) {
       return getLoadingActivityLevel();
     }
+
+    // DB에서 가져온 activityLevel이 있으면 사용
+    if (dbActivityLevel) {
+      switch (dbActivityLevel) {
+        case "EXPERT":
+          return {
+            label: "EXPERT",
+            badgeColor: "bg-purple-100 text-purple-700",
+            bgGradient: "from-purple-50 to-purple-100",
+          };
+        case "ACTIVE":
+          return {
+            label: "ACTIVE",
+            badgeColor: "bg-blue-100 text-blue-700",
+            bgGradient: "from-blue-50 to-blue-100",
+          };
+        case "REGULAR":
+          return {
+            label: "REGULAR",
+            badgeColor: "bg-green-100 text-green-700",
+            bgGradient: "from-green-50 to-green-100",
+          };
+        case "NEWBIE":
+        default:
+          return {
+            label: "NEWBIE",
+            badgeColor: "bg-yellow-100 text-yellow-700",
+            bgGradient: "from-yellow-50 to-yellow-100",
+          };
+      }
+    }
+
+    // 백업: 리뷰 개수로 계산
     return getActivityLevel(myTicketsCount);
-  }, [statsLoading, myTicketsCount]);
+  }, [statsLoading, dbActivityLevel, myTicketsCount]);
 
   const logoutHandler = useCallback(async () => {
     try {

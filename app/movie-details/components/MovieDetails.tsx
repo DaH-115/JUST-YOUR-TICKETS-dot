@@ -6,6 +6,7 @@ import convertRuntime from "app/movie-details/utils/convertRuntime";
 import { IoStar } from "react-icons/io5";
 import WriteBtn from "app/components/WriteBtn";
 import MoviePoster from "app/components/MoviePoster";
+import MovieRating from "app/components/MovieRating";
 import Loading from "app/loading";
 
 type MovieDetailCardProps = {
@@ -51,9 +52,14 @@ export default function MovieDetailCard({
               <h1 className="mb-3 inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
                 MOVIE DETAILS
               </h1>
-              <h2 className="break-keep text-3xl font-bold">
-                {movieDetails.title}
-              </h2>
+              <div className="mb-2 flex items-center gap-3">
+                <h2 className="break-keep text-3xl font-bold">
+                  {movieDetails.title}
+                </h2>
+                {movieDetails.rating && (
+                  <MovieRating rating={movieDetails.rating} showLabel={true} />
+                )}
+              </div>
               <div className="flex items-center">
                 <p className="text-gray-600">
                   {movieDetails.original_title}(

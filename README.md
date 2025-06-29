@@ -48,6 +48,7 @@ yarn build
 ### Backend & Database
 
 - **Firebase Authentication** - 다중 인증 (Google, GitHub, Email)
+- **Firebase Admin SDK** - 서버 사이드 JWT 토큰 검증
 - **Firestore** - 실시간 NoSQL 데이터베이스
 - **AWS S3** - Presigned URL 기반 이미지 저장 및 스트리밍
 - **TMDB API** - 영화 정보 및 트레일러
@@ -61,10 +62,12 @@ yarn build
 
 ### 🔐 보안 및 인증
 
+- **Firebase Admin SDK** - 프로덕션 레벨 JWT 토큰 검증
 - **다중 인증 방식** - 이메일/비밀번호, Google, GitHub 소셜 로그인
 - **비밀번호 변경** - 이메일 사용자를 위한 2단계 비밀번호 변경
 - **로그인 상태 유지** - 브라우저/세션 저장소 선택 가능
 - **닉네임 중복 검사** - 실시간 중복 확인 및 자동 생성
+- **JWT 토큰 자동 갱신** - 만료 시 자동 재시도 로직
 
 ### 🎨 사용자 경험
 
@@ -87,18 +90,349 @@ yarn build
 - **ARIA 속성** - 접근성 향상
 - **키보드 네비게이션** - 접근성을 위한 키보드 지원
 
+## 🚀 RESTful API
+
+완전한 CRUD 작업을 지원하는 RESTful API를 구현했습니다.
+
+### 🔐 인증 API
+
+#### `POST /api/auth/signup`
+
+이메일 회원가입을 처리합니다.
+
+**요청 본문:**
+
+```json
+{
+  "displayName": "사용자닉네임",
+  "email": "user@example.com",
+  "password": "password123!"
+}
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "message": "회원가입이 완료되었습니다.",
+  "data": {
+    "uid": "user123",
+    "email": "user@example.com",
+    "displayName": "사용자닉네임"
+  }
+}
+```
+
+#### `POST /api/auth/social-setup`
+
+소셜 로그인 후 사용자 프로필을 설정합니다.
+
+**요청 헤더:**
+
+- `Authorization: Bearer <JWT_TOKEN>`
+
+**요청 본문:**
+
+```json
+{
+  "provider": "google" // or "github"
+}
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "message": "로그인 성공",
+  "data": {
+    "uid": "user123",
+    "isNewUser": false,
+    "displayName": "사용자닉네임",
+    "provider": "google"
+  }
+}
+```
+
+#### `POST /api/auth/check-availability`
+
+닉네임 또는 이메일 중복을 확인합니다.
+
+**요청 본문:**
+
+```json
+{
+  "type": "displayName", // or "email"
+  "value": "확인할값"
+}
+```
+
+**응답:**
+
+```json
+{
+  "available": true,
+  "message": "사용 가능한 닉네임입니다."
+}
+```
+
+### 리뷰 API
+
+#### `GET /api/reviews`
+
+리뷰 목록을 조회합니다.
+
+**쿼리 파라미터:**
+
+- `page` (number): 페이지 번호 (기본값: 1)
+- `pageSize` (number): 페이지 크기 (기본값: 10)
+- `uid` (string, optional): 특정 사용자의 리뷰만 조회
+- `search` (string, optional): 검색어
+
+#### `POST /api/reviews`
+
+새 리뷰를 생성합니다.
+
+**요청 본문:**
+
+```json
+{
+  "user": {
+    "uid": "string",
+    "displayName": "string",
+    "photoURL": "string"
+  },
+  "review": {
+    "movieId": 123,
+    "movieTitle": "영화 제목",
+    "reviewTitle": "리뷰 제목",
+    "reviewContent": "리뷰 내용",
+    "rating": 5
+  }
+}
+```
+
+#### `GET /api/reviews/[id]`
+
+개별 리뷰를 조회합니다.
+
+#### `PUT /api/reviews/[id]`
+
+리뷰를 수정합니다.
+
+**요청 본문:**
+
+```json
+{
+  "reviewTitle": "수정된 제목",
+  "reviewContent": "수정된 내용",
+  "rating": 4
+}
+```
+
+#### `DELETE /api/reviews/[id]`
+
+리뷰를 삭제합니다.
+
+### 좋아요 API
+
+#### `POST /api/reviews/[id]/like`
+
+리뷰에 좋아요를 추가합니다.
+
+**요청 본문:**
+
+```json
+{
+  "movieTitle": "영화 제목"
+}
+```
+
+#### `DELETE /api/reviews/[id]/like`
+
+리뷰의 좋아요를 취소합니다.
+
+#### `GET /api/reviews/[id]/like`
+
+현재 사용자의 좋아요 상태를 확인합니다.
+
+**응답:**
+
+```json
+{
+  "isLiked": true
+}
+```
+
+### 사용자 프로필 API
+
+#### `GET /api/users/[uid]`
+
+사용자 프로필 정보를 조회합니다.
+
+**응답:**
+
+```json
+{
+  "provider": "google",
+  "biography": "영화를 사랑하는 개발자입니다.",
+  "createdAt": "2023-01-01T00:00:00.000Z",
+  "updatedAt": "2023-01-02T00:00:00.000Z"
+}
+```
+
+#### `PUT /api/users/[uid]`
+
+사용자 프로필을 업데이트합니다.
+
+**요청 본문:**
+
+```json
+{
+  "biography": "새로운 자기소개",
+  "displayName": "새로운닉네임"
+}
+```
+
+**응답:**
+
+```json
+{
+  "success": true,
+  "message": "프로필이 성공적으로 업데이트되었습니다.",
+  "data": {
+    "biography": "새로운 자기소개",
+    "displayName": "새로운닉네임",
+    "updatedAt": "2023-01-02T00:00:00.000Z"
+  }
+}
+```
+
+### 댓글 API
+
+#### `GET /api/comments/[reviewId]`
+
+특정 리뷰의 댓글 목록을 조회합니다.
+
+**응답:**
+
+```json
+{
+  "comments": [
+    {
+      "id": "string",
+      "authorId": "string",
+      "displayName": "string",
+      "photoURL": "string",
+      "content": "댓글 내용",
+      "createdAt": "2023-01-01T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+#### `POST /api/comments/[reviewId]`
+
+새 댓글을 생성합니다.
+
+**요청 본문:**
+
+```json
+{
+  "authorId": "string",
+  "displayName": "string",
+  "photoURL": "string",
+  "content": "댓글 내용"
+}
+```
+
+#### `PUT /api/comments/[reviewId]/[commentId]`
+
+댓글을 수정합니다.
+
+**요청 본문:**
+
+```json
+{
+  "content": "수정된 댓글 내용"
+}
+```
+
+#### `DELETE /api/comments/[reviewId]/[commentId]`
+
+댓글을 삭제합니다.
+
+### 기타 API
+
+#### `GET /api/reviews/liked`
+
+좋아요한 리뷰 목록을 조회합니다.
+
+#### `GET /api/reviews/search`
+
+리뷰를 검색합니다.
+
+#### `GET /api/s3`, `POST /api/s3`
+
+AWS S3 파일 업로드용 Presigned URL을 생성합니다.
+
+#### `GET /api/tmdb/search`
+
+TMDB API를 통해 영화를 검색합니다.
+
 ## 📁 프로젝트 구조
 
 ```
 ├── app/                 # Next.js App Router
 │   ├── components/      # 공통 컴포넌트
-│   ├── api/            # API 라우트 (S3, TMDB)
+│   ├── api/            # RESTful API 라우트
+│   │   ├── reviews/    # 리뷰 CRUD API
+│   │   ├── comments/   # 댓글 CRUD API
+│   │   ├── s3/        # 파일 업로드 API
+│   │   └── tmdb/      # 영화 검색 API
 │   ├── my-page/        # 프로필 관리 페이지
 │   └── [pages]/        # 페이지 컴포넌트
 ├── lib/                # 유틸리티 함수
 ├── store/              # 상태 관리 (Redux, Context)
 └── firebase-config/    # Firebase 설정
 ```
+
+## 🔐 Firebase Admin SDK 보안
+
+프로덕션 레벨의 보안을 위해 Firebase Admin SDK를 도입했습니다.
+
+### 보안 강화 사항
+
+- **JWT 토큰 검증**: 위조 불가능한 Firebase ID Token 사용
+- **자동 토큰 만료**: 1시간 후 자동 만료로 보안 위험 최소화
+- **서명 검증**: Firebase 공개키로 토큰 무결성 검증
+- **토큰 취소**: 계정 보안 침해 시 즉시 토큰 무효화 가능
+- **자동 갱신**: 토큰 만료 시 사용자 개입 없이 자동 갱신
+
+### 인증 플로우
+
+```typescript
+// 클라이언트: Firebase ID Token 발급
+const idToken = await user.getIdToken();
+
+// 서버: Admin SDK로 토큰 검증
+const decodedToken = await admin.auth().verifyIdToken(idToken);
+const uid = decodedToken.uid; // 검증된 사용자 ID
+```
+
+### 보안 API 엔드포인트
+
+모든 인증이 필요한 API는 JWT 토큰 검증을 통과해야 합니다:
+
+- `POST /api/reviews` - 리뷰 생성 (작성자 본인만)
+- `PUT /api/reviews/[id]` - 리뷰 수정 (작성자 본인만)
+- `DELETE /api/reviews/[id]` - 리뷰 삭제 (작성자 본인만)
+- `POST /api/comments/[reviewId]` - 댓글 생성 (인증된 사용자)
+- `PUT /api/comments/[reviewId]/[commentId]` - 댓글 수정 (작성자 본인만)
+- `DELETE /api/comments/[reviewId]/[commentId]` - 댓글 삭제 (작성자 본인만)
+
+자세한 구현 가이드는 [Firebase Admin SDK 가이드](./docs/FIREBASE_ADMIN_SDK_GUIDE.md)를 참조하세요.
 
 ## 📝 버전 히스토리
 

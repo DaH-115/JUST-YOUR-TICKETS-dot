@@ -9,22 +9,8 @@ import { useAlert } from "store/context/alertContext";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import InputField from "app/components/InputField";
 import DuplicateCheckButton from "app/components/DuplicateCheckButton";
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  fetchSignInMethodsForEmail,
-} from "firebase/auth";
-import { db, isAuth } from "firebase-config";
-import {
-  collection,
-  doc,
-  getDocs,
-  limit,
-  query,
-  runTransaction,
-  serverTimestamp,
-  where,
-} from "firebase/firestore";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { isAuth } from "firebase-config";
 
 const signupSchema = z
   .object({
@@ -103,20 +89,31 @@ export default function SignUpPage() {
     }
     setIsCheckingName(true);
     try {
-      const q = query(
-        collection(db, "users"),
-        where("displayName", "==", displayName),
-        limit(1),
-      );
-      const snap = await getDocs(q);
-      if (snap.empty) {
+      const response = await fetch("/api/auth/check-availability", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "displayName",
+          value: displayName,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "중복 확인에 실패했습니다.");
+      }
+
+      if (result.available) {
         setIsDisplayNameAvailable(true);
-        showSuccessHandler("중복 확인", "사용 가능한 닉네임입니다.");
+        showSuccessHandler("중복 확인", result.message);
       } else {
         setIsDisplayNameAvailable(false);
-        showErrorHandler("중복 확인", "이미 사용 중인 닉네임입니다.");
+        showErrorHandler("중복 확인", result.message);
       }
-    } catch (error) {
+    } catch (error: any) {
       const { title, message } = firebaseErrorHandler(error);
       showErrorHandler(title, message);
       setIsDisplayNameAvailable(false);
@@ -134,15 +131,31 @@ export default function SignUpPage() {
     }
     setIsCheckingEmail(true);
     try {
-      const methods = await fetchSignInMethodsForEmail(isAuth, email);
-      if (methods.length === 0) {
+      const response = await fetch("/api/auth/check-availability", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "email",
+          value: email,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "중복 확인에 실패했습니다.");
+      }
+
+      if (result.available) {
         setIsEmailAvailable(true);
-        showSuccessHandler("중복 확인", "사용 가능한 이메일입니다.");
+        showSuccessHandler("중복 확인", result.message);
       } else {
         setIsEmailAvailable(false);
-        showErrorHandler("중복 확인", "이미 사용 중인 이메일입니다.");
+        showErrorHandler("중복 확인", result.message);
       }
-    } catch (error) {
+    } catch (error: any) {
       const { title, message } = firebaseErrorHandler(error);
       showErrorHandler(title, message);
       setIsEmailAvailable(false);
@@ -157,41 +170,34 @@ export default function SignUpPage() {
       setIsLoading(true);
       try {
         const { displayName, email, password } = data;
-        // 1. 계정 생성
-        const { user } = await createUserWithEmailAndPassword(
-          isAuth,
-          email,
-          password,
-        );
-        // 2. 프로필에 디스플레이네임 설정
-        await updateProfile(user, { displayName });
-        // 3. Firestore 트랜잭션
-        await runTransaction(db, async (transaction) => {
-          const usernameRef = doc(db, "usernames", displayName);
-          const usernameSnap = await transaction.get(usernameRef);
-          if (usernameSnap.exists()) {
-            throw new Error("이미 사용 중인 닉네임입니다.");
-          }
-          transaction.set(usernameRef, {
-            uid: user.uid,
-            createdAt: serverTimestamp(),
-          });
 
-          const userRef = doc(db, "users", user.uid);
-          transaction.set(userRef, {
-            provider: "email",
-            biography: "Make a ticket for your own movie review.",
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          });
+        // REST API로 회원가입 처리
+        const response = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            displayName,
+            email,
+            password,
+          }),
         });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || "회원가입에 실패했습니다.");
+        }
+
+        // 회원가입 성공 후 자동 로그인
+        await signInWithEmailAndPassword(isAuth, email, password);
 
         showSuccessHandler("회원가입 완료", "환영합니다!");
         router.replace("/");
-      } catch (error) {
+      } catch (error: any) {
         const { title, message } = firebaseErrorHandler(error);
         showErrorHandler(title, message);
-        if (isAuth.currentUser) await isAuth.currentUser.delete();
       } finally {
         setIsLoading(false);
       }
@@ -331,7 +337,7 @@ export default function SignUpPage() {
                   isDisplayNameAvailable !== true ||
                   isEmailAvailable !== true
                 }
-                className={`w-full rounded-2xl bg-accent-400 p-4 font-semibold text-white transition-all duration-300 ${
+                className={`w-full rounded-xl bg-accent-400 p-4 font-semibold text-white transition-all duration-300 ${
                   isLoading ||
                   isDisplayNameAvailable !== true ||
                   isEmailAvailable !== true
