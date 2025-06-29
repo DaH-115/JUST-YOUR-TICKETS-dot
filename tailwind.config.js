@@ -69,16 +69,7 @@ module.exports = {
           "100%": { transform: "scale(1)", opacity: "1" },
         },
       },
-      animationDelay: {
-        200: "200ms",
-        300: "300ms",
-        400: "400ms",
-        500: "500ms",
-        600: "600ms",
-        700: "700ms",
-        1000: "1000ms",
-        2000: "2000ms",
-      },
+
       spacing: {
         18: "4.5rem",
         88: "22rem",
@@ -98,29 +89,15 @@ module.exports = {
           "-webkit-mask-image":
             "linear-gradient(to bottom, black 60%, transparent 100%)",
         },
-        ".animation-delay-200": {
-          "animation-delay": "200ms",
+
+        ".transition-delay-300": {
+          "transition-delay": "300ms",
         },
-        ".animation-delay-300": {
-          "animation-delay": "300ms",
+        ".transition-delay-500": {
+          "transition-delay": "500ms",
         },
-        ".animation-delay-400": {
-          "animation-delay": "400ms",
-        },
-        ".animation-delay-500": {
-          "animation-delay": "500ms",
-        },
-        ".animation-delay-600": {
-          "animation-delay": "600ms",
-        },
-        ".animation-delay-700": {
-          "animation-delay": "700ms",
-        },
-        ".animation-delay-1000": {
-          "animation-delay": "1000ms",
-        },
-        ".animation-delay-2000": {
-          "animation-delay": "2000ms",
+        ".transition-delay-700": {
+          "transition-delay": "700ms",
         },
       };
       addUtilities(newUtilities);
