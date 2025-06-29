@@ -52,7 +52,7 @@ export default function NicknameInput({
           <input
             id="displayName"
             {...register("displayName")}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1"
             placeholder="닉네임을 입력하세요"
           />
           {errors.displayName?.message && (

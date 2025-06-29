@@ -14,7 +14,7 @@ export default function WriteBtn({ movieId, size = "large" }: WriteBtnProps) {
         size === "large"
           ? "rounded-xl p-4 text-sm md:text-base"
           : "rounded-lg px-3 py-2 text-xs md:text-sm"
-      } group relative flex w-full items-center justify-between overflow-hidden bg-gradient-to-r from-primary-600 to-primary-700 text-white transition-all duration-300 hover:from-primary-700 hover:to-primary-800 hover:shadow-lg focus:outline-none`}
+      } group relative flex w-full items-center justify-between overflow-hidden bg-gradient-to-r from-primary-600 to-primary-700 text-white transition-all duration-300 hover:from-primary-700 hover:to-primary-800 hover:shadow-lg focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1`}
     >
       <FaPen
         className={`${

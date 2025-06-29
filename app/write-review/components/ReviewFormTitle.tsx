@@ -28,7 +28,7 @@ export default function ReviewFormTitle() {
             <input
               {...field}
               id="reviewTitle"
-              className={`w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3 text-gray-800 placeholder-gray-400 transition-all duration-300 focus:border-accent-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-accent-500/50 ${
+              className={`w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3 text-gray-800 placeholder-gray-400 transition-all duration-300 focus:border-accent-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1 ${
                 error ? "border-red-500 bg-red-50 ring-2 ring-red-500/30" : ""
               }`}
               placeholder="리뷰 제목을 입력해주세요"

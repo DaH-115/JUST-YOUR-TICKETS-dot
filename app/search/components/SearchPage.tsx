@@ -72,7 +72,7 @@ export default function SearchPage({
             {...register("searchQuery")}
             type="search"
             placeholder="검색어를 입력하세요"
-            className="w-full rounded-full bg-white py-3 pl-4 pr-12 text-sm text-black focus:outline-none focus:ring-2 focus:ring-accent-300"
+            className="w-full rounded-full bg-white py-3 pl-4 pr-12 text-sm text-black focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1"
           />
           <button type="button" className="absolute right-4">
             <IoSearchOutline size={24} />
