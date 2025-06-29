@@ -70,9 +70,7 @@ export async function apiCallWithTokenRefresh<T>(
           error.message?.includes("token expired") ||
           error.status === 401)
       ) {
-        console.log(
-          `토큰 만료로 인한 재시도 (${attempt + 1}/${maxRetries + 1})`,
-        );
+        // 토큰 만료로 인한 재시도
         attempt++;
         continue;
       }

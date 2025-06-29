@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { MovieTrailer } from "lib/movies/fetchVideosMovies";
 import VideoPlayer from "app/components/VideoPlayer";
-import { createOptimizedResizeHandler } from "app/utils/performanceOptimization";
 
 export default function AllMovieTrailers({
   movieTrailer,
@@ -24,7 +23,8 @@ export default function AllMovieTrailers({
 
   // 화면 크기에 따른 한 줄 개수 계산 (Tailwind 브레이크포인트 기준)
   useEffect(() => {
-    const updateItemsPerRow = createOptimizedResizeHandler((width) => {
+    const updateItemsPerRow = () => {
+      const width = window.innerWidth;
       let newItemsPerRow;
 
       if (width < BREAKPOINTS.sm) {
@@ -44,7 +44,7 @@ export default function AllMovieTrailers({
       if (newItemsPerRow !== currentItemsPerRow) {
         setCurrentItemsPerRow(newItemsPerRow);
       }
-    });
+    };
 
     // 초기 설정
     updateItemsPerRow();

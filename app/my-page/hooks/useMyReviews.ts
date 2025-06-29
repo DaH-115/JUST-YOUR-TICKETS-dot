@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  fetchReviewsPaginated,
-  ReviewDoc,
-} from "lib/reviews/fetchReviewsPaginated";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 interface UseMyReviewsOptions {
   uid: string;
@@ -43,17 +40,25 @@ export default function useMyReviews({
       setError(null);
 
       try {
-        const { reviews, totalPages } = await fetchReviewsPaginated({
+        const params = new URLSearchParams({
+          page: page.toString(),
+          pageSize: pageSize.toString(),
           uid,
-          page,
-          pageSize,
-          search,
+          ...(search && { search }),
         });
 
-        setReviews(reviews);
-        setTotalPages(totalPages);
+        const response = await fetch(`/api/reviews?${params}`);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch reviews");
+        }
+
+        const data = await response.json();
+
+        setReviews(data.reviews);
+        setTotalPages(data.totalPages);
       } catch (error: any) {
-        setError(error.message);
+        setError(error.message || "리뷰 데이터를 불러오는데 실패했습니다.");
       } finally {
         setLoading(false);
       }

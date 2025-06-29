@@ -92,7 +92,7 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
                   : "translate-y-8 opacity-0"
               }`}
             >
-              <header className="pb-6 md:pb-8">
+              <header className="py-6 md:py-8">
                 <div className="mb-2 flex items-center justify-center space-x-3 md:justify-start">
                   <h2 className="bg-gradient-to-r from-white via-accent-200 to-white bg-clip-text text-3xl font-bold tracking-tight text-transparent md:text-4xl">
                     Movie Trailer

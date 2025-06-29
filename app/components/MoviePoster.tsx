@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { debounce } from "app/utils/performanceOptimization";
+import debounce from "lodash/debounce";
 
 interface MoviePosterProps {
   posterPath?: string;
@@ -41,11 +41,11 @@ export default function MoviePoster({
       }
     };
 
-    // debounce로 ResizeObserver 콜백 최적화
-    const debouncedUpdate = debounce(updateOptimalSize, 100);
-
     // 초기 설정
     updateOptimalSize();
+
+    // 디바운스로 ResizeObserver 콜백 최적화 (100ms 지연)
+    const debouncedUpdate = debounce(updateOptimalSize, 100);
 
     // ResizeObserver로 크기 변화 감지
     const resizeObserver = new ResizeObserver(debouncedUpdate);

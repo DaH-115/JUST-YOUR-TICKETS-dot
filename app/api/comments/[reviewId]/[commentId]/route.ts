@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "firebase-config";
-import {
-  doc,
-  updateDoc,
-  deleteDoc,
-  getDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { adminFirestore } from "firebase-admin-config";
+import { FieldValue } from "firebase-admin/firestore";
 import { revalidatePath } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 
@@ -35,17 +29,15 @@ export async function PUT(
       );
     }
 
-    const commentRef = doc(
-      db,
-      "movie-reviews",
-      params.reviewId,
-      "comments",
-      params.commentId,
-    );
+    const commentRef = adminFirestore
+      .collection("movie-reviews")
+      .doc(params.reviewId)
+      .collection("comments")
+      .doc(params.commentId);
 
     // 댓글 존재 확인
-    const commentSnap = await getDoc(commentRef);
-    if (!commentSnap.exists()) {
+    const commentSnap = await commentRef.get();
+    if (!commentSnap.exists) {
       return NextResponse.json(
         { error: "댓글을 찾을 수 없습니다." },
         { status: 404 },
@@ -56,7 +48,7 @@ export async function PUT(
     const commentData = commentSnap.data();
     const ownershipResult = verifyResourceOwnership(
       authResult.uid!,
-      commentData.authorId,
+      commentData!.authorId,
     );
     if (!ownershipResult.success) {
       return NextResponse.json(
@@ -66,9 +58,9 @@ export async function PUT(
     }
 
     // 댓글 수정
-    await updateDoc(commentRef, {
+    await commentRef.update({
       content: content.trim(),
-      updatedAt: serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
     });
 
     // 캐시 재검증
@@ -102,17 +94,15 @@ export async function DELETE(
       );
     }
 
-    const commentRef = doc(
-      db,
-      "movie-reviews",
-      params.reviewId,
-      "comments",
-      params.commentId,
-    );
+    const commentRef = adminFirestore
+      .collection("movie-reviews")
+      .doc(params.reviewId)
+      .collection("comments")
+      .doc(params.commentId);
 
     // 댓글 존재 확인
-    const commentSnap = await getDoc(commentRef);
-    if (!commentSnap.exists()) {
+    const commentSnap = await commentRef.get();
+    if (!commentSnap.exists) {
       return NextResponse.json(
         { error: "댓글을 찾을 수 없습니다." },
         { status: 404 },
@@ -123,7 +113,7 @@ export async function DELETE(
     const commentData = commentSnap.data();
     const ownershipResult = verifyResourceOwnership(
       authResult.uid!,
-      commentData.authorId,
+      commentData!.authorId,
     );
     if (!ownershipResult.success) {
       return NextResponse.json(
@@ -133,7 +123,7 @@ export async function DELETE(
     }
 
     // 댓글 삭제
-    await deleteDoc(commentRef);
+    await commentRef.delete();
 
     // 캐시 재검증
     revalidatePath("/ticket-list");
