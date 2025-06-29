@@ -14,7 +14,7 @@ export async function fetchSimilarMovies(id: number): Promise<MovieList[]> {
 
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${TMDB_API_KEY}&language=ko-KR`,
-    { cache: "force-cache" },
+    { next: { revalidate: 86400 } }, // 24시간 캐시
   );
 
   if (!response.ok) {

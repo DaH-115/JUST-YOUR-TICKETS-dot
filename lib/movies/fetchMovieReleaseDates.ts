@@ -31,7 +31,6 @@ export async function fetchMovieReleaseDates(
     const response = await fetch(
       `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${TMDB_API_KEY}`,
       {
-        cache: "force-cache",
         next: { revalidate: 86400 }, // 24시간 캐시
       },
     );
@@ -76,17 +75,16 @@ export function normalizeRating(rating: string): string {
 
   // 대소문자 구분하지 않고 처리
   const normalizedInput = rating.trim();
+  const lowerInput = normalizedInput.toLowerCase();
 
-  // 한국 및 국제 등급 매핑
-  const ratingMap: Record<string, string> = {
+  // 한국 및 국제 등급 매핑 (우선순위: 정확한 매칭 → 소문자 매칭)
+  const exactRatingMap: Record<string, string> = {
     // 한국 등급 (TMDB에서 실제 제공되는 형식)
     All: "ALL",
-    all: "ALL",
     "12": "12",
     "15": "15",
     "18": "18",
     "Restricted Screening": "RESTRICTED",
-    "restricted screening": "RESTRICTED",
 
     // 미국 등급
     G: "ALL",
@@ -94,6 +92,7 @@ export function normalizeRating(rating: string): string {
     "PG-13": "15",
     R: "18",
     "NC-17": "18",
+    NR: "18", // Not Rated
 
     // 기타 국제 등급
     U: "ALL", // 영국
@@ -111,12 +110,34 @@ export function normalizeRating(rating: string): string {
     제한관람가: "RESTRICTED",
   };
 
-  // 직접 매핑된 값이 있으면 반환
-  if (ratingMap[normalizedInput]) {
-    return ratingMap[normalizedInput];
+  const lowerRatingMap: Record<string, string> = {
+    all: "ALL",
+    g: "ALL",
+    pg: "12",
+    "pg-13": "15",
+    r: "18",
+    "nc-17": "18",
+    nr: "18", // Not Rated
+    unrated: "18",
+    u: "ALL", // 영국
+    "12a": "12", // 영국
+    "restricted screening": "RESTRICTED",
+    fsk12: "12", // 독일
+    fsk16: "15", // 독일
+    fsk18: "18", // 독일
+  };
+
+  // 1. 정확한 매칭 확인
+  if (exactRatingMap[normalizedInput]) {
+    return exactRatingMap[normalizedInput];
   }
 
-  // 숫자로만 구성된 경우 처리
+  // 2. 소문자 매칭 확인
+  if (lowerRatingMap[lowerInput]) {
+    return lowerRatingMap[lowerInput];
+  }
+
+  // 3. 숫자로만 구성된 경우 처리
   const num = parseInt(normalizedInput, 10);
   if (!isNaN(num)) {
     if (num <= 6) return "ALL";
@@ -125,8 +146,10 @@ export function normalizeRating(rating: string): string {
     if (num >= 16) return "18";
   }
 
-  // 매핑되지 않은 경우 기본값
-  console.warn(`알 수 없는 연령등급: ${rating}, 기본값(18) 사용`);
+  // 매핑되지 않은 경우 기본값 (프로덕션에서는 로그 출력 안함)
+  if (process.env.NODE_ENV === "development") {
+    console.warn(`[연령등급] 알 수 없는 연령등급: ${rating}, 기본값(18) 사용`);
+  }
   return "18";
 }
 
