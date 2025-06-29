@@ -7,6 +7,7 @@ import { IoStar } from "react-icons/io5";
 import WriteBtn from "app/components/WriteBtn";
 import Tooltip from "app/components/Tooltip";
 import MoviePoster from "app/components/MoviePoster";
+import MovieRating from "app/components/MovieRating";
 
 export default function SwiperCard({
   idx,
@@ -49,8 +50,15 @@ export default function SwiperCard({
       <footer className="overflow-hidden rounded-xl bg-gradient-to-br from-white to-gray-50">
         {/* MOVIE TITLE */}
         <section className="border-b-4 border-dotted p-1 md:p-2">
-          <h3 className="truncate text-sm font-bold">{title}</h3>
-          <p className="truncate text-xs text-gray-600">{original_title}</p>
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <h3 className="line-clamp-1 text-sm font-bold">{title}</h3>
+              <p className="line-clamp-1 text-xs text-gray-600">
+                {original_title}
+              </p>
+            </div>
+            {movie.rating && <MovieRating rating={movie.rating} />}
+          </div>
         </section>
 
         {/* RATING & GENRES */}
@@ -80,6 +88,7 @@ export default function SwiperCard({
             )}
           </ul>
         </section>
+
         {/* REVIEW WRITE BUTTON */}
         <div className="p-1">
           <WriteBtn movieId={id} size={"small"} />

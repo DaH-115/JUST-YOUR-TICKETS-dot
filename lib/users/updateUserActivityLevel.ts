@@ -1,7 +1,7 @@
 import { adminFirestore } from "firebase-admin-config";
 import { FieldValue } from "firebase-admin/firestore";
-import { fetchUserReviewCount } from "./fetchUserReviewCount";
-import { getActivityLevel } from "../utils/getActivityLevel";
+import { fetchUserReviewCount } from "lib/users/fetchUserReviewCount";
+import { getActivityLevel } from "lib/utils/getActivityLevel";
 
 /**
  * 사용자의 활동 등급과 리뷰 개수를 업데이트합니다.
