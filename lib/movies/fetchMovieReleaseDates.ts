@@ -1,11 +1,69 @@
-// 캐시 시스템 - Map
-const cache = new Map<
-  number,
-  {
-    data: MovieReleaseDates;
-    timestamp: number;
+// 캐시 시스템
+const MAX_CACHE_SIZE = 1000;
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 24시간
+
+class LRUCache<K, V extends { timestamp: number }> {
+  private cache = new Map<K, V>();
+  private maxSize: number;
+
+  constructor(maxSize: number) {
+    this.maxSize = maxSize;
   }
->();
+
+  get(key: K): V | undefined {
+    const value = this.cache.get(key);
+    if (value) {
+      // 만료 체크
+      if (Date.now() - value.timestamp > CACHE_TTL) {
+        this.cache.delete(key);
+        return undefined;
+      }
+      // LRU: 접근한 항목을 맨 뒤로 이동
+      this.cache.delete(key);
+      this.cache.set(key, value);
+    }
+    return value;
+  }
+
+  set(key: K, value: V): void {
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    } else if (this.cache.size >= this.maxSize) {
+      // 가장 오래된 항목 제거
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey);
+      }
+    }
+    this.cache.set(key, value);
+  }
+
+  delete(key: K): boolean {
+    return this.cache.delete(key);
+  }
+
+  clear(): void {
+    this.cache.clear();
+  }
+
+  get size(): number {
+    return this.cache.size;
+  }
+
+  entries(): IterableIterator<[K, V]> {
+    return this.cache.entries();
+  }
+}
+
+const cache = new LRUCache<
+  number,
+  { data: MovieReleaseDates; timestamp: number }
+>(MAX_CACHE_SIZE);
+
+function setCache(id: number, data: MovieReleaseDates) {
+  if (typeof id !== "number" || isNaN(id)) return;
+  cache.set(id, { data, timestamp: Date.now() });
+}
 
 export interface ReleaseDate {
   certification: string;
@@ -30,14 +88,7 @@ export async function fetchMovieReleaseDates(
   // 1단계: 캐시 확인
   const cached = cache.get(id);
   if (cached) {
-    // 24시간 안에 가져온 데이터면 재사용
-    const oneDay = 24 * 60 * 60 * 1000;
-    if (Date.now() - cached.timestamp < oneDay) {
-      return cached.data;
-    } else {
-      // 오래된 데이터는 삭제
-      cache.delete(id);
-    }
+    return cached.data;
   }
 
   // 2단계: API 호출
@@ -55,7 +106,7 @@ export async function fetchMovieReleaseDates(
     const response = await fetch(
       `https://api.themoviedb.org/3/movie/${id}/release_dates?api_key=${TMDB_API_KEY}`,
       {
-        next: { revalidate: 86400 }, // 24시간 캐시
+        next: { revalidate: CACHE_TTL / 1000 }, // CACHE_TTL(밀리초) → 초 단위로 변환
       },
     );
 
@@ -82,10 +133,7 @@ export async function fetchMovieReleaseDates(
     }
 
     // 3단계: 캐시에 저장
-    cache.set(id, {
-      data,
-      timestamp: Date.now(),
-    });
+    setCache(id, data);
 
     return data;
   } catch (error) {
@@ -108,11 +156,8 @@ export async function fetchMultipleMovieReleaseDates(
   for (const id of movieIds) {
     const cached = cache.get(id);
     if (cached) {
-      const oneDay = 24 * 60 * 60 * 1000;
-      if (Date.now() - cached.timestamp < oneDay) {
-        results.set(id, cached.data);
-        continue; // 다음 영화로!
-      }
+      results.set(id, cached.data);
+      continue; // 다음 영화로!
     }
 
     // 캐시에 없으면 API 호출 목록에 추가
