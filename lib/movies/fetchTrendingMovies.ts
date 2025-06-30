@@ -1,7 +1,7 @@
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { fetchGenres } from "lib/movies/fetchGenres";
 import {
-  fetchMovieReleaseDates,
+  fetchMultipleMovieReleaseDates,
   getBestRating,
 } from "lib/movies/fetchMovieReleaseDates";
 
@@ -24,24 +24,26 @@ export async function fetchTrendingMovies(): Promise<MovieList[]> {
   const data = await response.json();
   const genreMap = await fetchGenres();
 
-  const moviesWithGenres = await Promise.all(
-    data.results.map(async (movie: MovieList) => {
-      let rating = null;
-      try {
-        const releaseDates = await fetchMovieReleaseDates(movie.id);
-        rating = getBestRating(releaseDates);
-      } catch {
-        rating = null;
-      }
-      return {
-        ...movie,
-        genres: movie.genre_ids
-          .map((genreId) => genreMap[genreId])
-          .filter(Boolean),
-        rating,
-      };
-    }),
-  );
+  // 1단계: 모든 영화 ID 수집
+  const movieIds = data.results.map((movie: MovieList) => movie.id);
+  console.log(`📋 처리할 영화: ${movieIds.length}개`);
+
+  // 2단계: 배치로 한 번에 처리
+  const ratingsMap = await fetchMultipleMovieReleaseDates(movieIds);
+
+  // 3단계: 결과 조합
+  const moviesWithGenres = data.results.map((movie: MovieList) => {
+    const ratingData = ratingsMap.get(movie.id);
+    const rating = ratingData ? getBestRating(ratingData) : null;
+
+    return {
+      ...movie,
+      genres: movie.genre_ids
+        .map((genreId) => genreMap[genreId])
+        .filter(Boolean),
+      rating,
+    };
+  });
 
   return moviesWithGenres;
 }

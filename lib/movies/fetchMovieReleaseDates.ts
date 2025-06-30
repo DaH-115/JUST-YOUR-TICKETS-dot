@@ -1,3 +1,12 @@
+// 캐시 시스템 - Map
+const cache = new Map<
+  number,
+  {
+    data: MovieReleaseDates;
+    timestamp: number;
+  }
+>();
+
 export interface ReleaseDate {
   certification: string;
   meaning: string;
@@ -14,9 +23,24 @@ export interface MovieReleaseDates {
   results: ReleaseDatesResult[];
 }
 
+//캐시 기능
 export async function fetchMovieReleaseDates(
   id: number,
 ): Promise<MovieReleaseDates> {
+  // 1단계: 캐시 확인
+  const cached = cache.get(id);
+  if (cached) {
+    // 24시간 안에 가져온 데이터면 재사용
+    const oneDay = 24 * 60 * 60 * 1000;
+    if (Date.now() - cached.timestamp < oneDay) {
+      return cached.data;
+    } else {
+      // 오래된 데이터는 삭제
+      cache.delete(id);
+    }
+  }
+
+  // 2단계: API 호출
   const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
   if (!TMDB_API_KEY) {
@@ -57,6 +81,12 @@ export async function fetchMovieReleaseDates(
       throw new Error("영화 등급 정보가 올바르지 않습니다.");
     }
 
+    // 3단계: 캐시에 저장
+    cache.set(id, {
+      data,
+      timestamp: Date.now(),
+    });
+
     return data;
   } catch (error) {
     if (error instanceof Error) {
@@ -67,217 +97,131 @@ export async function fetchMovieReleaseDates(
   }
 }
 
-// 등급 정보 정규화 함수
-export function normalizeRating(rating: string): string {
-  if (!rating || rating.trim() === "") {
-    return "18"; // 기본값
+// 배치 처리 함수
+export async function fetchMultipleMovieReleaseDates(
+  movieIds: number[],
+): Promise<Map<number, MovieReleaseDates | null>> {
+  const results = new Map<number, MovieReleaseDates | null>();
+  const needAPI = []; // API 호출이 필요한 영화들
+
+  // 1단계: 캐시부터 확인하기
+  for (const id of movieIds) {
+    const cached = cache.get(id);
+    if (cached) {
+      const oneDay = 24 * 60 * 60 * 1000;
+      if (Date.now() - cached.timestamp < oneDay) {
+        results.set(id, cached.data);
+        continue; // 다음 영화로!
+      }
+    }
+
+    // 캐시에 없으면 API 호출 목록에 추가
+    needAPI.push(id);
   }
 
-  // 대소문자 구분하지 않고 처리
-  const normalizedInput = rating.trim();
-  const lowerInput = normalizedInput.toLowerCase();
+  // 2단계: API 호출이 필요한 것들만 처리
+  if (needAPI.length > 0) {
+    const promises = needAPI.map(async (id) => {
+      try {
+        const data = await fetchMovieReleaseDates(id);
+        return { id, data, success: true };
+      } catch (error) {
+        return { id, data: null, success: false };
+      }
+    });
 
-  // 한국 및 국제 등급 매핑 (우선순위: 정확한 매칭 → 소문자 매칭)
-  const exactRatingMap: Record<string, string> = {
-    // 한국 등급 (TMDB에서 실제 제공되는 형식)
+    // 모든 API 호출이 끝날 때까지 기다리기
+    const apiResults = await Promise.all(promises);
+
+    // 결과 정리하기
+    for (const result of apiResults) {
+      results.set(result.id, result.data);
+    }
+  }
+
+  return results;
+}
+
+// 등급 정규화
+export function normalizeRating(rating: string): string {
+  if (!rating) return "18";
+
+  const ratingMap: Record<string, string> = {
     All: "ALL",
     "12": "12",
     "15": "15",
     "18": "18",
-    "Restricted Screening": "RESTRICTED",
-
-    // 미국 등급
     G: "ALL",
     PG: "12",
     "PG-13": "15",
     R: "18",
-    "NC-17": "18",
-    NR: "18", // Not Rated
-
-    // 기타 국제 등급
-    U: "ALL", // 영국
-    "12A": "12", // 영국
-    "16": "15", // 독일 등
-    FSK12: "12", // 독일
-    FSK16: "15", // 독일
-    FSK18: "18", // 독일
-
-    // 한글 표기
     전체관람가: "ALL",
     "12세관람가": "12",
     "15세관람가": "15",
     "18세관람가": "18",
-    제한관람가: "RESTRICTED",
   };
 
-  const lowerRatingMap: Record<string, string> = {
-    all: "ALL",
-    g: "ALL",
-    pg: "12",
-    "pg-13": "15",
-    r: "18",
-    "nc-17": "18",
-    nr: "18", // Not Rated
-    unrated: "18",
-    u: "ALL", // 영국
-    "12a": "12", // 영국
-    "restricted screening": "RESTRICTED",
-    fsk12: "12", // 독일
-    fsk16: "15", // 독일
-    fsk18: "18", // 독일
-  };
-
-  // 1. 정확한 매칭 확인
-  if (exactRatingMap[normalizedInput]) {
-    return exactRatingMap[normalizedInput];
-  }
-
-  // 2. 소문자 매칭 확인
-  if (lowerRatingMap[lowerInput]) {
-    return lowerRatingMap[lowerInput];
-  }
-
-  // 3. 숫자로만 구성된 경우 처리
-  const num = parseInt(normalizedInput, 10);
-  if (!isNaN(num)) {
-    if (num <= 6) return "ALL";
-    if (num <= 12) return "12";
-    if (num <= 15) return "15";
-    if (num >= 16) return "18";
-  }
-
-  // 매핑되지 않은 경우 기본값 (프로덕션에서는 로그 출력 안함)
-  if (process.env.NODE_ENV === "development") {
-    console.warn(`[연령등급] 알 수 없는 연령등급: ${rating}, 기본값(18) 사용`);
-  }
-  return "18";
+  return ratingMap[rating.trim()] || "18";
 }
 
-// 한국 등급 정보만 추출하는 헬퍼 함수
+// 최적 등급 추출
+export function getBestRating(releaseDates: MovieReleaseDates): string | null {
+  if (!releaseDates?.results?.length) return null;
+
+  // 한국 등급 우선
+  const kr = releaseDates.results.find((r) => r.iso_3166_1 === "KR");
+  if (kr?.release_dates?.[0]?.certification) {
+    return normalizeRating(kr.release_dates[0].certification);
+  }
+
+  // 미국 등급
+  const us = releaseDates.results.find((r) => r.iso_3166_1 === "US");
+  if (us?.release_dates?.[0]?.certification) {
+    return normalizeRating(us.release_dates[0].certification);
+  }
+
+  return null;
+}
+
+// 한국 등급만
 export function getKoreanRating(
   releaseDates: MovieReleaseDates,
 ): string | null {
-  const koreanResult = releaseDates.results.find(
-    (result) => result.iso_3166_1 === "KR",
-  );
-
-  if (koreanResult && koreanResult.release_dates.length > 0) {
-    const rating = koreanResult.release_dates[0].certification;
-    if (rating && rating.trim() !== "") {
-      return normalizeRating(rating);
-    }
-  }
-
-  return null;
-}
-
-// 미국 등급 정보만 추출하는 헬퍼 함수
-export function getUSRating(releaseDates: MovieReleaseDates): string | null {
-  const usResult = releaseDates.results.find(
-    (result) => result.iso_3166_1 === "US",
-  );
-
-  if (usResult && usResult.release_dates.length > 0) {
-    return usResult.release_dates[0].certification;
-  }
-
-  return null;
-}
-
-// 최적 등급 추출 함수 (한국 → 미국 → 기타)
-export function getBestRating(releaseDates: MovieReleaseDates): string | null {
-  if (
-    !releaseDates ||
-    !releaseDates.results ||
-    releaseDates.results.length === 0
-  ) {
-    return null;
-  }
-
-  // 1. 한국 등급 우선
   const kr = releaseDates.results.find((r) => r.iso_3166_1 === "KR");
-  if (kr && kr.release_dates.length > 0) {
-    for (const releaseDate of kr.release_dates) {
-      if (
-        releaseDate.certification &&
-        releaseDate.certification.trim() !== ""
-      ) {
-        const normalized = normalizeRating(releaseDate.certification);
-        if (process.env.NODE_ENV === "development") {
-          console.log(
-            `[연령등급] 한국: ${releaseDate.certification} → ${normalized}`,
-          );
-        }
-        return normalized;
-      }
-    }
-  }
-
-  // 2. 미국 등급
-  const us = releaseDates.results.find((r) => r.iso_3166_1 === "US");
-  if (us && us.release_dates.length > 0) {
-    for (const releaseDate of us.release_dates) {
-      if (
-        releaseDate.certification &&
-        releaseDate.certification.trim() !== ""
-      ) {
-        const normalized = normalizeRating(releaseDate.certification);
-        if (process.env.NODE_ENV === "development") {
-          console.log(
-            `[연령등급] 미국: ${releaseDate.certification} → ${normalized}`,
-          );
-        }
-        return normalized;
-      }
-    }
-  }
-
-  // 3. 기타 국가 (영국, 독일 등 우선순위)
-  const priorityCountries = ["GB", "DE", "FR", "CA", "AU"];
-  for (const countryCode of priorityCountries) {
-    const country = releaseDates.results.find(
-      (r) => r.iso_3166_1 === countryCode,
-    );
-    if (country && country.release_dates.length > 0) {
-      for (const releaseDate of country.release_dates) {
-        if (
-          releaseDate.certification &&
-          releaseDate.certification.trim() !== ""
-        ) {
-          const normalized = normalizeRating(releaseDate.certification);
-          if (process.env.NODE_ENV === "development") {
-            console.log(
-              `[연령등급] ${countryCode}: ${releaseDate.certification} → ${normalized}`,
-            );
-          }
-          return normalized;
-        }
-      }
-    }
-  }
-
-  // 4. 마지막으로 아무거나
-  for (const result of releaseDates.results) {
-    if (result.release_dates.length > 0) {
-      for (const releaseDate of result.release_dates) {
-        if (
-          releaseDate.certification &&
-          releaseDate.certification.trim() !== ""
-        ) {
-          const normalized = normalizeRating(releaseDate.certification);
-          if (process.env.NODE_ENV === "development") {
-            console.log(
-              `[연령등급] ${result.iso_3166_1}: ${releaseDate.certification} → ${normalized}`,
-            );
-          }
-          return normalized;
-        }
-      }
-    }
-  }
-
-  if (process.env.NODE_ENV === "development") {
-    console.log("[연령등급] 연령등급 정보를 찾을 수 없습니다.");
+  if (kr?.release_dates?.[0]?.certification) {
+    return normalizeRating(kr.release_dates[0].certification);
   }
   return null;
+}
+
+// 미국 등급만
+export function getUSRating(releaseDates: MovieReleaseDates): string | null {
+  const us = releaseDates.results.find((r) => r.iso_3166_1 === "US");
+  return us?.release_dates?.[0]?.certification || null;
+}
+
+// 유틸리티 함수들
+export function clearCache(): void {
+  cache.clear();
+  console.log("캐시가 모두 삭제되었습니다.");
+}
+
+export function getCacheSize(): number {
+  return cache.size;
+}
+
+export function getCacheStats(): {
+  size: number;
+  items: Array<{ id: number; timestamp: number; age: string }>;
+} {
+  const items = Array.from(cache.entries()).map(([id, cached]) => ({
+    id,
+    timestamp: cached.timestamp,
+    age: `${Math.round((Date.now() - cached.timestamp) / 1000 / 60)}분 전`,
+  }));
+
+  return {
+    size: cache.size,
+    items,
+  };
 }
