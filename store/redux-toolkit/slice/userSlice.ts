@@ -3,10 +3,11 @@ import { isAuth } from "firebase-config";
 import { RootState } from "..";
 
 export interface SerializableUser {
-  uid: string;
+  uid: string | null;
   email: string | null;
   displayName: string | null;
   photoURL: string | null;
+  activityLevel?: string;
 }
 
 export interface UserMetaData {

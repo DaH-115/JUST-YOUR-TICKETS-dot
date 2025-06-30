@@ -1,5 +1,9 @@
 import { useMemo } from "react";
-import { getActivityLevel, ActivityLevel } from "lib/utils/getActivityLevel";
+import {
+  getActivityLevel,
+  getActivityLevelInfo,
+  ActivityLevel,
+} from "lib/utils/getActivityLevel";
 
 interface ActivityBadgeProps {
   activityLevel?: string; // "NEWBIE", "REGULAR", "ACTIVE", "EXPERT"
@@ -16,34 +20,7 @@ export default function ActivityBadge({
   // activityLevel이 제공되면 해당 레벨 사용, 없으면 기본값(NEWBIE) 사용
   const computedActivityLevel = useMemo((): ActivityLevel => {
     if (activityLevel) {
-      // 문자열 레벨을 ActivityLevel 객체로 변환
-      switch (activityLevel) {
-        case "EXPERT":
-          return {
-            label: "EXPERT",
-            badgeColor: "bg-purple-100 text-purple-700",
-            bgGradient: "from-purple-50 to-purple-100",
-          };
-        case "ACTIVE":
-          return {
-            label: "ACTIVE",
-            badgeColor: "bg-blue-100 text-blue-700",
-            bgGradient: "from-blue-50 to-blue-100",
-          };
-        case "REGULAR":
-          return {
-            label: "REGULAR",
-            badgeColor: "bg-green-100 text-green-700",
-            bgGradient: "from-green-50 to-green-100",
-          };
-        case "NEWBIE":
-        default:
-          return {
-            label: "NEWBIE",
-            badgeColor: "bg-yellow-100 text-yellow-700",
-            bgGradient: "from-yellow-50 to-yellow-100",
-          };
-      }
+      return getActivityLevelInfo(activityLevel);
     }
     // 기본값: NEWBIE
     return getActivityLevel(0);

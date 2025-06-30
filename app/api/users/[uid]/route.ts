@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminAuth, adminFirestore } from "firebase-admin-config";
+import admin, { adminAuth, adminFirestore } from "firebase-admin-config";
 import { revalidatePath } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 import { fetchUserReviewCount } from "lib/users/fetchUserReviewCount";
@@ -94,29 +94,35 @@ export async function GET(
       let validLikedCount = 0;
       const cleanupPromises: Promise<void>[] = [];
 
-      for (const reviewId of likedReviewIds) {
-        const reviewDoc = await adminFirestore
-          .collection("movie-reviews")
-          .doc(reviewId)
-          .get();
-
-        if (reviewDoc.exists) {
-          validLikedCount++;
-        } else {
-          // 존재하지 않는 리뷰에 대한 좋아요 데이터 정리
-          const likeDoc = likesSnapshot.docs.find(
-            (doc) => doc.data().reviewId === reviewId,
-          );
-          if (likeDoc) {
-            cleanupPromises.push(likeDoc.ref.delete().then(() => {}));
-          }
+      if (likedReviewIds.length > 0) {
+        // Firestore 'in' 쿼리는 30개 아이템으로 제한되므로, 배열을 청크로 나눔
+        const chunks: string[][] = [];
+        for (let i = 0; i < likedReviewIds.length; i += 30) {
+          chunks.push(likedReviewIds.slice(i, i + 30));
         }
-      }
 
-      // 백그라운드에서 정리 작업 실행
-      if (cleanupPromises.length > 0) {
-        Promise.all(cleanupPromises).catch((error) => {
-          console.warn("좋아요 데이터 정리 중 오류:", error);
+        const reviewExistenceChecks = chunks.map((chunk) =>
+          adminFirestore
+            .collection("movie-reviews")
+            .where(admin.firestore.FieldPath.documentId(), "in", chunk)
+            .select() // 필드 없이 문서 존재 여부만 확인
+            .get(),
+        );
+
+        const reviewSnapshots = await Promise.all(reviewExistenceChecks);
+        const existingReviewIds = new Set<string>();
+        reviewSnapshots.forEach((snapshot) => {
+          snapshot.docs.forEach((doc) => existingReviewIds.add(doc.id));
+        });
+
+        validLikedCount = existingReviewIds.size;
+
+        // 존재하지 않는 리뷰에 대한 좋아요 데이터 정리
+        likesSnapshot.docs.forEach((doc) => {
+          const reviewId = doc.data().reviewId;
+          if (!existingReviewIds.has(reviewId)) {
+            cleanupPromises.push(doc.ref.delete().then(() => {}));
+          }
         });
       }
 

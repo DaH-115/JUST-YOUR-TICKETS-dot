@@ -32,49 +32,74 @@ export async function fetchLikedReviewsPaginated({
       return { reviews: [], totalPages: 0 };
     }
 
-    // 2) 해당 리뷰들의 상세 정보 조회 및 사용자 등급 정보 추가
-    const reviewPromises = likedReviewIds.map(async (reviewId) => {
-      const reviewDoc = await adminFirestore
-        .collection("movie-reviews")
-        .doc(reviewId)
-        .get();
+    // Firestore 'in' 쿼리는 최대 30개의 값을 가질 수 있습니다.
+    const MAX_IN_QUERIES = 30;
+    const reviewPromises = [];
+    for (let i = 0; i < likedReviewIds.length; i += MAX_IN_QUERIES) {
+      const chunk = likedReviewIds.slice(i, i + MAX_IN_QUERIES);
+      reviewPromises.push(
+        adminFirestore
+          .collection("movie-reviews")
+          .where("__name__", "in", chunk)
+          .get(),
+      );
+    }
 
-      if (!reviewDoc.exists) return null;
-
-      const data = reviewDoc.data()!;
-      const createdIso = data.review.createdAt.toDate().toISOString();
-      const updatedIso = data.review.updatedAt.toDate().toISOString();
-
-      // 사용자의 activityLevel 조회
-      let userActivityLevel = "NEWBIE"; // 기본값
-      try {
-        const userRef = adminFirestore.collection("users").doc(data.user.uid);
-        const userSnap = await userRef.get();
-        if (userSnap.exists) {
-          const userData = userSnap.data();
-          userActivityLevel = userData?.activityLevel || "NEWBIE";
-        }
-      } catch (error) {
-        console.warn(`사용자 ${data.user.uid}의 등급 조회 실패:`, error);
-      }
-
-      return {
-        id: reviewDoc.id,
-        user: {
-          ...data.user,
-          activityLevel: userActivityLevel,
-        },
-        review: {
-          ...data.review,
-          createdAt: createdIso,
-          updatedAt: updatedIso,
-        },
-      };
-    });
-
-    const allReviews = (await Promise.all(reviewPromises)).filter(
-      (review): review is ReviewDoc => review !== null,
+    const reviewSnapshots = await Promise.all(reviewPromises);
+    const reviewsData = reviewSnapshots.flatMap((snapshot) =>
+      snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as any),
     );
+
+    // 사용자 정보 일괄 조회
+    const userIds = [...new Set(reviewsData.map((review) => review.user.uid))];
+    let usersMap = new Map<string, SerializableUser>();
+
+    if (userIds.length > 0) {
+      const userPromises = [];
+      for (let i = 0; i < userIds.length; i += MAX_IN_QUERIES) {
+        const chunk = userIds.slice(i, i + MAX_IN_QUERIES);
+        userPromises.push(
+          adminFirestore
+            .collection("users")
+            .where("__name__", "in", chunk)
+            .get(),
+        );
+      }
+      const userSnapshots = await Promise.all(userPromises);
+      userSnapshots.forEach((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          const userData = doc.data();
+          usersMap.set(doc.id, {
+            uid: doc.id,
+            displayName: userData.displayName,
+            email: userData.email,
+            photoURL: userData.photoURL,
+            activityLevel: userData.activityLevel || "NEWBIE",
+          });
+        });
+      });
+    }
+
+    // 리뷰 데이터와 사용자 데이터 조합
+    const allReviews: ReviewDoc[] = reviewsData
+      .map((data) => {
+        const user = usersMap.get(data.user.uid);
+        if (!user) return null; // 사용자를 찾을 수 없는 경우
+
+        const createdIso = data.review.createdAt.toDate().toISOString();
+        const updatedIso = data.review.updatedAt.toDate().toISOString();
+
+        return {
+          id: data.id,
+          user,
+          review: {
+            ...data.review,
+            createdAt: createdIso,
+            updatedAt: updatedIso,
+          },
+        };
+      })
+      .filter((review): review is ReviewDoc => review !== null);
 
     // 3) 검색 필터링 (클라이언트 사이드에서 처리)
     let filteredReviews = allReviews;
