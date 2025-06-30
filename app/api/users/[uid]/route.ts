@@ -198,46 +198,45 @@ export async function PUT(
 
     // displayName 업데이트 (더 복잡한 로직)
     if (displayName !== undefined) {
-      // Firebase Admin SDK를 사용한 트랜잭션
-      const batch = adminFirestore.batch();
-
       try {
         // 현재 사용자 정보 가져오기
         const authUser = await adminAuth.getUser(params.uid);
         const oldDisplayName = authUser.displayName;
 
-        // 새 닉네임이 이미 사용 중인지 확인
-        const newDisplayNameRef = adminFirestore
-          .collection("usernames")
-          .doc(displayName);
-        const newDisplayNameSnapshot = await newDisplayNameRef.get();
-        if (newDisplayNameSnapshot.exists) {
-          throw new Error("이미 사용 중인 닉네임입니다.");
-        }
-
-        // 기존 닉네임이 있다면 usernames 컬렉션에서 삭제
-        if (oldDisplayName) {
-          const oldDisplayNameRef = adminFirestore
+        // Firestore 트랜잭션을 사용하여 닉네임 중복 검사와 등록을 원자적으로 처리
+        await adminFirestore.runTransaction(async (transaction) => {
+          // 새 닉네임이 이미 사용 중인지 확인
+          const newDisplayNameRef = adminFirestore
             .collection("usernames")
-            .doc(oldDisplayName);
-          batch.delete(oldDisplayNameRef);
-        }
+            .doc(displayName);
+          const newDisplayNameSnapshot =
+            await transaction.get(newDisplayNameRef);
 
-        // 새 닉네임을 usernames 컬렉션에 등록
-        batch.set(newDisplayNameRef, {
-          uid: params.uid,
-          createdAt: new Date(),
+          if (newDisplayNameSnapshot.exists) {
+            throw new Error("이미 사용 중인 닉네임입니다.");
+          }
+
+          // 기존 닉네임이 있다면 usernames 컬렉션에서 삭제
+          if (oldDisplayName) {
+            const oldDisplayNameRef = adminFirestore
+              .collection("usernames")
+              .doc(oldDisplayName);
+            transaction.delete(oldDisplayNameRef);
+          }
+
+          // 새 닉네임을 usernames 컬렉션에 등록
+          transaction.set(newDisplayNameRef, {
+            uid: params.uid,
+            createdAt: new Date(),
+          });
+
+          // users 컬렉션의 updatedAt 필드 업데이트
+          transaction.update(userRef, {
+            updatedAt: new Date(),
+          });
         });
 
-        // users 컬렉션의 updatedAt 필드 업데이트
-        batch.update(userRef, {
-          updatedAt: new Date(),
-        });
-
-        // 배치 실행
-        await batch.commit();
-
-        // Firebase Auth의 displayName 업데이트
+        // Firebase Auth의 displayName 업데이트 (트랜잭션 외부에서 실행)
         await adminAuth.updateUser(params.uid, { displayName });
         responseData.displayName = displayName;
       } catch (error: any) {

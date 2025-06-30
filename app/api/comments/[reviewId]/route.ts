@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminFirestore } from "firebase-admin-config";
+import { adminFirestore, adminAuth } from "firebase-admin-config";
 import { FieldValue } from "firebase-admin/firestore";
 import { revalidatePath } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 
 // GET /api/comments/[reviewId] - 특정 리뷰의 댓글 목록 조회
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: { reviewId: string } },
 ) {
   try {
@@ -22,7 +22,7 @@ export async function GET(
         const data = doc.data();
 
         // 댓글 작성자의 activityLevel 조회
-        let userActivityLevel = "NEWBIE"; // 기본값
+        let userActivityLevel;
         try {
           const userRef = adminFirestore.collection("users").doc(data.authorId);
           const userSnap = await userRef.get();
@@ -73,7 +73,7 @@ export async function POST(
       );
     }
 
-    const { authorId, displayName, photoURL, content } = await req.json();
+    const { authorId, content } = await req.json();
 
     // 필수 필드 검증
     if (!authorId || !content?.trim()) {
@@ -92,11 +92,25 @@ export async function POST(
       );
     }
 
+    // 서버 측에서 인증된 사용자의 정보 조회
+    let displayName;
+    let photoURL;
+
+    try {
+      // Firebase Auth에서 사용자 정보 조회
+      const authUser = await adminAuth.getUser(authResult.uid!);
+      displayName = authUser.displayName || "익명";
+      photoURL = authUser.photoURL || null;
+    } catch (error) {
+      console.warn("사용자 정보 조회 실패:", error);
+      // 기본값 사용
+    }
+
     // 댓글 생성
     const newComment = {
       authorId,
-      displayName: displayName || "익명",
-      photoURL: photoURL || null,
+      displayName,
+      photoURL,
       content: content.trim(),
       createdAt: FieldValue.serverTimestamp(),
     };

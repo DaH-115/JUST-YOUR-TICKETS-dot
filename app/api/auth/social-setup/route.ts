@@ -21,14 +21,28 @@ async function generateUniqueNickname(uid: string): Promise<string> {
     const usernameRef = adminFirestore.collection("usernames").doc(candidate);
 
     try {
-      const doc = await usernameRef.get();
-      if (!doc.exists) {
-        // 닉네임이 사용 가능하면 등록
-        await usernameRef.set({
-          uid,
-          createdAt: new Date(),
-        });
-        return candidate;
+      // Firestore 트랜잭션을 사용하여 닉네임 존재 확인과 생성을 원자적으로 처리
+      const result = await adminFirestore.runTransaction(
+        async (transaction) => {
+          const doc = await transaction.get(usernameRef);
+
+          if (!doc.exists) {
+            // 닉네임이 사용 가능하면 트랜잭션 내에서 등록
+            transaction.set(usernameRef, {
+              uid,
+              createdAt: new Date(),
+            });
+            return candidate;
+          } else {
+            // 닉네임이 이미 존재하는 경우 null 반환
+            return null;
+          }
+        },
+      );
+
+      // 트랜잭션이 성공하고 닉네임이 생성된 경우
+      if (result) {
+        return result;
       }
     } catch (error) {
       console.error("닉네임 생성 중 오류:", error);

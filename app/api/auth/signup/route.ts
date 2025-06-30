@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
 
     // Firebase Admin SDK를 사용한 트랜잭션 처리
     const batch = adminFirestore.batch();
+    let userCreated = false; // Firebase Auth 사용자 생성 성공 여부 추적
 
     try {
       // 1. 닉네임 중복 검사
@@ -66,6 +67,7 @@ export async function POST(req: NextRequest) {
         password: password,
         displayName: displayName.trim(),
       });
+      userCreated = true; // 사용자 생성 성공
 
       // 3. Firestore 트랜잭션: usernames 컬렉션에 닉네임 등록
       batch.set(usernameRef, {
@@ -101,8 +103,8 @@ export async function POST(req: NextRequest) {
         { status: 201 },
       );
     } catch (error: any) {
-      // Firebase Auth 계정이 생성된 경우 롤백
-      if (error.code !== "auth/email-already-exists") {
+      // Firebase Auth 사용자가 실제로 생성된 경우에만 롤백 수행
+      if (userCreated) {
         try {
           // 생성된 사용자가 있다면 삭제
           const users = await adminAuth.getUserByEmail(email);

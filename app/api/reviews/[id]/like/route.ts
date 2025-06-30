@@ -56,17 +56,20 @@ export async function POST(
       );
     }
 
-    // 좋아요 추가
-    await likeRef.set({
-      uid,
-      reviewId,
-      createdAt: FieldValue.serverTimestamp(),
-      movieTitle: movieTitle.trim(),
-    });
+    // 좋아요 추가와 리뷰 좋아요 수 증가를 트랜잭션으로 원자적 처리
+    await adminFirestore.runTransaction(async (transaction) => {
+      // 좋아요 문서 생성
+      transaction.set(likeRef, {
+        uid,
+        reviewId,
+        createdAt: FieldValue.serverTimestamp(),
+        movieTitle: movieTitle.trim(),
+      });
 
-    // 리뷰의 좋아요 수 증가
-    await reviewRef.update({
-      "review.likeCount": FieldValue.increment(1),
+      // 리뷰의 좋아요 수 증가
+      transaction.update(reviewRef, {
+        "review.likeCount": FieldValue.increment(1),
+      });
     });
 
     // 캐시 재검증
@@ -131,12 +134,15 @@ export async function DELETE(
       );
     }
 
-    // 좋아요 취소
-    await likeRef.delete();
+    // 좋아요 취소와 리뷰 좋아요 수 감소를 트랜잭션으로 원자적 처리
+    await adminFirestore.runTransaction(async (transaction) => {
+      // 좋아요 문서 삭제
+      transaction.delete(likeRef);
 
-    // 리뷰의 좋아요 수 감소
-    await reviewRef.update({
-      "review.likeCount": FieldValue.increment(-1),
+      // 리뷰의 좋아요 수 감소
+      transaction.update(reviewRef, {
+        "review.likeCount": FieldValue.increment(-1),
+      });
     });
 
     // 캐시 재검증
