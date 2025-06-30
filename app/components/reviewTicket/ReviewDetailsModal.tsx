@@ -169,11 +169,11 @@ export default function ReviewDetailsModal({
             <span className="ml-1 text-sm text-black">{likeCount}</span>
           </button>
           {/* 리뷰 작성자와 로그인한 유저가 같을 때만 수정/삭제 버튼 노출 */}
-          {userState?.uid && (
+          {userState?.uid && user.uid && userState.uid === user.uid && (
             <ReviewBtnGroup
               movieId={String(review.movieId)}
               postId={selectedReview.id}
-              authorId={user.uid}
+              authorId={userState.uid}
               onReviewDeleted={onReviewDeleted}
             />
           )}
@@ -215,7 +215,7 @@ export default function ReviewDetailsModal({
         {formatDate(review.createdAt)}
       </div>
       {/* 댓글 영역 - 모달이 열릴 때만 렌더링 */}
-      {isModalOpen && (
+      {isModalOpen && user.uid && (
         <Comments id={selectedReview.id} reviewAuthorId={user.uid} />
       )}
     </ModalPortal>

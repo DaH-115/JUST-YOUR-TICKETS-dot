@@ -1,5 +1,5 @@
 interface MovieRatingProps {
-  rating: string | null;
+  certification: string | null;
   showLabel?: boolean;
 }
 
@@ -21,22 +21,22 @@ const ratingLabels: Record<string, string> = {
 };
 
 export default function MovieRating({
-  rating,
+  certification,
   showLabel = false,
 }: MovieRatingProps) {
-  if (!rating) {
+  if (!certification) {
     return null;
   }
 
-  const colorClass = ratingColors[rating] || ratingColors.default;
-  const label = ratingLabels[rating];
+  const colorClass = ratingColors[certification] || ratingColors.default;
+  const label = ratingLabels[certification];
 
   return (
     <div className="flex items-center gap-2">
       <div
-        className={` ${colorClass} flex h-6 w-6 min-w-[1.5em] items-center justify-center rounded-full font-bold text-white ${rating === "ALL" ? "text-[10px]" : "text-xs"} `}
+        className={` ${colorClass} flex h-6 w-6 min-w-[1.5em] items-center justify-center rounded-full font-bold text-white ${certification === "ALL" ? "text-[10px]" : "text-xs"} `}
       >
-        {rating}
+        {certification}
       </div>
       {showLabel && (
         <span className="text-sm font-medium text-gray-700">{label}</span>

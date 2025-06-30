@@ -56,8 +56,11 @@ export default function MovieDetailCard({
                 <h2 className="break-keep text-3xl font-bold">
                   {movieDetails.title}
                 </h2>
-                {movieDetails.rating && (
-                  <MovieRating rating={movieDetails.rating} showLabel={true} />
+                {movieDetails.certification && (
+                  <MovieRating
+                    certification={movieDetails.certification}
+                    showLabel={true}
+                  />
                 )}
               </div>
               <div className="flex items-center">

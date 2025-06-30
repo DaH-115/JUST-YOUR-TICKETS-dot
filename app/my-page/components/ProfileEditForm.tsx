@@ -86,6 +86,10 @@ export default function ProfileEditForm() {
 
         // 2) biography 변경 처리
         if (data.biography !== userMetaData?.biography) {
+          if (!userAuth.uid) {
+            showErrorHandler("오류", "로그인이 필요합니다.");
+            return;
+          }
           await dispatch(
             updateUserMetaData({
               uid: userAuth.uid,

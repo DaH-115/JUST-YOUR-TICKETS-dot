@@ -72,7 +72,7 @@ export default function AvatarUploader({
         body: JSON.stringify({
           filename: file.name,
           contentType: file.type,
-          userId: isAuth.currentUser.uid,
+          userId: isAuth.currentUser?.uid,
         }),
       });
       const { url, key } = await res.json();

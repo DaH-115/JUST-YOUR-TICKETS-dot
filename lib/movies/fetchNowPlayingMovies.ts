@@ -1,7 +1,7 @@
 import { fetchGenres } from "lib/movies/fetchGenres";
 import {
   fetchMultipleMovieReleaseDates,
-  getBestRating,
+  getCertification,
 } from "lib/movies/fetchMovieReleaseDates";
 
 export interface MovieBaseType {
@@ -20,7 +20,7 @@ export interface MovieBaseType {
 export interface MovieList extends MovieBaseType {
   genre_ids: number[];
   genres: string[];
-  rating?: string | null;
+  certification?: string | null;
 }
 
 export async function fetchNowPlayingMovies(): Promise<MovieList[]> {
@@ -46,7 +46,6 @@ export async function fetchNowPlayingMovies(): Promise<MovieList[]> {
 
   // 1단계: 모든 영화 ID 수집
   const movieIds = data.results.map((movie: MovieList) => movie.id);
-  console.log(`📋 처리할 영화: ${movieIds.length}개`);
 
   // 2단계: 배치로 한 번에 처리
   const ratingsMap = await fetchMultipleMovieReleaseDates(movieIds);
@@ -54,14 +53,14 @@ export async function fetchNowPlayingMovies(): Promise<MovieList[]> {
   // 3단계: 결과 조합
   const movieListwithGenres = data.results.map((movie: MovieList) => {
     const ratingData = ratingsMap.get(movie.id);
-    const rating = ratingData ? getBestRating(ratingData) : null;
+    const certification = ratingData ? getCertification(ratingData) : null;
 
     return {
       ...movie,
       genres: movie.genre_ids
         .map((genreId) => genreMap[genreId])
         .filter(Boolean),
-      rating,
+      certification,
     };
   });
 

@@ -48,7 +48,7 @@ export default function TicketListLayout({
   const uid = useAppSelector((state) => state.userData.auth?.uid) || "";
 
   const fetchResult = useFetchReviews({
-    uid,
+    uid: uid || "",
     search: searchTerm,
     page: currentPage,
     pageSize: 10,

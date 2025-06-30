@@ -66,7 +66,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           photoURL: user.photoURL,
         };
         dispatch(setAuthUser(userData));
-        dispatch(fetchUserMetaData(userData.uid));
+        if (userData.uid) {
+          dispatch(fetchUserMetaData(userData.uid));
+        }
 
         setAuthState({ isAuthenticated: true, isLoading: false });
       } else {

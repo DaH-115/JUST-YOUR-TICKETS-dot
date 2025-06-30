@@ -165,7 +165,9 @@ export function normalizeRating(rating: string): string {
 }
 
 // 최적 등급 추출
-export function getBestRating(releaseDates: MovieReleaseDates): string | null {
+export function getCertification(
+  releaseDates: MovieReleaseDates,
+): string | null {
   if (!releaseDates?.results?.length) return null;
 
   // 한국 등급 우선
@@ -183,27 +185,9 @@ export function getBestRating(releaseDates: MovieReleaseDates): string | null {
   return null;
 }
 
-// 한국 등급만
-export function getKoreanRating(
-  releaseDates: MovieReleaseDates,
-): string | null {
-  const kr = releaseDates.results.find((r) => r.iso_3166_1 === "KR");
-  if (kr?.release_dates?.[0]?.certification) {
-    return normalizeRating(kr.release_dates[0].certification);
-  }
-  return null;
-}
-
-// 미국 등급만
-export function getUSRating(releaseDates: MovieReleaseDates): string | null {
-  const us = releaseDates.results.find((r) => r.iso_3166_1 === "US");
-  return us?.release_dates?.[0]?.certification || null;
-}
-
 // 유틸리티 함수들
 export function clearCache(): void {
   cache.clear();
-  console.log("캐시가 모두 삭제되었습니다.");
 }
 
 export function getCacheSize(): number {

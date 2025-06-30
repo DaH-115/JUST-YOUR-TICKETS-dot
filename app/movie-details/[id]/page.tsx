@@ -4,10 +4,6 @@ import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
 import { fetchMovieCredits } from "lib/movies/fetchMovieCredits";
 import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
 import { fetchSimilarMovies } from "lib/movies/fetchSimilarMovies";
-import {
-  fetchMovieReleaseDates,
-  getKoreanRating,
-} from "lib/movies/fetchMovieReleaseDates";
 import getMovieTitle from "app/utils/getMovieTitle";
 import Background from "app/ui/layout/Background";
 import SimilarMovies from "app/movie-details/components/SimilarMovies";
@@ -65,41 +61,30 @@ export default async function MovieDetailPage({
   }
 
   try {
-    const [
-      movieDetails,
-      movieCredits,
-      movieTrailerData,
-      similarMovies,
-      releaseDates,
-    ] = await Promise.all([
-      fetchMovieDetails(params.id),
-      fetchMovieCredits(params.id),
-      fetchVideosMovies(params.id),
-      fetchSimilarMovies(params.id),
-      fetchMovieReleaseDates(params.id),
-    ]).catch((error) => {
-      if (error.message.includes("TMDB API 키가 설정되지 않았습니다")) {
-        throw new Error("서버 설정 오류가 발생했습니다.");
-      }
-      throw error;
-    });
+    const [movieDetails, movieCredits, movieTrailerData, similarMovies] =
+      await Promise.all([
+        fetchMovieDetails(params.id),
+        fetchMovieCredits(params.id),
+        fetchVideosMovies(params.id),
+        fetchSimilarMovies(params.id),
+      ]).catch((error) => {
+        if (error.message.includes("TMDB API 키가 설정되지 않았습니다")) {
+          throw new Error("서버 설정 오류가 발생했습니다.");
+        }
+        throw error;
+      });
 
     if (!movieDetails || !movieCredits) {
       return notFound();
     }
 
-    const movieDetailsWithRating = {
-      ...movieDetails,
-      koreanRating: getKoreanRating(releaseDates),
-    };
-
-    const { backdrop_path } = movieDetailsWithRating;
+    const { backdrop_path } = movieDetails;
 
     return (
       <>
         <Background imageUrl={backdrop_path || ""} />
         <MovieDetailCard
-          movieDetails={movieDetailsWithRating}
+          movieDetails={movieDetails}
           movieCredits={movieCredits}
         />
         <AllMovieTrailers movieTrailer={movieTrailerData.results} />

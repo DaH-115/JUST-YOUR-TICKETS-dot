@@ -44,7 +44,9 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
 
           <div className="flex items-center gap-2">
             <h2 className="text-gray-600 md:text-lg">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
-            {movie.rating && <MovieRating rating={movie.rating} />}
+            {movie.certification && (
+              <MovieRating certification={movie.certification} />
+            )}
           </div>
         </div>
         <ul className="flex items-center space-x-2 overflow-x-scroll border-y-4 border-dotted p-2 text-sm scrollbar-hide md:text-xs">

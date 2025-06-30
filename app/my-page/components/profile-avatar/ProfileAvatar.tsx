@@ -10,11 +10,12 @@ export default function ProfileImage({
 }: {
   previewSrc?: string | null;
 }) {
-  const user = isAuth.currentUser!;
+  const user = isAuth.currentUser;
   // 1) Firestore에 저장된 photoKey를 구독해서 가져오기
   const [photoKey, setPhotoKey] = useState<string>("profile-img/default.png");
 
   useEffect(() => {
+    if (!user) return;
     const unsub = onSnapshot(doc(db, "users", user.uid), (snap) => {
       const data = snap.data();
 
@@ -23,12 +24,12 @@ export default function ProfileImage({
       }
     });
     return () => unsub();
-  }, [user.uid]);
+  }, [user?.uid]);
 
   return (
     // 2) photoKey를 Avatar에 prop으로 전달
     <Avatar
-      userDisplayName={user.displayName ?? "사용자"}
+      userDisplayName={user?.displayName ?? "사용자"}
       photoKey={photoKey}
       previewSrc={previewSrc}
     />

@@ -30,7 +30,7 @@ export default function ProfileView() {
     likedTicketsCount,
     activityLevel: dbActivityLevel,
     loading: statsLoading,
-  } = useProfileStats(uid);
+  } = useProfileStats(uid ?? undefined);
 
   // 활동 레벨 - DB에서 가져온 값 우선 사용, 없으면 계산
   const activityLevel = useMemo(() => {

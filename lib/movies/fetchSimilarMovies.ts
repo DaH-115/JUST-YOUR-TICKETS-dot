@@ -2,7 +2,7 @@ import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { fetchGenres } from "lib/movies/fetchGenres";
 import {
   fetchMultipleMovieReleaseDates,
-  getBestRating,
+  getCertification,
 } from "lib/movies/fetchMovieReleaseDates";
 
 export async function fetchSimilarMovies(id: number): Promise<MovieList[]> {
@@ -33,14 +33,14 @@ export async function fetchSimilarMovies(id: number): Promise<MovieList[]> {
   // 3단계: 결과 조합
   const movieListwithGenres = data.results.map((movie: MovieList) => {
     const ratingData = ratingsMap.get(movie.id);
-    const rating = ratingData ? getBestRating(ratingData) : null;
+    const certification = ratingData ? getCertification(ratingData) : null;
 
     return {
       ...movie,
       genres: movie.genre_ids
         .map((genreId) => genreMap[genreId])
         .filter(Boolean),
-      rating,
+      certification,
     };
   });
 

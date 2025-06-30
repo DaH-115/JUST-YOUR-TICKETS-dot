@@ -57,7 +57,9 @@ export default function SwiperCard({
                 {original_title}
               </p>
             </div>
-            {movie.rating && <MovieRating rating={movie.rating} />}
+            {movie.certification && (
+              <MovieRating certification={movie.certification} />
+            )}
           </div>
         </section>
 
