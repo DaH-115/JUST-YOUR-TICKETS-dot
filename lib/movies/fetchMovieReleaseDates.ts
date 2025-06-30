@@ -147,21 +147,21 @@ export function normalizeRating(rating: string): string {
   if (!rating) return "18";
 
   const ratingMap: Record<string, string> = {
-    All: "ALL",
+    all: "ALL",
     "12": "12",
     "15": "15",
     "18": "18",
-    G: "ALL",
-    PG: "12",
-    "PG-13": "15",
-    R: "18",
+    g: "ALL",
+    pg: "12",
+    "pg-13": "15",
+    r: "18",
     전체관람가: "ALL",
     "12세관람가": "12",
     "15세관람가": "15",
     "18세관람가": "18",
   };
 
-  return ratingMap[rating.trim()] || "18";
+  return ratingMap[rating.trim().toLowerCase()] || "18";
 }
 
 // 최적 등급 추출

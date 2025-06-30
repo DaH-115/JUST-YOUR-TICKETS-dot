@@ -169,14 +169,16 @@ export default function ReviewDetailsModal({
             <span className="ml-1 text-sm text-black">{likeCount}</span>
           </button>
           {/* 리뷰 작성자와 로그인한 유저가 같을 때만 수정/삭제 버튼 노출 */}
-          {userState?.uid && user.uid && userState.uid === user.uid && (
-            <ReviewBtnGroup
-              movieId={String(review.movieId)}
-              postId={selectedReview.id}
-              authorId={userState.uid}
-              onReviewDeleted={onReviewDeleted}
-            />
-          )}
+          {userState?.uid &&
+            selectedReview.user?.uid &&
+            userState.uid === selectedReview.user.uid && (
+              <ReviewBtnGroup
+                movieId={String(review.movieId)}
+                postId={selectedReview.id}
+                authorId={selectedReview.user.uid}
+                onReviewDeleted={onReviewDeleted}
+              />
+            )}
         </div>
         {/* 모달 닫기 버튼 */}
         <button

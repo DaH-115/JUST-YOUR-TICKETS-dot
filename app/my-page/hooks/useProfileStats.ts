@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { getAuthHeaders } from "app/utils/getIdToken";
 
 interface ProfileStats {
   myTicketsCount: number;
@@ -35,7 +36,13 @@ export default function useProfileStats(uid: string | undefined): ProfileStats {
       setStats((prev) => ({ ...prev, loading: true, error: null }));
 
       try {
-        const response = await fetch(`/api/users/${uid}?includeFullStats=true`);
+        const headers = await getAuthHeaders();
+        const response = await fetch(
+          `/api/users/${uid}?includeFullStats=true`,
+          {
+            headers,
+          },
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch user stats");

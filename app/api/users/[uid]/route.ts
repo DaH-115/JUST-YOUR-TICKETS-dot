@@ -126,6 +126,11 @@ export async function GET(
         });
       }
 
+      // 정리 작업이 완료될 때까지 대기
+      if (cleanupPromises.length > 0) {
+        await Promise.all(cleanupPromises);
+      }
+
       responseData.stats = {
         myTicketsCount: myReviewsCount,
         likedTicketsCount: validLikedCount,
