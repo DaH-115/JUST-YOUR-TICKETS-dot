@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface UsePresignedUrlProps {
   key?: string | null; // S3에 저장된 파일의 경로
@@ -34,13 +34,6 @@ export function usePresignedUrl({
 
     /**
      * S3 presigned URL을 요청하는 함수
-     *
-     * 동작 과정:
-     * 1. 이전 요청이 있다면 취소
-     * 2. 새로운 AbortController 생성
-     * 3. GET /api/s3?key={s3Key} 요청
-     * 4. 응답 검증 및 URL 설정
-     * 5. 에러 처리 및 fallback URL 설정
      */
     const fetchPresignedUrl = async () => {
       // 1. 이전 요청 취소 (중복 요청 방지)

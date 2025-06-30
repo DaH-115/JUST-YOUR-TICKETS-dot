@@ -6,20 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import formatDate from "app/utils/formatDate";
 import ActivityBadge from "app/components/ActivityBadge";
 import ProfileImage from "app/components/reviewTicket/ProfileImage";
-import { db } from "firebase-config";
-import {
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-  addDoc,
-  serverTimestamp,
-  Timestamp,
-  doc,
-  deleteDoc,
-  updateDoc,
-} from "firebase/firestore";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
 
 const commentSchema = z.object({
   comment: z
@@ -58,50 +46,37 @@ export default function Comments({
     defaultValues: { comment: "" },
   });
 
+  // 댓글 목록 가져오기
+  const fetchComments = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/comments/${reviewId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setComments(data.comments || []);
+      }
+    } catch (error) {
+      console.error("댓글 조회 실패:", error);
+    }
+  }, [reviewId]);
+
   useEffect(() => {
     // reviewId가 변경될 때 상태 초기화
     setComments([]);
     setEditingId(null);
     reset();
 
-    const commentsCol = collection(db, "movie-reviews", reviewId, "comments");
-    const querys = query(commentsCol, orderBy("createdAt", "asc"));
-
-    const unsubscribe = onSnapshot(querys, (snap) => {
-      const commentList = snap.docs.map((doc) => {
-        const data = doc.data() as {
-          authorId: string;
-          displayName?: string;
-          photoURL?: string;
-          content: string;
-          createdAt: Timestamp | null;
-        };
-
-        return {
-          id: doc.id,
-          authorId: data.authorId,
-          displayName: data.displayName || "익명",
-          photoURL: data.photoURL,
-          content: data.content,
-          createdAt: data.createdAt
-            ? data.createdAt.toDate().toISOString()
-            : new Date().toISOString(),
-        };
-      });
-
-      setComments(commentList);
-    });
+    // 댓글 목록 가져오기
+    fetchComments();
 
     return () => {
-      unsubscribe();
       // 컴포넌트 언마운트 시 상태 초기화
       setComments([]);
       setEditingId(null);
       reset();
     };
-  }, [reviewId, reset]);
+  }, [reviewId, reset, fetchComments]);
 
-  // 댓글 등록 핸들러
+  // 댓글 등록/수정 핸들러
   const onSubmit = useCallback(
     async (data: CommentForm) => {
       if (!data.comment.trim() || isPosting || !userState) {
@@ -110,38 +85,74 @@ export default function Comments({
       setIsPosting(true);
       const content = data.comment.trim();
 
-      if (editingId) {
-        try {
-          const ref = doc(db, "movie-reviews", reviewId, "comments", editingId);
-          await updateDoc(ref, {
-            content,
-            updatedAt: serverTimestamp(),
+      try {
+        if (editingId) {
+          // 댓글 수정
+          await apiCallWithTokenRefresh(async (authHeaders) => {
+            const response = await fetch(
+              `/api/comments/${reviewId}/${editingId}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  ...authHeaders,
+                },
+                body: JSON.stringify({ content }),
+              },
+            );
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || "댓글 수정에 실패했습니다.");
+            }
+
+            return response.json();
           });
-          reset(); // 폼 비우기
-        } catch (error) {
-          console.error("댓글 수정 실패", error);
-        } finally {
+
+          // 수정 모드 해제 및 폼 리셋
           setEditingId(null);
-          setIsPosting(false);
-        }
-      } else {
-        try {
-          await addDoc(collection(db, "movie-reviews", reviewId, "comments"), {
-            authorId: userState.uid,
-            displayName: userState.displayName || "익명",
-            photoURL: userState.photoURL,
-            content,
-            createdAt: serverTimestamp(),
+          reset({ comment: "" }); // 명시적으로 빈 문자열로 리셋
+        } else {
+          // 댓글 생성
+          await apiCallWithTokenRefresh(async (authHeaders) => {
+            const response = await fetch(`/api/comments/${reviewId}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                ...authHeaders,
+              },
+              body: JSON.stringify({
+                authorId: userState.uid,
+                displayName: userState.displayName || "익명",
+                photoURL: userState.photoURL,
+                content,
+              }),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || "댓글 등록에 실패했습니다.");
+            }
+
+            return response.json();
           });
-          reset(); // 폼 비우기
-        } catch (error) {
-          console.error("댓글 등록 실패", error);
-        } finally {
-          setIsPosting(false);
         }
+
+        // 폼 완전히 리셋 (수정 모드가 아닌 경우에만 추가로 리셋)
+        if (!editingId) {
+          reset({ comment: "" });
+        }
+        await fetchComments(); // 댓글 목록 새로고침
+      } catch (error) {
+        console.error("댓글 처리 실패:", error);
+        alert(
+          error instanceof Error ? error.message : "댓글 처리에 실패했습니다.",
+        );
+      } finally {
+        setIsPosting(false);
       }
     },
-    [isPosting, editingId, reviewId, reset, userState],
+    [isPosting, editingId, reviewId, reset, userState, fetchComments],
   );
 
   // 댓글 수정 핸들러
@@ -159,29 +170,44 @@ export default function Comments({
       if (!userState?.uid || isPosting) {
         return;
       }
+
+      if (!confirm("정말로 댓글을 삭제하시겠습니까?")) {
+        return;
+      }
+
       setIsPosting(true);
 
       try {
-        if (!confirm("정말로 댓글을 삭제하시겠습니까?")) {
-          setIsPosting(false);
-          return;
-        }
+        await apiCallWithTokenRefresh(async (authHeaders) => {
+          const response = await fetch(
+            `/api/comments/${reviewId}/${commentId}`,
+            {
+              method: "DELETE",
+              headers: {
+                ...authHeaders,
+              },
+            },
+          );
 
-        const commentRef = doc(
-          db,
-          "movie-reviews",
-          reviewId,
-          "comments",
-          commentId,
-        );
-        await deleteDoc(commentRef);
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "댓글 삭제에 실패했습니다.");
+          }
+
+          return response.json();
+        });
+
+        await fetchComments(); // 댓글 목록 새로고침
       } catch (error) {
-        console.error("댓글 삭제 실패", error);
+        console.error("댓글 삭제 실패:", error);
+        alert(
+          error instanceof Error ? error.message : "댓글 삭제에 실패했습니다.",
+        );
       } finally {
         setIsPosting(false);
       }
     },
-    [userState?.uid, isPosting, reviewId],
+    [userState?.uid, isPosting, reviewId, fetchComments],
   );
 
   // 취소 버튼 핸들러
@@ -200,7 +226,7 @@ export default function Comments({
         </div>
       )}
       <div
-        className={`${comments.length > 0 ? "max-h-60 overflow-y-auto scrollbar-hide" : "hidden"}`}
+        className={`${comments.length > 0 ? "max-h-80 overflow-y-auto scrollbar-hide" : "hidden"}`}
       >
         <ul className="space-y-2">
           {comments.map((c, idx) => (
@@ -221,7 +247,10 @@ export default function Comments({
                     <p className="text-xs font-bold text-gray-800">
                       {c.displayName || "익명"}
                     </p>
-                    <ActivityBadge uid={c.authorId} size="tiny" />
+                    <ActivityBadge
+                      activityLevel={(c as any).activityLevel}
+                      size="tiny"
+                    />
                   </div>
                   {c.authorId === reviewAuthorId && (
                     <span className="rounded-md bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">
@@ -229,6 +258,7 @@ export default function Comments({
                     </span>
                   )}
                 </div>
+                {/* 댓글 작성자와 로그인한 유저가 같을 때만 수정/삭제 버튼 노출 */}
                 {userState?.uid === c.authorId && (
                   <div className="flex items-center space-x-2">
                     {/* 댓글 수정 버튼 */}
@@ -272,7 +302,7 @@ export default function Comments({
               {errors.comment.message}
             </p>
           )}
-          <div className="mt-2 flex items-center justify-end">
+          <div className="mt-2 flex items-center justify-end text-sm">
             {editingId && (
               <button
                 type="button"

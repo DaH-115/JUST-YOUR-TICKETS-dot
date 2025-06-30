@@ -1,5 +1,9 @@
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { fetchGenres } from "lib/movies/fetchGenres";
+import {
+  fetchMovieReleaseDates,
+  getBestRating,
+} from "lib/movies/fetchMovieReleaseDates";
 
 export async function fetchTrendingMovies(): Promise<MovieList[]> {
   const TMDB_API_KEY = process.env.TMDB_API_KEY;
@@ -20,10 +24,24 @@ export async function fetchTrendingMovies(): Promise<MovieList[]> {
   const data = await response.json();
   const genreMap = await fetchGenres();
 
-  const moviesWithGenres = data.results.map((movie: MovieList) => ({
-    ...movie,
-    genres: movie.genre_ids.map((genreId) => genreMap[genreId]).filter(Boolean),
-  }));
+  const moviesWithGenres = await Promise.all(
+    data.results.map(async (movie: MovieList) => {
+      let rating = null;
+      try {
+        const releaseDates = await fetchMovieReleaseDates(movie.id);
+        rating = getBestRating(releaseDates);
+      } catch {
+        rating = null;
+      }
+      return {
+        ...movie,
+        genres: movie.genre_ids
+          .map((genreId) => genreMap[genreId])
+          .filter(Boolean),
+        rating,
+      };
+    }),
+  );
 
   return moviesWithGenres;
 }

@@ -1,21 +1,13 @@
 import { useRouter } from "next/navigation";
-import { db } from "firebase-config";
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  Timestamp,
-  FieldValue,
-} from "firebase/firestore";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { useAlert } from "store/context/alertContext";
-import updateReview from "app/actions/updateReview";
-import { ReviewFormValues } from "app/write-review/[id]/page";
+import { ReviewFormValues } from "app/write-review/types";
 import { ReviewContainerProps } from "app/write-review/components/ReviewContainer";
 import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
 import { useAppSelector } from "store/redux-toolkit/hooks";
+import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
 
-interface FirestoreReviewData {
+interface ReviewApiData {
   user: SerializableUser;
   review: {
     movieId: number;
@@ -26,8 +18,6 @@ interface FirestoreReviewData {
     rating: number;
     reviewTitle: string;
     reviewContent: string;
-    createdAt: FieldValue; // serverTimestamp() 타입
-    updatedAt: FieldValue;
     likeCount: number;
   };
 }
@@ -47,7 +37,7 @@ export const useReviewForm = ({
     const { reviewTitle, reviewContent, rating } = data;
 
     try {
-      const newData: FirestoreReviewData = {
+      const newData: ReviewApiData = {
         user: {
           uid: userState.uid,
           displayName: userState.displayName,
@@ -63,34 +53,67 @@ export const useReviewForm = ({
           rating,
           reviewTitle,
           reviewContent,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
           likeCount: 0,
         },
       };
 
       if (mode === "new") {
-        await addDoc(collection(db, "movie-reviews"), newData);
+        await apiCallWithTokenRefresh(async (authHeaders) => {
+          const response = await fetch("/api/reviews", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...authHeaders,
+            },
+            body: JSON.stringify(newData),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "생성에 실패했습니다.");
+          }
+
+          return response.json();
+        });
+
+        showSuccessHandler("알림", "리뷰가 성공적으로 생성되었습니다.", () => {
+          hideSuccessHandler();
+          router.push("/ticket-list");
+          router.refresh(); // 페이지 새로고침으로 최신 데이터 확보
+        });
       } else if (mode === "edit" && reviewId) {
         const updateData: ReviewFormValues = {
           reviewTitle,
           reviewContent,
           rating,
         };
-        await updateReview(reviewId, updateData);
-      }
 
-      showSuccessHandler(
-        "알림",
-        "리뷰 티켓이 성공적으로 저장되었습니다.",
-        () => {
+        await apiCallWithTokenRefresh(async (authHeaders) => {
+          const response = await fetch(`/api/reviews/${reviewId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              ...authHeaders,
+            },
+            body: JSON.stringify(updateData),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "수정에 실패했습니다.");
+          }
+
+          return response.json();
+        });
+
+        showSuccessHandler("알림", "리뷰가 성공적으로 수정되었습니다.", () => {
           hideSuccessHandler();
           router.push("/");
-        },
-      );
+        });
+      }
     } catch (error) {
       if (error instanceof Error) {
-        console.error("리뷰 티켓 생성 중 오류 발생:", error.message);
+        console.error("리뷰 티켓 처리 중 오류 발생:", error.message);
         showErrorHandler("오류", error.message);
       } else {
         const { title, message } = firebaseErrorHandler(error);

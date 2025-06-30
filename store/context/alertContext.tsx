@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useState } from "react";
 import UserAlert from "app/ui/UserAlert";
 
 interface AlertContextType {
-  showErrorHandler: (title: string, message: string, status?: number) => void;
+  showErrorHandler: (title: string, message: string) => void;
   showSuccessHandler: (
     title: string,
     message: string,
@@ -46,10 +46,17 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
 
   const showSuccessHandler = useCallback(
     (title: string, message: string, onConfirm?: () => void) => {
+      const handleConfirm = () => {
+        if (onConfirm) {
+          onConfirm();
+        }
+        hideSuccessHandler();
+      };
+
       setSuccessState({
         title,
         message,
-        onConfirm: onConfirm || hideSuccessHandler,
+        onConfirm: handleConfirm,
       });
       setErrorState(null); // 성공 상태일 때는 에러 메시지를 숨깁니다
     },

@@ -1,5 +1,5 @@
 import { useFormContext, Controller } from "react-hook-form";
-import { ReviewFormValues } from "app/write-review/[id]/page";
+import { ReviewFormValues } from "app/write-review/types";
 import { IoStar, IoChevronDown } from "react-icons/io5";
 import {
   Listbox,
@@ -50,7 +50,7 @@ export default function ReviewFormRating() {
             <div className="relative">
               <Listbox value={field.value} onChange={field.onChange}>
                 <ListboxButton
-                  className={`w-full rounded-xl border-2 px-4 py-3 text-left transition-all focus:outline-none focus:ring-2 focus:ring-accent-500/50 ${
+                  className={`w-full rounded-xl border-2 px-4 py-3 text-left transition-all focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1 ${
                     error
                       ? "border-red-500 bg-red-50 ring-2 ring-red-500/30"
                       : "border-gray-200 bg-gray-50 focus:border-accent-500 focus:bg-white"

@@ -1,4 +1,8 @@
 import { fetchGenres } from "lib/movies/fetchGenres";
+import {
+  fetchMovieReleaseDates,
+  getBestRating,
+} from "lib/movies/fetchMovieReleaseDates";
 
 export interface MovieBaseType {
   id: number;
@@ -16,6 +20,7 @@ export interface MovieBaseType {
 export interface MovieList extends MovieBaseType {
   genre_ids: number[];
   genres: string[];
+  rating?: string | null;
 }
 
 export async function fetchNowPlayingMovies(): Promise<MovieList[]> {
@@ -39,10 +44,25 @@ export async function fetchNowPlayingMovies(): Promise<MovieList[]> {
   const data = await response.json();
   const genreMap = await fetchGenres();
 
-  const movieListwithGenres = data.results.map((movie: MovieList) => ({
-    ...movie,
-    genres: movie.genre_ids.map((genreId) => genreMap[genreId]).filter(Boolean),
-  }));
+  // 등급 정보도 포함
+  const movieListwithGenres = await Promise.all(
+    data.results.map(async (movie: MovieList) => {
+      let rating = null;
+      try {
+        const releaseDates = await fetchMovieReleaseDates(movie.id);
+        rating = getBestRating(releaseDates);
+      } catch {
+        rating = null;
+      }
+      return {
+        ...movie,
+        genres: movie.genre_ids
+          .map((genreId) => genreMap[genreId])
+          .filter(Boolean),
+        rating,
+      };
+    }),
+  );
 
   return movieListwithGenres;
 }
