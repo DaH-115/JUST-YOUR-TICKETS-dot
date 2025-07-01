@@ -18,6 +18,6 @@ export default function formatMovieDate(dateString: string | undefined) {
     const monthName = monthNames[parseInt(month, 10) - 1];
     return `${year}년 ${monthName} ${parseInt(day, 10)}일`;
   } else {
-    return "날짜 정보가 없습니다.";
+    return "";
   }
 }

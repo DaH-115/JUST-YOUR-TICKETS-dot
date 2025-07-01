@@ -5,6 +5,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 import { updateUserActivityLevel } from "lib/users/updateUserActivityLevel";
+import { updateCommentsActivityLevel } from "app/api/users/[uid]/route.helper";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -64,13 +65,28 @@ export async function POST(req: NextRequest) {
       .collection("movie-reviews")
       .add(newReview);
 
-    // 사용자 등급 업데이트
-    try {
-      await updateUserActivityLevel(reviewData.user.uid);
-    } catch (error) {
-      console.error("사용자 등급 업데이트 실패:", error);
-      // 등급 업데이트 실패는 리뷰 생성에 영향을 주지 않음
-    }
+    // 사용자 등급 업데이트 (백그라운드에서 실행, API 응답을 기다리지 않음)
+    (async () => {
+      try {
+        const newActivityLevel = await updateUserActivityLevel(
+          reviewData.user.uid,
+        );
+
+        // 댓글의 활동 등급도 업데이트 (새 등급이 있는 경우)
+        if (newActivityLevel) {
+          await updateCommentsActivityLevel(
+            reviewData.user.uid,
+            newActivityLevel,
+          );
+        }
+      } catch (error) {
+        console.error(
+          `리뷰 생성 후 사용자 등급 업데이트 실패 (uid: ${reviewData.user.uid}):`,
+          error,
+        );
+        // 등급 업데이트 실패는 리뷰 생성에 영향을 주지 않음
+      }
+    })();
 
     // 캐시 재검증
     revalidatePath("/ticket-list");

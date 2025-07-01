@@ -1,120 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import admin, { adminAuth, adminFirestore } from "firebase-admin-config";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 import { fetchUserReviewCount } from "lib/users/fetchUserReviewCount";
-
-/**
- * 사용자의 모든 리뷰에서 displayName을 업데이트합니다.
- */
-async function updateReviewsDisplayName(
-  uid: string,
-  newDisplayName: string,
-): Promise<void> {
-  try {
-    // 해당 사용자의 모든 리뷰 조회
-    const reviewsQuery = adminFirestore
-      .collection("movie-reviews")
-      .where("user.uid", "==", uid);
-
-    const reviewsSnapshot = await reviewsQuery.get();
-
-    if (reviewsSnapshot.empty) {
-      console.log(`사용자 ${uid}의 리뷰가 없습니다.`);
-      return;
-    }
-
-    // 배치 업데이트 (Firestore 배치는 최대 500개 작업까지 가능)
-    const batches: admin.firestore.WriteBatch[] = [];
-    let currentBatch = adminFirestore.batch();
-    let batchCount = 0;
-
-    reviewsSnapshot.docs.forEach((doc) => {
-      if (batchCount === 500) {
-        batches.push(currentBatch);
-        currentBatch = adminFirestore.batch();
-        batchCount = 0;
-      }
-
-      currentBatch.update(doc.ref, {
-        "user.displayName": newDisplayName,
-        "review.updatedAt": admin.firestore.FieldValue.serverTimestamp(),
-      });
-      batchCount++;
-    });
-
-    // 마지막 배치 추가
-    if (batchCount > 0) {
-      batches.push(currentBatch);
-    }
-
-    // 모든 배치 실행
-    await Promise.all(batches.map((batch) => batch.commit()));
-
-    console.log(
-      `사용자 ${uid}의 리뷰 ${reviewsSnapshot.size}개의 닉네임을 ${newDisplayName}으로 업데이트했습니다.`,
-    );
-  } catch (error) {
-    console.error(`리뷰 닉네임 업데이트 실패 (uid: ${uid}):`, error);
-    throw error;
-  }
-}
-
-/**
- * 사용자의 모든 댓글에서 displayName을 업데이트합니다.
- */
-async function updateCommentsDisplayName(
-  uid: string,
-  newDisplayName: string,
-): Promise<void> {
-  try {
-    // 해당 사용자의 모든 댓글 조회
-    const commentsQuery = adminFirestore
-      .collectionGroup("comments")
-      .where("authorId", "==", uid);
-
-    const commentsSnapshot = await commentsQuery.get();
-
-    if (commentsSnapshot.empty) {
-      console.log(`사용자 ${uid}의 댓글이 없습니다.`);
-      return;
-    }
-
-    // 배치 업데이트
-    const batches: admin.firestore.WriteBatch[] = [];
-    let currentBatch = adminFirestore.batch();
-    let batchCount = 0;
-
-    commentsSnapshot.docs.forEach((doc) => {
-      if (batchCount === 500) {
-        batches.push(currentBatch);
-        currentBatch = adminFirestore.batch();
-        batchCount = 0;
-      }
-
-      currentBatch.update(doc.ref, {
-        displayName: newDisplayName,
-        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-      batchCount++;
-    });
-
-    // 마지막 배치 추가
-    if (batchCount > 0) {
-      batches.push(currentBatch);
-    }
-
-    // 모든 배치 실행
-    await Promise.all(batches.map((batch) => batch.commit()));
-
-    console.log(
-      `사용자 ${uid}의 댓글 ${commentsSnapshot.size}개의 닉네임을 ${newDisplayName}으로 업데이트했습니다.`,
-    );
-  } catch (error) {
-    console.error(`댓글 닉네임 업데이트 실패 (uid: ${uid}):`, error);
-    throw error;
-  }
-}
+import {
+  getS3Url,
+  updateReviewsDisplayName,
+  updateCommentsDisplayName,
+  updateReviewsPhotoURL,
+  updateCommentsPhotoURL,
+} from "./route.helper";
 
 // GET /api/users/[uid] - 사용자 프로필 조회
 export async function GET(
@@ -287,12 +182,14 @@ export async function PUT(
     }
 
     const updateData = await req.json();
-    const { biography, displayName } = updateData;
+    const { biography, displayName, photoURL } = updateData;
 
     // 필수 필드 검증
-    if (!biography && !displayName) {
+    if (!biography && !displayName && !photoURL) {
       return NextResponse.json(
-        { error: "biography 또는 displayName 중 하나는 필요합니다." },
+        {
+          error: "biography, displayName, 또는 photoURL 중 하나는 필요합니다.",
+        },
         { status: 400 },
       );
     }
@@ -381,6 +278,54 @@ export async function PUT(
       }
     }
 
+    // photoURL 업데이트
+    if (photoURL !== undefined) {
+      try {
+        const bucketName = process.env.AWS_S3_BUCKET;
+        if (!bucketName) {
+          console.error("AWS_S3_BUCKET 환경 변수가 설정되지 않았습니다.");
+          throw new Error("서버 설정 오류: S3 버킷 정보가 없습니다.");
+        }
+
+        // Firestore에 photoKey 저장 (S3 key만 저장)
+        let photoKeyToSave = photoURL;
+        if (photoURL && photoURL.startsWith("https://")) {
+          // S3 key만 추출
+          const idx = photoURL.indexOf(".amazonaws.com/");
+          if (idx !== -1) {
+            photoKeyToSave = photoURL.substring(idx + ".amazonaws.com/".length);
+          }
+        }
+
+        // S3 key를 완전한 URL로 변환
+        const fullPhotoURL = getS3Url(photoKeyToSave);
+
+        // Firebase Auth의 photoURL 업데이트 (완전한 URL 사용)
+        await adminAuth.updateUser(params.uid, { photoURL: fullPhotoURL });
+
+        await userRef.update({
+          photoKey: photoKeyToSave,
+          updatedAt: new Date(),
+        });
+
+        // 기존 리뷰들의 사용자 프로필 이미지 업데이트 (S3 key 저장)
+        console.log("리뷰의 프로필 이미지 업데이트를 시작합니다.");
+        await updateReviewsPhotoURL(params.uid, photoKeyToSave);
+        console.log("리뷰의 프로필 이미지 업데이트가 완료되었습니다.");
+
+        // 기존 댓글들의 사용자 프로필 이미지 업데이트 (S3 key 저장)
+        console.log("댓글의 프로필 이미지 업데이트를 시작합니다.");
+        await updateCommentsPhotoURL(params.uid, photoKeyToSave);
+        console.log("댓글의 프로필 이미지 업데이트가 완료되었습니다.");
+
+        responseData.photoURL = photoKeyToSave; // 클라이언트에는 S3 key 반환
+        responseData.fullPhotoURL = fullPhotoURL; // 완전한 URL도 함께 반환
+      } catch (error: any) {
+        console.error("프로필 이미지 업데이트 상세 에러:", error);
+        throw error;
+      }
+    }
+
     // 공통 응답 데이터
     responseData.updatedAt = new Date().toISOString();
 
@@ -390,6 +335,10 @@ export async function PUT(
     revalidatePath("/");
     revalidatePath("/my-page/my-ticket-list");
     revalidatePath("/my-page/liked-ticket-list");
+
+    // 리뷰 관련 캐시도 무효화
+    revalidateTag("reviews");
+    revalidateTag("comments");
 
     return NextResponse.json({
       success: true,
@@ -403,9 +352,17 @@ export async function PUT(
     if (error.message?.includes("이미 사용 중인 닉네임")) {
       return NextResponse.json({ error: error.message }, { status: 409 });
     }
+    if (error.message?.includes("서버 설정 오류")) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "알 수 없는 오류가 발생했습니다.";
 
     return NextResponse.json(
-      { error: "사용자 프로필 업데이트에 실패했습니다." },
+      { error: `사용자 프로필 업데이트에 실패했습니다. 원인: ${errorMessage}` },
       { status: 500 },
     );
   }

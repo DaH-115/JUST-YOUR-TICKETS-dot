@@ -38,9 +38,7 @@ export default function MovieRating({
       >
         {certification}
       </div>
-      {showLabel && (
-        <span className="text-sm font-medium text-gray-700">{label}</span>
-      )}
+      {showLabel && <span className="text-sm text-gray-600">{label}</span>}
     </div>
   );
 }

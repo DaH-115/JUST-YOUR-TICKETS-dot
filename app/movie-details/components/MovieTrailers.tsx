@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { MovieTrailer } from "lib/movies/fetchVideosMovies";
 import VideoPlayer from "app/components/VideoPlayer";
+import { IoChevronUp, IoChevronDown } from "react-icons/io5";
 
 export default function AllMovieTrailers({
   movieTrailer,
@@ -61,7 +62,7 @@ export default function AllMovieTrailers({
     : movieTrailer.slice(0, currentItemsPerRow);
 
   return (
-    <section className="px-8 py-12 lg:px-12 lg:py-16">
+    <section className="p-8">
       <div className="mb-8">
         <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
           Movie Trailers
@@ -83,20 +84,20 @@ export default function AllMovieTrailers({
             <div className="mt-8 flex justify-center">
               <button
                 onClick={() => setShowAll(!showAll)}
-                className="rounded-full bg-white/10 px-6 py-3 text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="rounded-full bg-white/10 px-6 py-3 text-sm text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
               >
                 {showAll ? (
-                  <>
+                  <div className="flex items-center">
                     <span>접기</span>
-                    <span className="ml-2">↑</span>
-                  </>
+                    <IoChevronUp className="ml-1" />
+                  </div>
                 ) : (
-                  <>
+                  <div className="flex items-center">
                     <span>
                       더보기 ({movieTrailer.length - currentItemsPerRow}개 더)
                     </span>
-                    <span className="ml-2">↓</span>
-                  </>
+                    <IoChevronDown className="ml-1" />
+                  </div>
                 )}
               </button>
             </div>

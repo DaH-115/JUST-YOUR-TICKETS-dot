@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdPerson, MdLogout } from "react-icons/md";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
-import { usePresignedUrl } from "app/hooks/usePresignedUrl";
+import ProfileAvatar from "app/components/ProfileAvatar";
 
 interface HeaderDropDownMenuProps {
   userDisplayName: string | undefined;
@@ -19,46 +17,17 @@ export default function HeaderDropDownMenu({
   userPhotoURL,
   logoutHandler,
 }: HeaderDropDownMenuProps) {
-  const [imageError, setImageError] = useState(false);
-  const { url: presignedUrl, loading } = usePresignedUrl({
-    key: userPhotoURL,
-  });
-
-  // userPhotoURL이 있는지 여부로 이미지 표시 결정
-  const shouldShowImage =
-    userPhotoURL &&
-    typeof userPhotoURL === "string" &&
-    userPhotoURL.trim().length > 0 &&
-    !imageError;
+  console.log("[HeaderDropDownMenu] userPhotoURL:", userPhotoURL);
 
   return (
     <Menu as="div" className="relative">
       <MenuButton className="flex items-center gap-3 transition-opacity hover:opacity-80">
-        <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-white/20">
-          {loading ? (
-            <div className="h-4 w-4 animate-spin rounded-full border border-white border-t-transparent"></div>
-          ) : shouldShowImage ? (
-            <Image
-              src={presignedUrl}
-              alt={userDisplayName || "Guest"}
-              fill
-              sizes="32px"
-              className="object-cover"
-              onError={(e) => {
-                console.warn(
-                  `헤더 프로필 이미지 로딩 실패: ${userDisplayName}`,
-                  e.currentTarget.src,
-                  e.type,
-                );
-                setImageError(true);
-              }}
-            />
-          ) : (
-            <span className="text-sm font-bold text-white">
-              {userDisplayName ? userDisplayName.charAt(0).toUpperCase() : "G"}
-            </span>
-          )}
-        </div>
+        <ProfileAvatar
+          userDisplayName={userDisplayName || "Guest"}
+          photoKey={userPhotoURL}
+          size={32}
+          showLoading={true}
+        />
         <span className="font-medium text-white">
           {userDisplayName ? userDisplayName : "Guest"} 님
         </span>

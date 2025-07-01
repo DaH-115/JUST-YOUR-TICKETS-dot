@@ -84,15 +84,46 @@ export default function AvatarUploader({
         body: file,
       });
 
-      // 3) 프로필에 key 저장 (Firebase Auth & Firestore)
-      await updateProfile(isAuth.currentUser, { photoURL: key });
+      // 3) API를 통한 프로필 이미지 업데이트 (기존 리뷰/댓글도 함께 업데이트)
+      console.log("API 업데이트 시작, photoURL:", key);
+      const idToken = await isAuth.currentUser.getIdToken();
+      const updateResponse = await fetch(
+        `/api/users/${isAuth.currentUser.uid}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({ photoURL: key }),
+        },
+      );
+
+      console.log("API 응답 상태:", updateResponse.status);
+
+      if (!updateResponse.ok) {
+        const errorData = await updateResponse.json();
+        console.error("API 에러 응답:", errorData);
+        throw new Error(
+          errorData.error || "프로필 이미지 업데이트에 실패했습니다.",
+        );
+      }
+
+      const successData = await updateResponse.json();
+      console.log("API 성공 응답:", successData);
+
+      // 4) 로컬 Firebase Auth와 Firestore도 업데이트 (즉시 반영용)
+      // Firebase Auth에는 완전한 URL을, Firestore에는 key를 저장
+      const fullPhotoURL =
+        successData.data.fullPhotoURL || successData.data.photoURL;
+      await updateProfile(isAuth.currentUser, { photoURL: fullPhotoURL });
       const userRef = doc(db, "users", isAuth.currentUser.uid);
       await updateDoc(userRef, { photoKey: key });
 
-      // 4) Redux 상태 업데이트
+      // 5) Redux 상태 업데이트
       dispatch(updatePhotoURL(key));
 
-      // 5) Firebase Auth 사용자 정보 새로고침
+      // 6) Firebase Auth 사용자 정보 새로고침
       await isAuth.currentUser.reload();
 
       setUploading(false);

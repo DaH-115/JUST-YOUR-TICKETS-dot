@@ -66,7 +66,7 @@ export default function AnimatedOverview({
   const collapsedHeight = `${maxLines * 1.5}rem`; // 3줄 = 4.5rem
 
   return (
-    <div className={`border-b-4 border-dotted p-4 ${className}`}>
+    <div className={`border-b-4 border-dotted px-4 py-6 ${className}`}>
       {/* 실제 표시되는 콘텐츠 */}
       <div className="relative">
         <div
@@ -76,7 +76,9 @@ export default function AnimatedOverview({
             height: isExpanded ? `${contentHeight}px` : collapsedHeight,
           }}
         >
-          <p className="break-keep leading-relaxed text-gray-800">{overview}</p>
+          <p className="break-keep text-sm leading-relaxed text-gray-800">
+            {overview}
+          </p>
         </div>
 
         {/* 그라데이션 오버레이 */}

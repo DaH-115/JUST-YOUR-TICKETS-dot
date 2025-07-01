@@ -138,7 +138,7 @@ export default function ProfileEditForm() {
         <div className="flex items-center gap-4">
           <button
             onClick={handleCancel}
-            className="rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100"
+            className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100"
           >
             <FaArrowLeft size={20} />
           </button>
@@ -150,7 +150,7 @@ export default function ProfileEditForm() {
           disabled={!hasDirty || isSubmitting}
           className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
             hasDirty && !isSubmitting
-              ? "bg-blue-500 text-white hover:bg-blue-600"
+              ? "bg-accent-300 text-white hover:bg-accent-500"
               : "cursor-not-allowed bg-gray-200 text-gray-400"
           }`}
         >
@@ -179,17 +179,16 @@ export default function ProfileEditForm() {
           <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-lg font-medium">기본 정보</h2>
             <div className="space-y-6">
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-700">
-                  이메일
-                </label>
-                <div className="rounded-lg bg-gray-50 px-3 py-2 text-gray-600">
-                  {userAuth?.email}
+              {userAuth?.email && (
+                <div className="mb-4">
+                  <label className="mb-2 block text-sm font-bold text-gray-700">
+                    이메일
+                  </label>
+                  <div className="rounded-lg bg-gray-50 px-3 py-2 text-gray-600">
+                    {userAuth.email}
+                  </div>
                 </div>
-                <p className="mt-1 text-xs text-gray-400">
-                  이메일은 변경할 수 없습니다.
-                </p>
-              </div>
+              )}
 
               <NicknameInput
                 originalValue={userAuth?.displayName}

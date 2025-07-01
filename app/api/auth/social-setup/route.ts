@@ -118,6 +118,7 @@ export async function POST(req: NextRequest) {
 
         // Firestore에 사용자 프로필 저장
         await userRef.set({
+          displayName: uniqueNickname,
           provider: provider,
           biography: "Make a ticket for your own movie review.",
           createdAt: new Date(),

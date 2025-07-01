@@ -32,6 +32,14 @@ export function usePresignedUrl({
       return;
     }
 
+    // 이미 완전한 URL인 경우 (https:// 또는 http://로 시작) 그대로 사용
+    if (key.startsWith("https://") || key.startsWith("http://")) {
+      setUrl(key);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
     /**
      * S3 presigned URL을 요청하는 함수
      */

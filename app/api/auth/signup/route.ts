@@ -78,6 +78,7 @@ export async function POST(req: NextRequest) {
       // 4. Firestore 트랜잭션: users 컬렉션에 사용자 프로필 저장
       const userRef = adminFirestore.collection("users").doc(userRecord.uid);
       batch.set(userRef, {
+        displayName: displayName.trim(),
         provider: "email",
         biography: "Make a ticket for your own movie review.",
         createdAt: new Date(),

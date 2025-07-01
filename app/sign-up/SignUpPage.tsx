@@ -337,7 +337,7 @@ export default function SignUpPage() {
                   isDisplayNameAvailable !== true ||
                   isEmailAvailable !== true
                 }
-                className={`w-full rounded-xl bg-accent-400 p-4 font-semibold text-white transition-all duration-300 ${
+                className={`w-full rounded-2xl bg-accent-400 p-4 text-sm font-semibold text-white transition-all duration-300 ${
                   isLoading ||
                   isDisplayNameAvailable !== true ||
                   isEmailAvailable !== true

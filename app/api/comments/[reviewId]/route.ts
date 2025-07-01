@@ -17,36 +17,20 @@ export async function GET(
 
     const querySnapshot = await commentsCol.orderBy("createdAt", "asc").get();
 
-    const comments = await Promise.all(
-      querySnapshot.docs.map(async (doc) => {
-        const data = doc.data();
-
-        // 댓글 작성자의 activityLevel 조회
-        let userActivityLevel;
-        try {
-          const userRef = adminFirestore.collection("users").doc(data.authorId);
-          const userSnap = await userRef.get();
-          if (userSnap.exists) {
-            const userData = userSnap.data();
-            userActivityLevel = userData?.activityLevel || "NEWBIE";
-          }
-        } catch (error) {
-          console.warn(`사용자 ${data.authorId}의 등급 조회 실패:`, error);
-        }
-
-        return {
-          id: doc.id,
-          authorId: data.authorId,
-          displayName: data.displayName || "익명",
-          photoURL: data.photoURL,
-          content: data.content,
-          activityLevel: userActivityLevel,
-          createdAt:
-            data.createdAt?.toDate().toISOString() || new Date().toISOString(),
-          updatedAt: data.updatedAt?.toDate().toISOString(),
-        };
-      }),
-    );
+    const comments = querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        authorId: data.authorId,
+        displayName: data.displayName || "익명",
+        photoURL: data.photoURL,
+        content: data.content,
+        activityLevel: data.activityLevel || "NEWBIE", // DB에 저장된 값 사용
+        createdAt:
+          data.createdAt?.toDate().toISOString() || new Date().toISOString(),
+        updatedAt: data.updatedAt?.toDate().toISOString(),
+      };
+    });
 
     return NextResponse.json({ comments });
   } catch (error) {
@@ -93,24 +77,39 @@ export async function POST(
     }
 
     // 서버 측에서 인증된 사용자의 정보 조회
-    let displayName;
-    let photoURL;
+    let displayName = "익명";
+    let photoKey = null;
+    let activityLevel = "NEWBIE"; // 기본값 설정
 
     try {
-      // Firebase Auth에서 사용자 정보 조회
-      const authUser = await adminAuth.getUser(authResult.uid!);
-      displayName = authUser.displayName || "익명";
-      photoURL = authUser.photoURL || null;
+      // Firestore 'users' 컬렉션에서 사용자 정보 조회
+      const userRef = adminFirestore.collection("users").doc(authResult.uid!);
+      const userSnap = await userRef.get();
+
+      if (userSnap.exists) {
+        const userData = userSnap.data();
+        displayName = userData?.displayName || "익명";
+        photoKey = userData?.photoKey || null;
+        activityLevel = userData?.activityLevel || "NEWBIE";
+      } else {
+        // users 문서가 없는 경우 (매우 드문 케이스), Auth 정보로 대체
+        const authUser = await adminAuth.getUser(authResult.uid!);
+        displayName = authUser.displayName || "익명";
+      }
     } catch (error) {
-      console.warn("사용자 정보 조회 실패:", error);
-      // 기본값 사용
+      console.warn(
+        `댓글 생성 시 사용자 정보(uid: ${authResult.uid}) 조회 실패:`,
+        error,
+      );
+      // 에러 발생 시 기본값 사용
     }
 
     // 댓글 생성
     const newComment = {
       authorId,
       displayName,
-      photoURL,
+      photoURL: photoKey,
+      activityLevel,
       content: content.trim(),
       createdAt: FieldValue.serverTimestamp(),
     };

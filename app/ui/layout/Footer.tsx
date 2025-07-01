@@ -118,7 +118,7 @@ export default function Footer() {
 
         {/* 하단 저작권 정보 */}
         <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
-          <div className="flex flex-col items-center space-y-2 md:flex-row md:space-x-2 md:space-y-0">
+          <div className="flex flex-col items-center space-y-2 text-sm md:flex-row md:space-x-2 md:space-y-0">
             <span>© {new Date().getFullYear()} GWAK DA HYUN</span>
             <span className="hidden md:inline">•</span>
             <span className="hidden md:inline">All rights reserved</span>

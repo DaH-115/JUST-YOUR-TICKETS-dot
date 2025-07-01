@@ -8,6 +8,7 @@ import WriteBtn from "app/components/WriteBtn";
 import MoviePoster from "app/components/MoviePoster";
 import MovieRating from "app/components/MovieRating";
 import Loading from "app/loading";
+import MetaInfoItem from "app/movie-details/components/MetaInfoItem";
 
 type MovieDetailCardProps = {
   movieDetails: MovieDetails;
@@ -45,15 +46,15 @@ export default function MovieDetailCard({
         </section>
 
         {/* MOVIE INFO */}
-        <div className="mx-auto w-full overflow-hidden rounded-2xl shadow-lg">
-          <div className="bg-white p-6">
+        <div className="mx-auto w-full overflow-hidden shadow-lg">
+          <div className="rounded-2xl bg-white p-4">
             {/* 기본 정보 영역 */}
-            <div className="mb-6">
-              <h1 className="mb-3 inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
+            <div className="mb-4">
+              <h1 className="mb-6 inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
                 MOVIE DETAILS
               </h1>
-              <div className="mb-2 flex items-center gap-3">
-                <h2 className="break-keep text-3xl font-bold">
+              <div className="flex items-center">
+                <h2 className="mr-3 break-keep text-3xl font-bold">
                   {movieDetails.title}
                 </h2>
                 {movieDetails.certification && (
@@ -72,12 +73,12 @@ export default function MovieDetailCard({
             </div>
 
             {/* 장르 영역 */}
-            <div className="border-y-4 border-dotted py-4">
+            <div className="border-y-4 border-dotted py-2">
               <ul className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide">
                 {movieDetails.genres.map((genre) => (
                   <li
                     key={genre.id}
-                    className="rounded-full border border-black px-3 py-1.5 text-xs md:text-sm"
+                    className="rounded-full border border-black px-3 py-1.5 text-sm"
                   >
                     {genre.name}
                   </li>
@@ -88,10 +89,10 @@ export default function MovieDetailCard({
             {/* 평점 영역 */}
             <div className="py-4">
               <div className="flex items-center">
-                <IoStar className="mr-2 text-accent-300" />
-                <p className="text-2xl font-bold md:text-3xl">
+                <IoStar className="mr-2 text-xl text-accent-300" />
+                <p className="text-3xl font-bold">
                   {Math.round(movieDetails.vote_average * 10) / 10}
-                  <span className="text-xl font-normal text-gray-300 md:text-2xl">
+                  <span className="text-2xl font-normal text-gray-200">
                     /10
                   </span>
                 </p>
@@ -100,8 +101,8 @@ export default function MovieDetailCard({
 
             {/* 줄거리 영역 */}
             {movieDetails.overview && (
-              <div className="mb-6">
-                <p className="break-keep leading-relaxed text-gray-800">
+              <div className="mb-6 px-2">
+                <p className="break-keep text-sm leading-relaxed text-gray-800">
                   {movieDetails.overview}
                 </p>
               </div>
@@ -109,69 +110,76 @@ export default function MovieDetailCard({
 
             {/* 출연진 영역 */}
             <div className="border-t-4 border-dotted py-4">
-              <h3 className="mb-3 text-sm font-bold md:text-base">출연진</h3>
+              <h3 className="mb-2 text-xs font-bold">출연진</h3>
               {casts.length > 0 ? (
                 <ul className="space-y-2">
                   {casts.slice(0, 5).map((cast) => (
-                    <li key={cast.id} className="text-sm">
-                      <span className="font-medium">{cast.name}</span>
-                      <p className="text-gray-600">{cast.character}</p>
+                    <li key={cast.id} className="">
+                      <p className="text-sm">{cast.name}</p>
+                      <p className="text-xs text-gray-600">{cast.character}</p>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="w-full text-center text-sm text-gray-400">
+                <p className="text-center text-sm text-gray-400">
                   출연진 정보가 없습니다.
                 </p>
               )}
             </div>
 
             {/* 기타 정보 영역 */}
-            <div className="flex w-full items-stretch justify-between border-t-4 border-dotted py-4 text-xs md:text-sm">
-              <div className="flex flex-1 flex-col">
-                <h3 className="mb-2 font-bold">개봉일</h3>
-                <div className="text-center">
-                  <p className="break-keep">{movieDate}</p>
-                </div>
-              </div>
-              <div className="flex flex-1 flex-col border-x-4 border-dotted px-4">
-                <h3 className="mb-2 font-bold">러닝 타임</h3>
-                <p className="text-center">{convertedRuntime}</p>
-              </div>
-              <div className="flex flex-1 flex-col">
-                <h3 className="mb-2 text-xs font-bold md:text-sm">감독</h3>
-                <div className="text-center">
-                  {crews.length > 0 ? (
-                    <ul className="space-y-1">
-                      {crews
-                        .filter((crew) => crew.job === "Director")
-                        .map((crew) => (
-                          <li key={crew.id}>{crew.name}</li>
-                        ))}
-                    </ul>
-                  ) : (
-                    <p className="w-full text-center text-gray-400">
-                      감독 정보가 없습니다.
-                    </p>
-                  )}
-                </div>
-              </div>
+            <div className="flex w-full items-center justify-center border-t-4 border-dotted py-4">
+              <MetaInfoItem label={"개봉일"}>
+                {movieDate ? (
+                  <p>{movieDate}</p>
+                ) : (
+                  <p className="text-gray-400">개봉일 정보가 없습니다.</p>
+                )}
+              </MetaInfoItem>
+              <MetaInfoItem label={"러닝 타임"}>
+                {convertedRuntime && convertedRuntime !== "NaN분" ? (
+                  <p>{convertedRuntime}</p>
+                ) : (
+                  <span className="text-gray-400">
+                    러닝 타임 정보가 없습니다.
+                  </span>
+                )}
+              </MetaInfoItem>
+              <MetaInfoItem label={"감독"}>
+                {crews.length > 0 &&
+                crews.filter((crew) => crew.job === "Director").length > 0 ? (
+                  <ul className="space-y-1">
+                    {crews
+                      .filter((crew) => crew.job === "Director")
+                      .map((crew) => (
+                        <li key={crew.id}>{crew.name}</li>
+                      ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-400">감독 정보가 없습니다.</p>
+                )}
+              </MetaInfoItem>
             </div>
 
             {/* 제작사 정보 */}
             <div className="border-t-4 border-dotted pt-4">
-              <h3 className="mb-3 text-sm font-bold md:text-base">제작</h3>
-              <div className="space-y-1">
+              <h3 className="mb-3 text-xs font-bold">제작</h3>
+              <div className="flex flex-wrap gap-2">
                 {movieDetails.production_companies.map((company, idx) => (
-                  <div key={idx} className="text-sm">
-                    <span>{company.name}</span>
+                  <div
+                    key={idx}
+                    className="rounded-full border border-black px-3 py-1.5 text-xs"
+                  >
+                    {company.name}
                   </div>
                 ))}
               </div>
             </div>
+            {/* 리뷰 작성 버튼 */}
+            <div className="mt-8">
+              <WriteBtn movieId={movieDetails.id} />
+            </div>
           </div>
-          {/* 리뷰 작성 버튼 */}
-          <WriteBtn movieId={movieDetails.id} />
         </div>
       </div>
     </main>

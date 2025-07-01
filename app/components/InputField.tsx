@@ -34,7 +34,7 @@ export default function InputField<TFormValues extends FieldValues>({
         placeholder={placeholder}
         disabled={disabled}
         {...register(id)}
-        className={`w-full rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-3 text-gray-800 placeholder-gray-400 transition-all duration-300 focus:border-accent-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1 ${
+        className={`w-full rounded-2xl border-2 border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 transition-all duration-300 focus:border-accent-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1 ${
           disabled ? "cursor-not-allowed opacity-50" : ""
         } ${
           touched && error
@@ -45,7 +45,6 @@ export default function InputField<TFormValues extends FieldValues>({
       />
       {touched && error && (
         <p className="flex items-center space-x-1 text-sm text-red-600">
-          <span>⚠</span>
           <span>{error}</span>
         </p>
       )}

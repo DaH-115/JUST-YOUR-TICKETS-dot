@@ -80,9 +80,6 @@ export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
               size="tiny"
             />
           </div>
-          <span className="text-xs font-medium text-gray-600">
-            {formatDateOnly(content.createdAt)}
-          </span>
         </div>
       </div>
     </div>

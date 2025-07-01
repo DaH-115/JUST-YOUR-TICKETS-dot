@@ -132,7 +132,7 @@ export default function LoginPage() {
               <div>
                 <button
                   type="submit"
-                  className={`w-full rounded-xl bg-accent-400 p-4 font-semibold text-white transition-all duration-300 ${
+                  className={`w-full rounded-2xl bg-accent-400 p-4 text-sm font-semibold text-white transition-all duration-300 ${
                     isLoading
                       ? "cursor-not-allowed opacity-50"
                       : "hover:bg-accent-500 hover:shadow-lg"
@@ -145,7 +145,7 @@ export default function LoginPage() {
                 <Link href="/sign-up" className="mt-4 block">
                   <button
                     type="button"
-                    className={`flex w-full items-center justify-center rounded-xl border border-gray-300 bg-gray-50 p-4 font-semibold text-gray-700 transition-all duration-300 ${
+                    className={`flex w-full items-center justify-center rounded-2xl border border-gray-300 bg-gray-50 p-4 text-sm font-semibold text-gray-700 transition-all duration-300 ${
                       isLoading
                         ? "cursor-not-allowed opacity-50"
                         : "hover:border-gray-400 hover:bg-gray-100"
@@ -153,7 +153,7 @@ export default function LoginPage() {
                     disabled={isLoading}
                   >
                     회원가입
-                    <FaArrowRight size={16} className="ml-2" />
+                    <FaArrowRight size={14} className="ml-2" />
                   </button>
                 </Link>
               </div>

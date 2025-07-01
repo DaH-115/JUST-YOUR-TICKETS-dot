@@ -115,7 +115,15 @@ export default function ChangePassword() {
 
       {/* 1단계: 현재 비밀번호 확인 */}
       {!isVerified && (
-        <form onSubmit={submitCurrent(onVerifyCurrent)}>
+        <div>
+          <div
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !isVerifying) {
+                e.preventDefault();
+                submitCurrent(onVerifyCurrent)();
+              }
+            }}
+          >
           <InputField
             id="currentPassword"
             label="현재 비밀번호"
@@ -127,9 +135,11 @@ export default function ChangePassword() {
             disabled={isVerifying}
             autoComplete="off"
           />
+          </div>
           <div className="flex justify-end">
             <button
-              type="submit"
+              type="button"
+              onClick={submitCurrent(onVerifyCurrent)}
               disabled={isVerifying}
               className={`rounded-xl px-3 py-1 text-sm transition-colors duration-300 ${
                 isVerifying
@@ -140,12 +150,20 @@ export default function ChangePassword() {
               {isVerifying ? "확인 중..." : "비밀번호 확인"}
             </button>
           </div>
-        </form>
+        </div>
       )}
 
       {/* 2단계: 새 비밀번호 입력 */}
       {isVerified && (
-        <form onSubmit={submitNew(onChangePassword)} className="mt-6">
+        <div className="mt-6">
+          <div
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !isUpdating) {
+                e.preventDefault();
+                submitNew(onChangePassword)();
+              }
+            }}
+          >
           <InputField
             id="newPassword"
             label="새로운 비밀번호"
@@ -157,9 +175,11 @@ export default function ChangePassword() {
             disabled={isUpdating}
             autoComplete="off"
           />
+          </div>
           <div className="flex justify-end">
             <button
-              type="submit"
+              type="button"
+              onClick={submitNew(onChangePassword)}
               disabled={isUpdating}
               className={`rounded-xl px-3 py-1 text-sm transition-colors duration-300 ${
                 isUpdating
@@ -170,7 +190,7 @@ export default function ChangePassword() {
               {isUpdating ? "변경 중..." : "비밀번호 변경"}
             </button>
           </div>
-        </form>
+        </div>
       )}
     </section>
   );

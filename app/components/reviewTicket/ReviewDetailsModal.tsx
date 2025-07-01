@@ -183,7 +183,7 @@ export default function ReviewDetailsModal({
         {/* 모달 닫기 버튼 */}
         <button
           onClick={closeModalHandler}
-          className="text-gray-400 transition-colors hover:text-gray-600"
+          className="ml-4 text-gray-400 transition-colors hover:text-gray-600"
           aria-label="모달 닫기"
         >
           <FaTimes size={16} />

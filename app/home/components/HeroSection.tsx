@@ -22,7 +22,6 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
   );
 
   useLayoutEffect(() => {
-    // 하이드레이션 완료 후 애니메이션 활성화
     setIsHydrated(true);
   }, []);
 
@@ -49,7 +48,7 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
               <p
                 className={`text-center text-base text-gray-300 transition-all duration-500 ease-out md:text-left ${
                   isHydrated
-                    ? "transition-delay-300 translate-y-0 opacity-100"
+                    ? "translate-y-0 opacity-100 transition-delay-300"
                     : "translate-y-8 opacity-0"
                 }`}
               >
@@ -58,28 +57,21 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
             </div>
 
             <div
-              className={`flex w-full justify-center transition-all duration-500 ease-out ${
+              className={`mx-auto flex w-full max-w-4xl flex-col items-center gap-8 transition-all duration-500 ease-out md:flex-row md:items-start ${
                 isHydrated
-                  ? "transition-delay-500 translate-y-0 opacity-100"
+                  ? "translate-y-0 opacity-100 transition-delay-500"
                   : "translate-y-8 opacity-0"
               }`}
             >
-              <div className="group flex w-full max-w-4xl flex-col items-center gap-8 md:flex-row md:items-start md:gap-4">
-                <div className="aspect-[2/3] w-72 flex-none overflow-hidden rounded-2xl drop-shadow-2xl transition-all duration-500 ease-in-out hover:rotate-1 hover:scale-105 hover:drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)] md:w-80 lg:w-96">
-                  <div className="relative h-full w-full">
-                    <span className="absolute inset-0 z-10 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-100 transition-opacity duration-500 group-hover:opacity-0" />
-                    <MoviePoster
-                      posterPath={movie.poster_path}
-                      title={movieTitle}
-                    />
-                  </div>
-                </div>
+              <div className="aspect-[2/3] w-60 overflow-hidden rounded-2xl transition-transform duration-300 ease-out hover:scale-105 md:w-72 lg:w-80">
+                <MoviePoster
+                  posterPath={movie.poster_path}
+                  title={movieTitle}
+                />
+              </div>
 
-                <div className="h-full flex-1 transition-all duration-500 ease-in-out md:hover:scale-105">
-                  <div className="relative h-full">
-                    <MovieInfoCard movie={movie} />
-                  </div>
-                </div>
+              <div className="flex-1 transition-transform duration-300 ease-out hover:scale-105">
+                <MovieInfoCard movie={movie} />
               </div>
             </div>
           </header>
@@ -88,7 +80,7 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
             <section
               className={`w-full transition-all duration-500 ease-out ${
                 isHydrated
-                  ? "transition-delay-700 translate-y-0 opacity-100"
+                  ? "translate-y-0 opacity-100 transition-delay-700"
                   : "translate-y-8 opacity-0"
               }`}
             >
@@ -103,18 +95,8 @@ export default function HeroSection({ movie, trailerKey }: HeroSectionProps) {
                 </p>
               </header>
 
-              <div className="flex justify-center">
-                <div className="group aspect-video w-full max-w-4xl transition-all duration-500 ease-out hover:scale-105">
-                  <div className="relative h-full w-full">
-                    <span className="absolute -inset-2 rounded-xl bg-white/10 opacity-0 blur transition-opacity duration-500 group-hover:opacity-100" />
-                    <div className="relative h-full w-full overflow-hidden rounded-xl">
-                      <VideoPlayer
-                        trailerKey={trailerKey}
-                        thumbnailSize={"large"}
-                      />
-                    </div>
-                  </div>
-                </div>
+              <div className="mx-auto aspect-video w-full max-w-4xl overflow-hidden rounded-xl transition-transform duration-300 ease-out hover:scale-105">
+                <VideoPlayer trailerKey={trailerKey} thumbnailSize={"large"} />
               </div>
             </section>
           )}

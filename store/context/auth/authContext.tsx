@@ -7,8 +7,8 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { isAuth } from "firebase-config";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { isAuth, db } from "firebase-config";
 import { useAppDispatch } from "store/redux-toolkit/hooks";
 import {
   clearUser,
@@ -23,6 +23,12 @@ import {
   clearAuthPersistence,
 } from "app/utils/authPersistence";
 import Loading from "app/loading";
+import {
+  doc,
+  onSnapshot,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -59,24 +65,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const unsubscribe = onAuthStateChanged(isAuth, (user) => {
       if (user) {
-        const userData: SerializableUser = {
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        };
-        dispatch(setAuthUser(userData));
-        if (userData.uid) {
-          dispatch(fetchUserMetaData(userData.uid));
-        }
+        // 사용자가 로그인했을 때 Firestore 구독 시작
+        const userDocRef = doc(db, "users", user.uid);
+
+        const unsubscribeSnapshot = onSnapshot(userDocRef, (snapshot) => {
+          const dbUser = snapshot.data();
+
+          // Auth 정보와 Firestore 정보를 합쳐서 Redux 스토어 업데이트
+          const combinedUserData: SerializableUser = {
+            uid: user.uid,
+            email: user.email,
+            displayName: dbUser?.displayName || user.displayName,
+            photoURL: dbUser?.photoKey || user.photoURL,
+          };
+
+          dispatch(setAuthUser(combinedUserData));
+
+          // 추가 메타데이터(등급 등) 가져오기
+          if (combinedUserData.uid) {
+            dispatch(fetchUserMetaData(combinedUserData.uid));
+          }
+        });
 
         setAuthState({ isAuthenticated: true, isLoading: false });
+
+        // Clean-up 함수에서 Firestore 구독 해제
+        return () => {
+          unsubscribeSnapshot();
+        };
       } else {
         dispatch(clearUser());
         setAuthState({ isAuthenticated: false, isLoading: false });
       }
     });
-    return () => unsubscribe();
+
+    return unsubscribe;
   }, [dispatch]);
 
   return (
