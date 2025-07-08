@@ -17,8 +17,6 @@ export default function HeaderDropDownMenu({
   userPhotoURL,
   logoutHandler,
 }: HeaderDropDownMenuProps) {
-  console.log("[HeaderDropDownMenu] userPhotoURL:", userPhotoURL);
-
   return (
     <Menu as="div" className="relative">
       <MenuButton className="flex items-center gap-3 transition-opacity hover:opacity-80">

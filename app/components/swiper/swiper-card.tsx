@@ -64,7 +64,7 @@ export default function SwiperCard({
         </section>
 
         {/* RATING & GENRES */}
-        <section className="flex items-center p-1 px-2 md:p-2">
+        <section className="flex items-center p-2">
           {/* RATE */}
           <div className="flex items-center border-r-4 border-dotted pr-2 text-xs md:text-sm">
             <IoStar className="text-accent-300 md:mr-1" />
@@ -77,7 +77,7 @@ export default function SwiperCard({
             {genres?.length > 0 ? (
               genres.slice(0, 3).map((genre, idx) => (
                 <li
-                  className="text-nowrap rounded-full border border-primary-500 bg-white px-2 py-1 text-xs text-black transition-colors duration-300 hover:bg-primary-500 hover:text-white active:bg-black active:text-white"
+                  className="text-nowrap rounded-full border border-primary-500 bg-white px-2 py-0.5 text-[11px] text-black transition-colors duration-300 hover:bg-primary-500 hover:text-white active:bg-black active:text-white"
                   key={idx}
                 >
                   {genre}
@@ -92,7 +92,7 @@ export default function SwiperCard({
         </section>
 
         {/* REVIEW WRITE BUTTON */}
-        <div className="p-1">
+        <div className="p-2">
           <WriteBtn movieId={id} size={"small"} />
         </div>
       </footer>

@@ -3,18 +3,18 @@
 import ProfileAvatar from "app/components/ProfileAvatar";
 
 interface ProfileImageProps {
-  photoURL?: string | null;
+  photoKey?: string | null;
   userDisplayName: string;
 }
 
 export default function ProfileImage({
-  photoURL,
+  photoKey,
   userDisplayName,
 }: ProfileImageProps) {
   return (
     <ProfileAvatar
       userDisplayName={userDisplayName}
-      photoKey={photoURL}
+      photoKey={photoKey}
       size={24}
       className="mr-1 border"
       showLoading={true}

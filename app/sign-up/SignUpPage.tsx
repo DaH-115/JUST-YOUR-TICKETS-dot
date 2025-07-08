@@ -11,6 +11,7 @@ import InputField from "app/components/InputField";
 import DuplicateCheckButton from "app/components/DuplicateCheckButton";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { isAuth } from "firebase-config";
+import { useNicknameCheck } from "app/my-page/hooks/useNicknameCheck";
 
 const signupSchema = z
   .object({
@@ -48,10 +49,6 @@ export default function SignUpPage() {
   const router = useRouter();
   const { showErrorHandler, showSuccessHandler } = useAlert();
   const [isLoading, setIsLoading] = useState(false);
-  const [isCheckingName, setIsCheckingName] = useState(false);
-  const [isDisplayNameAvailable, setIsDisplayNameAvailable] = useState<
-    boolean | null
-  >(null);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const [isEmailAvailable, setIsEmailAvailable] = useState<boolean | null>(
     null,
@@ -71,56 +68,34 @@ export default function SignUpPage() {
   const displayNameValue = watch("displayName");
   const emailValue = watch("email");
 
-  // 값 변경 시 이전 중복 검사 결과 초기화
-  useEffect(() => {
-    setIsDisplayNameAvailable(null);
-  }, [displayNameValue]);
+  const {
+    isChecking: isCheckingName,
+    isChecked: isNameChecked,
+    isAvailable: isDisplayNameAvailable,
+    message: displayNameMessage,
+    checkNickname,
+  } = useNicknameCheck({ nickname: displayNameValue });
 
+  useEffect(() => {
+    if (isNameChecked && displayNameMessage) {
+      if (isDisplayNameAvailable) {
+        showSuccessHandler("성공", displayNameMessage);
+      } else {
+        showErrorHandler("실패", displayNameMessage);
+      }
+    }
+  }, [
+    isNameChecked,
+    isDisplayNameAvailable,
+    displayNameMessage,
+    showErrorHandler,
+    showSuccessHandler,
+  ]);
+
+  // 값 변경 시 이전 중복 검사 결과 초기화
   useEffect(() => {
     setIsEmailAvailable(null);
   }, [emailValue]);
-
-  // 닉네임 중복 확인
-  const checkDisplayName = useCallback(async () => {
-    const displayName = getValues("displayName");
-    if (!displayName) {
-      showErrorHandler("알림", "닉네임을 입력해주세요.");
-      return;
-    }
-    setIsCheckingName(true);
-    try {
-      const response = await fetch("/api/auth/check-availability", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: "displayName",
-          value: displayName,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "중복 확인에 실패했습니다.");
-      }
-
-      if (result.available) {
-        setIsDisplayNameAvailable(true);
-        showSuccessHandler("중복 확인", result.message);
-      } else {
-        setIsDisplayNameAvailable(false);
-        showErrorHandler("중복 확인", result.message);
-      }
-    } catch (error: any) {
-      const { title, message } = firebaseErrorHandler(error);
-      showErrorHandler(title, message);
-      setIsDisplayNameAvailable(false);
-    } finally {
-      setIsCheckingName(false);
-    }
-  }, [getValues, showErrorHandler, showSuccessHandler]);
 
   // 이메일 중복 확인
   const checkEmail = useCallback(async () => {
@@ -150,10 +125,10 @@ export default function SignUpPage() {
 
       if (result.available) {
         setIsEmailAvailable(true);
-        showSuccessHandler("중복 확인", result.message);
+        showSuccessHandler("성공", result.message);
       } else {
         setIsEmailAvailable(false);
-        showErrorHandler("중복 확인", result.message);
+        showErrorHandler("실패", result.message);
       }
     } catch (error: any) {
       const { title, message } = firebaseErrorHandler(error);
@@ -193,8 +168,9 @@ export default function SignUpPage() {
         // 회원가입 성공 후 자동 로그인
         await signInWithEmailAndPassword(isAuth, email, password);
 
-        showSuccessHandler("회원가입 완료", "환영합니다!");
-        router.replace("/");
+        showSuccessHandler("회원가입 완료", "환영합니다!", () => {
+          router.replace("/");
+        });
       } catch (error: any) {
         const { title, message } = firebaseErrorHandler(error);
         showErrorHandler(title, message);
@@ -252,21 +228,8 @@ export default function SignUpPage() {
                       disabled={isLoading}
                       autoComplete={"displayName"}
                     />
-                    {isDisplayNameAvailable !== null && (
-                      <p
-                        className={`mt-1 text-xs ${
-                          isDisplayNameAvailable
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }`}
-                      >
-                        {isDisplayNameAvailable
-                          ? "사용 가능한 닉네임입니다."
-                          : "이미 사용 중인 닉네임입니다."}
-                      </p>
-                    )}
                     <DuplicateCheckButton
-                      onClick={checkDisplayName}
+                      onClick={checkNickname}
                       disabled={isCheckingName || !displayNameValue}
                       isChecking={isCheckingName}
                     />

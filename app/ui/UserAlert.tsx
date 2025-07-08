@@ -16,7 +16,7 @@ export default function UserAlert({
 }: UserAlertProps) {
   return (
     <AlertPortal onConfirm={onConfirm}>
-      <div className="animate-in fade-in-0 zoom-in-95 mx-4 w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl ring-1 ring-gray-200/50 backdrop-blur-sm duration-300">
+      <div className="animate-in fade-in-0 zoom-in-95 mx-4 w-full max-w-sm rounded-3xl bg-white p-4 shadow-2xl ring-1 ring-gray-200/50 backdrop-blur-sm duration-300">
         {/* Alert Header */}
         <div className="mb-4 text-center">
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg">

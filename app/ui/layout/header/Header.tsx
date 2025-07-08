@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { signOut } from "firebase/auth";
 import { isAuth } from "firebase-config";
 import { useRouter } from "next/navigation";
-import { clearUser } from "store/redux-toolkit/slice/userSlice";
+import { clearUser, selectUser } from "store/redux-toolkit/slice/userSlice";
 import HeaderSearchBar from "app/ui/layout/header/components/HeaderSearchBar";
 import { IoIosMenu } from "react-icons/io";
 import HeaderSideMenu from "app/ui/layout/header/components/HeaderSideMenu";
@@ -26,10 +26,9 @@ const navItems: NavItem[] = [
 export default function Header() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const userDisplayName = useAppSelector(
-    (state) => state.userData.auth?.displayName,
-  );
-  const userPhotoURL = useAppSelector((state) => state.userData.auth?.photoURL);
+  const user = useAppSelector(selectUser);
+  const userDisplayName = user?.displayName;
+  const userPhotoURL = user?.photoKey;
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -161,6 +160,7 @@ export default function Header() {
       <HeaderSideMenu
         userDisplayName={userDisplayName || ""}
         userPhotoURL={userPhotoURL}
+        userEmail={user?.email || ""}
         isOpen={isSideMenuOpen}
         onClose={() => setIsSideMenuOpen(false)}
       />

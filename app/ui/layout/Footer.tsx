@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useAppSelector } from "store/redux-toolkit/hooks";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 export default function Footer() {
-  const userUid = useAppSelector((state) => state.userData.auth?.uid);
-  const isLoggedIn = !!userUid;
+  const user = useAppSelector(selectUser);
+  const isLoggedIn = !!user?.uid;
 
   const mainMenuItems = [
     { href: "/", label: "Home" },
@@ -15,7 +16,10 @@ export default function Footer() {
 
   const userMenuItems = [
     { href: "/my-page", label: "My Page" },
-    { href: `/my-page/my-ticket-list?uid=${userUid}`, label: "My Ticket List" },
+    {
+      href: `/my-page/my-ticket-list?uid=${user?.uid}`,
+      label: "My Ticket List",
+    },
     { href: "/my-page/liked-ticket-list", label: "Liked Tickets" },
   ];
 

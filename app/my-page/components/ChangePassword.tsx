@@ -15,6 +15,7 @@ import { useAppSelector } from "store/redux-toolkit/hooks";
 import { useAlert } from "store/context/alertContext";
 import { useRouter } from "next/navigation";
 import InputField from "app/components/InputField";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 const passwordBase = z
   .string()
@@ -41,7 +42,7 @@ export default function ChangePassword() {
   const router = useRouter();
 
   const currentUser = isAuth.currentUser;
-  const userEmail = useAppSelector((s) => s.userData.auth?.email);
+  const user = useAppSelector(selectUser);
   const { showErrorHandler, showSuccessHandler } = useAlert();
 
   const {
@@ -61,14 +62,14 @@ export default function ChangePassword() {
   });
 
   const onVerifyCurrent = async (data: CurrentPasswordForm) => {
-    if (!currentUser || !userEmail) {
+    if (!currentUser || !user?.email) {
       showErrorHandler("오류", "사용자 정보가 올바르지 않습니다.");
       return;
     }
     setIsVerifying(true);
     try {
       const cred = EmailAuthProvider.credential(
-        userEmail,
+        user?.email,
         data.currentPassword,
       );
       await reauthenticateWithCredential(currentUser, cred);
@@ -124,17 +125,17 @@ export default function ChangePassword() {
               }
             }}
           >
-          <InputField
-            id="currentPassword"
-            label="현재 비밀번호"
-            type="password"
-            placeholder="현재 비밀번호를 입력하세요."
-            register={regCurrent}
-            error={errCurrent.currentPassword?.message}
-            touched={!!touchedCurrent.currentPassword}
-            disabled={isVerifying}
-            autoComplete="off"
-          />
+            <InputField
+              id="currentPassword"
+              label="현재 비밀번호"
+              type="password"
+              placeholder="현재 비밀번호를 입력하세요."
+              register={regCurrent}
+              error={errCurrent.currentPassword?.message}
+              touched={!!touchedCurrent.currentPassword}
+              disabled={isVerifying}
+              autoComplete="off"
+            />
           </div>
           <div className="flex justify-end">
             <button
@@ -164,17 +165,17 @@ export default function ChangePassword() {
               }
             }}
           >
-          <InputField
-            id="newPassword"
-            label="새로운 비밀번호"
-            type="password"
-            placeholder="새로운 비밀번호를 입력하세요."
-            register={regNew}
-            error={errNew.newPassword?.message}
-            touched={!!touchedNew.newPassword}
-            disabled={isUpdating}
-            autoComplete="off"
-          />
+            <InputField
+              id="newPassword"
+              label="새로운 비밀번호"
+              type="password"
+              placeholder="새로운 비밀번호를 입력하세요."
+              register={regNew}
+              error={errNew.newPassword?.message}
+              touched={!!touchedNew.newPassword}
+              disabled={isUpdating}
+              autoComplete="off"
+            />
           </div>
           <div className="flex justify-end">
             <button

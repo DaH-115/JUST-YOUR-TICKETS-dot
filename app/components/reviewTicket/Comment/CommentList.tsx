@@ -8,6 +8,7 @@ import ActivityBadge from "app/components/ActivityBadge";
 import ProfileImage from "app/components/reviewTicket/ProfileImage";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 const commentSchema = z.object({
   comment: z
@@ -15,27 +16,29 @@ const commentSchema = z.object({
     .min(1, { message: "댓글을 입력해주세요." })
     .max(500, { message: "댓글은 500자 이하로 작성해주세요." }),
 });
+
 type CommentForm = z.infer<typeof commentSchema>;
 
 interface Comment {
   id: string;
   authorId: string;
   displayName: string;
-  photoURL?: string;
+  photoKey: string | null;
   content: string;
-  createdAt: string;
+  activityLevel: string;
+  createdAt: string | null;
+  updatedAt?: string | null;
 }
 
-export default function Comments({
+export default function CommentList({
   id: reviewId,
   reviewAuthorId,
 }: Pick<ReviewDoc, "id"> & { reviewAuthorId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [isPosting, setIsPosting] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null); // null 이면 새 댓글, 댓글ID면 수정 모드
-
-  const userState = useAppSelector((state) => state.userData.auth);
-
+  const userState = useAppSelector(selectUser); // 댓글 작성자 정보
+  // 댓글 작성 폼 상태 관리
   const {
     register,
     handleSubmit,
@@ -46,7 +49,7 @@ export default function Comments({
     defaultValues: { comment: "" },
   });
 
-  // 댓글 목록 가져오기
+  // 댓글 목록 가져오는 함수 정의
   const fetchComments = useCallback(async () => {
     try {
       const response = await fetch(`/api/comments/${reviewId}`);
@@ -64,30 +67,23 @@ export default function Comments({
     setComments([]);
     setEditingId(null);
     reset();
-
-    // 댓글 목록 가져오기
-    fetchComments();
-
-    return () => {
-      // 컴포넌트 언마운트 시 상태 초기화
-      setComments([]);
-      setEditingId(null);
-      reset();
-    };
+    fetchComments(); // 댓글 목록 가져오기
   }, [reviewId, reset, fetchComments]);
 
   // 댓글 등록/수정 핸들러
   const onSubmit = useCallback(
     async (data: CommentForm) => {
+      // 댓글 내용이 비어있거나, 이미 댓글 등록 중이거나, 로그인 상태가 아니면 종료
       if (!data.comment.trim() || isPosting || !userState) {
         return;
       }
-      setIsPosting(true);
-      const content = data.comment.trim();
+
+      setIsPosting(true); // 댓글 등록/수정 중임을 표시
+      const content = data.comment.trim(); // 댓글 내용 정리
 
       try {
+        // 댓글 수정 모드인 경우
         if (editingId) {
-          // 댓글 수정
           await apiCallWithTokenRefresh(async (authHeaders) => {
             const response = await fetch(
               `/api/comments/${reviewId}/${editingId}`,
@@ -113,7 +109,7 @@ export default function Comments({
           setEditingId(null);
           reset({ comment: "" }); // 명시적으로 빈 문자열로 리셋
         } else {
-          // 댓글 생성
+          // 댓글 생성 모드인 경우
           await apiCallWithTokenRefresh(async (authHeaders) => {
             const response = await fetch(`/api/comments/${reviewId}`, {
               method: "POST",
@@ -123,8 +119,6 @@ export default function Comments({
               },
               body: JSON.stringify({
                 authorId: userState.uid,
-                displayName: userState.displayName || "익명",
-                photoURL: userState.photoURL,
                 content,
               }),
             });
@@ -171,7 +165,7 @@ export default function Comments({
         return;
       }
 
-      if (!confirm("정말로 댓글을 삭제하시겠습니까?")) {
+      if (!confirm("정말 댓글을 삭제하시겠습니까?")) {
         return;
       }
 
@@ -229,9 +223,9 @@ export default function Comments({
         className={`${comments.length > 0 ? "max-h-80 overflow-y-auto scrollbar-hide" : "hidden"}`}
       >
         <ul className="space-y-2">
-          {comments.map((c, idx) => (
+          {comments.map((comment, idx) => (
             <li
-              key={c.id}
+              key={comment.id}
               className={`py-2 ${idx < comments.length - 1 ? "border-b" : ""}`}
             >
               <div className="flex items-center justify-between pt-1">
@@ -241,36 +235,36 @@ export default function Comments({
                       {idx + 1}.
                     </span>
                     <ProfileImage
-                      photoURL={c.photoURL}
-                      userDisplayName={c.displayName || "익명"}
+                      photoKey={comment.photoKey}
+                      userDisplayName={comment.displayName || "익명"}
                     />
                     <p className="text-xs font-bold text-gray-800">
-                      {c.displayName || "익명"}
+                      {comment.displayName || "익명"}
                     </p>
                     <ActivityBadge
-                      activityLevel={(c as any).activityLevel}
+                      activityLevel={comment.activityLevel}
                       size="tiny"
                     />
                   </div>
-                  {c.authorId === reviewAuthorId && (
+                  {comment.authorId === reviewAuthorId && (
                     <span className="rounded-md bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">
                       작성자
                     </span>
                   )}
                 </div>
                 {/* 댓글 작성자와 로그인한 유저가 같을 때만 수정/삭제 버튼 노출 */}
-                {userState?.uid === c.authorId && (
+                {userState?.uid === comment.authorId && (
                   <div className="flex items-center space-x-2">
                     {/* 댓글 수정 버튼 */}
                     <button
-                      onClick={() => editHandler(c.id, c.content)}
+                      onClick={() => editHandler(comment.id, comment.content)}
                       className="text-xs text-black hover:underline"
                     >
                       수정
                     </button>
                     {/* 댓글 삭제 버튼 */}
                     <button
-                      onClick={() => deleteComment(c.id)}
+                      onClick={() => deleteComment(comment.id)}
                       className="text-xs text-red-600 hover:underline"
                     >
                       삭제
@@ -278,9 +272,9 @@ export default function Comments({
                   </div>
                 )}
               </div>
-              <p className="py-2 text-sm">{c.content}</p>
+              <p className="py-2 text-sm">{comment.content}</p>
               <span className="mt-2 block text-xs text-gray-600">
-                {formatDate(c.createdAt)}
+                {formatDate(comment.createdAt)}
               </span>
             </li>
           ))}

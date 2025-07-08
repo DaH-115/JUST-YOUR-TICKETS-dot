@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminFirestore, adminAuth } from "firebase-admin-config";
 import { FieldValue } from "firebase-admin/firestore";
-import { revalidatePath } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 
-// GET /api/comments/[reviewId] - 특정 리뷰의 댓글 목록 조회
+// GET /api/comments/[reviewId] - 'movie-reviews' 컬렉션의 특정 리뷰의 댓글 목록 조회
 export async function GET(
   _req: NextRequest,
   { params }: { params: { reviewId: string } },
@@ -17,20 +16,46 @@ export async function GET(
 
     const querySnapshot = await commentsCol.orderBy("createdAt", "asc").get();
 
-    const comments = querySnapshot.docs.map((doc) => {
+    const commentsPromises = querySnapshot.docs.map(async (doc) => {
       const data = doc.data();
+
+      // 댓글 작성자의 최신 프로필 정보 조회
+      let authorInfo = {
+        displayName: data.displayName || "익명",
+        photoKey: data.photoKey || null,
+        activityLevel: data.activityLevel || "NEWBIE",
+      };
+
+      try {
+        // 'users' 컬렉션에서 댓글 작성자의 프로필 정보 조회
+        const userRef = adminFirestore.collection("users").doc(data.authorId);
+        const userSnap = await userRef.get();
+        if (userSnap.exists) {
+          const userData = userSnap.data();
+          authorInfo.displayName =
+            userData?.displayName || authorInfo.displayName;
+          authorInfo.photoKey = userData?.photoKey || authorInfo.photoKey;
+          authorInfo.activityLevel =
+            userData?.activityLevel || authorInfo.activityLevel;
+        }
+      } catch (error) {
+        console.warn(`사용자 ${data.authorId}의 프로필 조회 실패:`, error);
+      }
+
+      // 댓글 정보 반환 (댓글 내용 + 작성자 정보)
       return {
         id: doc.id,
         authorId: data.authorId,
-        displayName: data.displayName || "익명",
-        photoURL: data.photoURL,
+        displayName: authorInfo.displayName,
+        photoKey: authorInfo.photoKey,
         content: data.content,
-        activityLevel: data.activityLevel || "NEWBIE", // DB에 저장된 값 사용
-        createdAt:
-          data.createdAt?.toDate().toISOString() || new Date().toISOString(),
-        updatedAt: data.updatedAt?.toDate().toISOString(),
+        activityLevel: authorInfo.activityLevel,
+        createdAt: data.createdAt?.toDate().toISOString() || null,
+        updatedAt: data.updatedAt?.toDate().toISOString() || null,
       };
     });
+
+    const comments = await Promise.all(commentsPromises);
 
     return NextResponse.json({ comments });
   } catch (error) {
@@ -48,7 +73,7 @@ export async function POST(
   { params }: { params: { reviewId: string } },
 ) {
   try {
-    // Firebase Admin SDK로 토큰 검증
+    // 1. Firebase Admin SDK로 토큰 검증
     const authResult = await verifyAuthToken(req);
     if (!authResult.success) {
       return NextResponse.json(
@@ -57,9 +82,10 @@ export async function POST(
       );
     }
 
+    // 2. 요청 본문에서 댓글 작성자 ID와 내용 추출
     const { authorId, content } = await req.json();
 
-    // 필수 필드 검증
+    // 3. 필수 필드 검증
     if (!authorId || !content?.trim()) {
       return NextResponse.json(
         { error: "authorId와 content가 필요합니다." },
@@ -67,7 +93,7 @@ export async function POST(
       );
     }
 
-    // 리소스 소유자 권한 확인
+    // 4. 리소스 소유자 권한 확인
     const ownershipResult = verifyResourceOwnership(authResult.uid!, authorId);
     if (!ownershipResult.success) {
       return NextResponse.json(
@@ -76,10 +102,10 @@ export async function POST(
       );
     }
 
-    // 서버 측에서 인증된 사용자의 정보 조회
+    // 5. 서버 측에서 인증된 사용자의 정보 조회
     let displayName = "익명";
     let photoKey = null;
-    let activityLevel = "NEWBIE"; // 기본값 설정
+    let activityLevel = "NEWBIE";
 
     try {
       // Firestore 'users' 컬렉션에서 사용자 정보 조회
@@ -92,7 +118,7 @@ export async function POST(
         photoKey = userData?.photoKey || null;
         activityLevel = userData?.activityLevel || "NEWBIE";
       } else {
-        // users 문서가 없는 경우 (매우 드문 케이스), Auth 정보로 대체
+        // users 문서가 없는 경우, Auth 정보로 대체
         const authUser = await adminAuth.getUser(authResult.uid!);
         displayName = authUser.displayName || "익명";
       }
@@ -101,14 +127,13 @@ export async function POST(
         `댓글 생성 시 사용자 정보(uid: ${authResult.uid}) 조회 실패:`,
         error,
       );
-      // 에러 발생 시 기본값 사용
     }
 
-    // 댓글 생성
+    // 6. 댓글 생성
     const newComment = {
       authorId,
       displayName,
-      photoURL: photoKey,
+      photoKey: photoKey,
       activityLevel,
       content: content.trim(),
       createdAt: FieldValue.serverTimestamp(),
@@ -119,9 +144,6 @@ export async function POST(
       .doc(params.reviewId)
       .collection("comments")
       .add(newComment);
-
-    // 캐시 재검증 (필요한 경우)
-    revalidatePath("/ticket-list");
 
     return NextResponse.json(
       {

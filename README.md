@@ -308,7 +308,7 @@ const releaseDates = await getBatchReleaseDates(movieIds); // 동시 처리
 
 #### `GET /api/users/[uid]`
 
-사용자 프로필 정보를 조회합니다.
+사용자 프로필 정보와 통계를 조회합니다.
 
 **응답:**
 
@@ -316,6 +316,10 @@ const releaseDates = await getBatchReleaseDates(movieIds); // 동시 처리
 {
   "provider": "google",
   "biography": "영화를 사랑하는 개발자입니다.",
+  "photoKey": "profile-images/user123.jpg",
+  "activityLevel": "NEWBIE",
+  "myTicketsCount": 15,
+  "likedTicketsCount": 8,
   "createdAt": "2023-01-01T00:00:00.000Z",
   "updatedAt": "2023-01-02T00:00:00.000Z"
 }

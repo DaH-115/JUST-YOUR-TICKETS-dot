@@ -22,7 +22,7 @@ export default function DuplicateCheckButton({
           : "bg-gray-600 text-white hover:bg-gray-700"
       } ${className}`}
     >
-      {isChecking ? "확인중" : "중복확인"}
+      {isChecking ? "확인 중" : "중복 확인"}
     </button>
   );
 }

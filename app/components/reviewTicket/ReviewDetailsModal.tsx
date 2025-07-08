@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart, FaTimes } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { useAppSelector } from "store/redux-toolkit/hooks";
-import Comments from "app/components/reviewTicket/Comment/Comments";
-import ModalPortal from "app/components/modal/ModalPortal";
-import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
-import ProfileImage from "app/components/reviewTicket/ProfileImage";
-import ActivityBadge from "app/components/ActivityBadge";
-import formatDate from "app/utils/formatDate";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
+import formatDate from "app/utils/formatDate";
+import ActivityBadge from "app/components/ActivityBadge";
+import ModalPortal from "app/components/modal/ModalPortal";
+import CommentList from "app/components/reviewTicket/Comment/CommentList";
+import ProfileImage from "app/components/reviewTicket/ProfileImage";
+import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
 
 interface ReviewDetailsModalProps {
   isModalOpen: boolean;
@@ -32,9 +33,10 @@ export default function ReviewDetailsModal({
   const [likeCount, setLikeCount] = useState(review.likeCount || 0);
   const [isLiking, setIsLiking] = useState(false);
 
-  const userState = useAppSelector((state) => state.userData.auth);
+  const userState = useAppSelector(selectUser);
 
   useEffect(() => {
+    // 리뷰 좋아요 상태 초기화
     setLiked(false);
     setLikeCount(review.likeCount || 0);
   }, [review.likeCount]);
@@ -44,6 +46,7 @@ export default function ReviewDetailsModal({
       return;
     }
 
+    // 좋아요 상태(개수, 좋아요 여부) 확인 함수
     const checkStatus = async () => {
       try {
         await apiCallWithTokenRefresh(async (authHeaders) => {
@@ -75,13 +78,14 @@ export default function ReviewDetailsModal({
     }
   }, [userState?.uid, selectedReview.id]);
 
+  // 좋아요 처리 핸들러
   const likeHandler = async () => {
     if (!userState?.uid || isLiking) return;
     setIsLiking(true);
 
     try {
       if (liked) {
-        // 좋아요 취소
+        // '좋아요를 한 적이 있으면' 취소 처리
         await apiCallWithTokenRefresh(async (authHeaders) => {
           const response = await fetch(
             `/api/reviews/${selectedReview.id}/like`,
@@ -105,7 +109,7 @@ export default function ReviewDetailsModal({
         setLikeCount((prev) => prev - 1);
         onLikeToggled?.(selectedReview.id, false);
       } else {
-        // 좋아요 추가
+        // '좋아요를 한 적이 없으면' 추가 처리
         await apiCallWithTokenRefresh(async (authHeaders) => {
           const response = await fetch(
             `/api/reviews/${selectedReview.id}/like`,
@@ -193,14 +197,11 @@ export default function ReviewDetailsModal({
       <div className="pb-4 text-sm">
         <div className="flex items-center gap-2">
           <ProfileImage
-            photoURL={user.photoURL || undefined}
+            photoKey={user.photoKey || undefined}
             userDisplayName={user.displayName || "익명"}
           />
           <span className="font-bold">{user.displayName}</span>
-          <ActivityBadge
-            activityLevel={(user as any).activityLevel}
-            size="tiny"
-          />
+          <ActivityBadge activityLevel={user.activityLevel} size="tiny" />
         </div>
       </div>
       <div className="mb-4 max-h-80 overflow-y-auto border-t-4 border-dotted pb-4 pt-4 scrollbar-hide">
@@ -218,7 +219,7 @@ export default function ReviewDetailsModal({
       </div>
       {/* 댓글 영역 - 모달이 열릴 때만 렌더링 */}
       {isModalOpen && user.uid && (
-        <Comments id={selectedReview.id} reviewAuthorId={user.uid} />
+        <CommentList id={selectedReview.id} reviewAuthorId={user.uid} />
       )}
     </ModalPortal>
   );

@@ -13,10 +13,10 @@ interface UsePresignedUrlReturn {
 
 export function usePresignedUrl({
   key,
-  fallbackUrl = "/images/fallback-avatar.svg",
+  fallbackUrl,
 }: UsePresignedUrlProps): UsePresignedUrlReturn {
   // 현재 표시할 URL (presigned URL 또는 fallback URL)
-  const [url, setUrl] = useState<string>(fallbackUrl);
+  const [url, setUrl] = useState<string>(fallbackUrl || "");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   // HTTP 요청 취소를 위한 AbortController 참조
@@ -26,15 +26,7 @@ export function usePresignedUrl({
     // key 유효성 검증
     if (!key || typeof key !== "string" || key.trim().length === 0) {
       // 유효하지 않은 key인 경우 즉시 fallback URL 사용
-      setUrl(fallbackUrl);
-      setLoading(false);
-      setError(null);
-      return;
-    }
-
-    // 이미 완전한 URL인 경우 (https:// 또는 http://로 시작) 그대로 사용
-    if (key.startsWith("https://") || key.startsWith("http://")) {
-      setUrl(key);
+      setUrl(fallbackUrl || "");
       setLoading(false);
       setError(null);
       return;
@@ -86,7 +78,7 @@ export function usePresignedUrl({
         if (!abortController.signal.aborted) {
           console.error("Error fetching presigned URL:", err);
           setError(err instanceof Error ? err.message : "Unknown error");
-          setUrl(fallbackUrl); // 에러 시 fallback URL로 복원
+          setUrl(fallbackUrl || "");
         }
       } finally {
         // 10. 로딩 상태 종료 (요청이 취소되지 않은 경우만)

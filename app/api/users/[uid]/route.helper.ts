@@ -56,10 +56,6 @@ export async function updateReviewsDisplayName(
 
     // 모든 배치 실행
     await Promise.all(batches.map((batch) => batch.commit()));
-
-    console.log(
-      `사용자 ${uid}의 리뷰 ${reviewsSnapshot.size}개의 닉네임을 ${newDisplayName}으로 업데이트했습니다.`,
-    );
   } catch (error) {
     console.error(`리뷰 닉네임 업데이트 실패 (uid: ${uid}):`, error);
     throw error;
@@ -113,10 +109,6 @@ export async function updateCommentsDisplayName(
 
     // 모든 배치 실행
     await Promise.all(batches.map((batch) => batch.commit()));
-
-    console.log(
-      `사용자 ${uid}의 댓글 ${commentsSnapshot.size}개의 닉네임을 ${newDisplayName}으로 업데이트했습니다.`,
-    );
   } catch (error) {
     console.error(`댓글 닉네임 업데이트 실패 (uid: ${uid}):`, error);
     throw error;
@@ -124,9 +116,9 @@ export async function updateCommentsDisplayName(
 }
 
 /**
- * 사용자의 모든 리뷰에서 photoURL을 업데이트합니다.
+ * 사용자의 모든 리뷰에서 photoKey를 업데이트합니다.
  */
-export async function updateReviewsPhotoURL(
+export async function updateReviewsPhotoKey(
   uid: string,
   newPhotoKey: string,
 ): Promise<void> {
@@ -156,7 +148,7 @@ export async function updateReviewsPhotoURL(
       }
 
       currentBatch.update(doc.ref, {
-        "user.photoURL": newPhotoKey,
+        "user.photoKey": newPhotoKey,
         "review.updatedAt": admin.firestore.FieldValue.serverTimestamp(),
       });
       batchCount++;
@@ -169,10 +161,6 @@ export async function updateReviewsPhotoURL(
 
     // 모든 배치 실행
     await Promise.all(batches.map((batch) => batch.commit()));
-
-    console.log(
-      `사용자 ${uid}의 리뷰 ${reviewsSnapshot.size}개의 프로필 이미지를 업데이트했습니다.`,
-    );
   } catch (error) {
     console.error(`리뷰 프로필 이미지 업데이트 실패 (uid: ${uid}):`, error);
     throw error;
@@ -180,9 +168,9 @@ export async function updateReviewsPhotoURL(
 }
 
 /**
- * 사용자의 모든 댓글에서 photoURL을 업데이트합니다.
+ * 사용자의 모든 댓글에서 photoKey를 업데이트합니다.
  */
-export async function updateCommentsPhotoURL(
+export async function updateCommentsPhotoKey(
   uid: string,
   newPhotoKey: string,
 ): Promise<void> {
@@ -213,7 +201,7 @@ export async function updateCommentsPhotoURL(
       }
 
       currentBatch.update(doc.ref, {
-        photoURL: newPhotoKey,
+        photoKey: newPhotoKey,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
       batchCount++;
@@ -226,10 +214,6 @@ export async function updateCommentsPhotoURL(
 
     // 모든 배치 실행
     await Promise.all(batches.map((batch) => batch.commit()));
-
-    console.log(
-      `사용자 ${uid}의 댓글 ${commentsSnapshot.size}개의 프로필 이미지를 업데이트했습니다.`,
-    );
   } catch (error) {
     console.error(`댓글 프로필 이미지 업데이트 실패 (uid: ${uid}):`, error);
     throw error;
@@ -283,10 +267,6 @@ export async function updateCommentsActivityLevel(
 
     // 모든 배치 실행
     await Promise.all(batches.map((batch) => batch.commit()));
-
-    console.log(
-      `사용자 ${uid}의 댓글 ${commentsSnapshot.size}개의 활동 등급을 ${newActivityLevel}(으)로 업데이트했습니다.`,
-    );
   } catch (error) {
     console.error(`댓글 활동 등급 업데이트 실패 (uid: ${uid}):`, error);
     throw error;

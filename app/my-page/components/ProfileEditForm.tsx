@@ -15,13 +15,13 @@ import BioInput from "app/my-page/components/BioInput";
 import ChangePassword from "app/my-page/components/ChangePassword";
 import { isAuth } from "firebase-config";
 import {
-  updateUserDisplayName,
-  updateUserMetaData,
+  updateUserProfile,
+  selectUser,
 } from "store/redux-toolkit/slice/userSlice";
 import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
 import AvatarUploader from "app/my-page/components/profile-avatar/AvatarUploader";
 
-export const profileSchema = z.object({
+const profileSchema = z.object({
   displayName: z
     .string()
     .min(1, "이름을 입력해주세요")
@@ -34,72 +34,114 @@ export const profileSchema = z.object({
     .or(z.literal("")),
 });
 
-export type ProfileFormData = z.infer<typeof profileSchema>;
+type ProfileFormData = z.infer<typeof profileSchema>;
 
 export default function ProfileEditForm() {
   const router = useRouter();
-  const userAuth = useAppSelector((state) => state.userData.auth);
-  const userMetaData = useAppSelector((state) => state.userData.metaData);
-  const { showErrorHandler, showSuccessHandler } = useAlert();
+  const user = useAppSelector(selectUser);
   const currentUser = isAuth.currentUser;
+  const { showErrorHandler, showSuccessHandler } = useAlert();
   const dispatch = useAppDispatch();
 
   const methods = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
-    defaultValues: {
-      displayName: "",
-      biography: "",
-    },
+    mode: "onChange",
   });
 
   const {
     handleSubmit,
-    reset,
     formState: { dirtyFields, isSubmitting },
+    reset,
   } = methods;
 
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [hasImageChanged, setHasImageChanged] = useState(false);
+
   const hasDirty = Object.keys(dirtyFields).length > 0 || hasImageChanged;
 
+  // 초기값 설정
   useEffect(() => {
-    if (userAuth && userMetaData) {
+    if (user) {
       reset({
-        displayName: userAuth.displayName || "",
-        biography: userMetaData?.biography || "",
+        displayName: user.displayName || "",
+        biography: user.biography || "",
       });
     }
-  }, [reset, userAuth, userMetaData]);
+  }, [reset, user]);
+
+  // 사용자가 로그인하지 않은 경우 리다이렉트
+  useEffect(() => {
+    if (!currentUser || !user?.uid) {
+      router.push("/login");
+    }
+  }, [currentUser, user, router]);
 
   const onSubmit = useCallback(
     async (data: ProfileFormData) => {
-      if (!currentUser || !userAuth) {
+      if (!currentUser || !user?.uid) {
         showErrorHandler("오류", "로그인이 필요합니다.");
         return;
       }
 
       try {
-        // 1) displayName 변경 처리
-        if (data.displayName !== userAuth.displayName) {
-          await dispatch(updateUserDisplayName(data.displayName)).unwrap();
+        const updatePayload: {
+          displayName?: string;
+          biography?: string;
+          photoKey?: string;
+        } = {};
+
+        // 변경된 필드만 업데이트 대상에 포함
+        if (dirtyFields.displayName && data.displayName !== user?.displayName) {
+          updatePayload.displayName = data.displayName;
+        }
+        if (dirtyFields.biography && data.biography !== user?.biography) {
+          updatePayload.biography = data.biography;
         }
 
-        // 2) biography 변경 처리
-        if (data.biography !== userMetaData?.biography) {
-          if (!userAuth.uid) {
-            showErrorHandler("오류", "로그인이 필요합니다.");
-            return;
-          }
-          await dispatch(
-            updateUserMetaData({
-              uid: userAuth.uid,
-              data: { biography: data.biography || "" },
+        // 이미지 업로드 처리
+        if (selectedFile && hasImageChanged) {
+          // S3 Presigned URL 요청
+          const presignedRes = await fetch("/api/s3", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              filename: selectedFile.name,
+              contentType: selectedFile.type,
+              userId: currentUser.uid,
             }),
-          ).unwrap();
+          });
+
+          if (!presignedRes.ok) {
+            throw new Error("이미지 업로드 준비에 실패했습니다.");
+          }
+
+          const { url, key } = await presignedRes.json();
+
+          // S3에 이미지 업로드
+          const uploadRes = await fetch(url, {
+            method: "PUT",
+            headers: { "Content-Type": selectedFile.type },
+            body: selectedFile,
+          });
+
+          if (!uploadRes.ok) {
+            throw new Error("이미지 업로드에 실패했습니다.");
+          }
+
+          updatePayload.photoKey = key;
         }
 
-        showSuccessHandler("성공", "프로필 정보가 업데이트되었습니다.");
-        setHasImageChanged(false); // 폼 제출 완료 후 이미지 변경 상태 초기화
+        // 변경사항이 있는 경우에만 API 호출
+        if (Object.keys(updatePayload).length > 0) {
+          await dispatch(
+            updateUserProfile({ uid: user.uid, data: updatePayload }),
+          ).unwrap();
+
+          showSuccessHandler("성공", "프로필이 업데이트되었습니다.");
+        }
+
+        // 성공 시 마이페이지로 이동
         router.push("/my-page");
       } catch (error: any) {
         showErrorHandler(
@@ -110,26 +152,26 @@ export default function ProfileEditForm() {
     },
     [
       currentUser,
-      userAuth,
-      userMetaData,
+      user,
       dispatch,
       showErrorHandler,
       showSuccessHandler,
       router,
+      dirtyFields,
+      selectedFile,
+      hasImageChanged,
     ],
   );
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     if (hasDirty) {
       if (confirm("변경사항이 저장되지 않습니다. 정말 나가시겠습니까?")) {
-        setHasImageChanged(false);
-        setPreviewSrc(null);
         router.push("/my-page");
       }
     } else {
       router.push("/my-page");
     }
-  };
+  }, [hasDirty, router]);
 
   return (
     <main className="flex min-h-full w-full flex-col pl-0 md:w-3/4 md:pl-4">
@@ -139,6 +181,7 @@ export default function ProfileEditForm() {
           <button
             onClick={handleCancel}
             className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100"
+            disabled={isSubmitting}
           >
             <FaArrowLeft size={20} />
           </button>
@@ -170,6 +213,7 @@ export default function ProfileEditForm() {
                 previewSrc={previewSrc}
                 onPreview={(url) => setPreviewSrc(url)}
                 onCancelPreview={() => setPreviewSrc(null)}
+                onFileSelect={(file) => setSelectedFile(file)}
                 onImageChange={(hasChanged) => setHasImageChanged(hasChanged)}
               />
             </div>
@@ -179,32 +223,29 @@ export default function ProfileEditForm() {
           <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-lg font-medium">기본 정보</h2>
             <div className="space-y-6">
-              {userAuth?.email && (
+              {user?.email && (
                 <div className="mb-4">
                   <label className="mb-2 block text-sm font-bold text-gray-700">
                     이메일
                   </label>
                   <div className="rounded-lg bg-gray-50 px-3 py-2 text-gray-600">
-                    {userAuth.email}
+                    {user.email}
                   </div>
                 </div>
               )}
 
               <NicknameInput
-                originalValue={userAuth?.displayName}
+                originalValue={user?.displayName}
                 isEditing={true}
               />
 
-              <BioInput
-                isEditing={true}
-                originalValue={userMetaData?.biography}
-              />
+              <BioInput isEditing={true} originalValue={user?.biography} />
             </div>
           </div>
 
           {/* 비밀번호 변경 섹션 */}
-          {userMetaData?.provider === "email" && (
-            <div className="mb-8">
+          {user?.provider === "email" && (
+            <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm">
               <ChangePassword />
             </div>
           )}

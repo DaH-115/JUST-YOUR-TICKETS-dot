@@ -7,6 +7,7 @@ import { IoMdClose } from "react-icons/io";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import ProfileAvatar from "app/components/ProfileAvatar";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 interface HeaderSideMenuProps {
   userDisplayName: string;
@@ -29,11 +30,10 @@ export default function HeaderSideMenu({
   isOpen,
   onClose,
 }: HeaderSideMenuProps) {
-  const userUid = useAppSelector((state) => state.userData.auth?.uid);
+  const user = useAppSelector(selectUser);
   const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
 
-  // 클라이언트에서만 포털 렌더링
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -85,7 +85,7 @@ export default function HeaderSideMenu({
 
         {/* 사용자 프로필 */}
         <div className="border-b border-white/20 p-6">
-          {userUid ? (
+          {user?.uid ? (
             <div className="flex items-center space-x-4">
               <ProfileAvatar
                 userDisplayName={userDisplayName}
@@ -137,7 +137,7 @@ export default function HeaderSideMenu({
           </nav>
 
           {/* 사용자 메뉴 */}
-          {userUid && (
+          {user?.uid && (
             <div className="mt-8 border-t border-white/20 pt-6">
               <h3 className="mb-4 text-base font-medium text-gray-400">
                 My Menu

@@ -3,12 +3,18 @@ import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { useAlert } from "store/context/alertContext";
 import { ReviewFormValues } from "app/write-review/types";
 import { ReviewContainerProps } from "app/write-review/components/ReviewContainer";
-import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
 
+interface ReviewUserData {
+  uid: string | null;
+  displayName: string | null;
+  photoKey: string | null;
+}
+
 interface ReviewApiData {
-  user: SerializableUser;
+  user: ReviewUserData;
   review: {
     movieId: number;
     movieTitle: string;
@@ -28,7 +34,7 @@ export const useReviewForm = ({
   movieData,
 }: ReviewContainerProps) => {
   const router = useRouter();
-  const userState = useAppSelector((state) => state.userData.auth);
+  const userState = useAppSelector(selectUser);
   const { showErrorHandler, showSuccessHandler, hideSuccessHandler } =
     useAlert();
 
@@ -38,11 +44,11 @@ export const useReviewForm = ({
 
     try {
       const newData: ReviewApiData = {
+        // ✅ 리뷰에 필요한 최소한의 사용자 정보만 전송
         user: {
           uid: userState.uid,
           displayName: userState.displayName,
-          photoURL: userState.photoURL,
-          email: userState.email,
+          photoKey: userState.photoKey,
         },
         review: {
           movieId: movieData.id,

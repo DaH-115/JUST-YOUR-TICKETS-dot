@@ -4,6 +4,7 @@ import { useAppSelector } from "store/redux-toolkit/hooks";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 interface TicketBtnGroupProps {
   postId: string;
@@ -18,7 +19,7 @@ const TicketBtnGroup = React.memo(function ReviewBtnGroup({
   authorId,
   onReviewDeleted,
 }: TicketBtnGroupProps) {
-  const userState = useAppSelector((state) => state.userData.auth);
+  const userState = useAppSelector(selectUser);
 
   // 현재 사용자가 리뷰 작성자인지 확인
   const isOwner = userState?.uid === authorId;
@@ -28,6 +29,7 @@ const TicketBtnGroup = React.memo(function ReviewBtnGroup({
     onReviewDeleted(postId);
   }, [onReviewDeleted, postId]);
 
+  // 현재 사용자가 리뷰 작성자가 아니면 버튼 렌더링 X
   if (!isOwner) return null;
 
   return (

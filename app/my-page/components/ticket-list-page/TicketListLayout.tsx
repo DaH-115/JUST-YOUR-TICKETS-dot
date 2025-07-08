@@ -10,6 +10,7 @@ import EmptyState from "app/my-page/components/EmptyState";
 import Pagination from "app/components/Pagination";
 import { buildQueryUrl } from "app/my-page/utils/buildQueryUrl";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 interface FetchReviewsHook {
   reviews: ReviewDoc[];
@@ -45,10 +46,10 @@ export default function TicketListLayout({
   const params = useSearchParams();
   const currentPage = parseInt(params.get("page") || "1", 10);
   const searchTerm = params.get("search") || "";
-  const uid = useAppSelector((state) => state.userData.auth?.uid) || "";
+  const user = useAppSelector(selectUser);
 
   const fetchResult = useFetchReviews({
-    uid: uid || "",
+    uid: user?.uid || "",
     search: searchTerm,
     page: currentPage,
     pageSize: 10,
@@ -61,7 +62,7 @@ export default function TicketListLayout({
   const searchHandler = (term: string) => {
     const url = buildQueryUrl({
       pathname,
-      params: { uid, search: term, page: 1 },
+      params: { uid: user?.uid || "", search: term, page: 1 },
     });
     router.replace(url);
   };
@@ -69,7 +70,7 @@ export default function TicketListLayout({
   const pageChangeHandler = (page: number) => {
     const url = buildQueryUrl({
       pathname,
-      params: { uid, search: searchTerm, page },
+      params: { uid: user?.uid || "", search: searchTerm, page },
     });
     router.push(url);
   };

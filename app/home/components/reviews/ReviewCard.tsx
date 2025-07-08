@@ -3,26 +3,23 @@ import ProfileImage from "app/components/reviewTicket/ProfileImage";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import Link from "next/link";
 import { FaStar, FaHeart } from "react-icons/fa";
-import formatDateOnly from "app/utils/formatDateOnly";
 import ActivityBadge from "app/components/ActivityBadge";
 
 interface ReviewCardProps {
   review: ReviewDoc;
-  onReviewClick?: (review: ReviewDoc) => void;
+  onReviewClick: (review: ReviewDoc) => void;
 }
 
 export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
-  const { review: content, user } = review;
+  const { user, review: content } = review;
 
-  const handleReviewTitleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onReviewClick?.(review);
+  const handleReviewTitleClick = () => {
+    onReviewClick(review);
   };
 
   return (
     <div className="group flex items-stretch">
-      {/* Movie Poster */}
+      {/* 영화 포스터 */}
       <div className="aspect-[2/3] h-full overflow-hidden rounded-xl">
         <MoviePoster
           posterPath={content.moviePosterPath}
@@ -30,9 +27,9 @@ export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
         />
       </div>
 
-      {/* Review Content */}
+      {/* 리뷰 컨텐츠 */}
       <div className="relative flex h-full flex-1 flex-col overflow-hidden rounded-xl border bg-white px-3 py-2 sm:px-4">
-        {/* 상단 제목/좋아요 */}
+        {/* 상단 제목 & 좋아요 */}
         <div className="flex items-center justify-between border-b-4 border-dotted pb-2">
           <div className="flex flex-col text-xs">
             <Link
@@ -71,14 +68,11 @@ export default function ReviewCard({ review, onReviewClick }: ReviewCardProps) {
         <div className="mt-auto flex items-center justify-between pt-2 text-xs font-bold">
           <div className="flex items-center gap-2">
             <ProfileImage
-              photoURL={user.photoURL || undefined}
+              photoKey={user.photoKey || undefined}
               userDisplayName={user.displayName || "사용자"}
             />
             <div className="line-clamp-1 max-w-[60%]">{user.displayName}</div>
-            <ActivityBadge
-              activityLevel={(user as any).activityLevel}
-              size="tiny"
-            />
+            <ActivityBadge activityLevel={user.activityLevel} size="tiny" />
           </div>
         </div>
       </div>

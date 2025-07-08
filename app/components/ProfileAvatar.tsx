@@ -22,19 +22,17 @@ export default function ProfileAvatar({
   showLoading = true,
 }: ProfileAvatarProps) {
   const [imageError, setImageError] = useState(false);
+
+  // photoKey는 항상 S3 key
   const { url: presignedUrl, loading } = usePresignedUrl({
     key: photoKey,
   });
 
-  // previewSrc가 있으면 우선 사용 (업로드 미리보기용)
+  // previewSrc가 있으면 우선 사용, 없으면 presignedUrl 사용
   const src = previewSrc || presignedUrl;
 
   // 이미지를 표시할지 여부 결정
-  const shouldShowImage =
-    !imageError &&
-    photoKey &&
-    typeof photoKey === "string" &&
-    photoKey.trim().length > 0;
+  const shouldShowImage = !imageError && photoKey && src;
 
   // 닉네임의 첫 글자 추출
   const firstLetter = userDisplayName
@@ -53,7 +51,7 @@ export default function ProfileAvatar({
         <div className="flex h-full w-full items-center justify-center bg-gray-200">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
         </div>
-      ) : shouldShowImage ? (
+      ) : shouldShowImage && src ? (
         <Image
           src={src}
           alt={userDisplayName || "User"}

@@ -14,7 +14,7 @@ import { FaHeart } from "react-icons/fa";
 import ActivityBadge from "app/components/ActivityBadge";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
-import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 export default function ReviewTicket({
   reviews,
@@ -28,7 +28,7 @@ export default function ReviewTicket({
   const [canClick, setCanClick] = useState(true);
   const { showSuccessHandler, showErrorHandler } = useAlert();
   const router = useRouter();
-  const userState = useAppSelector((state) => state.userData.auth);
+  const userState = useAppSelector(selectUser);
 
   const openModalHandler = useCallback(
     (selectedReview: ReviewDoc) => {
@@ -55,10 +55,11 @@ export default function ReviewTicket({
       }
 
       const confirmed = window.confirm("정말 삭제하시겠습니까?");
-      if (!confirmed) return;
-
-      // confirm 확인 즉시 모달 닫기
-      closeModalHandler();
+      if (!confirmed) {
+        return;
+      } else {
+        closeModalHandler(); // confirm 확인 즉시 모달 닫기
+      }
 
       try {
         await apiCallWithTokenRefresh(async (authHeaders) => {
@@ -134,7 +135,7 @@ export default function ReviewTicket({
               <div className="flex items-center justify-between border-b-4 border-dotted p-1">
                 {/* 클릭하면 영화 상세 정보로 이동 */}
                 <div
-                  className="flex-1 truncate border-r-4 border-dotted pr-1.5 text-sm text-gray-600 hover:underline"
+                  className="flex-1 truncate border-r-4 border-dotted pr-1.5 text-[11px] hover:underline"
                   onClick={(event) => event.stopPropagation()}
                 >
                   <Link href={`/movie-details/${data.review.movieId}`}>
@@ -163,20 +164,14 @@ export default function ReviewTicket({
               <div className="flex items-center justify-between px-1 pt-1.5 text-xs">
                 <div className="flex min-w-0 flex-1 items-center gap-1">
                   <ProfileImage
-                    photoURL={data.user.photoURL || undefined}
+                    photoKey={data.user.photoKey || undefined}
                     userDisplayName={data.user.displayName || "사용자"}
                   />
                   <p className="min-w-0 truncate text-xs">
                     {data.user.displayName ? data.user.displayName : "Guest"}
                   </p>
                   <ActivityBadge
-                    activityLevel={
-                      (
-                        data.user as SerializableUser & {
-                          activityLevel?: string;
-                        }
-                      ).activityLevel
-                    }
+                    activityLevel={data.user.activityLevel}
                     size="tiny"
                   />
                 </div>

@@ -1,6 +1,6 @@
 import { adminFirestore } from "firebase-admin-config";
-import { SerializableUser } from "store/redux-toolkit/slice/userSlice";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { ReviewUser } from "lib/reviews/fetchReviewsPaginated";
 
 interface FetchLikedReviewsParams {
   page: number;
@@ -50,9 +50,9 @@ export async function fetchLikedReviewsPaginated({
       snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as any),
     );
 
-    // 사용자 정보 일괄 조회
+    // 사용자 정보 일괄 조회 (필요한 정보만)
     const userIds = [...new Set(reviewsData.map((review) => review.user.uid))];
-    let usersMap = new Map<string, SerializableUser>();
+    let usersMap = new Map<string, ReviewUser>();
 
     if (userIds.length > 0) {
       const userPromises = [];
@@ -72,8 +72,7 @@ export async function fetchLikedReviewsPaginated({
           usersMap.set(doc.id, {
             uid: doc.id,
             displayName: userData.displayName,
-            email: userData.email,
-            photoURL: userData.photoURL,
+            photoKey: userData.photoKey, // photoKey 우선 사용
             activityLevel: userData.activityLevel || "NEWBIE",
           });
         });
@@ -104,24 +103,26 @@ export async function fetchLikedReviewsPaginated({
     // 3) 검색 필터링 (클라이언트 사이드에서 처리)
     let filteredReviews = allReviews;
     if (search) {
-      const searchLower = search.toLowerCase();
+      const searchTerm = search.toLowerCase();
       filteredReviews = allReviews.filter(
         (review) =>
-          review.review.movieTitle.toLowerCase().includes(searchLower) ||
-          review.review.reviewTitle.toLowerCase().includes(searchLower) ||
-          review.review.reviewContent.toLowerCase().includes(searchLower),
+          review.review.movieTitle.toLowerCase().includes(searchTerm) ||
+          review.review.reviewTitle.toLowerCase().includes(searchTerm) ||
+          review.review.reviewContent.toLowerCase().includes(searchTerm),
       );
     }
 
     // 4) 페이지네이션
     const totalPages = Math.ceil(filteredReviews.length / pageSize);
     const start = (page - 1) * pageSize;
-    const end = start + pageSize;
-    const paginatedReviews = filteredReviews.slice(start, end);
+    const paginatedReviews = filteredReviews.slice(start, start + pageSize);
 
-    return { reviews: paginatedReviews, totalPages };
+    return {
+      reviews: paginatedReviews,
+      totalPages,
+    };
   } catch (error) {
-    console.error("좋아요한 리뷰 목록 조회 실패:", error);
-    return { reviews: [], totalPages: 0 };
+    console.error("좋아요한 리뷰 조회 실패:", error);
+    throw new Error("좋아요한 리뷰 조회에 실패했습니다.");
   }
 }
