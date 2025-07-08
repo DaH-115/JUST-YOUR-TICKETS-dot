@@ -214,7 +214,7 @@ export default function ReviewDetailsModal({
           </p>
         </div>
       </div>
-      <div className="py-2 text-xs text-gray-600">
+      <div className="py-2 text-right text-xs text-gray-600">
         {formatDate(review.createdAt)}
       </div>
       {/* 댓글 영역 - 모달이 열릴 때만 렌더링 */}

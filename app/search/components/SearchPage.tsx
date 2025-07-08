@@ -55,7 +55,7 @@ export default function SearchPage({
   }, [watchedQuery, debounceHandler]);
 
   return (
-    <main className="px-3 py-4 sm:px-4 md:px-6 md:py-8 lg:px-8">
+    <main className="p-6">
       <div className="mb-8">
         <h1 className="mb-2 text-2xl font-bold tracking-tight text-white">
           Search

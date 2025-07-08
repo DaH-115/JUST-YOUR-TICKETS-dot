@@ -49,8 +49,8 @@ export default function SwiperCard({
       {/* MOVIE INFO CARD */}
       <footer className="overflow-hidden rounded-xl bg-gradient-to-br from-white to-gray-50">
         {/* MOVIE TITLE */}
-        <section className="border-b-4 border-dotted p-1 md:p-2">
-          <div className="flex items-center gap-2">
+        <section className="border-b-4 border-dotted p-2">
+          <div className="flex items-center gap-1 md:gap-2">
             <div className="flex-1">
               <h3 className="line-clamp-1 text-sm font-bold">{title}</h3>
               <p className="line-clamp-1 text-xs text-gray-600">

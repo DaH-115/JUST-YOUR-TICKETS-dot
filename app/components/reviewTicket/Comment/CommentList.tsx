@@ -36,6 +36,7 @@ export default function CommentList({
 }: Pick<ReviewDoc, "id"> & { reviewAuthorId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [isPosting, setIsPosting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null); // null 이면 새 댓글, 댓글ID면 수정 모드
   const userState = useAppSelector(selectUser); // 댓글 작성자 정보
   // 댓글 작성 폼 상태 관리
@@ -52,6 +53,7 @@ export default function CommentList({
   // 댓글 목록 가져오는 함수 정의
   const fetchComments = useCallback(async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(`/api/comments/${reviewId}`);
       if (response.ok) {
         const data = await response.json();
@@ -59,6 +61,8 @@ export default function CommentList({
       }
     } catch (error) {
       console.error("댓글 조회 실패:", error);
+    } finally {
+      setIsLoading(false);
     }
   }, [reviewId]);
 
@@ -66,6 +70,7 @@ export default function CommentList({
     // reviewId가 변경될 때 상태 초기화
     setComments([]);
     setEditingId(null);
+    setIsLoading(true);
     reset();
     fetchComments(); // 댓글 목록 가져오기
   }, [reviewId, reset, fetchComments]);
@@ -212,7 +217,18 @@ export default function CommentList({
 
   return (
     <>
-      {comments.length > 0 && (
+      {/* 로딩 스피너 */}
+      {isLoading && (
+        <div className="flex items-center justify-center border-t-4 border-dotted py-8">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-primary-600"></div>
+          <span className="ml-2 text-sm text-gray-600">
+            댓글을 불러오는 중...
+          </span>
+        </div>
+      )}
+
+      {/* 댓글 목록 */}
+      {!isLoading && comments.length > 0 && (
         <div className="mb-2 flex items-center justify-between border-t-4 border-dotted pt-2">
           <p className="text-sm font-medium text-gray-700">
             댓글 {comments.length}개
@@ -220,7 +236,7 @@ export default function CommentList({
         </div>
       )}
       <div
-        className={`${comments.length > 0 ? "max-h-80 overflow-y-auto scrollbar-hide" : "hidden"}`}
+        className={`${!isLoading && comments.length > 0 ? "max-h-80 overflow-y-auto scrollbar-hide" : "hidden"}`}
       >
         <ul className="space-y-2">
           {comments.map((comment, idx) => (
@@ -280,7 +296,9 @@ export default function CommentList({
           ))}
         </ul>
       </div>
-      {userState?.uid && (
+
+      {/* 댓글 작성 폼 */}
+      {!isLoading && userState?.uid && (
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="border-t-4 border-dotted pt-4"
