@@ -43,13 +43,29 @@ export async function DELETE(
       );
     }
 
-    // 리뷰 삭제 전에 사용자 UID 저장
+    // Firestore 일괄 쓰기(Batch) 생성
+    const batch = adminFirestore.batch();
+
+    // 1. 하위 컬렉션 'comments'의 모든 문서 삭제
+    const commentsSnapshot = await reviewRef.collection("comments").get();
+    commentsSnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+
+    // 2. 하위 컬렉션 'likedBy'의 모든 문서 삭제
+    const likedBySnapshot = await reviewRef.collection("likedBy").get();
+    likedBySnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+
+    // 3. 메인 리뷰 문서 삭제
+    batch.delete(reviewRef);
+
+    // 일괄 쓰기 실행
+    await batch.commit();
+
+    // 리뷰 삭제 후에 사용자 UID를 사용하여 등급 업데이트
     const userUid = reviewData!.user.uid;
-
-    // 리뷰 삭제
-    await reviewRef.delete();
-
-    // 사용자 등급 업데이트
     try {
       await updateUserActivityLevel(userUid);
     } catch (error) {

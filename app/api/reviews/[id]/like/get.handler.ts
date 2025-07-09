@@ -20,10 +20,12 @@ export async function GET(
     const uid = authResult.uid!;
     const reviewId = params.id;
 
-    // Admin SDK 사용
     const likeRef = adminFirestore
-      .collection("review-likes")
-      .doc(`${uid}_${reviewId}`);
+      .collection("movie-reviews")
+      .doc(reviewId)
+      .collection("likedBy")
+      .doc(uid);
+
     const likeSnap = await likeRef.get();
 
     return NextResponse.json({

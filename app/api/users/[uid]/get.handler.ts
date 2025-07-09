@@ -50,54 +50,14 @@ export async function GET(
       myReviewsCount = await fetchUserReviewCount(params.uid);
     }
 
-    // 2. 좋아요한 리뷰 개수 (실제 존재하는 리뷰만 카운트)
+    // 2. 좋아요한 리뷰 개수 (컬렉션 그룹 쿼리 사용)
     const likesQuery = adminFirestore
-      .collection("review-likes")
-      .where("uid", "==", params.uid);
+      .collectionGroup("likedBy")
+      .where("uid", "==", params.uid)
+      .orderBy("createdAt", "desc");
 
-    const likesSnapshot = await likesQuery.get();
-    const likedReviewIds = likesSnapshot.docs.map((doc) => doc.data().reviewId);
-
-    // 실제 존재하는 리뷰들만 필터링
-    let validLikedCount = 0;
-    const cleanupPromises: Promise<void>[] = [];
-
-    if (likedReviewIds.length > 0) {
-      // Firestore 'in' 쿼리는 30개 아이템으로 제한되므로, 배열을 청크로 나눔
-      const chunks: string[][] = [];
-      for (let i = 0; i < likedReviewIds.length; i += 30) {
-        chunks.push(likedReviewIds.slice(i, i + 30));
-      }
-
-      const reviewExistenceChecks = chunks.map((chunk) =>
-        adminFirestore
-          .collection("movie-reviews")
-          .where(admin.firestore.FieldPath.documentId(), "in", chunk)
-          .select() // 필드 없이 문서 존재 여부만 확인
-          .get(),
-      );
-
-      const reviewSnapshots = await Promise.all(reviewExistenceChecks);
-      const existingReviewIds = new Set<string>();
-      reviewSnapshots.forEach((snapshot) => {
-        snapshot.docs.forEach((doc) => existingReviewIds.add(doc.id));
-      });
-
-      validLikedCount = existingReviewIds.size;
-
-      // 존재하지 않는 리뷰에 대한 좋아요 데이터 정리
-      likesSnapshot.docs.forEach((doc) => {
-        const reviewId = doc.data().reviewId;
-        if (!existingReviewIds.has(reviewId)) {
-          cleanupPromises.push(doc.ref.delete().then(() => {}));
-        }
-      });
-    }
-
-    // 정리 작업이 완료될 때까지 대기
-    if (cleanupPromises.length > 0) {
-      await Promise.all(cleanupPromises);
-    }
+    const likesSnapshot = await likesQuery.count().get();
+    const likedReviewsCount = likesSnapshot.data().count;
 
     // 3. 응답 데이터 구성
     const responseData = {
@@ -108,7 +68,7 @@ export async function GET(
       createdAt: userData?.createdAt?.toDate().toISOString() || null,
       updatedAt: userData?.updatedAt?.toDate().toISOString() || null,
       myTicketsCount: myReviewsCount,
-      likedTicketsCount: validLikedCount,
+      likedTicketsCount: likedReviewsCount,
     };
 
     return NextResponse.json(responseData);

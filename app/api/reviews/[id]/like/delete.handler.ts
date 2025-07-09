@@ -22,11 +22,8 @@ export async function DELETE(
     const uid = authResult.uid!;
     const reviewId = params.id;
 
-    // Admin SDK 사용
     const reviewRef = adminFirestore.collection("movie-reviews").doc(reviewId);
-    const likeRef = adminFirestore
-      .collection("review-likes")
-      .doc(`${uid}_${reviewId}`);
+    const likeRef = reviewRef.collection("likedBy").doc(uid);
 
     // 리뷰 존재 확인
     const reviewSnap = await reviewRef.get();
@@ -48,12 +45,12 @@ export async function DELETE(
 
     // 좋아요 취소와 리뷰 좋아요 수 감소를 트랜잭션으로 원자적 처리
     await adminFirestore.runTransaction(async (transaction) => {
-      // 좋아요 문서 삭제
+      // 좋아요 문서 삭제 (경로 수정됨)
       transaction.delete(likeRef);
 
       // 리뷰의 좋아요 수 감소
       transaction.update(reviewRef, {
-        "review.likeCount": FieldValue.increment(-1),
+        likeCount: FieldValue.increment(-1),
       });
     });
 

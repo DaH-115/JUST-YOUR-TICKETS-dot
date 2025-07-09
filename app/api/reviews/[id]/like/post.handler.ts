@@ -32,11 +32,8 @@ export async function POST(
     const uid = authResult.uid!;
     const reviewId = params.id;
 
-    // Admin SDK 사용
     const reviewRef = adminFirestore.collection("movie-reviews").doc(reviewId);
-    const likeRef = adminFirestore
-      .collection("review-likes")
-      .doc(`${uid}_${reviewId}`);
+    const likeRef = reviewRef.collection("likedBy").doc(uid);
 
     // 리뷰 존재 확인
     const reviewSnap = await reviewRef.get();
@@ -58,17 +55,15 @@ export async function POST(
 
     // 좋아요 추가와 리뷰 좋아요 수 증가를 트랜잭션으로 원자적 처리
     await adminFirestore.runTransaction(async (transaction) => {
-      // 좋아요 문서 생성
+      // 좋아요 문서 생성 (경로 수정됨)
       transaction.set(likeRef, {
-        uid,
-        reviewId,
+        uid, // 컬렉션 그룹 쿼리를 위해 uid 필드 추가
         createdAt: FieldValue.serverTimestamp(),
-        movieTitle: movieTitle.trim(),
       });
 
       // 리뷰의 좋아요 수 증가
       transaction.update(reviewRef, {
-        "review.likeCount": FieldValue.increment(1),
+        likeCount: FieldValue.increment(1),
       });
     });
 
