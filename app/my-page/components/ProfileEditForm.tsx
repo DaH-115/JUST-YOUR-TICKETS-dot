@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
-
 import { FaArrowLeft, FaCheck } from "react-icons/fa";
 import { z } from "zod";
 import BioInput from "app/my-page/components/BioInput";
@@ -144,10 +143,11 @@ export default function ProfileEditForm() {
         // 성공 시 마이페이지로 이동
         router.push("/my-page");
       } catch (error: any) {
-        showErrorHandler(
-          "오류",
-          error.message || "프로필 업데이트에 실패했습니다.",
-        );
+        const errorMessage =
+          typeof error === "string"
+            ? error
+            : error?.message || "프로필 업데이트에 실패했습니다.";
+        showErrorHandler("오류", errorMessage);
       }
     },
     [

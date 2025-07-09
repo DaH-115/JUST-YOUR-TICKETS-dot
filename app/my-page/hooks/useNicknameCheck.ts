@@ -55,9 +55,9 @@ export const useNicknameCheck = ({
     if (originalNickname && nickname === originalNickname) {
       setStatus({
         isChecking: false,
-        isChecked: true,
-        isAvailable: true,
-        message: null, // 별도 메시지 없음
+        isChecked: false, // 확인 절차를 거치지 않았으므로 false로 변경
+        isAvailable: null, // 상태를 초기화하여 메시지 노출 방지
+        message: null,
       });
       return;
     }

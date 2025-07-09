@@ -1,6 +1,25 @@
-import { HeroSection, MovieSection, LatestReviews } from "app/home/components";
+"use client";
+
+import dynamic from "next/dynamic";
+import { HeroSection } from "app/home/components";
+import LatestReviewsSkeleton from "app/home/components/reviews/LatestReviewsSkeleton";
+import MovieSectionSkeleton from "app/home/components/MovieSectionSkeleton";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+
+// 컴포넌트 지연 로딩
+const MovieSection = dynamic(() => import("app/home/components/MovieSection"), {
+  loading: () => <MovieSectionSkeleton />,
+  ssr: false,
+});
+
+const LatestReviews = dynamic(
+  () => import("app/home/components/reviews/LatestReviews"),
+  {
+    loading: () => <LatestReviewsSkeleton />,
+    ssr: false,
+  },
+);
 
 interface HomePageProps {
   movieList: MovieList[];
@@ -19,26 +38,20 @@ export default function HomePage({
 }: HomePageProps) {
   return (
     <>
-      {/* Hero Section - 추천 영화와 트레일러 통합 */}
       <HeroSection movie={recommendMovie} trailerKey={trailerKey} />
 
-      {/* Main Content */}
       <main className="px-4 md:px-6 lg:px-8">
-        {/* Now Playing */}
         <MovieSection
           title="Now Playing"
           description="지금 상영 중인 영화들을 확인하고 티켓을 예매하세요"
           movieList={movieList}
+          maxItems={10}
         />
-
-        {/* Trending Movies */}
         <MovieSection
           title="Trending Movies"
           description="요즘 가장 인기 있는 영화들을 만나보세요"
           movieList={trendingMovies}
         />
-
-        {/* Latest Reviews */}
         <LatestReviews reviews={latestReviews} />
       </main>
     </>

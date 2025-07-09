@@ -8,7 +8,7 @@ import {
 } from "@headlessui/react";
 import debounce from "lodash/debounce";
 import Link from "next/link";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useState, useMemo, useRef } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
@@ -27,9 +27,10 @@ export default function HeaderSearchBar({
   const [visibleCount, setVisibleCount] = useState(5);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<MovieList | null>(null);
+  const searchBarRef = useRef<HTMLDivElement>(null);
 
   const iconClickHandler = useCallback(() => {
-    setIsSearchOpen((prev) => !prev);
+    setIsSearchOpen(true);
   }, []);
 
   const handleMovieSelect = useCallback((movie: MovieList | null) => {
@@ -82,8 +83,25 @@ export default function HeaderSearchBar({
     onSearchOpenChange?.(isSearchOpen);
   }, [isSearchOpen, onSearchOpenChange]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(event.target as Node)
+      ) {
+        resetSearch();
+      }
+    };
+    if (isSearchOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSearchOpen, resetSearch]);
+
   return (
-    <div className="ml-4 hidden lg:flex">
+    <div className="ml-4 hidden lg:flex" ref={searchBarRef}>
       <Combobox value={selectedMovie} onChange={handleMovieSelect}>
         <div className="relative flex items-center justify-end">
           <div

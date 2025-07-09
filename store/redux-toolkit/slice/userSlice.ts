@@ -125,53 +125,57 @@ interface UpdateProfileData {
 export const updateUserProfile = createAsyncThunk<
   User, // 성공시 반환 타입
   { uid: string; data: UpdateProfileData }, // 매개변수 타입
-  { rejectValue: string } // 에러 타입
->("user/updateUserProfile", async ({ uid, data }, { rejectWithValue }) => {
-  try {
-    const user = isAuth.currentUser;
-    if (!user) {
-      return rejectWithValue("로그인이 필요합니다.");
+  { rejectValue: string; state: { userData: UserState } } // 에러 타입 및 상태 타입 추가
+>(
+  "user/updateUserProfile",
+  async ({ uid, data }, { rejectWithValue, getState }) => {
+    try {
+      const user = isAuth.currentUser;
+      if (!user) {
+        return rejectWithValue("로그인이 필요합니다.");
+      }
+
+      const idToken = await user.getIdToken();
+      const response = await fetch(`/api/users/${uid}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "프로필 업데이트에 실패했습니다.");
+      }
+
+      const result = await response.json(); // e.g. { displayName?, biography?, photoKey? }
+
+      // 업데이트된 Firebase Auth 정보 다시 가져오기
+      await user.reload();
+      const updatedUser = isAuth.currentUser!;
+      const currentUserState = getState().userData.user;
+
+      if (!currentUserState) {
+        throw new Error("현재 사용자 정보를 찾을 수 없습니다.");
+      }
+
+      // 기존 상태를 기반으로 업데이트된 정보 병합
+      return {
+        ...currentUserState,
+        uid: updatedUser.uid,
+        email: updatedUser.email,
+        displayName: updatedUser.displayName, // Auth에서 최신 정보 가져오기
+        ...("biography" in result && { biography: result.biography }),
+        ...("photoKey" in result && { photoKey: result.photoKey }),
+        updatedAt: new Date().toISOString(), // 업데이트 시각 갱신
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.message);
     }
-
-    const idToken = await user.getIdToken();
-    const response = await fetch(`/api/users/${uid}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${idToken}`,
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "프로필 업데이트에 실패했습니다.");
-    }
-
-    const result = await response.json();
-
-    // 업데이트된 Firebase Auth 정보 다시 가져오기
-    await user.reload();
-    const updatedUser = isAuth.currentUser!;
-
-    // 업데이트된 전체 사용자 정보 반환
-    return {
-      uid: updatedUser.uid,
-      email: updatedUser.email,
-      displayName: updatedUser.displayName,
-      photoKey: data.photoKey || result.data.photoKey, // 요청시 보낸 photoKey 우선 사용
-      biography: result.data.biography,
-      provider: result.data.provider,
-      activityLevel: result.data.activityLevel,
-      createdAt: result.data.createdAt,
-      updatedAt: result.data.updatedAt,
-      myTicketsCount: result.data.myTicketsCount,
-      likedTicketsCount: result.data.likedTicketsCount,
-    };
-  } catch (error: any) {
-    return rejectWithValue(error.message);
-  }
-});
+  },
+);
 
 // 🏪 Redux Slice 생성
 const userSlice = createSlice({

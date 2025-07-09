@@ -25,26 +25,17 @@ export default function ReviewTicket({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewDoc>();
-  const [canClick, setCanClick] = useState(true);
   const { showSuccessHandler, showErrorHandler } = useAlert();
   const router = useRouter();
   const userState = useAppSelector(selectUser);
 
-  const openModalHandler = useCallback(
-    (selectedReview: ReviewDoc) => {
-      if (!canClick) return;
-      setSelectedReview(selectedReview);
-      setIsModalOpen(true);
-    },
-    [canClick],
-  );
+  const openModalHandler = useCallback((selectedReview: ReviewDoc) => {
+    setSelectedReview(selectedReview);
+    setIsModalOpen(true);
+  }, []);
 
   const closeModalHandler = useCallback(() => {
     setIsModalOpen(false);
-    setCanClick(false);
-    setTimeout(() => {
-      setCanClick(true);
-    }, 100);
   }, []);
 
   const onReviewDeleteHanlder = useCallback(
