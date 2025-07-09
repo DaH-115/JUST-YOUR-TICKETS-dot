@@ -1,18 +1,18 @@
-import { useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 import {
   GithubAuthProvider,
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import SocialLoginBtn from "app/login/components/SocialLoginBtn";
+import { setRememberMe } from "app/utils/authPersistence";
+import { firebaseErrorHandler } from "app/utils/firebaseError";
+import { getIdToken } from "app/utils/getIdToken";
 import { isAuth } from "firebase-config";
 import { useAlert } from "store/context/alertContext";
-import { firebaseErrorHandler } from "app/utils/firebaseError";
-import { setRememberMe } from "app/utils/authPersistence";
-import SocialLoginBtn from "app/login/components/SocialLoginBtn";
-import { getIdToken } from "app/utils/getIdToken";
 
 export type SocialProvider = "google" | "github";
 

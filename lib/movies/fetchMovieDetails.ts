@@ -1,8 +1,6 @@
+import { fetchMovieReleaseDates } from "lib/movies/fetchMovieReleaseDates";
 import { MovieBaseType } from "lib/movies/fetchNowPlayingMovies";
-import {
-  fetchMovieReleaseDates,
-  getCertification,
-} from "lib/movies/fetchMovieReleaseDates";
+import { getCertification } from "lib/movies/utils/normalizeCertification";
 
 export interface MovieDetails extends MovieBaseType {
   genres: { id: number; name: string }[];

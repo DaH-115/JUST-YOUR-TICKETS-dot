@@ -1,20 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   EmailAuthProvider,
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
-import { isAuth } from "firebase-config";
-import { firebaseErrorHandler } from "app/utils/firebaseError";
-import { useAppSelector } from "store/redux-toolkit/hooks";
-import { useAlert } from "store/context/alertContext";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import InputField from "app/components/InputField";
+import { firebaseErrorHandler } from "app/utils/firebaseError";
+import { isAuth } from "firebase-config";
+import { useAlert } from "store/context/alertContext";
+import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 const passwordBase = z

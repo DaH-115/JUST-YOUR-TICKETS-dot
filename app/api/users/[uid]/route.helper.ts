@@ -1,5 +1,5 @@
-import { adminFirestore } from "firebase-admin-config";
 import admin from "firebase-admin";
+import { adminFirestore } from "firebase-admin-config";
 
 /**
  * S3 key를 완전한 URL로 변환합니다.

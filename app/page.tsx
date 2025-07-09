@@ -1,15 +1,15 @@
 import { notFound } from "next/navigation";
 
-import { fetchNowPlayingMovies } from "lib/movies/fetchNowPlayingMovies";
+import HomePage from "app/home/home-page";
 import { fetchMovieCredits } from "lib/movies/fetchMovieCredits";
 import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
-import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
+import { fetchNowPlayingMovies } from "lib/movies/fetchNowPlayingMovies";
 import { fetchTrendingMovies } from "lib/movies/fetchTrendingMovies";
+import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
 import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
 
 import { MovieDetailsProvider } from "store/context/movieDetailsContext";
 
-import HomePage from "app/home/home-page";
 
 export default async function Page() {
   const [nowPlayingMovies, trendingMovies, { reviews: latestReviews }] =

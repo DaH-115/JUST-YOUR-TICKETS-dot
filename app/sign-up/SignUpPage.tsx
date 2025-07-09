@@ -1,17 +1,17 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import { useCallback, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
-import { useAlert } from "store/context/alertContext";
-import { firebaseErrorHandler } from "app/utils/firebaseError";
-import InputField from "app/components/InputField";
 import DuplicateCheckButton from "app/components/DuplicateCheckButton";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { isAuth } from "firebase-config";
+import InputField from "app/components/InputField";
 import { useNicknameCheck } from "app/my-page/hooks/useNicknameCheck";
+import { firebaseErrorHandler } from "app/utils/firebaseError";
+import { isAuth } from "firebase-config";
+import { useAlert } from "store/context/alertContext";
 
 const signupSchema = z
   .object({

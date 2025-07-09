@@ -1,9 +1,5 @@
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
-import { fetchGenres } from "lib/movies/fetchGenres";
-import {
-  fetchMultipleMovieReleaseDates,
-  getCertification,
-} from "lib/movies/fetchMovieReleaseDates";
+import { enrichMovieData } from "lib/movies/utils/enrichMovieData";
 
 export async function fetchTrendingMovies(): Promise<MovieList[]> {
   const TMDB_API_KEY = process.env.TMDB_API_KEY;
@@ -14,7 +10,7 @@ export async function fetchTrendingMovies(): Promise<MovieList[]> {
 
   const response = await fetch(
     `https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_API_KEY}&language=ko-KR`,
-    { next: { revalidate: 3600 } }, // 1시간마다 재검증
+    { next: { revalidate: 86400 } }, // 24시간 캐시
   );
 
   if (!response.ok) {
@@ -22,27 +18,6 @@ export async function fetchTrendingMovies(): Promise<MovieList[]> {
   }
 
   const data = await response.json();
-  const genreMap = await fetchGenres();
 
-  // 1단계: 모든 영화 ID 수집
-  const movieIds = data.results.map((movie: MovieList) => movie.id);
-
-  // 2단계: 배치로 한 번에 처리
-  const ratingsMap = await fetchMultipleMovieReleaseDates(movieIds);
-
-  // 3단계: 결과 조합
-  const moviesWithGenres = data.results.map((movie: MovieList) => {
-    const ratingData = ratingsMap.get(movie.id);
-    const certification = ratingData ? getCertification(ratingData) : null;
-
-    return {
-      ...movie,
-      genres: movie.genre_ids
-        .map((genreId) => genreMap[genreId])
-        .filter(Boolean),
-      certification,
-    };
-  });
-
-  return moviesWithGenres;
+  return enrichMovieData(data.results);
 }

@@ -1,10 +1,10 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { useEffect } from "react";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { IoSearchOutline } from "react-icons/io5";
+import { z } from "zod";
 
 const schema = z.object({
   search: z.string().max(30, "최대 30자 이하로 입력"),

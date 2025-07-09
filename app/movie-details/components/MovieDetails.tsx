@@ -1,14 +1,15 @@
-import { MovieDetails } from "lib/movies/fetchMovieDetails";
-import { MovieCredits } from "lib/movies/fetchMovieCredits";
-import formatMovieDate from "app/utils/formatMovieDate";
-import getMovieTitle from "app/utils/getMovieTitle";
-import convertRuntime from "app/movie-details/utils/convertRuntime";
 import { IoStar } from "react-icons/io5";
-import WriteBtn from "app/components/WriteBtn";
+import GenreList from "app/components/GenreList";
+import MovieCertification from "app/components/MovieCertification";
 import MoviePoster from "app/components/MoviePoster";
-import MovieRating from "app/components/MovieRating";
+import WriteBtn from "app/components/WriteBtn";
 import Loading from "app/loading";
 import MetaInfoItem from "app/movie-details/components/MetaInfoItem";
+import convertRuntime from "app/movie-details/utils/convertRuntime";
+import formatMovieDate from "app/utils/formatMovieDate";
+import getMovieTitle from "app/utils/getMovieTitle";
+import { MovieCredits } from "lib/movies/fetchMovieCredits";
+import { MovieDetails } from "lib/movies/fetchMovieDetails";
 
 type MovieDetailCardProps = {
   movieDetails: MovieDetails;
@@ -58,7 +59,7 @@ export default function MovieDetailCard({
                   {movieDetails.title}
                 </h2>
                 {movieDetails.certification && (
-                  <MovieRating
+                  <MovieCertification
                     certification={movieDetails.certification}
                     showLabel={true}
                   />
@@ -73,17 +74,10 @@ export default function MovieDetailCard({
             </div>
 
             {/* 장르 영역 */}
-            <div className="border-y-4 border-dotted py-2">
-              <ul className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide">
-                {movieDetails.genres.map((genre) => (
-                  <li
-                    key={genre.id}
-                    className="rounded-full border border-black px-3 py-1.5 text-sm"
-                  >
-                    {genre.name}
-                  </li>
-                ))}
-              </ul>
+            <div className="border-y-4 border-dotted">
+              <GenreList
+                genres={movieDetails.genres.map((genre) => genre.name)}
+              />
             </div>
 
             {/* 평점 영역 */}

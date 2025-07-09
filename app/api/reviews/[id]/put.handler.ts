@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { adminFirestore } from "firebase-admin-config";
 import { FieldValue } from "firebase-admin/firestore";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
+import { adminFirestore } from "firebase-admin-config";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 
 // PUT /api/reviews/[id] - 리뷰 수정

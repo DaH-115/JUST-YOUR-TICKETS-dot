@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MovieTrailer } from "lib/movies/fetchVideosMovies";
-import VideoPlayer from "app/components/VideoPlayer";
 import { IoChevronUp, IoChevronDown } from "react-icons/io5";
+import VideoPlayer from "app/components/VideoPlayer";
+import { MovieTrailer } from "lib/movies/fetchVideosMovies";
 
 export default function AllMovieTrailers({
   movieTrailer,

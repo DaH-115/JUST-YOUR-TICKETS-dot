@@ -4,9 +4,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import { MovieList } from "lib/movies/fetchNowPlayingMovies";
-import SwiperCard from "app/components/swiper/swiper-card";
 import SwiperButton from "app/components/swiper/swiper-button";
+import SwiperCard from "app/components/swiper/swiper-card";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
 export default function TicketSwiper({
   movieList,

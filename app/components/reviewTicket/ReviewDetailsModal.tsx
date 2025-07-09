@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart, FaTimes } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import { useAppSelector } from "store/redux-toolkit/hooks";
-import { selectUser } from "store/redux-toolkit/slice/userSlice";
-import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
-import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
-import formatDate from "app/utils/formatDate";
 import ActivityBadge from "app/components/ActivityBadge";
 import ModalPortal from "app/components/modal/ModalPortal";
 import CommentList from "app/components/reviewTicket/Comment/CommentList";
 import ProfileImage from "app/components/reviewTicket/ProfileImage";
 import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
+import formatDate from "app/utils/formatDate";
+import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { useAppSelector } from "store/redux-toolkit/hooks";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 interface ReviewDetailsModalProps {
   isModalOpen: boolean;

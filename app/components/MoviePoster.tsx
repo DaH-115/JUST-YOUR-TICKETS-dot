@@ -1,8 +1,8 @@
 "use client";
 
+import debounce from "lodash/debounce";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import debounce from "lodash/debounce";
 
 interface MoviePosterProps {
   posterPath?: string;

@@ -1,25 +1,25 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useRouter } from "next/navigation";
 
-import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
-import { useAlert } from "store/context/alertContext";
 
 import { FaArrowLeft, FaCheck } from "react-icons/fa";
-import NicknameInput from "app/my-page/components/NicknameInput";
+import { z } from "zod";
 import BioInput from "app/my-page/components/BioInput";
 import ChangePassword from "app/my-page/components/ChangePassword";
+import NicknameInput from "app/my-page/components/NicknameInput";
+import AvatarUploader from "app/my-page/components/profile-avatar/AvatarUploader";
+import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
 import { isAuth } from "firebase-config";
+import { useAlert } from "store/context/alertContext";
+import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import {
   updateUserProfile,
   selectUser,
 } from "store/redux-toolkit/slice/userSlice";
-import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
-import AvatarUploader from "app/my-page/components/profile-avatar/AvatarUploader";
 
 const profileSchema = z.object({
   displayName: z

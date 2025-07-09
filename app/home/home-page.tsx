@@ -1,5 +1,5 @@
-import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { HeroSection, MovieSection, LatestReviews } from "app/home/components";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 interface HomePageProps {

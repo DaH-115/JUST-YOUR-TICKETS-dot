@@ -1,6 +1,6 @@
+import { FieldValue } from "firebase-admin/firestore";
 import { NextRequest, NextResponse } from "next/server";
 import { adminFirestore, adminAuth } from "firebase-admin-config";
-import { FieldValue } from "firebase-admin/firestore";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 
 // POST /api/comments/[reviewId] - 댓글 생성

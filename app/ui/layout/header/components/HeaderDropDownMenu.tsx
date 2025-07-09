@@ -1,9 +1,9 @@
 "use client";
 
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import Link from "next/link";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdPerson, MdLogout } from "react-icons/md";
-import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import ProfileAvatar from "app/components/ProfileAvatar";
 
 interface HeaderDropDownMenuProps {

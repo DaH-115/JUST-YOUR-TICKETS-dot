@@ -1,7 +1,7 @@
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminFirestore } from "firebase-admin-config";
 import { verifyAuthToken } from "lib/auth/verifyToken";
-import { revalidatePath } from "next/cache";
 
 // 랜덤 닉네임 생성 함수
 function generateRandomNickname(): string {

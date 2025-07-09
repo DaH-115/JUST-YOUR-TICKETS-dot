@@ -1,5 +1,5 @@
-import { PrivateRoute } from "store/context/auth/authContext";
 import SideMenu from "app/my-page/components/SideMenu";
+import { PrivateRoute } from "store/context/auth/authContext";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

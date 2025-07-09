@@ -1,14 +1,14 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
-import { fetchMovieCredits } from "lib/movies/fetchMovieCredits";
-import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
-import { fetchSimilarMovies } from "lib/movies/fetchSimilarMovies";
-import getMovieTitle from "app/utils/getMovieTitle";
-import Background from "app/ui/layout/Background";
-import SimilarMovies from "app/movie-details/components/SimilarMovies";
-import AllMovieTrailers from "app/movie-details/components/MovieTrailers";
 import MovieDetailCard from "app/movie-details/components/MovieDetails";
+import AllMovieTrailers from "app/movie-details/components/MovieTrailers";
+import SimilarMovies from "app/movie-details/components/SimilarMovies";
+import Background from "app/ui/layout/Background";
+import getMovieTitle from "app/utils/getMovieTitle";
+import { fetchMovieCredits } from "lib/movies/fetchMovieCredits";
+import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
+import { fetchSimilarMovies } from "lib/movies/fetchSimilarMovies";
+import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
 
 export async function generateMetadata({
   params,

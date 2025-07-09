@@ -1,6 +1,6 @@
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { adminFirestore } from "firebase-admin-config";
-import { revalidatePath } from "next/cache";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 
 // DELETE /api/comments/[reviewId]/[commentId] - 댓글 삭제

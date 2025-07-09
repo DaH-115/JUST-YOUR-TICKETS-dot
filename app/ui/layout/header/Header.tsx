@@ -1,16 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
-import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
 import { signOut } from "firebase/auth";
-import { isAuth } from "firebase-config";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { clearUser, selectUser } from "store/redux-toolkit/slice/userSlice";
-import HeaderSearchBar from "app/ui/layout/header/components/HeaderSearchBar";
+import { useCallback, useEffect, useState } from "react";
 import { IoIosMenu } from "react-icons/io";
-import HeaderSideMenu from "app/ui/layout/header/components/HeaderSideMenu";
 import HeaderDropDownMenu from "app/ui/layout/header/components/HeaderDropDownMenu";
+import HeaderSearchBar from "app/ui/layout/header/components/HeaderSearchBar";
+import HeaderSideMenu from "app/ui/layout/header/components/HeaderSideMenu";
+import { isAuth } from "firebase-config";
+import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
+import { clearUser, selectUser } from "store/redux-toolkit/slice/userSlice";
 
 interface NavItem {
   href: string;

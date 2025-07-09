@@ -1,12 +1,12 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import Link from "next/link";
 import { IoMdClose } from "react-icons/io";
-import { usePathname } from "next/navigation";
-import { useAppSelector } from "store/redux-toolkit/hooks";
 import ProfileAvatar from "app/components/ProfileAvatar";
+import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 interface HeaderSideMenuProps {

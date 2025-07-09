@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { NextResponse } from "next/server";
 
 // S3Client를 파일 최상단에서 한 번만 생성하여 재사용
 const s3 = new S3Client({

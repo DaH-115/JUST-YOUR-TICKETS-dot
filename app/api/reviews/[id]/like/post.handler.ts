@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { adminFirestore } from "firebase-admin-config";
 import { FieldValue } from "firebase-admin/firestore";
 import { revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
+import { adminFirestore } from "firebase-admin-config";
 import { verifyAuthToken } from "lib/auth/verifyToken";
 
 // POST /api/reviews/[id]/like - 좋아요 추가

@@ -1,6 +1,6 @@
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminFirestore } from "firebase-admin-config";
-import { revalidatePath } from "next/cache";
 
 // POST /api/auth/signup - 이메일 회원가입
 export async function POST(req: NextRequest) {

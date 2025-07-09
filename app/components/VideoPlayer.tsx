@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import { useState, useEffect, useRef } from "react";
 import Loading from "app/loading";
 
 // YouTube 전용 플레이어만 import하여 번들 크기 최적화

@@ -1,19 +1,19 @@
 "use client";
 
-import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { FaHeart } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import ReviewDetailsModal from "app/components/reviewTicket/ReviewDetailsModal";
+import ActivityBadge from "app/components/ActivityBadge";
 import MoviePoster from "app/components/MoviePoster";
 import ProfileImage from "app/components/reviewTicket/ProfileImage";
-import { useAlert } from "store/context/alertContext";
+import ReviewDetailsModal from "app/components/reviewTicket/ReviewDetailsModal";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
-import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
-import { FaHeart } from "react-icons/fa";
-import ActivityBadge from "app/components/ActivityBadge";
-import { useAppSelector } from "store/redux-toolkit/hooks";
 import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { useAlert } from "store/context/alertContext";
+import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 export default function ReviewTicket({

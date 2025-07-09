@@ -1,87 +1,41 @@
-// 캐시 시스템
+import { LRUCache } from "lib/utils/lruCache";
+
+interface ReleaseDate {
+  certification: string;
+  meaning: string;
+  release_date: string;
+}
+
+interface ReleaseDatesResult {
+  iso_3166_1: string;
+  release_dates: ReleaseDate[];
+}
+
+interface MovieReleaseDates {
+  id: number;
+  results: ReleaseDatesResult[];
+}
+
 const MAX_CACHE_SIZE = 1000;
 const CACHE_TTL = 24 * 60 * 60 * 1000; // 24시간
-
-class LRUCache<K, V extends { timestamp: number }> {
-  private cache = new Map<K, V>();
-  private maxSize: number;
-
-  constructor(maxSize: number) {
-    this.maxSize = maxSize;
-  }
-
-  get(key: K): V | undefined {
-    const value = this.cache.get(key);
-    if (value) {
-      // 만료 체크
-      if (Date.now() - value.timestamp > CACHE_TTL) {
-        this.cache.delete(key);
-        return undefined;
-      }
-      // LRU: 접근한 항목을 맨 뒤로 이동
-      this.cache.delete(key);
-      this.cache.set(key, value);
-    }
-    return value;
-  }
-
-  set(key: K, value: V): void {
-    if (this.cache.has(key)) {
-      this.cache.delete(key);
-    } else if (this.cache.size >= this.maxSize) {
-      // 가장 오래된 항목 제거
-      const firstKey = this.cache.keys().next().value;
-      if (firstKey !== undefined) {
-        this.cache.delete(firstKey);
-      }
-    }
-    this.cache.set(key, value);
-  }
-
-  delete(key: K): boolean {
-    return this.cache.delete(key);
-  }
-
-  clear(): void {
-    this.cache.clear();
-  }
-
-  get size(): number {
-    return this.cache.size;
-  }
-
-  entries(): IterableIterator<[K, V]> {
-    return this.cache.entries();
-  }
-}
 
 const cache = new LRUCache<
   number,
   { data: MovieReleaseDates; timestamp: number }
 >(MAX_CACHE_SIZE);
 
-function setCache(id: number, data: MovieReleaseDates) {
+/**
+ * @private -- For test only
+ * LRU 캐시에 데이터를 저장합니다.
+ */
+export function setCache(id: number, data: MovieReleaseDates) {
   if (typeof id !== "number" || isNaN(id)) return;
   cache.set(id, { data, timestamp: Date.now() });
 }
 
-export interface ReleaseDate {
-  certification: string;
-  meaning: string;
-  release_date: string;
-}
-
-export interface ReleaseDatesResult {
-  iso_3166_1: string;
-  release_dates: ReleaseDate[];
-}
-
-export interface MovieReleaseDates {
-  id: number;
-  results: ReleaseDatesResult[];
-}
-
-//캐시 기능
+// ✳️ 해당 id에 대한 연령 등급 정보만 가져오는 단일 목적 함수
+// 기본 작업 단위: 특정 영화 하나의 등급 정보를 가져오는 가장 기본적인(atomic) 함수입니다.
+// 재사용성: 이 함수는 다른 곳에서 "영화 하나의 등급 정보가 필요할 때" 언제든지 가져다 쓸 수 있는 부품(building block) 역할을 합니다.
 export async function fetchMovieReleaseDates(
   id: number,
 ): Promise<MovieReleaseDates> {
@@ -143,91 +97,6 @@ export async function fetchMovieReleaseDates(
       throw new Error("알 수 없는 오류가 발생했습니다.");
     }
   }
-}
-
-// 배치 처리 함수
-export async function fetchMultipleMovieReleaseDates(
-  movieIds: number[],
-): Promise<Map<number, MovieReleaseDates | null>> {
-  const results = new Map<number, MovieReleaseDates | null>();
-  const needAPI = []; // API 호출이 필요한 영화들
-
-  // 1단계: 캐시부터 확인하기
-  for (const id of movieIds) {
-    const cached = cache.get(id);
-    if (cached) {
-      results.set(id, cached.data);
-      continue; // 다음 영화로!
-    }
-
-    // 캐시에 없으면 API 호출 목록에 추가
-    needAPI.push(id);
-  }
-
-  // 2단계: API 호출이 필요한 것들만 처리
-  if (needAPI.length > 0) {
-    const promises = needAPI.map(async (id) => {
-      try {
-        const data = await fetchMovieReleaseDates(id);
-        return { id, data, success: true };
-      } catch (error) {
-        return { id, data: null, success: false };
-      }
-    });
-
-    // 모든 API 호출이 끝날 때까지 기다리기
-    const apiResults = await Promise.all(promises);
-
-    // 결과 정리하기
-    for (const result of apiResults) {
-      results.set(result.id, result.data);
-    }
-  }
-
-  return results;
-}
-
-// 등급 정규화
-export function normalizeRating(rating: string): string {
-  if (!rating) return "18";
-
-  const ratingMap: Record<string, string> = {
-    all: "ALL",
-    "12": "12",
-    "15": "15",
-    "18": "18",
-    g: "ALL",
-    pg: "12",
-    "pg-13": "15",
-    r: "18",
-    전체관람가: "ALL",
-    "12세관람가": "12",
-    "15세관람가": "15",
-    "18세관람가": "18",
-  };
-
-  return ratingMap[rating.trim().toLowerCase()] || "18";
-}
-
-// 최적 등급 추출
-export function getCertification(
-  releaseDates: MovieReleaseDates,
-): string | null {
-  if (!releaseDates?.results?.length) return null;
-
-  // 한국 등급 우선
-  const kr = releaseDates.results.find((r) => r.iso_3166_1 === "KR");
-  if (kr?.release_dates?.[0]?.certification) {
-    return normalizeRating(kr.release_dates[0].certification);
-  }
-
-  // 미국 등급
-  const us = releaseDates.results.find((r) => r.iso_3166_1 === "US");
-  if (us?.release_dates?.[0]?.certification) {
-    return normalizeRating(us.release_dates[0].certification);
-  }
-
-  return null;
 }
 
 // 유틸리티 함수들

@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
-import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
-import { adminFirestore } from "firebase-admin-config";
 import { FieldValue } from "firebase-admin/firestore";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
-import { updateUserActivityLevel } from "lib/users/updateUserActivityLevel";
+import { NextRequest, NextResponse } from "next/server";
 import { updateCommentsActivityLevel } from "app/api/users/[uid]/route.helper";
+import { adminFirestore } from "firebase-admin-config";
+import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
+import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
+import { updateUserActivityLevel } from "lib/users/updateUserActivityLevel";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);

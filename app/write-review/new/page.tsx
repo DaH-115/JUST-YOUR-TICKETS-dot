@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
 import ReviewContainer from "app/write-review/components/ReviewContainer";
+import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
 
 export const metadata: Metadata = {
   title: "New Write Review Ticket",

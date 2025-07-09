@@ -1,12 +1,12 @@
 "use client";
 
 import { useMemo, useState, useLayoutEffect } from "react";
-import { MovieList } from "lib/movies/fetchNowPlayingMovies";
-import getMovieTitle from "app/utils/getMovieTitle";
-import MovieInfoCard from "app/home/components/MovieInfoCard";
 import MoviePoster from "app/components/MoviePoster";
 import VideoPlayer from "app/components/VideoPlayer";
+import MovieInfoCard from "app/home/components/MovieInfoCard";
 import Background from "app/ui/layout/Background";
+import getMovieTitle from "app/utils/getMovieTitle";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
 interface HeroSectionProps {
   movie: MovieList;

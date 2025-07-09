@@ -1,9 +1,9 @@
-import MoviePoster from "app/components/MoviePoster";
-import ProfileImage from "app/components/reviewTicket/ProfileImage";
-import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import Link from "next/link";
 import { FaStar, FaHeart } from "react-icons/fa";
 import ActivityBadge from "app/components/ActivityBadge";
+import MoviePoster from "app/components/MoviePoster";
+import ProfileImage from "app/components/reviewTicket/ProfileImage";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 interface ReviewCardProps {
   review: ReviewDoc;

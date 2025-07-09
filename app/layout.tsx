@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import "app/globals.css";
-import Providers from "store/redux-toolkit/Providers";
+import { Nanum_Gothic, Montserrat } from "next/font/google";
+import ConditionalLayout from "app/components/ConditionalLayout";
 import { AlertProvider } from "store/context/alertContext";
 import { AuthProvider } from "store/context/auth/authContext";
-import ConditionalLayout from "app/components/ConditionalLayout";
-import { Nanum_Gothic, Montserrat } from "next/font/google";
+import Providers from "store/redux-toolkit/Providers";
 
 const nanumGothic = Nanum_Gothic({
   subsets: ["latin"],

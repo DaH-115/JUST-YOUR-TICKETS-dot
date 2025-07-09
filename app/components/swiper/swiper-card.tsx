@@ -1,13 +1,14 @@
-import { useMemo } from "react";
 import Link from "next/link";
-import { MovieList } from "lib/movies/fetchNowPlayingMovies";
-import getMovieTitle from "app/utils/getMovieTitle";
+import { useMemo } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import WriteBtn from "app/components/WriteBtn";
-import Tooltip from "app/components/Tooltip";
+import GenreList from "app/components/GenreList";
+import MovieCertification from "app/components/MovieCertification";
 import MoviePoster from "app/components/MoviePoster";
-import MovieRating from "app/components/MovieRating";
+import Tooltip from "app/components/Tooltip";
+import WriteBtn from "app/components/WriteBtn";
+import getMovieTitle from "app/utils/getMovieTitle";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
 export default function SwiperCard({
   idx,
@@ -58,13 +59,13 @@ export default function SwiperCard({
               </p>
             </div>
             {movie.certification && (
-              <MovieRating certification={movie.certification} />
+              <MovieCertification certification={movie.certification} />
             )}
           </div>
         </section>
 
-        {/* RATING & GENRES */}
-        <section className="flex items-center p-2">
+        {/* CERTIFICATION & GENRES */}
+        <section className="flex items-center px-2">
           {/* RATE */}
           <div className="flex items-center border-r-4 border-dotted pr-2 text-xs md:text-sm">
             <IoStar className="text-accent-300 md:mr-1" />
@@ -73,22 +74,7 @@ export default function SwiperCard({
             </span>
           </div>
           {/* GENRES */}
-          <ul className="flex w-full gap-1 overflow-x-scroll pl-2 scrollbar-hide">
-            {genres?.length > 0 ? (
-              genres.slice(0, 3).map((genre, idx) => (
-                <li
-                  className="text-nowrap rounded-full border border-primary-500 bg-white px-2 py-0.5 text-[11px] text-black transition-colors duration-300 hover:bg-primary-500 hover:text-white active:bg-black active:text-white"
-                  key={idx}
-                >
-                  {genre}
-                </li>
-              ))
-            ) : (
-              <li className="truncate px-2 py-1 text-xs text-gray-300 lg:text-sm">
-                장르 정보가 없습니다
-              </li>
-            )}
-          </ul>
+          <GenreList genres={(genres || []).slice(0, 3)} variant="small" />
         </section>
 
         {/* REVIEW WRITE BUTTON */}

@@ -1,7 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { adminAuth, adminFirestore } from "firebase-admin-config";
 import { revalidatePath } from "next/cache";
-import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
+import { NextRequest, NextResponse } from "next/server";
 import {
   getS3Url,
   updateReviewsDisplayName,
@@ -9,6 +7,8 @@ import {
   updateReviewsPhotoKey,
   updateCommentsPhotoKey,
 } from "app/api/users/[uid]/route.helper";
+import { adminAuth, adminFirestore } from "firebase-admin-config";
+import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 
 // PUT /api/users/[uid] - 사용자 프로필 업데이트
 export async function PUT(

@@ -15,11 +15,19 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const data = await fetchReviewsPaginated({
-    page,
-    pageSize,
-    uid,
-    search: searchTerm,
-  });
-  return NextResponse.json(data);
+  try {
+    const data = await fetchReviewsPaginated({
+      page,
+      pageSize,
+      uid,
+      search: searchTerm,
+    });
+    return NextResponse.json(data);
+  } catch (error: any) {
+    console.error("리뷰 검색 실패:", error);
+    return NextResponse.json(
+      { error: error.message || "리뷰 검색에 실패했습니다." },
+      { status: 500 },
+    );
+  }
 }

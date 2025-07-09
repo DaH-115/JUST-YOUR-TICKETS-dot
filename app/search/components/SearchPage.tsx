@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import debounce from "lodash/debounce";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
 import { IoSearchOutline } from "react-icons/io5";
+import * as z from "zod";
 import SwiperCard from "app/components/swiper/swiper-card";
 import SearchResultList from "app/search/components/SearchResultList";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";

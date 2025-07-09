@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
-import { db, isAuth } from "firebase-config";
+import { useState, useEffect } from "react";
 import Avatar from "app/my-page/components/profile-avatar/Avatar";
+import { db, isAuth } from "firebase-config";
 
 export default function ProfileImage({
   previewSrc = null,

@@ -1,17 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useState, useMemo } from "react";
-import Link from "next/link";
-import debounce from "lodash/debounce";
-import { MovieList } from "lib/movies/fetchNowPlayingMovies";
-import { IoSearchOutline } from "react-icons/io5";
-import { FaArrowRight } from "react-icons/fa";
 import {
   Combobox,
   ComboboxInput,
   ComboboxOptions,
   ComboboxOption,
 } from "@headlessui/react";
+import debounce from "lodash/debounce";
+import Link from "next/link";
+import { useCallback, useEffect, useState, useMemo } from "react";
+import { FaArrowRight } from "react-icons/fa";
+import { IoSearchOutline } from "react-icons/io5";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
 interface HeaderSearchBarProps {
   isSideMenuOpen: boolean;

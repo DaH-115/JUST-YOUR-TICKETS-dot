@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useState } from "react";
 import Link from "next/link";
-import ReviewCard from "app/home/components/reviews/ReviewCard";
+import { useCallback, useState } from "react";
 import ReviewDetailsModal from "app/components/reviewTicket/ReviewDetailsModal";
+import ReviewCard from "app/home/components/reviews/ReviewCard";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 export default function LatestReviews({ reviews }: { reviews: ReviewDoc[] }) {

@@ -1,7 +1,7 @@
 "use client";
 
-import { ReactNode } from "react";
 import { Dialog, DialogPanel, DialogBackdrop } from "@headlessui/react";
+import { ReactNode } from "react";
 
 interface ModalProps {
   isOpen: boolean;

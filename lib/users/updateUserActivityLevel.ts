@@ -1,5 +1,5 @@
-import { adminFirestore } from "firebase-admin-config";
 import { FieldValue } from "firebase-admin/firestore";
+import { adminFirestore } from "firebase-admin-config";
 import { fetchUserReviewCount } from "lib/users/fetchUserReviewCount";
 import { getActivityLevel } from "lib/utils/getActivityLevel";
 

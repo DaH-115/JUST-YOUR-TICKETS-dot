@@ -1,19 +1,19 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { isAuth } from "firebase-config";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useAlert } from "store/context/alertContext";
-import { firebaseErrorHandler } from "app/utils/firebaseError";
-import { setRememberMe } from "app/utils/authPersistence";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import SocialLogin from "app/login/components/SocialLogin";
-import InputField from "app/components/InputField";
 import { FaArrowRight } from "react-icons/fa";
+import { z } from "zod";
+import InputField from "app/components/InputField";
+import SocialLogin from "app/login/components/SocialLogin";
+import { setRememberMe } from "app/utils/authPersistence";
+import { firebaseErrorHandler } from "app/utils/firebaseError";
+import { isAuth } from "firebase-config";
+import { useAlert } from "store/context/alertContext";
 
 const loginSchema = z.object({
   email: z

@@ -1,29 +1,29 @@
 "use client";
 
-import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
-import { FaEdit, FaArrowRight, FaSignOutAlt } from "react-icons/fa";
+import { signOut } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useEffect } from "react";
-import { signOut } from "firebase/auth";
+import { FaEdit, FaArrowRight, FaSignOutAlt } from "react-icons/fa";
+import Loading from "app/loading";
+import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
+import UserGradeInfo from "app/my-page/components/UserGradeInfo";
+import { clearAuthPersistence } from "app/utils/authPersistence";
+import formatDate from "app/utils/formatDate";
 import { isAuth } from "firebase-config";
+import {
+  getActivityLevel,
+  getActivityLevelInfo,
+  getLoadingActivityLevel,
+} from "lib/utils/getActivityLevel";
+import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
 import {
   clearUser,
   selectUser,
   selectUserStatus,
   fetchUserProfile,
 } from "store/redux-toolkit/slice/userSlice";
-import { clearAuthPersistence } from "app/utils/authPersistence";
-import formatDate from "app/utils/formatDate";
-import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
-import UserGradeInfo from "app/my-page/components/UserGradeInfo";
 
-import {
-  getActivityLevel,
-  getActivityLevelInfo,
-  getLoadingActivityLevel,
-} from "lib/utils/getActivityLevel";
-import Loading from "app/loading";
 
 export default function ProfileView() {
   const router = useRouter();
