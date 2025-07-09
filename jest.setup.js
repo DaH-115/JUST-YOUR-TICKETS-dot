@@ -5,6 +5,12 @@
 // Learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
 
+// Mock React Cache
+jest.mock("react", () => ({
+  ...jest.requireActual("react"),
+  cache: jest.fn((fn) => fn),
+}));
+
 // Mock Firebase modules
 jest.mock("firebase/app", () => ({
   initializeApp: jest.fn(),
@@ -147,24 +153,22 @@ console.error = (...args) => {
   const message = typeof args[0] === "string" ? args[0] : "";
   const errorObject = args[1] instanceof Error ? args[1] : {};
 
-  // 아래 키워드가 포함된 에러는 테스트 중 의도된 에러이므로 콘솔에 출력하지 않습니다.
-  const silencedKeywords = [
-    "Warning: ReactDOM.render is no longer supported",
-    "회원가입 API 에러",
-    "중복 검사 API 에러",
-    "소셜 로그인 설정 API 에러",
-    "닉네임 생성 중 오류",
-    "신규 사용자 프로필 생성 실패",
-    "닉네임 롤백 실패",
-    "Internal error",
-    "Firestore error",
-    "Transaction failed",
-    "유일한 닉네임 생성에 실패했습니다.",
-    "Firebase Auth error",
-    "Firestore set error",
+  // 테스트 중 의도된 에러들을 필터링하는 패턴들
+  const silencedPatterns = [
+    // React 관련 경고
+    /Warning: ReactDOM\.render is no longer supported/,
+    /Warning: React\./,
+
+    // 일반적인 에러/실패 키워드 (가장 포괄적)
+    /실패/,
+    /오류/,
+    /error/i,
+    /failed/i,
+    /exception/i,
   ];
 
-  if (silencedKeywords.some((keyword) => message.includes(keyword))) {
+  // 패턴 매칭으로 필터링
+  if (silencedPatterns.some((pattern) => pattern.test(message))) {
     return;
   }
 

@@ -1,0 +1,92 @@
+import { POST } from "app/api/s3/post.handler";
+import { createMockRequest } from "__tests__/utils/test-utils";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
+jest.mock("@aws-sdk/s3-request-presigner", () => ({
+  getSignedUrl: jest.fn(),
+}));
+
+jest.mock("@aws-sdk/client-s3", () => ({
+  S3Client: jest.fn(() => ({})),
+  PutObjectCommand: jest.fn((args) => ({ ...args })),
+}));
+
+describe("POST /api/s3", () => {
+  const mockSignedUrl =
+    "https://s3.amazonaws.com/mock-bucket/mock-presigned-url";
+  const mockFilename = "test-image.png";
+  const mockContentType = "image/png";
+  const mockUserId = "test-user-123";
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (getSignedUrl as jest.Mock).mockResolvedValue(mockSignedUrl);
+  });
+
+  test("성공: 유효한 요청 시 presigned URL과 key를 반환해야 함", async () => {
+    const req = createMockRequest({
+      method: "POST",
+      body: {
+        filename: mockFilename,
+        contentType: mockContentType,
+        userId: mockUserId,
+      },
+    });
+
+    const response = await POST(req);
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.url).toBe(mockSignedUrl);
+    expect(body.key).toMatch(
+      new RegExp(`^profile-img/${mockUserId}/\\d+_${mockFilename}$`),
+    );
+
+    expect(getSignedUrl).toHaveBeenCalledTimes(1);
+    const getSignedUrlCall = (getSignedUrl as jest.Mock).mock.calls[0];
+    const command = getSignedUrlCall[1];
+
+    expect(command.Bucket).toBe(process.env.AWS_S3_BUCKET);
+    expect(command.Key).toBe(body.key);
+    expect(command.ContentType).toBe(mockContentType);
+  });
+
+  test("실패: 필수 파라미터(filename)가 없는 경우 400 에러를 반환해야 함", async () => {
+    const req = createMockRequest({
+      method: "POST",
+      body: {
+        contentType: mockContentType,
+        userId: mockUserId,
+      },
+    });
+    const response = await POST(req);
+    const body = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(body.error).toBe(true);
+    expect(body.message).toBe("filename, contentType, userId 모두 필요합니다.");
+    expect(getSignedUrl).not.toHaveBeenCalled();
+  });
+
+  test("실패: getSignedUrl에서 에러 발생 시 500 에러를 반환해야 함", async () => {
+    const errorMessage = "S3 is down";
+    (getSignedUrl as jest.Mock).mockRejectedValue(new Error(errorMessage));
+
+    const req = createMockRequest({
+      method: "POST",
+      body: {
+        filename: mockFilename,
+        contentType: mockContentType,
+        userId: mockUserId,
+      },
+    });
+
+    const response = await POST(req);
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body.error).toBe(true);
+    expect(body.message).toBe(errorMessage);
+    expect(getSignedUrl).toHaveBeenCalledTimes(1);
+  });
+});
