@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { isAuth } from "firebase-config";
 
 // 메모리 내 캐시 (key: S3 key, value: presigned URL)
 const presignedUrlCache = new Map<string, string>();
@@ -50,8 +51,19 @@ export function usePresignedUrl({
       setError(null);
 
       try {
+        // 현재 사용자 확인 및 토큰 가져오기
+        const currentUser = isAuth.currentUser;
+        if (!currentUser) {
+          throw new Error("인증이 필요합니다.");
+        }
+
+        const idToken = await currentUser.getIdToken();
+
         const response = await fetch(`/api/s3?key=${encodeURIComponent(key)}`, {
           method: "GET",
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
           signal: abortController.signal,
         });
 

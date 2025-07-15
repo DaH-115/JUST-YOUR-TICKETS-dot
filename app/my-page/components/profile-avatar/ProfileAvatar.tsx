@@ -24,7 +24,7 @@ export default function ProfileImage({
       }
     });
     return () => unsub();
-  }, [user?.uid]);
+  }, [user]);
 
   return (
     // 2) photoKey를 Avatar에 prop으로 전달

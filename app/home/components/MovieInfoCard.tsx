@@ -21,7 +21,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   return (
     <section className="mx-auto w-full overflow-hidden break-keep rounded-2xl bg-gradient-to-br from-white to-gray-50">
       <div className="p-2">
-        <div className="p-2 md:p-4">
+        <div className="p-2 md:p-4 md:pb-2">
           <div className="mb-4 flex justify-between">
             <p className="inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
               RECOMMEND MOVIE
@@ -44,11 +44,11 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
           <div className="flex items-center gap-2">
             <h2 className="text-gray-600">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
             <FaStar className="text-yellow-400" />
-            <p className="font-bold">{vote_average.toFixed(1)}</p>
+            <p className="text-lg font-bold">{vote_average.toFixed(1)}</p>
             <MovieCertification certification={movie.certification ?? null} />
           </div>
         </div>
-        <div className="border-y-4 border-dotted px-2">
+        <div className="border-b-4 border-dotted px-2">
           <GenreList genres={genres} />
         </div>
         {overview && <AnimatedOverview overview={overview} />}

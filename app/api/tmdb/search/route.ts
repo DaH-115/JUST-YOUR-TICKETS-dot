@@ -34,7 +34,11 @@ export async function GET(req: NextRequest) {
     const results = Array.isArray(data.results) ? data.results : [];
     const genreMap = await fetchGenres();
 
-    const movieListWithGenres = results.map((movie: any) => {
+    type TmdbMovie = {
+      genre_ids: number[];
+    };
+
+    const movieListWithGenres = results.map((movie: TmdbMovie) => {
       // genre_ids 배열 체크
       const ids = Array.isArray(movie.genre_ids) ? movie.genre_ids : [];
       return {

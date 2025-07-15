@@ -23,11 +23,10 @@ export async function GET(req: NextRequest) {
       search: searchTerm,
     });
     return NextResponse.json(data);
-  } catch (error: any) {
+  } catch (error) {
     console.error("리뷰 검색 실패:", error);
-    return NextResponse.json(
-      { error: error.message || "리뷰 검색에 실패했습니다." },
-      { status: 500 },
-    );
+    const message =
+      error instanceof Error ? error.message : "리뷰 검색에 실패했습니다.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

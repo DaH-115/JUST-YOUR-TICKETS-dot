@@ -64,8 +64,12 @@ export default function useLikedReviews({
 
         setReviews(reviews);
         setTotalPages(totalPages);
-      } catch (error: any) {
-        setError(error.message);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("알 수 없는 오류가 발생했습니다.");
+        }
       } finally {
         setLoading(false);
       }

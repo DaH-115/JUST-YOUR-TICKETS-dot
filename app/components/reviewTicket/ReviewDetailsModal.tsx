@@ -1,145 +1,26 @@
 import { useEffect, useState, Suspense, lazy, useCallback } from "react";
 import { FaHeart, FaRegHeart, FaTimes } from "react-icons/fa";
+import { ImSpinner2 } from "react-icons/im";
 import { IoStar } from "react-icons/io5";
 import ActivityBadge from "app/components/ActivityBadge";
 import ModalPortal from "app/components/modal/ModalPortal";
-import ProfileImage from "app/components/reviewTicket/ProfileImage";
+import ProfileImage from "app/components/ProfileImage";
 import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
 import formatDate from "app/utils/formatDate";
-import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
-import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
-// 댓글 컴포넌트 지연 로딩
 const CommentList = lazy(
-  () => import("app/components/reviewTicket/Comment/CommentList"),
+  () => import("app/components/reviewTicket/comment/CommentList"),
 );
 
 interface ReviewDetailsModalProps {
   isModalOpen: boolean;
   closeModalHandler: () => void;
-  selectedReview: ReviewDoc;
+  selectedReview: ReviewWithLike;
   onReviewDeleted: (id: string) => void;
-  onLikeToggled?: (reviewId: string, isLiked: boolean) => void;
-}
-
-// 좋아요 기능을 위한 커스텀 훅
-function useLikeStatus(
-  reviewId: string,
-  initialLikeCount: number,
-  isModalOpen: boolean,
-) {
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(initialLikeCount);
-  const [isLiking, setIsLiking] = useState(false);
-  const [isLikeStatusLoaded, setIsLikeStatusLoaded] = useState(false);
-
-  const userState = useAppSelector(selectUser);
-
-  // 리뷰 ID가 변경될 때 상태 초기화
-  useEffect(() => {
-    setLiked(false);
-    setLikeCount(initialLikeCount);
-    setIsLikeStatusLoaded(false);
-  }, [reviewId, initialLikeCount]);
-
-  // 모달이 열린 후 좋아요 상태 확인 (지연 로딩)
-  useEffect(() => {
-    if (!isModalOpen || !userState?.uid || isLikeStatusLoaded) {
-      return;
-    }
-
-    const checkLikeStatus = async () => {
-      try {
-        await apiCallWithTokenRefresh(async (authHeaders) => {
-          const response = await fetch(`/api/reviews/${reviewId}/like`, {
-            method: "GET",
-            headers: { ...authHeaders },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setLiked(data.isLiked);
-            setIsLikeStatusLoaded(true);
-            return data;
-          }
-          return null;
-        });
-      } catch (error) {
-        console.error("좋아요 상태 확인 실패:", error);
-        setIsLikeStatusLoaded(true);
-      }
-    };
-
-    // 모달이 열린 후 지연 로딩
-    const timer = setTimeout(checkLikeStatus, 100);
-    return () => clearTimeout(timer);
-  }, [isModalOpen, userState?.uid, reviewId, isLikeStatusLoaded]);
-
-  const toggleLike = useCallback(
-    async (
-      movieTitle: string,
-      onLikeToggled?: (reviewId: string, isLiked: boolean) => void,
-    ) => {
-      if (!userState?.uid || isLiking) return;
-      setIsLiking(true);
-
-      try {
-        if (liked) {
-          await apiCallWithTokenRefresh(async (authHeaders) => {
-            const response = await fetch(`/api/reviews/${reviewId}/like`, {
-              method: "DELETE",
-              headers: { ...authHeaders },
-            });
-
-            if (!response.ok) {
-              const errorData = await response.json();
-              throw new Error(errorData.error || "좋아요 취소에 실패했습니다.");
-            }
-            return response.json();
-          });
-
-          setLiked(false);
-          setLikeCount((prev) => prev - 1);
-          onLikeToggled?.(reviewId, false);
-        } else {
-          await apiCallWithTokenRefresh(async (authHeaders) => {
-            const response = await fetch(`/api/reviews/${reviewId}/like`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                ...authHeaders,
-              },
-              body: JSON.stringify({ movieTitle }),
-            });
-
-            if (!response.ok) {
-              const errorData = await response.json();
-              throw new Error(errorData.error || "좋아요 추가에 실패했습니다.");
-            }
-            return response.json();
-          });
-
-          setLiked(true);
-          setLikeCount((prev) => prev + 1);
-          onLikeToggled?.(reviewId, true);
-        }
-      } catch (error) {
-        console.error("좋아요 처리 실패:", error);
-        alert(
-          error instanceof Error
-            ? error.message
-            : "좋아요 처리에 실패했습니다.",
-        );
-      } finally {
-        setIsLiking(false);
-      }
-    },
-    [liked, isLiking, userState?.uid, reviewId],
-  );
-
-  return { liked, likeCount, isLiking, toggleLike };
+  onLikeToggle: (reviewId: string) => void;
 }
 
 export default function ReviewDetailsModal({
@@ -147,19 +28,14 @@ export default function ReviewDetailsModal({
   closeModalHandler,
   selectedReview,
   onReviewDeleted,
-  onLikeToggled,
+  onLikeToggle,
 }: ReviewDetailsModalProps) {
-  const { review, user } = selectedReview;
+  const { review, user, isLiked } = selectedReview;
   const [showComments, setShowComments] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
 
   const userState = useAppSelector(selectUser);
-  const { liked, likeCount, isLiking, toggleLike } = useLikeStatus(
-    selectedReview.id,
-    review.likeCount || 0,
-    isModalOpen,
-  );
 
-  // 모달이 열린 후 댓글 컴포넌트 지연 렌더링
   useEffect(() => {
     if (!isModalOpen) {
       setShowComments(false);
@@ -174,18 +50,19 @@ export default function ReviewDetailsModal({
   }, [isModalOpen]);
 
   const handleLikeClick = useCallback(() => {
-    toggleLike(review.movieTitle, onLikeToggled);
-  }, [toggleLike, review.movieTitle, onLikeToggled]);
+    if (isLiking) return;
+    setIsLiking(true);
+    onLikeToggle(selectedReview.id);
+    setIsLiking(false);
+  }, [isLiking, onLikeToggle, selectedReview.id]);
 
   return (
     <ModalPortal isOpen={isModalOpen} onClose={closeModalHandler}>
       <div className="flex w-full items-center justify-between pb-4">
-        {/* 왼쪽: 별점 영역 */}
         <div className="mr-4 flex h-full items-center justify-center">
           <IoStar className="mr-1 text-accent-300" size={18} />
           <p className="text-2xl font-bold md:text-3xl">{review.rating}</p>
         </div>
-        {/* 오른쪽: 타이틀 및 버튼 */}
         <div className="w-full">
           <h1 className="font-bold">{review?.reviewTitle}</h1>
           <div className="flex text-xs text-gray-600">
@@ -197,11 +74,19 @@ export default function ReviewDetailsModal({
           <button
             onClick={handleLikeClick}
             disabled={!userState?.uid || isLiking}
-            className="flex items-center text-red-500 transition hover:scale-105"
+            className="group flex items-center justify-center text-red-500"
             data-testid="like-button"
           >
-            {liked ? <FaHeart /> : <FaRegHeart />}
-            <span className="ml-1 text-sm text-black">{likeCount}</span>
+            <div className="transition-transform duration-200 group-hover:scale-110">
+              {isLiked ? <FaHeart /> : <FaRegHeart />}
+            </div>
+            <div className="ml-1.5 flex min-w-[1.5rem] items-center justify-center">
+              {isLiking ? (
+                <ImSpinner2 className="animate-spin" />
+              ) : (
+                <span className="text-sm text-black">{review.likeCount}</span>
+              )}
+            </div>
           </button>
           {/* 리뷰 작성자와 로그인한 유저가 같을 때만 수정/삭제 버튼 노출 */}
           {userState?.uid &&
@@ -215,7 +100,6 @@ export default function ReviewDetailsModal({
               />
             )}
         </div>
-        {/* 모달 닫기 버튼 */}
         <button
           onClick={closeModalHandler}
           className="ml-4 text-gray-400 transition-colors hover:text-gray-600"
@@ -225,7 +109,6 @@ export default function ReviewDetailsModal({
           <FaTimes size={16} />
         </button>
       </div>
-      {/* 리뷰 작성자 정보 */}
       <div className="pb-4 text-sm">
         <div className="flex items-center gap-2">
           <ProfileImage
@@ -247,7 +130,6 @@ export default function ReviewDetailsModal({
       <div className="py-2 text-right text-xs text-gray-600">
         {formatDate(review.createdAt)}
       </div>
-      {/* 댓글 영역 - 지연 로딩 */}
       {showComments && user.uid && (
         <Suspense
           fallback={

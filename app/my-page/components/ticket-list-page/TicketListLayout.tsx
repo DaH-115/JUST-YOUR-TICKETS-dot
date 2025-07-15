@@ -18,6 +18,7 @@ interface FetchReviewsHook {
   loading: boolean;
   error: string | null;
   removeReview?: (reviewId: string) => void;
+  updateReviewLikeCount?: (reviewId: string, newLikeCount: number) => void;
 }
 
 interface FetchReviewsArgs {
@@ -58,6 +59,10 @@ export default function TicketListLayout({
   const { reviews, totalPages, loading, error } = fetchResult;
   const removeReview =
     "removeReview" in fetchResult ? fetchResult.removeReview : undefined;
+  const updateReviewLikeCount =
+    "updateReviewLikeCount" in fetchResult
+      ? fetchResult.updateReviewLikeCount
+      : undefined;
 
   const searchHandler = (term: string) => {
     const url = buildQueryUrl({
@@ -75,10 +80,18 @@ export default function TicketListLayout({
     router.push(url);
   };
 
-  const handleLikeToggled = (reviewId: string, isLiked: boolean) => {
+  const handleLikeToggled = (
+    reviewId: string,
+    newLikeCount: number,
+    isLiked: boolean,
+  ) => {
     // 좋아요 취소 시에만 목록에서 제거 (좋아요한 리뷰 페이지에서만)
     if (!isLiked && removeReview) {
       removeReview(reviewId);
+    }
+    // 모든 페이지에서 likeCount 업데이트
+    if (updateReviewLikeCount) {
+      updateReviewLikeCount(reviewId, newLikeCount);
     }
   };
 
@@ -96,7 +109,7 @@ export default function TicketListLayout({
         <div className="flex-1">
           {searchTerm && (
             <div className="text-sm text-gray-600">
-              <span className="font-medium">"{searchTerm}"</span> 검색 결과:
+              <span className="font-medium">{`"{searchTerm}"`}</span> 검색 결과:
               {reviews.length}개
             </div>
           )}

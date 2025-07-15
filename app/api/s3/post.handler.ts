@@ -1,65 +1,62 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { NextResponse } from "next/server";
+import { verifyAuthToken } from "lib/auth/verifyToken";
+import s3 from "lib/aws/s3";
+import { NextRequest, NextResponse } from "next/server";
+import { MAX_FILE_SIZE, ALLOWED_CONTENT_TYPES } from "app/constants/fileUpload";
 
-// S3Client를 파일 최상단에서 한 번만 생성하여 재사용
-const s3 = new S3Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
-});
-
-/**
- * POST: 파일 업로드용 presigned URL 생성
- *
- * Request Body:
- * - filename: 업로드할 파일명
- * - contentType: 파일의 MIME 타입
- * - userId: 사용자 ID
- *
- * @param request - 요청 객체
- * @returns 업로드용 presigned URL과 파일 key
- */
-export async function POST(request: Request) {
-  const { filename, contentType, userId } = await request.json();
-
-  // 1. 필수 파라미터 검증
-  if (!filename || !contentType || !userId) {
-    return NextResponse.json(
-      {
-        error: true,
-        message: "filename, contentType, userId 모두 필요합니다.",
-      },
-      { status: 400 },
-    );
-  }
-
-  // 2. S3에 저장될 고유한 파일 경로 생성
-  // 형식: profile-img/{userId}/{timestamp}_{원본파일명}
-  const uploadKey = `profile-img/${userId}/${Date.now()}_${filename}`;
-
-  // 3. S3에 파일을 업로드하는 명령 생성
-  const command = new PutObjectCommand({
-    Bucket: process.env.AWS_S3_BUCKET!,
-    Key: uploadKey, // S3에 저장될 파일 경로
-    ContentType: contentType, // 파일의 MIME 타입
-  });
-
+export async function POST(req: NextRequest) {
   try {
-    // 4. 5분간 유효한 업로드용 presigned URL 생성
-    const url = await getSignedUrl(s3, command, { expiresIn: 60 * 5 }); // 5분
+    const authResult = await verifyAuthToken(req);
+    if (!authResult.success) {
+      return NextResponse.json(
+        { error: authResult.error },
+        { status: authResult.statusCode },
+      );
+    }
+    const uid = authResult.uid as string;
 
-    // 5. presigned URL과 파일 key를 함께 반환
-    // - url: 클라이언트가 파일을 업로드할 수 있는 임시 URL
-    // - key: 업로드 후 S3에서 파일에 접근할 때 사용할 경로
+    const { filename, contentType, size } = await req.json();
+
+    if (!filename || !contentType || !size) {
+      return NextResponse.json(
+        { error: "filename, contentType, size가 모두 필요합니다." },
+        { status: 400 },
+      );
+    }
+
+    if (!ALLOWED_CONTENT_TYPES.includes(contentType)) {
+      return NextResponse.json(
+        { error: "허용되지 않는 파일 타입입니다." },
+        { status: 400 },
+      );
+    }
+
+    if (size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: "파일 크기는 5MB를 초과할 수 없습니다." },
+        { status: 400 },
+      );
+    }
+
+    const uploadKey = `profile-img/${uid}/${Date.now()}_${filename}`;
+
+    const command = new PutObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET!,
+      Key: uploadKey,
+      ContentType: contentType,
+      ContentLength: size,
+    });
+
+    const url = await getSignedUrl(s3, command, { expiresIn: 300 }); // 5분
+
     return NextResponse.json({ url, key: uploadKey });
-  } catch (err: any) {
+  } catch (err) {
     console.error("S3 presign error:", err);
-    return NextResponse.json(
-      { error: true, message: err.message, code: err.name },
-      { status: 500 },
-    );
+    const errorMessage =
+      err instanceof Error
+        ? err.message
+        : "An unknown error occurred while creating a presigned URL.";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -24,11 +24,10 @@ export async function GET(req: Request) {
       search,
     });
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error) {
     console.error("fetchLikedReviewsPaginated 오류:", error);
-    return NextResponse.json(
-      { error: error.message || "서버 오류가 발생했습니다." },
-      { status: 500 },
-    );
+    const message =
+      error instanceof Error ? error.message : "서버 오류가 발생했습니다.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -1,10 +1,12 @@
+import { UseFormRegisterReturn } from "react-hook-form";
+
 interface ProfileFieldProps {
   label: string;
   id: string;
   value?: string;
   isEditing: boolean;
   isLoading: boolean;
-  register?: any;
+  register?: UseFormRegisterReturn;
   error?: { message?: string };
   placeholder?: string;
 }

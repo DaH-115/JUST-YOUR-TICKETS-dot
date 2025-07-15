@@ -67,7 +67,7 @@ export default function SwiperCard({
         {/* CERTIFICATION & GENRES */}
         <section className="flex items-center px-2">
           {/* RATE */}
-          <div className="flex items-center border-r-4 border-dotted pr-2 text-xs md:text-sm">
+          <div className="flex items-center pr-2 text-xs md:text-sm">
             <IoStar className="text-accent-300 md:mr-1" />
             <span className="font-bold">
               {vote_average ? Math.round(vote_average * 10) / 10 : 0}

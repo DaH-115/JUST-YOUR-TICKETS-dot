@@ -85,13 +85,17 @@ export const useNicknameCheck = ({
         isAvailable: result.available,
         message: result.message,
       });
-    } catch (err: any) {
+    } catch (err) {
+      let message = "중복 확인 중 오류가 발생했습니다.";
+      if (err instanceof Error) {
+        message = err.message;
+      }
       // API 요청 실패
       setStatus({
         isChecking: false,
         isChecked: true,
         isAvailable: false,
-        message: err.message || "중복 확인 중 오류가 발생했습니다.",
+        message: message,
       });
     }
   }, [nickname, originalNickname]);

@@ -31,7 +31,8 @@ export async function fetchMultipleMovieReleaseDates(
       // 각 id에 대해 fetcher를 호출합니다. 캐싱 여부는 fetcher 내부에서 처리됩니다.
       const data = await fetcher(id);
       return { id, data, success: true };
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error(`ID ${id}의 연령 등급 정보 조회 실패:`, error);
       return { id, data: null, success: false };
     }
   });

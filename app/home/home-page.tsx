@@ -10,14 +10,12 @@ import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 // 컴포넌트 지연 로딩
 const MovieSection = dynamic(() => import("app/home/components/MovieSection"), {
   loading: () => <MovieSectionSkeleton />,
-  ssr: false,
 });
 
 const LatestReviews = dynamic(
   () => import("app/home/components/reviews/LatestReviews"),
   {
     loading: () => <LatestReviewsSkeleton />,
-    ssr: false,
   },
 );
 

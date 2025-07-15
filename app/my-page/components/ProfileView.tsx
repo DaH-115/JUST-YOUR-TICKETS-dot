@@ -24,7 +24,6 @@ import {
   fetchUserProfile,
 } from "store/redux-toolkit/slice/userSlice";
 
-
 export default function ProfileView() {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -77,7 +76,8 @@ export default function ProfileView() {
       dispatch(clearUser());
 
       router.replace("/login");
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error("로그아웃 실패:", error);
       window.alert("로그아웃 중 오류가 발생했습니다.");
     }
   }, [dispatch, router]);

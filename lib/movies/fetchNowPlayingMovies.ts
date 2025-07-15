@@ -1,4 +1,4 @@
-import { enrichMovieData } from "./utils/enrichMovieData";
+import { enrichMovieData } from "lib/movies/utils/enrichMovieData";
 
 export interface MovieBaseType {
   id: number;
@@ -13,9 +13,22 @@ export interface MovieBaseType {
   production_companies: { id: number; name: string }[];
 }
 
-export interface MovieList extends MovieBaseType {
+export interface MovieList {
+  adult: boolean;
+  backdrop_path: string;
   genre_ids: number[];
-  genres: string[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+  genres?: string[];
   certification?: string | null;
 }
 
@@ -39,5 +52,5 @@ export async function fetchNowPlayingMovies(): Promise<MovieList[]> {
 
   const data = await response.json();
 
-  return enrichMovieData(data.results) as Promise<MovieList[]>;
+  return enrichMovieData(data.results);
 }

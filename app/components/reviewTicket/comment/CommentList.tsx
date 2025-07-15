@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ActivityBadge from "app/components/ActivityBadge";
-import ProfileImage from "app/components/reviewTicket/ProfileImage";
+import ProfileImage from "app/components/ProfileImage";
 import formatDate from "app/utils/formatDate";
 import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";

@@ -44,9 +44,9 @@ export async function DELETE(
       );
       if (!ownershipResult.success) {
         // 트랜잭션 내에서 특정 상태 코드를 반환하기 위해 커스텀 에러 사용
-        const error = new Error("접근 권한이 없습니다.");
-        (error as any).statusCode = 403;
-        throw error;
+        throw Object.assign(new Error("접근 권한이 없습니다."), {
+          statusCode: 403,
+        });
       }
 
       // 메인 댓글 문서 삭제
@@ -71,10 +71,14 @@ export async function DELETE(
       },
       { status: 200 },
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error("댓글 삭제 실패:", error);
     // 트랜잭션에서 던져진 커스텀 에러 처리
-    if (error.statusCode === 403) {
+    if (
+      error instanceof Error &&
+      "statusCode" in error &&
+      (error as { statusCode: unknown }).statusCode === 403
+    ) {
       return NextResponse.json({ error: error.message }, { status: 403 });
     }
     return NextResponse.json(

@@ -83,7 +83,7 @@ const firestoreErrorMessages: Record<string, ErrorMessage> = {
   },
 };
 
-export const firebaseErrorHandler = (error: any): ErrorMessage => {
+export const firebaseErrorHandler = (error: unknown): ErrorMessage => {
   const defaultError = {
     title: "오류 발생",
     message: "처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
@@ -91,21 +91,27 @@ export const firebaseErrorHandler = (error: any): ErrorMessage => {
 
   if (!error) return defaultError;
 
-  // ✅ 서버에서 throw new Error()로 전달된 일반 에러 처리
-  if (error instanceof Error && !("code" in error)) {
+  // Firebase 에러 (코드 속성 존재)
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    typeof (error as { code: unknown }).code === "string"
+  ) {
+    const code = (error as { code: string }).code;
+    if (code.startsWith("auth/")) {
+      return firebaseErrorMessages[code] || defaultError;
+    }
+    return firestoreErrorMessages[code] || defaultError;
+  }
+
+  // 일반 Error 객체
+  if (error instanceof Error) {
     return {
       title: "에러",
       message: error.message || defaultError.message,
     };
   }
 
-  // ✅ Firebase 에러 코드 기반 처리
-  const code = error.code;
-  if (typeof code !== "string") return defaultError;
-
-  if (code.startsWith("auth/")) {
-    return firebaseErrorMessages[code] || defaultError;
-  }
-
-  return firestoreErrorMessages[code] || defaultError;
+  return defaultError;
 };

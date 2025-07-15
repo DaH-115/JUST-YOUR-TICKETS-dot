@@ -82,7 +82,7 @@ export default function SearchResultList({
     return (
       <div className="flex h-96 items-center justify-center">
         <p className="text-xl text-white">
-          "{searchQuery}"에 대한 검색 결과가 없습니다.
+          {`"${searchQuery}"에 대한 검색 결과가 없습니다.`}
         </p>
       </div>
     );

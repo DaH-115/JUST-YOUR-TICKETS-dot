@@ -18,7 +18,7 @@ export async function GET(
       const data = doc.data();
 
       // 댓글 작성자의 최신 프로필 정보 조회
-      let authorInfo = {
+      const authorInfo = {
         displayName: data.displayName || "익명",
         photoKey: data.photoKey || null,
         activityLevel: data.activityLevel || "NEWBIE",

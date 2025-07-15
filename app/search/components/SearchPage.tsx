@@ -88,7 +88,7 @@ export default function SearchPage({
               Search Results
             </h2>
             <p className="text-sm text-gray-300">
-              "{searchTerm}" 검색 결과입니다
+              {`"${searchTerm}" 검색 결과입니다`}
             </p>
           </div>
           <SearchResultList searchQuery={searchTerm} />

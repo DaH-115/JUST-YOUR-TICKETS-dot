@@ -5,6 +5,15 @@ import { IoChevronUp, IoChevronDown } from "react-icons/io5";
 import VideoPlayer from "app/components/VideoPlayer";
 import { MovieTrailer } from "lib/movies/fetchVideosMovies";
 
+// Tailwind CSS 브레이크포인트 상수
+const BREAKPOINTS = {
+  sm: 640, // 태블릿
+  md: 768, // 중간 태블릿
+  lg: 1024, // 데스크톱
+  xl: 1280, // 대형 데스크톱
+  "2xl": 1536, // 초대형 화면
+} as const;
+
 export default function AllMovieTrailers({
   movieTrailer,
 }: {
@@ -12,15 +21,6 @@ export default function AllMovieTrailers({
 }) {
   const [showAll, setShowAll] = useState(false);
   const [currentItemsPerRow, setCurrentItemsPerRow] = useState(4);
-
-  // Tailwind CSS 브레이크포인트 상수
-  const BREAKPOINTS = {
-    sm: 640, // 태블릿
-    md: 768, // 중간 태블릿
-    lg: 1024, // 데스크톱
-    xl: 1280, // 대형 데스크톱
-    "2xl": 1536, // 초대형 화면
-  } as const;
 
   // 화면 크기에 따른 한 줄 개수 계산 (Tailwind 브레이크포인트 기준)
   useEffect(() => {

@@ -2,34 +2,43 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import ActivityBadge from "app/components/ActivityBadge";
 import MoviePoster from "app/components/MoviePoster";
-import ProfileImage from "app/components/reviewTicket/ProfileImage";
+import ProfileImage from "app/components/ProfileImage";
 import ReviewDetailsModal from "app/components/reviewTicket/ReviewDetailsModal";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
-import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { ReviewDoc, ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
 import { useAlert } from "store/context/alertContext";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
-export default function ReviewTicket({
-  reviews,
-  onLikeToggled,
-}: {
+interface ReviewTicketProps {
   reviews: ReviewDoc[];
-  onLikeToggled?: (reviewId: string, isLiked: boolean) => void;
-}) {
+  reviewId?: string | null;
+  onLikeToggled?: (
+    reviewId: string,
+    newLikeCount: number,
+    isLiked: boolean,
+  ) => void;
+}
+
+export default function ReviewTicket({
+  reviews: initialReviews,
+  reviewId,
+  onLikeToggled,
+}: ReviewTicketProps) {
+  const [reviews, setReviews] = useState<ReviewWithLike[]>(initialReviews);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedReview, setSelectedReview] = useState<ReviewDoc>();
+  const [selectedReview, setSelectedReview] = useState<ReviewWithLike>();
   const { showSuccessHandler, showErrorHandler } = useAlert();
   const router = useRouter();
   const userState = useAppSelector(selectUser);
 
-  const openModalHandler = useCallback((selectedReview: ReviewDoc) => {
+  const openModalHandler = useCallback((selectedReview: ReviewWithLike) => {
     setSelectedReview(selectedReview);
     setIsModalOpen(true);
   }, []);
@@ -38,7 +47,88 @@ export default function ReviewTicket({
     setIsModalOpen(false);
   }, []);
 
-  const onReviewDeleteHanlder = useCallback(
+  useEffect(() => {
+    const openModalForReview = async (id: string) => {
+      let reviewToOpen = reviews.find((r) => r.id === id);
+
+      if (!reviewToOpen) {
+        // If review is not in the list, fetch it directly
+        try {
+          const fetchedReview = await apiCallWithTokenRefresh(
+            async (authHeaders) => {
+              const res = await fetch(`/api/reviews/${id}`, {
+                headers: authHeaders,
+              });
+              if (!res.ok) throw new Error("리뷰를 가져오지 못했습니다.");
+              return res.json();
+            },
+          );
+          reviewToOpen = fetchedReview;
+        } catch (error: unknown) {
+          console.error("특정 리뷰를 가져오는 데 실패했습니다.", error);
+          showErrorHandler("오류", "리뷰를 불러오는 데 실패했습니다.");
+          return;
+        }
+      }
+
+      if (reviewToOpen) {
+        openModalHandler(reviewToOpen);
+      }
+    };
+
+    if (reviewId) {
+      openModalForReview(reviewId);
+    }
+  }, [reviewId, openModalHandler, reviews, showErrorHandler]);
+
+  useEffect(() => {
+    if (!userState?.uid) {
+      setReviews(
+        initialReviews.map((review) => ({ ...review, isLiked: false })),
+      );
+      return;
+    }
+
+    const fetchLikeStatuses = async () => {
+      if (initialReviews.length === 0) {
+        setReviews([]);
+        return;
+      }
+      try {
+        const reviewIds = initialReviews.map((review) => review.id);
+        const likesResponse = await apiCallWithTokenRefresh(
+          async (authHeaders) => {
+            const response = await fetch(`/api/reviews/likes`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", ...authHeaders },
+              body: JSON.stringify({ reviewIds }),
+            });
+            if (!response.ok) {
+              throw new Error("Failed to fetch like statuses");
+            }
+            return response.json();
+          },
+        );
+
+        const likesMap = likesResponse.likes;
+        const statuses = initialReviews.map((review) => ({
+          ...review,
+          isLiked: likesMap[review.id] || false,
+        }));
+        setReviews(statuses);
+      } catch (error) {
+        console.error("Error fetching like statuses:", error);
+        // On error, set all as not liked
+        setReviews(
+          initialReviews.map((review) => ({ ...review, isLiked: false })),
+        );
+      }
+    };
+
+    fetchLikeStatuses();
+  }, [initialReviews, userState?.uid]);
+
+  const onReviewDeleteHandler = useCallback(
     async (id: string) => {
       if (!userState?.uid) {
         showErrorHandler("오류", "로그인이 필요합니다.");
@@ -72,7 +162,7 @@ export default function ReviewTicket({
         showSuccessHandler("알림", "리뷰가 성공적으로 삭제되었습니다.", () => {
           router.refresh();
         });
-      } catch (error) {
+      } catch (error: unknown) {
         if (error instanceof Error) {
           console.error("리뷰 티켓 삭제 중 오류 발생:", error.message);
           showErrorHandler("오류", error.message);
@@ -91,6 +181,96 @@ export default function ReviewTicket({
     ],
   );
 
+  const handleLikeToggle = useCallback(
+    async (reviewId: string) => {
+      if (!userState?.uid) {
+        showErrorHandler("오류", "로그인이 필요합니다.");
+        return;
+      }
+
+      const reviewToUpdate = reviews.find((r) => r.id === reviewId);
+      if (!reviewToUpdate) return;
+
+      const newLikedStatus = !reviewToUpdate.isLiked;
+      const originalLikeCount = reviewToUpdate.review.likeCount;
+      const newLikeCount = newLikedStatus
+        ? originalLikeCount + 1
+        : originalLikeCount - 1;
+
+      setReviews((prev) =>
+        prev.map((review) =>
+          review.id === reviewId
+            ? {
+                ...review,
+                isLiked: newLikedStatus,
+                review: { ...review.review, likeCount: newLikeCount },
+              }
+            : review,
+        ),
+      );
+      if (selectedReview?.id === reviewId) {
+        setSelectedReview((prev: ReviewWithLike | undefined) =>
+          prev
+            ? {
+                ...prev,
+                isLiked: newLikedStatus,
+                review: { ...prev.review, likeCount: newLikeCount },
+              }
+            : undefined,
+        );
+      }
+
+      try {
+        await apiCallWithTokenRefresh(async (authHeaders) => {
+          const response = await fetch(`/api/reviews/${reviewId}/like`, {
+            method: newLikedStatus ? "POST" : "DELETE",
+            headers: { "Content-Type": "application/json", ...authHeaders },
+            body: newLikedStatus
+              ? JSON.stringify({ movieTitle: reviewToUpdate.review.movieTitle })
+              : undefined,
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error);
+          }
+        });
+
+        onLikeToggled?.(reviewId, newLikeCount, newLikedStatus);
+      } catch (error: unknown) {
+        setReviews((prev) =>
+          prev.map((review) =>
+            review.id === reviewId
+              ? {
+                  ...review,
+                  isLiked: reviewToUpdate.isLiked,
+                  review: { ...review.review, likeCount: originalLikeCount },
+                }
+              : review,
+          ),
+        );
+        if (selectedReview?.id === reviewId) {
+          setSelectedReview((prev: ReviewWithLike | undefined) =>
+            prev
+              ? {
+                  ...prev,
+                  isLiked: reviewToUpdate.isLiked,
+                  review: { ...prev.review, likeCount: originalLikeCount },
+                }
+              : undefined,
+          );
+        }
+
+        if (error instanceof Error) {
+          showErrorHandler("오류", error.message);
+        } else {
+          showErrorHandler("오류", "좋아요 처리에 실패했습니다.");
+        }
+      }
+    },
+    [reviews, selectedReview, userState?.uid, showErrorHandler, onLikeToggled],
+  );
+
   return (
     <>
       {/* 리뷰 상세 모달 */}
@@ -99,8 +279,8 @@ export default function ReviewTicket({
           selectedReview={selectedReview}
           isModalOpen={isModalOpen}
           closeModalHandler={closeModalHandler}
-          onReviewDeleted={onReviewDeleteHanlder}
-          onLikeToggled={onLikeToggled}
+          onReviewDeleted={onReviewDeleteHandler}
+          onLikeToggle={handleLikeToggle}
         />
       )}
 
@@ -112,21 +292,21 @@ export default function ReviewTicket({
             onClick={() => openModalHandler(data)}
             className="cursor-pointer drop-shadow-md transition-transform duration-300 hover:-translate-y-1"
           >
-            {/* MOVIE POSTER */}
-            <div className="aspect-[2/3] overflow-hidden rounded-xl">
+            {/* 포스터 이미지 */}
+            <div className="relative aspect-[2/3] w-24 overflow-hidden rounded-lg md:w-40">
               <MoviePoster
                 posterPath={data.review.moviePosterPath}
                 title={data.review.movieTitle}
               />
             </div>
+            <div className="absolute left-0 top-0 h-full w-full bg-gradient-to-r from-black via-transparent to-transparent opacity-80" />
 
-            {/* MOVIE INFO CARD */}
-            <div className="w-full rounded-xl border bg-white p-2 transition-all duration-500">
+            <div className="absolute bottom-4 right-4 flex items-center gap-1 text-sm text-white">
               {/* 영화 타이틀 & 좋아요 */}
-              <div className="flex items-center justify-between border-b-4 border-dotted p-1">
+              <div className="flex items-center justify-between border-b-4 border-dotted px-1 pb-1">
                 {/* 클릭하면 영화 상세 정보로 이동 */}
                 <div
-                  className="flex-1 truncate border-r-4 border-dotted pr-1.5 text-[11px] hover:underline"
+                  className="flex-1 truncate pr-1.5 text-[11px] hover:underline"
                   onClick={(event) => event.stopPropagation()}
                 >
                   <Link href={`/movie-details/${data.review.movieId}`}>
@@ -134,8 +314,8 @@ export default function ReviewTicket({
                   </Link>
                 </div>
                 {/* 좋아요 카운트 */}
-                <div className="flex items-center pl-1.5">
-                  <FaHeart size={10} className="mr-1 text-red-500" />
+                <div className="flex items-center">
+                  <FaHeart size={11} className="mr-1 text-red-500" />
                   <p className="text-xs">{data.review.likeCount}</p>
                 </div>
               </div>

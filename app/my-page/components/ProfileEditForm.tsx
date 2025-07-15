@@ -100,19 +100,25 @@ export default function ProfileEditForm() {
 
         // 이미지 업로드 처리
         if (selectedFile && hasImageChanged) {
-          // S3 Presigned URL 요청
+          // S3 Presigned URL 요청 (size 파라미터 추가)
           const presignedRes = await fetch("/api/s3", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${await currentUser.getIdToken()}`,
+            },
             body: JSON.stringify({
               filename: selectedFile.name,
               contentType: selectedFile.type,
-              userId: currentUser.uid,
+              size: selectedFile.size,
             }),
           });
 
           if (!presignedRes.ok) {
-            throw new Error("이미지 업로드 준비에 실패했습니다.");
+            const errorData = await presignedRes.json();
+            throw new Error(
+              errorData.error || "이미지 업로드 준비에 실패했습니다.",
+            );
           }
 
           const { url, key } = await presignedRes.json();
@@ -142,11 +148,13 @@ export default function ProfileEditForm() {
 
         // 성공 시 마이페이지로 이동
         router.push("/my-page");
-      } catch (error: any) {
-        const errorMessage =
-          typeof error === "string"
-            ? error
-            : error?.message || "프로필 업데이트에 실패했습니다.";
+      } catch (error) {
+        let errorMessage = "프로필 업데이트에 실패했습니다.";
+        if (typeof error === "string") {
+          errorMessage = error;
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
+        }
         showErrorHandler("오류", errorMessage);
       }
     },
@@ -215,6 +223,9 @@ export default function ProfileEditForm() {
                 onCancelPreview={() => setPreviewSrc(null)}
                 onFileSelect={(file) => setSelectedFile(file)}
                 onImageChange={(hasChanged) => setHasImageChanged(hasChanged)}
+                onError={(message) =>
+                  showErrorHandler("파일 선택 오류", message)
+                }
               />
             </div>
           </div>

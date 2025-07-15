@@ -31,7 +31,7 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
           provider === "google"
             ? new GoogleAuthProvider()
             : new GithubAuthProvider();
-        const { user } = await signInWithPopup(isAuth, authProvider);
+        await signInWithPopup(isAuth, authProvider);
 
         // 2. 로그인 상태 유지 설정 저장
         setRememberMe(rememberMe);
@@ -62,8 +62,14 @@ export default function SocialLogin({ rememberMe }: { rememberMe: boolean }) {
 
         // 5. 로그인 성공 후 리다이렉트
         router.replace("/");
-      } catch (error: any) {
-        if (error.code === "auth/popup-closed-by-user") return;
+      } catch (error) {
+        if (
+          error &&
+          typeof error === "object" &&
+          "code" in error &&
+          (error as { code: string }).code === "auth/popup-closed-by-user"
+        )
+          return;
         const { title, message } = firebaseErrorHandler(error);
         showErrorHandler(title, message);
       } finally {

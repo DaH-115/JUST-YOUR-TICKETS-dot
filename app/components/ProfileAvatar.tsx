@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePresignedUrl } from "app/hooks/usePresignedUrl";
 
 interface ProfileAvatarProps {
@@ -22,11 +22,39 @@ export default function ProfileAvatar({
   showLoading = true,
 }: ProfileAvatarProps) {
   const [imageError, setImageError] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   // photoKey는 항상 S3 key
   const { url: presignedUrl, loading } = usePresignedUrl({
-    key: photoKey,
+    key: isVisible ? photoKey : null,
   });
+
+  // Intersection Observer 설정
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    const currentRef = containerRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
 
   // previewSrc가 있으면 우선 사용, 없으면 presignedUrl 사용
   const src = previewSrc || presignedUrl;
@@ -44,6 +72,7 @@ export default function ProfileAvatar({
 
   return (
     <div
+      ref={containerRef}
       className={`relative overflow-hidden rounded-full ${className}`}
       style={{ width: size, height: size }}
     >

@@ -54,7 +54,30 @@ export const fetchUserProfile = createAsyncThunk<
     });
 
     if (!response.ok) {
-      // API 실패 시 Firebase Auth 정보로 폴백
+      if (response.status === 404) {
+        // Firestore에 사용자 문서가 없으면 생성 요청 (최초 소셜 로그인 시)
+        const providerId = user.providerData[0]?.providerId.split(".")[0];
+
+        const setupResponse = await fetch("/api/auth/social-setup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({ provider: providerId }),
+        });
+
+        if (!setupResponse.ok) {
+          throw new Error("사용자 프로필 생성에 실패했습니다.");
+        }
+        const setupData = await setupResponse.json();
+        return {
+          ...setupData.data, // uid, displayName, provider 등
+          email: user.email, // email은 Auth에서 가져옴
+        };
+      }
+
+      // 그 외의 오류는 이전처럼 폴백 처리
       console.warn(
         "API 호출 실패, Firebase Auth 정보로 폴백:",
         response.status,
@@ -90,11 +113,14 @@ export const fetchUserProfile = createAsyncThunk<
       myTicketsCount: data.myTicketsCount,
       likedTicketsCount: data.likedTicketsCount,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     // 네트워크 에러 등의 경우에도 Firebase Auth 정보로 폴백
     const user = isAuth.currentUser;
     if (user) {
-      console.warn("네트워크 에러, Firebase Auth 정보로 폴백:", error.message);
+      console.warn(
+        "네트워크 에러, Firebase Auth 정보로 폴백:",
+        error instanceof Error ? error.message : "알 수 없는 오류",
+      );
       return {
         uid: user.uid,
         email: user.email,
@@ -110,7 +136,9 @@ export const fetchUserProfile = createAsyncThunk<
       };
     }
 
-    return rejectWithValue(error.message);
+    return rejectWithValue(
+      error instanceof Error ? error.message : "알 수 없는 오류",
+    );
   }
 });
 
@@ -171,8 +199,10 @@ export const updateUserProfile = createAsyncThunk<
         ...("photoKey" in result && { photoKey: result.photoKey }),
         updatedAt: new Date().toISOString(), // 업데이트 시각 갱신
       };
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    } catch (error: unknown) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : "알 수 없는 오류",
+      );
     }
   },
 );

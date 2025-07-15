@@ -61,7 +61,13 @@ export async function PUT(
       );
     }
 
-    const responseData: any = {};
+    interface ResponseData {
+      biography?: string;
+      displayName?: string;
+      photoKey?: string;
+      photoURL?: string;
+    }
+    const responseData: ResponseData = {};
 
     // biography 업데이트
     if (biography !== undefined) {
@@ -127,8 +133,11 @@ export async function PUT(
         });
 
         responseData.displayName = displayName;
-      } catch (error: any) {
-        if (error.message?.includes("이미 사용 중인 닉네임")) {
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          error.message?.includes("이미 사용 중인 닉네임")
+        ) {
           return NextResponse.json({ error: error.message }, { status: 409 });
         }
         console.error("닉네임 업데이트 중 오류 발생:", error);

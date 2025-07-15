@@ -52,7 +52,7 @@ export async function verifyAuthToken(req: NextRequest): Promise<AuthResult> {
       success: true,
       uid: decodedToken.uid,
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error("토큰 검증 실패:", error);
 
     const AUTH_ERRORS: { [key: string]: string } = {
@@ -61,7 +61,16 @@ export async function verifyAuthToken(req: NextRequest): Promise<AuthResult> {
       "auth/invalid-id-token": "유효하지 않은 토큰입니다.",
     };
 
-    const errorMessage = AUTH_ERRORS[error.code] || "인증에 실패했습니다.";
+    let errorMessage = "인증에 실패했습니다.";
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      typeof (error as { code: string }).code === "string"
+    ) {
+      errorMessage =
+        AUTH_ERRORS[(error as { code: string }).code] || errorMessage;
+    }
 
     return {
       success: false,

@@ -7,12 +7,11 @@ import Loading from "app/loading";
 import MetaInfoItem from "app/movie-details/components/MetaInfoItem";
 import convertRuntime from "app/movie-details/utils/convertRuntime";
 import formatMovieDate from "app/utils/formatMovieDate";
-import getMovieTitle from "app/utils/getMovieTitle";
 import { MovieCredits } from "lib/movies/fetchMovieCredits";
-import { MovieDetails } from "lib/movies/fetchMovieDetails";
+import { MovieDetails as MovieDetailsType } from "lib/movies/fetchMovieDetails";
 
 type MovieDetailCardProps = {
-  movieDetails: MovieDetails;
+  movieDetails: MovieDetailsType;
   movieCredits: MovieCredits;
 };
 
@@ -20,12 +19,20 @@ export default function MovieDetailCard({
   movieDetails,
   movieCredits,
 }: MovieDetailCardProps) {
-  const movieTitle = getMovieTitle(
-    movieDetails.original_title,
-    movieDetails.title,
-  );
-  const movieDate = formatMovieDate(movieDetails.release_date);
-  const convertedRuntime = convertRuntime(Number(movieDetails.runtime));
+  const {
+    poster_path,
+    title,
+    original_title,
+    overview,
+    genres,
+    release_date,
+    runtime,
+    vote_average,
+    certification,
+  } = movieDetails;
+
+  const movieDate = formatMovieDate(release_date);
+  const convertedRuntime = convertRuntime(Number(runtime));
   const casts = movieCredits?.cast || [];
   const crews = movieCredits?.crew || [];
 
@@ -35,11 +42,8 @@ export default function MovieDetailCard({
         {/* MOVIE POSTER */}
         <section className="w-full md:w-2/3">
           <div className="aspect-[2/3] w-full overflow-hidden rounded-2xl">
-            {movieDetails.poster_path ? (
-              <MoviePoster
-                posterPath={movieDetails.poster_path}
-                title={movieTitle}
-              />
+            {poster_path ? (
+              <MoviePoster posterPath={poster_path} title={title} />
             ) : (
               <Loading />
             )}
@@ -50,34 +54,29 @@ export default function MovieDetailCard({
         <div className="mx-auto w-full overflow-hidden shadow-lg">
           <div className="rounded-2xl bg-white p-4">
             {/* 기본 정보 영역 */}
-            <div className="mb-4">
-              <h1 className="mb-6 inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
+            <div className="mb-2">
+              <h1 className="mb-4 inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
                 MOVIE DETAILS
               </h1>
               <div className="flex items-center">
-                <h2 className="mr-3 break-keep text-3xl font-bold">
-                  {movieDetails.title}
-                </h2>
-                {movieDetails.certification && (
+                <h2 className="mr-3 break-keep text-3xl font-bold">{title}</h2>
+                {certification && (
                   <MovieCertification
-                    certification={movieDetails.certification}
+                    certification={certification}
                     showLabel={true}
                   />
                 )}
               </div>
               <div className="flex items-center">
                 <p className="text-gray-600">
-                  {movieDetails.original_title}(
-                  {movieDetails.release_date.slice(0, 4)})
+                  {original_title}({release_date.slice(0, 4)})
                 </p>
               </div>
             </div>
 
             {/* 장르 영역 */}
-            <div className="border-y-4 border-dotted">
-              <GenreList
-                genres={movieDetails.genres.map((genre) => genre.name)}
-              />
+            <div className="border-b-4 border-dotted">
+              <GenreList genres={genres.map((genre) => genre.name)} />
             </div>
 
             {/* 평점 영역 */}
@@ -85,7 +84,7 @@ export default function MovieDetailCard({
               <div className="flex items-center">
                 <IoStar className="mr-2 text-xl text-accent-300" />
                 <p className="text-3xl font-bold">
-                  {Math.round(movieDetails.vote_average * 10) / 10}
+                  {Math.round(vote_average * 10) / 10}
                   <span className="text-2xl font-normal text-gray-200">
                     /10
                   </span>
@@ -94,10 +93,10 @@ export default function MovieDetailCard({
             </div>
 
             {/* 줄거리 영역 */}
-            {movieDetails.overview && (
+            {overview && (
               <div className="mb-6 px-2">
                 <p className="break-keep text-sm leading-relaxed text-gray-800">
-                  {movieDetails.overview}
+                  {overview}
                 </p>
               </div>
             )}
@@ -170,7 +169,7 @@ export default function MovieDetailCard({
               </div>
             </div>
             {/* 리뷰 작성 버튼 */}
-            <div className="mt-8">
+            <div className="mt-6">
               <WriteBtn movieId={movieDetails.id} />
             </div>
           </div>

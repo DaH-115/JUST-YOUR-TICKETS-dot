@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import admin, { adminFirestore } from "firebase-admin-config";
+import { adminFirestore } from "firebase-admin-config";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 import { fetchUserReviewCount } from "lib/users/fetchUserReviewCount";
 

@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
         },
         { status: 201 },
       );
-    } catch (error: any) {
+    } catch (error) {
       // Firebase Auth 사용자가 실제로 생성된 경우에만 롤백 수행
       if (userCreated) {
         try {
@@ -118,30 +118,37 @@ export async function POST(req: NextRequest) {
       }
 
       // Firebase Auth 에러 처리
-      if (error.code === "auth/email-already-exists") {
-        return NextResponse.json(
-          { error: "이미 사용 중인 이메일입니다." },
-          { status: 409 },
-        );
-      }
+      if (
+        error &&
+        typeof error === "object" &&
+        "code" in error &&
+        typeof error.code === "string"
+      ) {
+        if (error.code === "auth/email-already-exists") {
+          return NextResponse.json(
+            { error: "이미 사용 중인 이메일입니다." },
+            { status: 409 },
+          );
+        }
 
-      if (error.code === "auth/invalid-email") {
-        return NextResponse.json(
-          { error: "유효하지 않은 이메일입니다." },
-          { status: 400 },
-        );
-      }
+        if (error.code === "auth/invalid-email") {
+          return NextResponse.json(
+            { error: "유효하지 않은 이메일입니다." },
+            { status: 400 },
+          );
+        }
 
-      if (error.code === "auth/weak-password") {
-        return NextResponse.json(
-          { error: "비밀번호가 너무 약합니다." },
-          { status: 400 },
-        );
+        if (error.code === "auth/weak-password") {
+          return NextResponse.json(
+            { error: "비밀번호가 너무 약합니다." },
+            { status: 400 },
+          );
+        }
       }
 
       throw error;
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error("회원가입 API 에러:", error);
     return NextResponse.json(
       { error: "회원가입 처리 중 오류가 발생했습니다." },

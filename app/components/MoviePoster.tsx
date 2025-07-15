@@ -25,11 +25,11 @@ export default function MoviePoster({
     if (width <= 92) return 92;
     if (width <= 154) return 154;
     if (width <= 185) return 185;
-    if (width <= 400) return 342; // 400px까지는 w342 사용
+    if (width <= 400) return 342;
     return 500;
   };
 
-  // 컨테이너 크기 감지 및 최적 이미지 크기 설정
+  // ResizeObserver: 컨테이너 크기 감지 및 최적 이미지 크기 설정
   useEffect(() => {
     const updateOptimalSize = () => {
       if (containerRef.current) {
@@ -41,20 +41,18 @@ export default function MoviePoster({
       }
     };
 
-    // 초기 설정
     updateOptimalSize();
-
-    // 디바운스로 ResizeObserver 콜백 최적화 (100ms 지연)
     const debouncedUpdate = debounce(updateOptimalSize, 100);
-
-    // ResizeObserver로 크기 변화 감지
     const resizeObserver = new ResizeObserver(debouncedUpdate);
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
+    const currentRef = containerRef.current;
+    if (currentRef) {
+      resizeObserver.observe(currentRef);
     }
 
     return () => {
-      resizeObserver.disconnect();
+      if (currentRef) {
+        resizeObserver.unobserve(currentRef);
+      }
     };
   }, [optimalSize]);
 
@@ -75,8 +73,7 @@ export default function MoviePoster({
           loading={lazy ? "lazy" : "eager"}
           className="object-cover"
           sizes={generateSizes()}
-          placeholder="blur"
-          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN88P/BfwAJhAPYe0YQ1AAAAABJRU5ErkJggg=="
+          placeholder={"empty"}
         />
       ) : (
         <figcaption className="absolute inset-0 flex items-center justify-center bg-primary-700 p-4 text-white">

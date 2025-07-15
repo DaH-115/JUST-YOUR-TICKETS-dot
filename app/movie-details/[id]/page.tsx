@@ -43,7 +43,8 @@ export async function generateMetadata({
           : [],
       },
     };
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error("메타데이터 생성 실패:", error);
     return {
       title: "오류",
       description: "요청하신 영화 정보를 불러오는데 실패했습니다.",
@@ -61,22 +62,16 @@ export default async function MovieDetailPage({
   }
 
   try {
-    const [movieDetails, movieCredits, movieTrailerData, similarMovies] =
-      await Promise.all([
-        fetchMovieDetails(params.id),
-        fetchMovieCredits(params.id),
-        fetchVideosMovies(params.id),
-        fetchSimilarMovies(params.id),
-      ]).catch((error) => {
-        if (error.message.includes("TMDB API 키가 설정되지 않았습니다")) {
-          throw new Error("서버 설정 오류가 발생했습니다.");
-        }
-        throw error;
-      });
-
-    if (!movieDetails || !movieCredits) {
+    const movieDetails = await fetchMovieDetails(params.id);
+    if (!movieDetails) {
       return notFound();
     }
+
+    const [movieCredits, movieTrailerData, similarMovies] = await Promise.all([
+      fetchMovieCredits(params.id),
+      fetchVideosMovies(params.id),
+      fetchSimilarMovies(params.id),
+    ]);
 
     const { backdrop_path } = movieDetails;
 
@@ -91,7 +86,7 @@ export default async function MovieDetailPage({
         <SimilarMovies similarMovies={similarMovies} />
       </>
     );
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       throw error;
     }

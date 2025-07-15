@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
       // 신규 사용자: 프로필 생성
       try {
         // Firebase Auth에서 사용자 정보 가져오기
-        const authUser = await adminAuth.getUser(uid);
+        // const authUser = await adminAuth.getUser(uid); // 사용하지 않으므로 주석 처리 또는 삭제
 
         // 유일한 닉네임 생성
         const uniqueNickname = await generateUniqueNickname(uid);
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
           },
           { status: 201 },
         );
-      } catch (error: any) {
+      } catch (error) {
         console.error("신규 사용자 프로필 생성 실패:", error);
 
         // 생성된 닉네임이 있다면 롤백
@@ -163,7 +163,7 @@ export async function POST(req: NextRequest) {
         );
       }
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error("소셜 로그인 설정 API 에러:", error);
     return NextResponse.json(
       { error: "소셜 로그인 처리 중 오류가 발생했습니다." },

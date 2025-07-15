@@ -130,7 +130,7 @@ export default function SignUpPage() {
         setIsEmailAvailable(false);
         showErrorHandler("실패", result.message);
       }
-    } catch (error: any) {
+    } catch (error) {
       const { title, message } = firebaseErrorHandler(error);
       showErrorHandler(title, message);
       setIsEmailAvailable(false);
@@ -171,7 +171,7 @@ export default function SignUpPage() {
         showSuccessHandler("회원가입 완료", "환영합니다!", () => {
           router.replace("/");
         });
-      } catch (error: any) {
+      } catch (error) {
         const { title, message } = firebaseErrorHandler(error);
         showErrorHandler(title, message);
       } finally {
