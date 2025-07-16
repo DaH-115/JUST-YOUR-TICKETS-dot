@@ -229,6 +229,7 @@ describe("리뷰 API 라우트 (/api/reviews)", () => {
         page: 1,
         pageSize: 10,
         uid: undefined,
+        search: "",
       });
     });
 
@@ -255,6 +256,61 @@ describe("리뷰 API 라우트 (/api/reviews)", () => {
         page: 2,
         pageSize: 5,
         uid: "test-user-id",
+        search: "",
+      });
+    });
+
+    it("검색어를 포함하여 리뷰 목록을 성공적으로 가져와야 합니다", async () => {
+      // GIVEN: 검색 결과 데이터가 준비된 상황
+      const mockSearchResults = {
+        data: [{ id: "search-1", content: "영화 제목 포함 리뷰" }],
+        hasMore: false,
+      };
+      mockedFetchReviewsPaginated.mockResolvedValue(mockSearchResults);
+
+      // WHEN: search 파라미터를 포함하여 GET 요청
+      const request = createMockRequest({
+        method: "GET",
+        url: "http://localhost/api/reviews?page=1&pageSize=10&search=영화제목",
+      });
+      const response = await GET(request as NextRequest);
+      const body = await response.json();
+
+      // THEN: 200 상태 코드와 함께 검색 결과가 반환되고, search 파라미터가 올바르게 전달됨
+      expect(response.status).toBe(200);
+      expect(body).toEqual(mockSearchResults);
+      expect(mockedFetchReviewsPaginated).toHaveBeenCalledWith({
+        page: 1,
+        pageSize: 10,
+        uid: undefined,
+        search: "영화제목",
+      });
+    });
+
+    it("uid와 검색어를 함께 포함하여 특정 사용자의 리뷰를 검색해야 합니다", async () => {
+      // GIVEN: 특정 사용자의 검색 결과 데이터가 준비된 상황
+      const mockUserSearchResults = {
+        data: [{ id: "user-search-1", content: "특정 사용자의 검색 결과" }],
+        hasMore: false,
+      };
+      mockedFetchReviewsPaginated.mockResolvedValue(mockUserSearchResults);
+
+      // WHEN: uid와 search 파라미터를 모두 포함하여 GET 요청
+      const request = createMockRequest({
+        method: "GET",
+        url: "http://localhost/api/reviews?page=1&pageSize=10&uid=user123&search=액션영화",
+      });
+      const response = await GET(request as NextRequest);
+      const body = await response.json();
+
+      // THEN: 200 상태 코드와 함께 검색 결과가 반환되고, 모든 파라미터가 올바르게 전달됨
+      expect(response.status).toBe(200);
+      expect(body).toEqual(mockUserSearchResults);
+      expect(mockedFetchReviewsPaginated).toHaveBeenCalledWith({
+        page: 1,
+        pageSize: 10,
+        uid: "user123",
+        search: "액션영화",
       });
     });
   });

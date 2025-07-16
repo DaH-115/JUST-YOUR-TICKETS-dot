@@ -17,6 +17,7 @@ export default function SearchSection({
         <SearchForm
           placeholder="영화 제목으로 검색해 보세요"
           onSearch={onSearch}
+          initialValue={searchTerm}
         />
       </div>
       {searchTerm && (

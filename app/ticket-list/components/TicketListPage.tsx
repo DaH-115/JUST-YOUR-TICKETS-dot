@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Pagination from "app/components/Pagination";
-import SearchSection from "app/components/SearchSection";
+import SearchSection from "app/components/search/SearchSection";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 import EmptyState from "app/my-page/components/EmptyState";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";

@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Pagination from "app/components/Pagination";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
-import SearchSection from "app/components/SearchSection";
+import SearchSection from "app/components/search/SearchSection";
 import Loading from "app/loading";
 import EmptyState from "app/my-page/components/EmptyState";
 import MyTicketHeader from "app/my-page/components/MyTicketPageHeader";

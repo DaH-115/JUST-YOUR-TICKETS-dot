@@ -12,8 +12,9 @@ export async function GET(req: NextRequest) {
   const page = Number(searchParams.get("page") ?? "1");
   const pageSize = Number(searchParams.get("pageSize") ?? "10");
   const uid = searchParams.get("uid") ?? undefined;
+  const search = searchParams.get("search") ?? "";
 
-  const data = await fetchReviewsPaginated({ page, pageSize, uid });
+  const data = await fetchReviewsPaginated({ page, pageSize, uid, search });
   return NextResponse.json(data);
 }
 

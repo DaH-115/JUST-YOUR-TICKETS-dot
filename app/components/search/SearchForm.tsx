@@ -14,23 +14,31 @@ type FormData = z.infer<typeof schema>;
 interface SearchFormProps {
   onSearch: (term: string) => void;
   placeholder?: string;
+  initialValue?: string;
 }
 
 export default function SearchForm({
   onSearch,
   placeholder = "검색어를 입력하세요",
+  initialValue = "",
 }: SearchFormProps) {
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { search: "" },
+    defaultValues: { search: initialValue },
   });
 
   const searchValue = watch("search");
+
+  // initialValue가 변경되면 폼 값 업데이트
+  useEffect(() => {
+    setValue("search", initialValue);
+  }, [initialValue, setValue]);
 
   // watch로 검색어 변화 감지
   useEffect(() => {
