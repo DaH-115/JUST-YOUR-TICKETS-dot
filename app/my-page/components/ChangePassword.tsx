@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import InputField from "app/components/InputField";
+import InputField from "app/components/ui/forms/InputField";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { isAuth } from "firebase-config";
 import { useAlert } from "store/context/alertContext";

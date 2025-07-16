@@ -1,8 +1,8 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Pagination from "app/components/Pagination";
-import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
+import Pagination from "app/components/ui/layout/Pagination";
+import ReviewTicket from "app/components/review/ReviewTicket";
 import SearchSection from "app/components/search/SearchSection";
 import Loading from "app/loading";
 import EmptyState from "app/my-page/components/EmptyState";

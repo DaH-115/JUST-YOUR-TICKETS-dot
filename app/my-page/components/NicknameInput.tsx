@@ -1,5 +1,5 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import DuplicateCheckButton from "app/components/DuplicateCheckButton";
+import DuplicateCheckButton from "app/components/ui/buttons/DuplicateCheckButton";
 import { useNicknameCheck } from "app/my-page/hooks/useNicknameCheck";
 
 interface NicknameInputProps {

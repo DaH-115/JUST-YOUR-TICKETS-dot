@@ -1,6 +1,6 @@
 import { screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
+import ReviewTicket from "app/components/review/ReviewTicket";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { apiCallWithTokenRefresh } from "app/utils/getIdToken";

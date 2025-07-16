@@ -2,17 +2,17 @@ import { useEffect, useState, Suspense, lazy, useCallback } from "react";
 import { FaHeart, FaRegHeart, FaTimes } from "react-icons/fa";
 import { ImSpinner2 } from "react-icons/im";
 import { IoStar } from "react-icons/io5";
-import ActivityBadge from "app/components/ActivityBadge";
-import ModalPortal from "app/components/modal/ModalPortal";
-import ProfileImage from "app/components/ProfileImage";
-import ReviewBtnGroup from "app/components/reviewTicket/TicketBtnGroup";
+import ActivityBadge from "app/components/ui/feedback/ActivityBadge";
+import ModalPortal from "app/components/ui/modal/ModalPortal";
+import ProfileImage from "app/components/user/ProfileImage";
+import ReviewBtnGroup from "app/components/review/TicketBtnGroup";
 import formatDate from "app/utils/formatDate";
 import { ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 const CommentList = lazy(
-  () => import("app/components/reviewTicket/comment/CommentList"),
+  () => import("app/components/review/comment/CommentList"),
 );
 
 interface ReviewDetailsModalProps {

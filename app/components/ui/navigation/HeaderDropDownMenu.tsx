@@ -4,7 +4,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import Link from "next/link";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdPerson, MdLogout } from "react-icons/md";
-import ProfileAvatar from "app/components/ProfileAvatar";
+import ProfileAvatar from "app/components/user/ProfileAvatar";
 
 interface HeaderDropDownMenuProps {
   userDisplayName: string | undefined;

@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import Pagination from "app/components/Pagination";
+import Pagination from "app/components/ui/layout/Pagination";
 import SwiperCard from "app/components/swiper/swiper-card";
 import Loading from "app/loading";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";

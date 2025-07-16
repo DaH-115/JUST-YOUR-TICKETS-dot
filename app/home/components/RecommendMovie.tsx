@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import MoviePoster from "app/components/MoviePoster";
+import MoviePoster from "app/components/movie/MoviePoster";
 import MovieInfoCard from "app/home/components/MovieInfoCard";
 import getMovieTitle from "app/utils/getMovieTitle";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";

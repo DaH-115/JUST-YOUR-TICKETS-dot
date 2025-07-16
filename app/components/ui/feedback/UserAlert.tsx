@@ -1,5 +1,5 @@
 import { FaCheck } from "react-icons/fa";
-import AlertPortal from "app/components/alert/AlertPortal";
+import AlertPortal from "app/components/ui/modal/AlertPortal";
 
 interface UserAlertProps {
   title: string;

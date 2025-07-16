@@ -8,7 +8,7 @@ import { useCallback, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FaArrowRight } from "react-icons/fa";
 import { z } from "zod";
-import InputField from "app/components/InputField";
+import InputField from "app/components/ui/forms/InputField";
 import SocialLogin from "app/login/components/SocialLogin";
 import { setRememberMe } from "app/utils/authPersistence";
 import { firebaseErrorHandler } from "app/utils/firebaseError";

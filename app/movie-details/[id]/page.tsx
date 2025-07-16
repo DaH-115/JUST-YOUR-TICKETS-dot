@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import MovieDetailCard from "app/movie-details/components/MovieDetails";
 import AllMovieTrailers from "app/movie-details/components/MovieTrailers";
 import SimilarMovies from "app/movie-details/components/SimilarMovies";
-import Background from "app/ui/layout/Background";
+import Background from "app/components/ui/layout/Background";
 import getMovieTitle from "app/utils/getMovieTitle";
 import { fetchMovieCredits } from "lib/movies/fetchMovieCredits";
 import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";

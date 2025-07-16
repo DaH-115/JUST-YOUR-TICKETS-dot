@@ -2,11 +2,11 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import GenreList from "app/components/GenreList";
-import MovieCertification from "app/components/MovieCertification";
-import MoviePoster from "app/components/MoviePoster";
-import Tooltip from "app/components/Tooltip";
-import WriteBtn from "app/components/WriteBtn";
+import GenreList from "app/components/movie/GenreList";
+import MovieCertification from "app/components/movie/MovieCertification";
+import MoviePoster from "app/components/movie/MoviePoster";
+import Tooltip from "app/components/ui/feedback/Tooltip";
+import WriteBtn from "app/components/ui/buttons/WriteBtn";
 import getMovieTitle from "app/utils/getMovieTitle";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 

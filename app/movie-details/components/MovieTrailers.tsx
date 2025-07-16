@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { IoChevronUp, IoChevronDown } from "react-icons/io5";
-import VideoPlayer from "app/components/VideoPlayer";
+import VideoPlayer from "app/components/movie/VideoPlayer";
 import { MovieTrailer } from "lib/movies/fetchVideosMovies";
 
 // Tailwind CSS 브레이크포인트 상수

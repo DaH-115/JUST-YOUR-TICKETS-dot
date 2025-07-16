@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { MdDriveFileRenameOutline, MdWarning } from "react-icons/md";
-import Background from "app/ui/layout/Background";
+import Background from "app/components/ui/layout/Background";
 import ReviewFormContent from "app/write-review/components/ReviewFormContent";
 import ReviewFormHeader from "app/write-review/components/ReviewFormHeader";
 import ReviewFormRating from "app/write-review/components/ReviewFormRating";

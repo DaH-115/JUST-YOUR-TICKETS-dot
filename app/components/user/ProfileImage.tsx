@@ -1,6 +1,6 @@
 "use client";
 
-import ProfileAvatar from "app/components/ProfileAvatar";
+import ProfileAvatar from "app/components/user/ProfileAvatar";
 
 interface ProfileImageProps {
   photoKey?: string | null;

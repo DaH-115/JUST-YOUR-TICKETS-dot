@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useState } from "react";
-import UserAlert from "app/ui/UserAlert";
+import UserAlert from "app/components/ui/feedback/UserAlert";
 
 interface AlertContextType {
   showErrorHandler: (title: string, message: string) => void;

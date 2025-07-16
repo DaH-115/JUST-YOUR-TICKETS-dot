@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { FaHeart } from "react-icons/fa";
 import { ImSpinner2 } from "react-icons/im";
-import ActivityBadge from "app/components/ActivityBadge";
-import MoviePoster from "app/components/MoviePoster";
-import ProfileImage from "app/components/ProfileImage";
+import ActivityBadge from "app/components/ui/feedback/ActivityBadge";
+import MoviePoster from "app/components/movie/MoviePoster";
+import ProfileImage from "app/components/user/ProfileImage";
 import { ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
 import { IoStar } from "react-icons/io5";
 
@@ -55,22 +55,20 @@ export default function ReviewCard({
 
         {/* 영화 타이틀 & 좋아요 */}
         <div className="mt-auto flex items-center justify-between pt-2">
-          <div className="flex-1 truncate pr-1.5 text-[10px] hover:underline">
+          <div className="flex-1 truncate pr-1 text-xs text-gray-500 hover:underline">
             <Link
               href={`/movie-details/${content.movieId}`}
               onClick={(e) => e.stopPropagation()}
             >
-              {content.movieTitle}
+              {`${content.movieTitle}(${content.originalTitle})`}
             </Link>
           </div>
 
-          <div className="flex items-center text-xs">
+          <div className="flex items-center justify-center text-sm">
             <div className="text-red-500">
               <FaHeart size={10} />
             </div>
-            <div className="ml-1.5 flex min-w-[1.5rem] items-center justify-center">
-              {content.likeCount}
-            </div>
+            <div className="ml-1">{content.likeCount}</div>
           </div>
         </div>
 

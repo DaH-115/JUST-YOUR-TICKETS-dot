@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo, useState, useLayoutEffect } from "react";
-import MoviePoster from "app/components/MoviePoster";
-import VideoPlayer from "app/components/VideoPlayer";
+import MoviePoster from "app/components/movie/MoviePoster";
+import VideoPlayer from "app/components/movie/VideoPlayer";
 import MovieInfoCard from "app/home/components/MovieInfoCard";
-import Background from "app/ui/layout/Background";
+import Background from "app/components/ui/layout/Background";
 import getMovieTitle from "app/utils/getMovieTitle";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 

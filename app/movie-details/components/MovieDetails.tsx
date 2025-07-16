@@ -1,8 +1,8 @@
 import { IoStar } from "react-icons/io5";
-import GenreList from "app/components/GenreList";
-import MovieCertification from "app/components/MovieCertification";
-import MoviePoster from "app/components/MoviePoster";
-import WriteBtn from "app/components/WriteBtn";
+import GenreList from "app/components/movie/GenreList";
+import MovieCertification from "app/components/movie/MovieCertification";
+import MoviePoster from "app/components/movie/MoviePoster";
+import WriteBtn from "app/components/ui/buttons/WriteBtn";
 import Loading from "app/loading";
 import MetaInfoItem from "app/movie-details/components/MetaInfoItem";
 import convertRuntime from "app/movie-details/utils/convertRuntime";

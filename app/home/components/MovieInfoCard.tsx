@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { FaInfoCircle, FaStar } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import AnimatedOverview from "app/components/AnimatedOverview";
-import GenreList from "app/components/GenreList";
-import MovieCertification from "app/components/MovieCertification";
-import Tooltip from "app/components/Tooltip";
-import WriteBtn from "app/components/WriteBtn";
+import AnimatedOverview from "app/components/movie/AnimatedOverview";
+import GenreList from "app/components/movie/GenreList";
+import MovieCertification from "app/components/movie/MovieCertification";
+import Tooltip from "app/components/ui/feedback/Tooltip";
+import WriteBtn from "app/components/ui/buttons/WriteBtn";
 import formatMovieDate from "app/utils/formatMovieDate";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { useMovieDetails } from "store/context/movieDetailsContext";

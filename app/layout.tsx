@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import "app/globals.css";
-import ConditionalLayout from "app/components/ConditionalLayout";
+import ConditionalLayout from "app/components/ui/layout/ConditionalLayout";
 import { AlertProvider } from "store/context/alertContext";
 import { AuthProvider } from "store/context/auth/authContext";
 import Providers from "store/redux-toolkit/Providers";
