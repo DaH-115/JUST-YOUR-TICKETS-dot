@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
     const response = await postHandler(req);
     return response;
   } catch (error) {
-    console.error("Error in POST /api/reviews/likes:", error);
+    console.error("Error in POST /api/reviews/like-statuses:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

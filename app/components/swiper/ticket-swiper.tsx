@@ -1,8 +1,7 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/navigation";
+import "swiper/css/bundle";
 import { Navigation } from "swiper/modules";
 import SwiperButton from "app/components/swiper/swiper-button";
 import SwiperCard from "app/components/swiper/swiper-card";
@@ -18,7 +17,7 @@ export default function TicketSwiper({
       <Swiper
         speed={500}
         loop={true}
-        navigation={false}
+        navigation={true}
         modules={[Navigation]}
         breakpoints={{
           320: {

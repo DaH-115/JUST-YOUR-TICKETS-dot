@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 };
 
 interface searchParamsProps {
-  search?: string;
   page?: string;
+  search?: string;
 }
 
 export default async function Page({

@@ -28,13 +28,14 @@ export interface ReviewDoc {
   };
 }
 
-// 좋아요 정보가 포함된 리뷰 타입
-export type ReviewWithLike = ReviewDoc & { isLiked?: boolean };
+// 좋아요 정보가 포함된 리뷰 타입 (이제 서버에서 바로 이 형태로 반환)
+export type ReviewWithLike = ReviewDoc & { isLiked: boolean };
 
 // Firestore에서 가져온 원본 리뷰 데이터 타입 (날짜는 Timestamp)
 interface RawReview {
   id: string;
   user: ReviewUser;
+  likeCount?: number; // 최상위 레벨 likeCount (API 업데이트 후)
   review: {
     movieId: number;
     movieTitle: string;
@@ -54,7 +55,7 @@ interface RawReview {
 interface FetchReviewsParams {
   page: number;
   pageSize: number;
-  uid?: string;
+  uid?: string; // 특정 사용자의 리뷰만 보기
   search?: string;
 }
 
@@ -306,6 +307,8 @@ async function addUserInfoToReviews(
       user,
       review: {
         ...review.review,
+        // 최상위 likeCount를 review 안에 복사 (API 업데이트와 호환성 유지)
+        likeCount: review.likeCount || review.review.likeCount || 0,
         createdAt: review.review.createdAt.toDate().toISOString(),
         updatedAt: review.review.updatedAt.toDate().toISOString(),
       },

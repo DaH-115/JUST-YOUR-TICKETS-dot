@@ -43,16 +43,40 @@ export async function DELETE(
       );
     }
 
+    // 트랜잭션 전 현재 likeCount 확인
+    const beforeReviewSnap = await reviewRef.get();
+    const reviewData = beforeReviewSnap.data();
+    const beforeLikeCount = reviewData?.likeCount || 0;
+    console.log("📊 트랜잭션 전 likeCount:", beforeLikeCount);
+
     // 좋아요 취소와 리뷰 좋아요 수 감소를 트랜잭션으로 원자적 처리
     await adminFirestore.runTransaction(async (transaction) => {
+      console.log("🔄 삭제 트랜잭션 시작...");
+
       // 좋아요 문서 삭제 (경로 수정됨)
       transaction.delete(likeRef);
+      console.log("✅ 좋아요 문서 삭제 완료");
 
-      // 리뷰의 좋아요 수 감소
+      // 리뷰의 좋아요 수 감소 (최상위 레벨)
       transaction.update(reviewRef, {
         likeCount: FieldValue.increment(-1),
       });
+      console.log("✅ likeCount 감소 완료");
+
+      // 사용자의 좋아요한 티켓 수 감소
+      const userRef = adminFirestore.collection("users").doc(uid);
+      transaction.update(userRef, {
+        likedTicketsCount: FieldValue.increment(-1),
+      });
+      console.log("✅ 사용자 likedTicketsCount 감소 완료");
     });
+
+    console.log("✅ 삭제 트랜잭션 완료");
+
+    // 업데이트된 likeCount를 가져오기 위해 문서를 다시 읽음
+    const updatedReviewSnap = await reviewRef.get();
+    const updatedData = updatedReviewSnap.data();
+    const updatedLikeCount = updatedData?.likeCount || 0;
 
     // 캐시 재검증
     revalidatePath("/ticket-list");
@@ -62,6 +86,7 @@ export async function DELETE(
       {
         success: true,
         message: "좋아요가 취소되었습니다.",
+        likeCount: updatedLikeCount,
       },
       { status: 200 },
     );

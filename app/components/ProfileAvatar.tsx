@@ -11,6 +11,7 @@ interface ProfileAvatarProps {
   size?: number;
   className?: string;
   showLoading?: boolean;
+  isPublic?: boolean;
 }
 
 export default function ProfileAvatar({
@@ -20,6 +21,7 @@ export default function ProfileAvatar({
   size = 48,
   className = "",
   showLoading = true,
+  isPublic = false,
 }: ProfileAvatarProps) {
   const [imageError, setImageError] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -28,6 +30,7 @@ export default function ProfileAvatar({
   // photoKey는 항상 S3 key
   const { url: presignedUrl, loading } = usePresignedUrl({
     key: isVisible ? photoKey : null,
+    isPublic,
   });
 
   // Intersection Observer 설정

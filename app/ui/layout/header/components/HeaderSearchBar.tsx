@@ -119,7 +119,7 @@ export default function HeaderSearchBar({
               displayValue={() => searchQuery}
             />
             <div
-              className="absolute right-0 top-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full transition-all duration-300 ease-in-out hover:bg-white/10"
+              className="absolute right-0 top-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full pb-1 transition-all duration-300 ease-in-out hover:bg-white/10"
               onClick={iconClickHandler}
             >
               <IoSearchOutline size={18} color="white" />

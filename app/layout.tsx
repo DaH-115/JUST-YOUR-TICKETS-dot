@@ -1,24 +1,9 @@
 import { Metadata } from "next";
 import "app/globals.css";
-import { Nanum_Gothic, Montserrat } from "next/font/google";
 import ConditionalLayout from "app/components/ConditionalLayout";
 import { AlertProvider } from "store/context/alertContext";
 import { AuthProvider } from "store/context/auth/authContext";
 import Providers from "store/redux-toolkit/Providers";
-
-const nanumGothic = Nanum_Gothic({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-  preload: true,
-});
-
-const roboto = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-  preload: true,
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://just-your-tickets.vercel.app"),
@@ -118,7 +103,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className={`${nanumGothic.className} ${roboto.className}`}>
+    <html lang="ko">
       <body className="flex min-h-screen w-full min-w-[320px] flex-col bg-[#121212]">
         {/* RTK Provider */}
         <Providers>

@@ -13,8 +13,6 @@ import { useAppDispatch } from "store/redux-toolkit/hooks";
 import {
   clearUser,
   fetchUserProfile,
-  setUser,
-  User as AppUser,
 } from "store/redux-toolkit/slice/userSlice";
 import { useRouter } from "next/navigation";
 import { useAlert } from "store/context/alertContext";

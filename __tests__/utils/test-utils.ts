@@ -1,31 +1,58 @@
 import { NextRequest } from "next/server";
 
+// 테스트용 타입 정의들
+interface MockUser {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL: string | null;
+  emailVerified: boolean;
+}
+
+interface MockSignupData {
+  displayName: string;
+  email: string;
+  password: string;
+}
+
+interface MockSocialSetupData {
+  provider: string;
+}
+
+interface MockAvailabilityCheckData {
+  type: string;
+  value: string;
+}
+
+interface FirebaseError extends Error {
+  code: string;
+}
+
 /**
- * 테스트용 NextRequest 객체를 생성합니다
+ * NextRequest 객체를 모킹하기 위한 헬퍼 함수
+ * @param {object} options - method, url, body 등을 포함하는 요청 객체
+ * @returns {NextRequest} 모킹된 NextRequest 객체
  */
-export function createMockRequest(
-  options: {
-    method?: string;
-    url?: string;
-    headers?: Record<string, string>;
-    body?: any;
-  } = {},
-): NextRequest {
+export function createMockRequest(options: {
+  method?: string;
+  url?: string;
+  body?: Record<string, unknown> | null;
+  headers?: Record<string, string>;
+}): NextRequest {
   const {
     method = "GET",
-    url = "http://localhost:3000",
-    headers = {},
-    body,
+    url = "http://localhost/api/test",
+    body = null,
+    headers = { "Content-Type": "application/json" },
   } = options;
 
-  return {
-    url,
+  const request = new NextRequest(url, {
     method,
-    headers: {
-      get: (name: string) => headers[name.toLowerCase()],
-    },
-    json: async () => body || {},
-  } as NextRequest;
+    body: body ? JSON.stringify(body) : null,
+    headers,
+  });
+
+  return request;
 }
 
 /**
@@ -39,7 +66,7 @@ export function createMockAuthToken(uid: string = "test-user-id"): string {
 /**
  * 테스트용 사용자 데이터를 생성합니다
  */
-export function createMockUser(overrides: Partial<any> = {}) {
+export function createMockUser(overrides: Partial<MockUser> = {}): MockUser {
   return {
     uid: "test-user-id",
     email: "test@example.com",
@@ -70,16 +97,21 @@ export function createMockDecodedToken(uid: string = "test-user-id") {
 /**
  * 테스트용 에러 객체를 생성합니다
  */
-export function createMockFirebaseError(code: string, message: string) {
-  const error = new Error(message);
-  (error as any).code = code;
+export function createMockFirebaseError(
+  code: string,
+  message: string,
+): FirebaseError {
+  const error = new Error(message) as FirebaseError;
+  error.code = code;
   return error;
 }
 
 /**
  * 테스트용 회원가입 요청 데이터를 생성합니다
  */
-export function createMockSignupData(overrides: Partial<any> = {}) {
+export function createMockSignupData(
+  overrides: Partial<MockSignupData> = {},
+): MockSignupData {
   return {
     displayName: "Test User",
     email: "test@example.com",
@@ -91,7 +123,9 @@ export function createMockSignupData(overrides: Partial<any> = {}) {
 /**
  * 테스트용 소셜 로그인 설정 데이터를 생성합니다
  */
-export function createMockSocialSetupData(overrides: Partial<any> = {}) {
+export function createMockSocialSetupData(
+  overrides: Partial<MockSocialSetupData> = {},
+): MockSocialSetupData {
   return {
     provider: "google",
     ...overrides,
@@ -101,10 +135,15 @@ export function createMockSocialSetupData(overrides: Partial<any> = {}) {
 /**
  * 테스트용 중복 확인 요청 데이터를 생성합니다
  */
-export function createMockAvailabilityCheckData(overrides: Partial<any> = {}) {
+export function createMockAvailabilityCheckData(
+  overrides: Partial<MockAvailabilityCheckData> = {},
+): MockAvailabilityCheckData {
   return {
     type: "displayName",
     value: "testuser",
     ...overrides,
   };
 }
+
+// testing-library의 모든 것을 다시 export (기본 render 포함)
+export * from "@testing-library/react";

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import ReviewCard from "app/home/components/reviews/ReviewCard";
-import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { ReviewDoc, ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
 
 export default function LatestReviews({
   reviews: initialReviews,
@@ -15,6 +15,10 @@ export default function LatestReviews({
     null,
   );
   const router = useRouter();
+  const reviewsWithLike: ReviewWithLike[] = initialReviews.map((review) => ({
+    ...review,
+    isLiked: false,
+  }));
 
   const onReviewClickHandler = useCallback(
     (reviewId: string) => {
@@ -46,12 +50,11 @@ export default function LatestReviews({
         </div>
 
         <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4 md:py-4 lg:grid-cols-3">
-          {initialReviews.map((review) => (
+          {reviewsWithLike.map((review) => (
             <ReviewCard
               key={review.id}
-              review={{ ...review, isLiked: false }}
+              review={review}
               onReviewClick={onReviewClickHandler}
-              showLikeButton={false}
               isNavigating={navigatingReviewId === review.id}
             />
           ))}

@@ -20,7 +20,7 @@ interface ReviewDetailsModalProps {
   closeModalHandler: () => void;
   selectedReview: ReviewWithLike;
   onReviewDeleted: (id: string) => void;
-  onLikeToggle: (reviewId: string) => void;
+  onLikeToggle: (reviewId: string) => Promise<void>;
 }
 
 export default function ReviewDetailsModal({
@@ -49,11 +49,14 @@ export default function ReviewDetailsModal({
     return () => clearTimeout(timer);
   }, [isModalOpen]);
 
-  const handleLikeClick = useCallback(() => {
+  const handleLikeClick = useCallback(async () => {
     if (isLiking) return;
     setIsLiking(true);
-    onLikeToggle(selectedReview.id);
-    setIsLiking(false);
+    try {
+      await onLikeToggle(selectedReview.id);
+    } finally {
+      setIsLiking(false);
+    }
   }, [isLiking, onLikeToggle, selectedReview.id]);
 
   return (

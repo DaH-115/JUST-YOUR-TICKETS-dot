@@ -14,6 +14,7 @@ interface FetchLikedReviewsParams {
 interface RawReview {
   id: string;
   user: ReviewUser;
+  likeCount?: number; // 최상위 레벨 likeCount (API 업데이트 후)
   review: {
     movieId: number;
     movieTitle: string;
@@ -55,6 +56,10 @@ export async function fetchLikedReviewsPaginated({
   try {
     // 1단계: 사용자가 좋아요한 리뷰 ID들 찾기
     const likedReviewIds = await getLikedReviewIds(uid);
+    console.log(
+      `🔍 [fetchLikedReviewsPaginated] 사용자 ${uid}가 좋아요한 리뷰 ID 개수:`,
+      likedReviewIds.length,
+    );
 
     if (likedReviewIds.length === 0) {
       return { reviews: [], totalPages: 0, totalCount: 0 };
@@ -62,6 +67,14 @@ export async function fetchLikedReviewsPaginated({
 
     // 2단계: 리뷰 상세 정보 가져오기 (Firestore 제한 고려)
     const allReviews = await getReviewsByIds(likedReviewIds);
+    console.log(
+      `📄 [fetchLikedReviewsPaginated] 실제 가져온 리뷰 개수:`,
+      allReviews.length,
+    );
+    console.log(
+      `❌ [fetchLikedReviewsPaginated] 누락된 리뷰 개수:`,
+      likedReviewIds.length - allReviews.length,
+    );
 
     // 3단계: 검색어로 필터링 (검색어가 있다면)
     const filteredReviews = search
@@ -264,6 +277,8 @@ async function addUserInfoToReviews(
       user,
       review: {
         ...review.review,
+        // 최상위 likeCount를 review 안에 복사 (API 업데이트와 호환성 유지)
+        likeCount: review.likeCount || review.review.likeCount || 0,
         createdAt: review.review.createdAt.toDate().toISOString(),
         updatedAt: review.review.updatedAt.toDate().toISOString(),
       },

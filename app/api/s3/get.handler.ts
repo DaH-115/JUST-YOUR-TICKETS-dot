@@ -6,16 +6,20 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    const authResult = await verifyAuthToken(req);
-    if (!authResult.success) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.statusCode },
-      );
-    }
-
     const { searchParams } = new URL(req.url);
     const key = searchParams.get("key");
+    const isPublic = searchParams.get("isPublic") === "true";
+
+    // 공개 리소스가 아닌 경우에만 인증 토큰 확인
+    if (!isPublic) {
+      const authResult = await verifyAuthToken(req);
+      if (!authResult.success) {
+        return NextResponse.json(
+          { error: authResult.error },
+          { status: authResult.statusCode },
+        );
+      }
+    }
 
     if (!key) {
       return NextResponse.json(

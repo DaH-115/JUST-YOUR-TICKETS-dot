@@ -51,7 +51,9 @@ export default function useLikedReviews({
           params.set("search", search);
         }
 
-        const res = await fetch(`/api/reviews/liked?${params.toString()}`);
+        const res = await fetch(
+          `/api/reviews/liked-by-user?${params.toString()}`,
+        );
 
         if (!res.ok) {
           throw new Error("좋아요 리뷰 로딩에 실패했습니다");

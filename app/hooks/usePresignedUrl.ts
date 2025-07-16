@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { isAuth } from "firebase-config";
+import { useAuth } from "store/context/auth/authContext";
 
 // 메모리 내 캐시 (key: S3 key, value: presigned URL)
 const presignedUrlCache = new Map<string, string>();
@@ -7,6 +8,7 @@ const presignedUrlCache = new Map<string, string>();
 interface UsePresignedUrlProps {
   key?: string | null; // S3에 저장된 파일의 경로
   fallbackUrl?: string; // 로딩 중이거나 에러 시 표시할 기본 URL
+  isPublic?: boolean; // 공개 리소스 여부. true이면 인증 없이 요청
 }
 
 interface UsePresignedUrlReturn {
@@ -18,17 +20,33 @@ interface UsePresignedUrlReturn {
 export function usePresignedUrl({
   key,
   fallbackUrl,
+  isPublic = false,
 }: UsePresignedUrlProps): UsePresignedUrlReturn {
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const [url, setUrl] = useState<string>(fallbackUrl || "");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
+    // 공개 리소스가 아닌 경우에만 인증 상태 로딩을 기다림
+    if (!isPublic && isAuthLoading) {
+      setLoading(true);
+      return;
+    }
+
     if (!key || typeof key !== "string" || key.trim().length === 0) {
       setUrl(fallbackUrl || "");
       setLoading(false);
       setError(null);
+      return;
+    }
+
+    // 공개 리소스가 아니고, 인증도 안 된 경우
+    if (!isPublic && !isAuthenticated) {
+      setError("인증이 필요합니다.");
+      setUrl(fallbackUrl || "");
+      setLoading(false);
       return;
     }
 
@@ -51,19 +69,27 @@ export function usePresignedUrl({
       setError(null);
 
       try {
-        // 현재 사용자 확인 및 토큰 가져오기
-        const currentUser = isAuth.currentUser;
-        if (!currentUser) {
-          throw new Error("인증이 필요합니다.");
+        const idToken =
+          !isPublic && isAuth.currentUser
+            ? await isAuth.currentUser.getIdToken()
+            : null;
+
+        // 공개 리소스가 아니고, 토큰도 없는 경우
+        if (!isPublic && !idToken) {
+          throw new Error("인증 토큰을 가져올 수 없습니다.");
         }
 
-        const idToken = await currentUser.getIdToken();
+        const headers: HeadersInit = idToken
+          ? { Authorization: `Bearer ${idToken}` }
+          : {};
 
-        const response = await fetch(`/api/s3?key=${encodeURIComponent(key)}`, {
+        const apiUrl = isPublic
+          ? `/api/s3?key=${encodeURIComponent(key)}&isPublic=true`
+          : `/api/s3?key=${encodeURIComponent(key)}`;
+
+        const response = await fetch(apiUrl, {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${idToken}`,
-          },
+          headers,
           signal: abortController.signal,
         });
 
@@ -100,7 +126,7 @@ export function usePresignedUrl({
         abortControllerRef.current.abort();
       }
     };
-  }, [key, fallbackUrl]);
+  }, [key, fallbackUrl, isAuthenticated, isAuthLoading, isPublic]);
 
   return { url, loading, error };
 }
