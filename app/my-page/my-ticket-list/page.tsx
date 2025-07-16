@@ -14,7 +14,6 @@ export default function Page() {
         title: "My Ticket List",
         content: "내가 작성한 티켓 목록입니다",
       }}
-      placeholder="티켓 검색"
       useFetchReviews={useMyReviews}
     />
   );

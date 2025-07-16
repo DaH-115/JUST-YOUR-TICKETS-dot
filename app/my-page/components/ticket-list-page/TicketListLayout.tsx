@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Pagination from "app/components/Pagination";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
-import SearchForm from "app/components/SearchForm";
+import SearchSection from "app/components/SearchSection";
 import Loading from "app/loading";
 import EmptyState from "app/my-page/components/EmptyState";
 import MyTicketHeader from "app/my-page/components/MyTicketPageHeader";
@@ -33,13 +33,11 @@ interface TicketListLayoutProps {
     title: string;
     content: string;
   };
-  placeholder: string;
   useFetchReviews: (args: FetchReviewsArgs) => FetchReviewsHook;
 }
 
 export default function TicketListLayout({
   header,
-  placeholder,
   useFetchReviews,
 }: TicketListLayoutProps) {
   const router = useRouter();
@@ -105,19 +103,11 @@ export default function TicketListLayout({
       />
 
       {/* 검색 폼 & 결과 정보 */}
-      <div className="my-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex-1">
-          {searchTerm && (
-            <div className="text-sm text-gray-600">
-              <span className="font-medium">{`"{searchTerm}"`}</span> 검색 결과:
-              {reviews.length}개
-            </div>
-          )}
-        </div>
-        <div className="flex justify-end">
-          <SearchForm placeholder={placeholder} onSearch={searchHandler} />
-        </div>
-      </div>
+      <SearchSection
+        searchTerm={searchTerm}
+        resultCount={reviews.length}
+        onSearch={searchHandler}
+      />
 
       {/* 리뷰 리스트 */}
       {loading ? (

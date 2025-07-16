@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Pagination from "app/components/Pagination";
-import SearchForm from "app/components/SearchForm";
+import SearchSection from "app/components/SearchSection";
 import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 import EmptyState from "app/my-page/components/EmptyState";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
@@ -62,20 +62,11 @@ export default function TicketListPage({
       </section>
 
       {/* 검색 폼 & 결과 정보 */}
-      <div className="my-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex-1">
-          {searchTerm && (
-            <div className="text-sm text-gray-600">
-              <span className="font-medium">{`"${searchTerm}"`}</span> 검색
-              결과:
-              {initialReviews.length}개
-            </div>
-          )}
-        </div>
-        <div className="flex justify-end">
-          <SearchForm onSearch={searchHandler} placeholder="티켓 검색" />
-        </div>
-      </div>
+      <SearchSection
+        searchTerm={searchTerm}
+        resultCount={initialReviews.length}
+        onSearch={searchHandler}
+      />
 
       {/* 리뷰 리스트 */}
       {initialReviews.length > 0 ? (

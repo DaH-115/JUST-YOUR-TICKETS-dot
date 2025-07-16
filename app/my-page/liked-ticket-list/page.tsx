@@ -14,7 +14,6 @@ export default function Page() {
         title: "Liked Ticket List",
         content: "좋아요한 티켓 목록입니다",
       }}
-      placeholder="티켓 검색"
       useFetchReviews={useLikedReviews}
     />
   );
