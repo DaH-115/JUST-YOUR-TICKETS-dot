@@ -11,7 +11,7 @@ import BioInput from "app/my-page/components/BioInput";
 import ChangePassword from "app/my-page/components/ChangePassword";
 import NicknameInput from "app/my-page/components/NicknameInput";
 import AvatarUploader from "app/my-page/components/profile-avatar/AvatarUploader";
-import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
+import ProfileImage from "app/my-page/components/profile-avatar/ProfileImage";
 import { isAuth } from "firebase-config";
 import { useAlert } from "store/context/alertContext";
 import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
@@ -190,6 +190,7 @@ export default function ProfileEditForm() {
             onClick={handleCancel}
             className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100"
             disabled={isSubmitting}
+            aria-label="뒤로가기"
           >
             <FaArrowLeft size={20} />
           </button>
@@ -216,9 +217,8 @@ export default function ProfileEditForm() {
           <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-lg font-medium">프로필 사진</h2>
             <div className="flex flex-col items-center gap-4">
-              <ProfileAvatar previewSrc={previewSrc} />
+              <ProfileImage previewSrc={previewSrc} />
               <AvatarUploader
-                previewSrc={previewSrc}
                 onPreview={(url) => setPreviewSrc(url)}
                 onCancelPreview={() => setPreviewSrc(null)}
                 onFileSelect={(file) => setSelectedFile(file)}

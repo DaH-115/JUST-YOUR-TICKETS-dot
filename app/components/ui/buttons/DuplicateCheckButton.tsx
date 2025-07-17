@@ -3,6 +3,8 @@ interface DuplicateCheckButtonProps {
   disabled: boolean;
   isChecking: boolean;
   className?: string;
+  "aria-label"?: string;
+  "aria-describedby"?: string;
 }
 
 export default function DuplicateCheckButton({
@@ -10,6 +12,8 @@ export default function DuplicateCheckButton({
   disabled,
   isChecking,
   className = "",
+  "aria-label": ariaLabel,
+  "aria-describedby": ariaDescribedBy,
 }: DuplicateCheckButtonProps) {
   return (
     <button
@@ -21,8 +25,11 @@ export default function DuplicateCheckButton({
           ? "cursor-not-allowed bg-gray-200 text-gray-400"
           : "bg-gray-600 text-white hover:bg-gray-700"
       } ${className}`}
+      aria-label={ariaLabel}
+      aria-describedby={ariaDescribedBy}
+      data-testid="duplicate-check-button"
     >
-      {isChecking ? "확인 중" : "중복 확인"}
+      {isChecking ? "확인 중..." : "중복 확인"}
     </button>
   );
 }

@@ -49,6 +49,7 @@ export default function ChangePassword() {
     register: regCurrent,
     handleSubmit: submitCurrent,
     formState: { errors: errCurrent, touchedFields: touchedCurrent },
+    reset: resetCurrent,
   } = useForm<CurrentPasswordForm>({
     resolver: zodResolver(currentPasswordSchema),
   });
@@ -57,6 +58,7 @@ export default function ChangePassword() {
     register: regNew,
     handleSubmit: submitNew,
     formState: { errors: errNew, touchedFields: touchedNew },
+    reset: resetNew,
   } = useForm<NewPasswordForm>({
     resolver: zodResolver(newPasswordSchema),
   });
@@ -76,12 +78,8 @@ export default function ChangePassword() {
       setIsVerified(true);
       showSuccessHandler("확인", "비밀번호가 확인되었습니다.");
     } catch (error) {
-      if (error instanceof Error) {
-        showErrorHandler("오류", "현재 비밀번호가 일치하지 않습니다.");
-      } else {
-        const { title, message } = firebaseErrorHandler(error);
-        showErrorHandler(title, message);
-      }
+      const { title, message } = firebaseErrorHandler(error);
+      showErrorHandler(title, message);
     } finally {
       setIsVerifying(false);
     }
@@ -97,27 +95,26 @@ export default function ChangePassword() {
     try {
       await updatePassword(currentUser, data.newPassword);
       setIsVerified(false);
+      resetCurrent();
+      resetNew();
       showSuccessHandler("성공", "비밀번호가 성공적으로 변경되었습니다.");
     } catch (error) {
-      if (error instanceof Error) {
-        showErrorHandler("오류", "비밀번호 변경에 실패했습니다.");
-      } else {
-        const { title, message } = firebaseErrorHandler(error);
-        showErrorHandler(title, message);
-      }
+      const { title, message } = firebaseErrorHandler(error);
+      showErrorHandler(title, message);
     } finally {
       setIsUpdating(false);
     }
   };
 
   return (
-    <section className="relative rounded-xl border-2 bg-white px-8 py-6 transition-transform duration-300 hover:-translate-x-1 hover:-translate-y-1">
-      <h2 className="mb-2 text-xl font-bold">비밀번호 변경</h2>
+    <section className="relative rounded-xl bg-white">
+      <h2 className="mb-4 text-lg font-bold">비밀번호 변경</h2>
 
       {/* 1단계: 현재 비밀번호 확인 */}
       {!isVerified && (
         <div>
           <div
+            className="mb-4"
             onKeyDown={(e) => {
               if (e.key === "Enter" && !isVerifying) {
                 e.preventDefault();
