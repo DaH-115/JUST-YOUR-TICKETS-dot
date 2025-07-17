@@ -454,7 +454,7 @@ export default function ReviewTicket({
                         />
                       )}
                     </div>
-                    <div className="ml-1.5 flex min-w-[1.5rem] items-center justify-center">
+                    <div className="ml-1 flex items-center justify-center">
                       {likingReviewId === data.id ? (
                         <ImSpinner2 className="animate-spin" />
                       ) : (

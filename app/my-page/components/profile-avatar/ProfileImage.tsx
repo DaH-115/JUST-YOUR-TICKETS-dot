@@ -2,8 +2,8 @@
 
 import { doc, onSnapshot } from "firebase/firestore";
 import { useState, useEffect } from "react";
-import Avatar from "app/my-page/components/profile-avatar/Avatar";
 import { db, isAuth } from "firebase-config";
+import ProfileAvatar from "app/components/user/ProfileAvatar";
 
 export default function ProfileImage({
   previewSrc = null,
@@ -28,10 +28,13 @@ export default function ProfileImage({
 
   return (
     // 2) photoKey를 Avatar에 prop으로 전달
-    <Avatar
+    <ProfileAvatar
       userDisplayName={user?.displayName ?? "사용자"}
       photoKey={photoKey}
       previewSrc={previewSrc}
+      size={96}
+      className="mx-auto"
+      showLoading={true}
     />
   );
 }

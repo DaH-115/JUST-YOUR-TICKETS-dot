@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
 import { Navigation } from "swiper/modules";
@@ -7,11 +8,87 @@ import SwiperButton from "app/components/swiper/swiper-button";
 import SwiperCard from "app/components/swiper/swiper-card";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
+// TicketSwiper용 스켈레톤 컴포넌트 (화면에 꽉 차는 레이아웃)
+function TicketSwiperSkeleton() {
+  const skeletonItems = Array.from({ length: 8 });
+
+  return (
+    <div className="w-full pt-0">
+      <div className="relative">
+        {/* 스켈레톤 아이템들 */}
+        <div className="flex gap-3 overflow-hidden pt-8 md:gap-4 lg:gap-5">
+          {skeletonItems.map((_, i) => (
+            <div
+              key={i}
+              className="w-[140px] flex-shrink-0 sm:w-[150px] md:w-[160px] lg:w-[180px] xl:w-[200px] 2xl:w-[220px]"
+            >
+              <div className="flex w-full flex-col">
+                {/* 포스터 영역 (실제 SwiperCard와 동일한 비율) */}
+                <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl">
+                  <div className="absolute inset-0 animate-pulse bg-gray-600"></div>
+                  {/* 랭킹 번호 스켈레톤 */}
+                  <div className="absolute left-2 top-2 z-10 h-6 w-8 animate-pulse rounded-full bg-gray-500"></div>
+                  {/* 정보 버튼 스켈레톤 */}
+                  <div className="absolute right-2 top-2 z-10 h-6 w-6 animate-pulse rounded-full bg-gray-500"></div>
+                </div>
+
+                {/* 정보 카드 영역 */}
+                <div className="mt-3 space-y-2">
+                  {/* 제목 영역 */}
+                  <div className="space-y-1">
+                    <div className="h-4 w-full animate-pulse rounded bg-gray-600"></div>
+                    <div className="h-3 w-3/4 animate-pulse rounded bg-gray-600"></div>
+                  </div>
+
+                  {/* 평점 및 장르 영역 */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-1">
+                      <div className="h-3 w-3 animate-pulse rounded bg-gray-600"></div>
+                      <div className="h-3 w-8 animate-pulse rounded bg-gray-600"></div>
+                    </div>
+                    <div className="flex space-x-1">
+                      <div className="h-3 w-6 animate-pulse rounded bg-gray-600"></div>
+                      <div className="h-3 w-8 animate-pulse rounded bg-gray-600"></div>
+                    </div>
+                  </div>
+
+                  {/* 버튼 영역 */}
+                  <div className="h-8 w-full animate-pulse rounded-lg bg-gray-600"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 네비게이션 버튼 스켈레톤 */}
+        <div className="absolute left-2 top-1/2 h-10 w-10 -translate-y-1/2 animate-pulse rounded-full bg-gray-600 opacity-50"></div>
+        <div className="absolute right-2 top-1/2 h-10 w-10 -translate-y-1/2 animate-pulse rounded-full bg-gray-600 opacity-50"></div>
+      </div>
+    </div>
+  );
+}
+
 export default function TicketSwiper({
   movieList,
 }: {
   movieList: MovieList[];
 }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트된 후 약간의 지연을 두고 로드 완료
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // 로딩 중일 때 스켈레톤 표시
+  if (!isLoaded) {
+    return <TicketSwiperSkeleton />;
+  }
+
   return (
     <div className="pt-0">
       <Swiper

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useEffect } from "react";
 import { FaEdit, FaArrowRight, FaSignOutAlt } from "react-icons/fa";
 import Loading from "app/loading";
-import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
+import ProfileAvatar from "app/components/user/ProfileAvatar";
 import UserGradeInfo from "app/my-page/components/UserGradeInfo";
 import { clearAuthPersistence } from "app/utils/authPersistence";
 import formatDate from "app/utils/formatDate";
@@ -31,8 +31,10 @@ export default function ProfileView() {
   const userStatus = useAppSelector(selectUserStatus);
 
   useEffect(() => {
-    if (user?.uid && userStatus !== "loading") {
-      // 프로필 정보나 통계 정보가 없는 경우 API 호출
+    if (!user?.uid) return;
+
+    // 아직 프로필 데이터를 받아온 적이 없을 때(idle)만 fetch
+    if (userStatus === "idle") {
       const needsProfileData =
         !user.biography ||
         !user.activityLevel ||
@@ -47,13 +49,38 @@ export default function ProfileView() {
   }, [
     dispatch,
     user?.uid,
+    userStatus,
     user?.biography,
     user?.activityLevel,
     user?.provider,
     user?.myTicketsCount,
     user?.likedTicketsCount,
-    userStatus,
   ]);
+
+  // useEffect(() => {
+  //   if (user?.uid && userStatus !== "loading") {
+  //     // 프로필 정보나 통계 정보가 없는 경우 API 호출
+  //     const needsProfileData =
+  //       !user.biography ||
+  //       !user.activityLevel ||
+  //       !user.provider ||
+  //       user.myTicketsCount === undefined ||
+  //       user.likedTicketsCount === undefined;
+
+  //     if (needsProfileData) {
+  //       dispatch(fetchUserProfile(user.uid));
+  //     }
+  //   }
+  // }, [
+  //   dispatch,
+  //   user?.uid,
+  //   user?.biography,
+  //   user?.activityLevel,
+  //   user?.provider,
+  //   user?.myTicketsCount,
+  //   user?.likedTicketsCount,
+  //   userStatus,
+  // ]);
 
   const activityLevel = useMemo(() => {
     if (userStatus === "loading") {
@@ -96,7 +123,12 @@ export default function ProfileView() {
         <div
           className={`flex flex-col items-center justify-center bg-gradient-to-b ${activityLevel.bgGradient} p-6 md:w-1/3`}
         >
-          <ProfileAvatar />
+          <ProfileAvatar
+            userDisplayName={user?.displayName || "사용자"}
+            photoKey={user?.photoKey || null}
+            size={128}
+            showLoading={true}
+          />
         </div>
 
         <div className="flex flex-1 flex-col p-6">

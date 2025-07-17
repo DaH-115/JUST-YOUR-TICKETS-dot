@@ -52,10 +52,6 @@ export default function Header() {
     }
   }, [dispatch, router]);
 
-  const toggleSideMenu = useCallback(() => {
-    setIsSideMenuOpen((prev) => !prev);
-  }, []);
-
   // 스크롤 감지 효과
   useEffect(() => {
     const handleScroll = () => {
@@ -80,16 +76,16 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-4 py-4 text-xs transition-all duration-300 ease-in-out md:px-8 md:py-8 ${
+      className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-4 py-4 text-xs transition-all duration-300 ease-in-out ${
         isScrolled && !isSideMenuOpen
           ? "bg-gradient-to-b from-black/90 via-black/70 to-transparent backdrop-blur-sm"
           : "bg-transparent"
       }`}
     >
       {/* LOGO */}
-      <h1 className="mr-2 text-lg font-bold sm:mr-4 sm:text-lg md:text-xl">
-        <span className="hidden text-white sm:inline">Just Your Tickets</span>
-        <span className="text-white sm:hidden">JYT</span>
+      <h1 className="mr-2 bg-gradient-to-r from-white via-accent-200 to-white bg-clip-text text-lg font-bold text-transparent sm:mr-4 sm:text-lg md:text-xl">
+        <span className="hidden sm:inline">Just Your Tickets</span>
+        <span className="sm:hidden">JYT</span>
       </h1>
 
       {/* DESKTOP NAVIGATION - 중앙 배치 */}
@@ -149,7 +145,7 @@ export default function Header() {
 
         {/* MOBILE HAMBURGER MENU - 오른쪽 끝 배치 */}
         <button
-          onClick={toggleSideMenu}
+          onClick={() => setIsSideMenuOpen((prev) => !prev)}
           className="rounded-full p-2 text-white transition-colors duration-300 hover:bg-white/20 md:hidden"
           aria-label="메뉴 열기"
         >

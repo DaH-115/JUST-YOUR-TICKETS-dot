@@ -10,7 +10,6 @@ import {
 } from "app/constants/fileUpload";
 
 interface AvatarUploaderProps {
-  previewSrc: string | null;
   onPreview: (url: string | null) => void;
   onCancelPreview: () => void;
   onFileSelect: (file: File | null) => void;
@@ -111,6 +110,7 @@ export default function AvatarUploader({
               accept={ALLOWED_EXTENSIONS.join(",")}
               className="hidden"
               onChange={onFileChange}
+              data-testid="avatar-file-input"
             />
             <button
               type="button"

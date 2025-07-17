@@ -19,7 +19,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   const { genres, uniqueDirectors } = useMovieDetails();
 
   return (
-    <section className="mx-auto w-full overflow-hidden break-keep rounded-2xl bg-gradient-to-br from-white to-gray-50">
+    <section className="mx-auto w-full overflow-hidden break-keep rounded-2xl bg-white">
       <div className="p-2">
         <div className="p-2 md:p-4 md:pb-2">
           <div className="mb-4 flex justify-between">
