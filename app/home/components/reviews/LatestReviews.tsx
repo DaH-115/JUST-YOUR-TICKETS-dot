@@ -31,7 +31,7 @@ export default function LatestReviews({
   return (
     <>
       <section className="py-8 md:py-16">
-        <div className="mb-6 md:mb-4">
+        <div className="mb-4">
           <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
             Latest Reviews
           </h2>

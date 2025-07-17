@@ -62,7 +62,7 @@ export default function AllMovieTrailers({
     : movieTrailer.slice(0, currentItemsPerRow);
 
   return (
-    <section className="p-8">
+    <section className="p-6">
       <div className="mb-8">
         <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
           Movie Trailers

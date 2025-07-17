@@ -8,12 +8,12 @@ import SwiperButton from "app/components/swiper/swiper-button";
 import SwiperCard from "app/components/swiper/swiper-card";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
-// TicketSwiper용 스켈레톤 컴포넌트 (화면에 꽉 차는 레이아웃)
+// TicketSwiper용 스켈레톤 컴포넌트
 function TicketSwiperSkeleton() {
   const skeletonItems = Array.from({ length: 8 });
 
   return (
-    <div className="w-full pt-0">
+    <div className="w-full">
       <div className="relative">
         {/* 스켈레톤 아이템들 */}
         <div className="flex gap-3 overflow-hidden pt-8 md:gap-4 lg:gap-5">
@@ -27,9 +27,7 @@ function TicketSwiperSkeleton() {
                 <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl">
                   <div className="absolute inset-0 animate-pulse bg-gray-600"></div>
                   {/* 랭킹 번호 스켈레톤 */}
-                  <div className="absolute left-2 top-2 z-10 h-6 w-8 animate-pulse rounded-full bg-gray-500"></div>
-                  {/* 정보 버튼 스켈레톤 */}
-                  <div className="absolute right-2 top-2 z-10 h-6 w-6 animate-pulse rounded-full bg-gray-500"></div>
+                  <div className="absolute left-2 top-2 z-10 h-8 w-8 animate-pulse rounded-full bg-gray-500"></div>
                 </div>
 
                 {/* 정보 카드 영역 */}
@@ -76,12 +74,8 @@ export default function TicketSwiper({
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // 컴포넌트가 마운트된 후 약간의 지연을 두고 로드 완료
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 150);
-
-    return () => clearTimeout(timer);
+    // 컴포넌트가 마운트된 후 바로 로드 완료
+    setIsLoaded(true);
   }, []);
 
   // 로딩 중일 때 스켈레톤 표시
@@ -90,51 +84,49 @@ export default function TicketSwiper({
   }
 
   return (
-    <div className="pt-0">
-      <Swiper
-        speed={500}
-        loop={true}
-        navigation={true}
-        modules={[Navigation]}
-        breakpoints={{
-          320: {
-            slidesPerView: 2.5,
-            spaceBetween: 8,
-          },
-          480: {
-            slidesPerView: 3,
-            spaceBetween: 10,
-          },
-          640: {
-            slidesPerView: 3.5,
-            spaceBetween: 12,
-          },
-          768: {
-            slidesPerView: 4,
-            spaceBetween: 14,
-          },
-          1024: {
-            slidesPerView: 5,
-            spaceBetween: 16,
-          },
-          1280: {
-            slidesPerView: 6,
-            spaceBetween: 18,
-          },
-          1440: {
-            slidesPerView: 6.5,
-            spaceBetween: 20,
-          },
-        }}
-      >
-        {movieList.map((movie, idx) => (
-          <SwiperSlide key={movie.id} className="pt-8">
-            <SwiperCard idx={idx} movie={movie} />
-          </SwiperSlide>
-        ))}
-        <SwiperButton direction="prev" />
-        <SwiperButton direction="next" />
-      </Swiper>
-    </div>
+    <Swiper
+      speed={500}
+      loop={true}
+      navigation={false}
+      modules={[Navigation]}
+      breakpoints={{
+        320: {
+          slidesPerView: 2.5,
+          spaceBetween: 8,
+        },
+        480: {
+          slidesPerView: 3,
+          spaceBetween: 10,
+        },
+        640: {
+          slidesPerView: 3.5,
+          spaceBetween: 12,
+        },
+        768: {
+          slidesPerView: 4,
+          spaceBetween: 14,
+        },
+        1024: {
+          slidesPerView: 5,
+          spaceBetween: 16,
+        },
+        1280: {
+          slidesPerView: 6,
+          spaceBetween: 18,
+        },
+        1440: {
+          slidesPerView: 6.5,
+          spaceBetween: 20,
+        },
+      }}
+    >
+      {movieList.map((movie, idx) => (
+        <SwiperSlide key={movie.id} className="pt-6">
+          <SwiperCard idx={idx} movie={movie} />
+        </SwiperSlide>
+      ))}
+      <SwiperButton direction="prev" />
+      <SwiperButton direction="next" />
+    </Swiper>
   );
 }

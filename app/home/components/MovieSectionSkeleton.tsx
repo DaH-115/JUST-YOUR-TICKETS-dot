@@ -8,7 +8,7 @@ export default function MovieSectionSkeleton() {
   return (
     <section className="py-8 md:py-16">
       {/* 섹션 제목 스켈레톤 */}
-      <div className="mb-6 md:mb-4">
+      <div className="mb-4">
         <div className="mb-2 h-8 w-40 animate-pulse rounded bg-gray-600"></div>
         <div className="h-5 w-80 animate-pulse rounded bg-gray-600"></div>
       </div>
