@@ -1,13 +1,10 @@
 "use client";
 
 import { useState, ChangeEvent, useRef } from "react";
-import {
-  MAX_FILE_SIZE,
-  ALLOWED_CONTENT_TYPES,
-  ALLOWED_EXTENSIONS,
-  formatFileSize,
-  validateFileExtension,
-} from "app/constants/fileUpload";
+import { MAX_FILE_SIZE, ALLOWED_CONTENT_TYPES } from "app/constants/fileUpload";
+import { ALLOWED_EXTENSIONS } from "app/my-page/components/profile-avatar/utils/allowedExtensions";
+import { formatFileSize } from "app/my-page/components/profile-avatar/utils/formatFileSize";
+import { validateFileExtension } from "app/my-page/components/profile-avatar/utils/validateFileExtension";
 
 interface AvatarUploaderProps {
   onPreview: (url: string | null) => void;

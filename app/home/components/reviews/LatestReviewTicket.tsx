@@ -7,17 +7,17 @@ import ProfileImage from "app/components/user/ProfileImage";
 import { ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
 import { IoStar } from "react-icons/io5";
 
-interface ReviewCardProps {
+interface LatestReviewTicketProps {
   review: ReviewWithLike;
   onReviewClick: (reviewId: string) => void;
   isNavigating?: boolean;
 }
 
-export default function ReviewCard({
+export default function LatestReviewTicket({
   review,
   onReviewClick,
   isNavigating = false,
-}: ReviewCardProps) {
+}: LatestReviewTicketProps) {
   const { user, review: content } = review;
 
   const handleReviewTitleClick = () => {
@@ -33,7 +33,6 @@ export default function ReviewCard({
           title={content.movieTitle}
         />
       </div>
-
       {/* 리뷰 컨텐츠 */}
       <section
         onClick={handleReviewTitleClick}
@@ -52,7 +51,6 @@ export default function ReviewCard({
           </div>
           <p className="w-full truncate font-semibold">{content.reviewTitle}</p>
         </div>
-
         {/* 영화 타이틀 & 좋아요 */}
         <div className="mt-auto flex items-center justify-between pt-2">
           <div className="flex-1 truncate pr-1 text-xs text-gray-500 hover:underline">
@@ -63,15 +61,11 @@ export default function ReviewCard({
               {`${content.movieTitle}(${content.originalTitle})`}
             </Link>
           </div>
-
-          <div className="flex items-center justify-center text-sm">
-            <div className="text-red-500">
-              <FaHeart size={10} />
-            </div>
-            <div className="ml-1">{content.likeCount}</div>
+          <div className="flex items-center justify-center">
+            <FaHeart className="test-xs text-red-500" />
+            <div className="ml-1 text-sm">{content.likeCount}</div>
           </div>
         </div>
-
         {/* 프로필 이미지, 닉네임 */}
         <div className="mt-2 flex items-center">
           <div className="flex min-w-0 flex-1 items-center gap-1.5">

@@ -1,4 +1,4 @@
-export default function LatestReviewsSkeleton() {
+export default function LatestReviewSkeleton() {
   return (
     <div className="py-8 md:py-16">
       <div className="mb-4">

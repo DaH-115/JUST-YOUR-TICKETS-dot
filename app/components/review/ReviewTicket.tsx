@@ -53,11 +53,10 @@ export default function ReviewTicket({
   useEffect(() => {
     const openModalForReview = async (id: string) => {
       let reviewToOpen: ReviewWithLike | undefined = reviews.find(
-        (r) => r.id === id,
+        (review) => review.id === id,
       );
 
       if (!reviewToOpen) {
-        // If review is not in the list, fetch it directly
         try {
           const fetchedReview: ReviewDoc = await apiCallWithTokenRefresh(
             async (authHeaders) => {
@@ -69,7 +68,6 @@ export default function ReviewTicket({
             },
           );
 
-          // Manually check like status for this single review
           if (userState?.uid) {
             const likesResponse = await apiCallWithTokenRefresh(
               async (authHeaders) => {
@@ -154,7 +152,6 @@ export default function ReviewTicket({
         setReviews(statuses);
       } catch (error) {
         console.error("Error fetching like statuses:", error);
-        // On error, set all as not liked
         setReviews(
           initialReviews.map((review) => ({ ...review, isLiked: false })),
         );
@@ -237,7 +234,6 @@ export default function ReviewTicket({
         ? originalLikeCount + 1
         : originalLikeCount - 1;
 
-      // Optimistic UI update for main list
       setReviews((prev) =>
         prev.map((review) =>
           review.id === reviewId
@@ -250,7 +246,6 @@ export default function ReviewTicket({
         ),
       );
 
-      // Update selectedReview if it's the same review
       if (selectedReview?.id === reviewId) {
         setSelectedReview((prev: ReviewWithLike | undefined) =>
           prev
@@ -284,7 +279,6 @@ export default function ReviewTicket({
           },
         );
 
-        // 서버로부터 받은 최신 likeCount로 UI 업데이트
         setReviews((prev) =>
           prev.map((review) =>
             review.id === reviewId
@@ -309,7 +303,6 @@ export default function ReviewTicket({
 
         onLikeToggled?.(reviewId, updatedLikeCount, newLikedStatus);
       } catch (error: unknown) {
-        // Revert on error for main list
         setReviews((prev) =>
           prev.map((review) =>
             review.id === reviewId
@@ -322,7 +315,6 @@ export default function ReviewTicket({
           ),
         );
 
-        // Revert selectedReview on error
         if (selectedReview?.id === reviewId) {
           setSelectedReview((prev: ReviewWithLike | undefined) =>
             prev
@@ -359,7 +351,6 @@ export default function ReviewTicket({
           onLikeToggle={handleLikeToggle}
         />
       )}
-
       {/* 리뷰 리스트 */}
       {isLoading ? (
         <div className="py-4 text-center">
@@ -382,7 +373,6 @@ export default function ReviewTicket({
                   title={data.review.movieTitle}
                 />
               </div>
-
               {/* 정보 카드 */}
               <section className="relative z-10 mt-[-3rem] flex flex-col rounded-b-xl border bg-white p-2 text-black transition-all duration-500 group-hover:bg-gray-200">
                 {/* 프로필 사진 & 닉네임 & 등급 */}
@@ -404,7 +394,6 @@ export default function ReviewTicket({
                     size="tiny"
                   />
                 </div>
-
                 {/* 리뷰 제목 */}
                 <div
                   className="mt-2 flex items-center"
@@ -441,15 +430,13 @@ export default function ReviewTicket({
                     }}
                     disabled={!userState?.uid || likingReviewId === data.id}
                   >
-                    <div className="text-red-500 transition-transform duration-200 group-hover:scale-110">
+                    <div className="text-xs text-red-500 transition-transform duration-200 group-hover:scale-110">
                       {data.isLiked ? (
                         <FaHeart
-                          size={10}
                           data-testid={`like-button-filled-${data.id}`}
                         />
                       ) : (
                         <FaRegHeart
-                          size={10}
                           data-testid={`like-button-empty-${data.id}`}
                         />
                       )}
@@ -458,7 +445,7 @@ export default function ReviewTicket({
                       {likingReviewId === data.id ? (
                         <ImSpinner2 className="animate-spin" />
                       ) : (
-                        <span className="min-w-[1rem] text-center">
+                        <span className="text-center">
                           {data.review.likeCount}
                         </span>
                       )}

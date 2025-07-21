@@ -3,17 +3,16 @@ import GenreList from "app/components/movie/GenreList";
 import MovieCertification from "app/components/movie/MovieCertification";
 import MoviePoster from "app/components/movie/MoviePoster";
 import WriteBtn from "app/components/ui/buttons/WriteBtn";
-import Loading from "app/loading";
-import MetaInfoItem from "app/movie-details/components/MetaInfoItem";
-import convertRuntime from "app/movie-details/utils/convertRuntime";
+import MetaInfoItem from "app/movie-details/[id]/components/MetaInfoItem";
+import convertRuntime from "app/movie-details/[id]/utils/convertRuntime";
 import formatMovieDate from "app/utils/formatMovieDate";
 import { MovieCredits } from "lib/movies/fetchMovieCredits";
-import { MovieDetails as MovieDetailsType } from "lib/movies/fetchMovieDetails";
+import { MovieDetails } from "lib/movies/fetchMovieDetails";
 
-type MovieDetailCardProps = {
-  movieDetails: MovieDetailsType;
+interface MovieDetailCardProps {
+  movieDetails: MovieDetails;
   movieCredits: MovieCredits;
-};
+}
 
 export default function MovieDetailCard({
   movieDetails,
@@ -38,22 +37,17 @@ export default function MovieDetailCard({
 
   return (
     <main className="relative mb-12 flex w-full items-center justify-center px-4 pt-8 md:my-12 md:px-0 md:pt-16">
-      <div className="flex flex-col justify-center gap-6 md:w-2/3 md:flex-row md:gap-8">
-        {/* MOVIE POSTER */}
-        <section className="w-full md:w-2/3">
+      <div className="flex flex-col justify-center gap-4 md:w-2/3 md:flex-row md:gap-6">
+        {/* 영화 포스터 */}
+        <section className="w-1/3">
           <div className="aspect-[2/3] w-full overflow-hidden rounded-2xl">
-            {poster_path ? (
-              <MoviePoster posterPath={poster_path} title={title} />
-            ) : (
-              <Loading />
-            )}
+            <MoviePoster posterPath={poster_path} title={title} />
           </div>
         </section>
-
-        {/* MOVIE INFO */}
-        <div className="mx-auto w-full overflow-hidden shadow-lg">
-          <div className="rounded-2xl bg-white p-4">
-            {/* 기본 정보 영역 */}
+        {/* 영화 정보 */}
+        <article className="mx-auto w-full overflow-hidden shadow-lg">
+          <div className="rounded-2xl bg-white px-8 py-6">
+            {/* 영화 정보 & 제목 */}
             <div className="mb-2">
               <h1 className="mb-4 inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
                 MOVIE DETAILS
@@ -73,35 +67,28 @@ export default function MovieDetailCard({
                 </p>
               </div>
             </div>
-
-            {/* 장르 영역 */}
+            {/* 장르 */}
             <div className="border-b-4 border-dotted">
               <GenreList genres={genres.map((genre) => genre.name)} />
             </div>
-
-            {/* 평점 영역 */}
+            {/* 평점 */}
             <div className="py-4">
               <div className="flex items-center">
                 <IoStar className="mr-2 text-xl text-accent-300" />
                 <p className="text-3xl font-bold">
                   {Math.round(vote_average * 10) / 10}
-                  <span className="text-2xl font-normal text-gray-200">
-                    /10
-                  </span>
                 </p>
               </div>
             </div>
-
-            {/* 줄거리 영역 */}
+            {/* 줄거리 */}
             {overview && (
               <div className="mb-6 px-2">
-                <p className="break-keep text-sm leading-relaxed text-gray-800">
+                <p className="break-keep leading-relaxed text-gray-800">
                   {overview}
                 </p>
               </div>
             )}
-
-            {/* 출연진 영역 */}
+            {/* 출연진 */}
             <div className="border-t-4 border-dotted py-4">
               <h3 className="mb-2 text-xs font-bold">출연진</h3>
               {casts.length > 0 ? (
@@ -119,8 +106,7 @@ export default function MovieDetailCard({
                 </p>
               )}
             </div>
-
-            {/* 기타 정보 영역 */}
+            {/* 기타 정보 */}
             <div className="flex w-full items-center justify-center border-t-4 border-dotted py-4">
               <MetaInfoItem label={"개봉일"}>
                 {movieDate ? (
@@ -153,8 +139,7 @@ export default function MovieDetailCard({
                 )}
               </MetaInfoItem>
             </div>
-
-            {/* 제작사 정보 */}
+            {/* 제작사 */}
             <div className="border-t-4 border-dotted pt-4">
               <h3 className="mb-3 text-xs font-bold">제작</h3>
               <div className="flex flex-wrap gap-2">
@@ -173,7 +158,7 @@ export default function MovieDetailCard({
               <WriteBtn movieId={movieDetails.id} />
             </div>
           </div>
-        </div>
+        </article>
       </div>
     </main>
   );

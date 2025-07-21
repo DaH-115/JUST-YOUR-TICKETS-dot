@@ -14,10 +14,10 @@ const BREAKPOINTS = {
   "2xl": 1536, // 초대형 화면
 } as const;
 
-export default function AllMovieTrailers({
-  movieTrailer,
+export default function MovieTrailerList({
+  trailerList,
 }: {
-  movieTrailer: MovieTrailer[];
+  trailerList: MovieTrailer[];
 }) {
   const [showAll, setShowAll] = useState(false);
   const [currentItemsPerRow, setCurrentItemsPerRow] = useState(4);
@@ -56,10 +56,10 @@ export default function AllMovieTrailers({
     return () => window.removeEventListener("resize", updateItemsPerRow);
   }, [currentItemsPerRow]);
 
-  const shouldShowMoreButton = movieTrailer.length > currentItemsPerRow;
+  const shouldShowMoreButton = trailerList.length > currentItemsPerRow;
   const displayedTrailers = showAll
-    ? movieTrailer
-    : movieTrailer.slice(0, currentItemsPerRow);
+    ? trailerList
+    : trailerList.slice(0, currentItemsPerRow);
 
   return (
     <section className="p-6">
@@ -69,8 +69,7 @@ export default function AllMovieTrailers({
         </h2>
         <p className="text-sm text-gray-300">이 영화의 예고편을 확인해보세요</p>
       </div>
-
-      {movieTrailer.length > 0 ? (
+      {trailerList.length > 0 ? (
         <>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {displayedTrailers.map((trailer) => (
@@ -79,12 +78,11 @@ export default function AllMovieTrailers({
               </div>
             ))}
           </div>
-
           {shouldShowMoreButton && (
             <div className="mt-8 flex justify-center">
               <button
                 onClick={() => setShowAll(!showAll)}
-                className="rounded-full bg-white/10 px-6 py-3 text-sm text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="rounded-full bg-white/10 px-6 py-3 text-sm text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/20 focus:outline-none focus:ring-1 focus:ring-white/50"
               >
                 {showAll ? (
                   <div className="flex items-center">
@@ -94,7 +92,7 @@ export default function AllMovieTrailers({
                 ) : (
                   <div className="flex items-center">
                     <span>
-                      더보기 ({movieTrailer.length - currentItemsPerRow}개 더)
+                      더보기 ({trailerList.length - currentItemsPerRow}개 더)
                     </span>
                     <IoChevronDown className="ml-1" />
                   </div>
