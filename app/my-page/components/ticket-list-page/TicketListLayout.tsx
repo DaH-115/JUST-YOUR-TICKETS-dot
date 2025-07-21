@@ -1,15 +1,16 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useAppSelector } from "store/redux-toolkit/hooks";
-import MyTicketHeader from "app/my-page/components/MyTicketPageHeader";
-import SearchForm from "app/components/SearchForm";
+import Pagination from "app/components/ui/layout/Pagination";
+import ReviewTicket from "app/components/review/ReviewTicket";
+import SearchSection from "app/components/search/SearchSection";
 import Loading from "app/loading";
-import ReviewTicket from "app/components/reviewTicket/ReviewTicket";
 import EmptyState from "app/my-page/components/EmptyState";
-import Pagination from "app/components/Pagination";
+import MyTicketHeader from "app/my-page/components/MyTicketPageHeader";
 import { buildQueryUrl } from "app/my-page/utils/buildQueryUrl";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { useAppSelector } from "store/redux-toolkit/hooks";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 interface FetchReviewsHook {
   reviews: ReviewDoc[];
@@ -17,6 +18,7 @@ interface FetchReviewsHook {
   loading: boolean;
   error: string | null;
   removeReview?: (reviewId: string) => void;
+  updateReviewLikeCount?: (reviewId: string, newLikeCount: number) => void;
 }
 
 interface FetchReviewsArgs {
@@ -31,13 +33,11 @@ interface TicketListLayoutProps {
     title: string;
     content: string;
   };
-  placeholder: string;
   useFetchReviews: (args: FetchReviewsArgs) => FetchReviewsHook;
 }
 
 export default function TicketListLayout({
   header,
-  placeholder,
   useFetchReviews,
 }: TicketListLayoutProps) {
   const router = useRouter();
@@ -45,10 +45,10 @@ export default function TicketListLayout({
   const params = useSearchParams();
   const currentPage = parseInt(params.get("page") || "1", 10);
   const searchTerm = params.get("search") || "";
-  const uid = useAppSelector((state) => state.userData.auth?.uid) || "";
+  const user = useAppSelector(selectUser);
 
   const fetchResult = useFetchReviews({
-    uid,
+    uid: user?.uid || "",
     search: searchTerm,
     page: currentPage,
     pageSize: 10,
@@ -57,11 +57,15 @@ export default function TicketListLayout({
   const { reviews, totalPages, loading, error } = fetchResult;
   const removeReview =
     "removeReview" in fetchResult ? fetchResult.removeReview : undefined;
+  const updateReviewLikeCount =
+    "updateReviewLikeCount" in fetchResult
+      ? fetchResult.updateReviewLikeCount
+      : undefined;
 
   const searchHandler = (term: string) => {
     const url = buildQueryUrl({
       pathname,
-      params: { uid, search: term, page: 1 },
+      params: { uid: user?.uid || "", search: term, page: 1 },
     });
     router.replace(url);
   };
@@ -69,15 +73,23 @@ export default function TicketListLayout({
   const pageChangeHandler = (page: number) => {
     const url = buildQueryUrl({
       pathname,
-      params: { uid, search: searchTerm, page },
+      params: { uid: user?.uid || "", search: searchTerm, page },
     });
     router.push(url);
   };
 
-  const handleLikeToggled = (reviewId: string, isLiked: boolean) => {
+  const handleLikeToggled = (
+    reviewId: string,
+    newLikeCount: number,
+    isLiked: boolean,
+  ) => {
     // 좋아요 취소 시에만 목록에서 제거 (좋아요한 리뷰 페이지에서만)
     if (!isLiked && removeReview) {
       removeReview(reviewId);
+    }
+    // 모든 페이지에서 likeCount 업데이트
+    if (updateReviewLikeCount) {
+      updateReviewLikeCount(reviewId, newLikeCount);
     }
   };
 
@@ -91,19 +103,11 @@ export default function TicketListLayout({
       />
 
       {/* 검색 폼 & 결과 정보 */}
-      <div className="my-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex-1">
-          {searchTerm && (
-            <div className="text-sm text-gray-600">
-              <span className="font-medium">"{searchTerm}"</span> 검색 결과:
-              {reviews.length}개
-            </div>
-          )}
-        </div>
-        <div className="flex justify-end">
-          <SearchForm placeholder={placeholder} onSearch={searchHandler} />
-        </div>
-      </div>
+      <SearchSection
+        searchTerm={searchTerm}
+        resultCount={reviews.length}
+        onSearch={searchHandler}
+      />
 
       {/* 리뷰 리스트 */}
       {loading ? (

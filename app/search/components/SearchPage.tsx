@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import debounce from "lodash/debounce";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
 import { IoSearchOutline } from "react-icons/io5";
+import * as z from "zod";
 import SwiperCard from "app/components/swiper/swiper-card";
 import SearchResultList from "app/search/components/SearchResultList";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
@@ -55,7 +55,7 @@ export default function SearchPage({
   }, [watchedQuery, debounceHandler]);
 
   return (
-    <main className="px-3 py-4 sm:px-4 md:px-6 md:py-8 lg:px-8">
+    <main className="p-6">
       <div className="mb-8">
         <h1 className="mb-2 text-2xl font-bold tracking-tight text-white">
           Search
@@ -88,7 +88,7 @@ export default function SearchPage({
               Search Results
             </h2>
             <p className="text-sm text-gray-300">
-              "{searchTerm}" 검색 결과입니다
+              {`"${searchTerm}" 검색 결과입니다`}
             </p>
           </div>
           <SearchResultList searchQuery={searchTerm} />

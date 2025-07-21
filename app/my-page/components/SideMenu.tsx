@@ -26,7 +26,7 @@ export default function SideMenu() {
           <div key={path} className="w-full">
             <Link
               href={path}
-              className={`block w-full text-center text-lg transition-all duration-300 ease-in-out md:text-2xl lg:text-start lg:text-4xl ${
+              className={`block w-full text-center text-lg transition-all duration-300 ease-in-out md:text-2xl lg:text-start ${
                 isActive
                   ? "font-bold text-accent-300"
                   : "text-gray-300 hover:text-accent-300"

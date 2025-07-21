@@ -1,13 +1,10 @@
+import { fetchMovieReleaseDates } from "lib/movies/fetchMovieReleaseDates";
 import { MovieBaseType } from "lib/movies/fetchNowPlayingMovies";
-import {
-  fetchMovieReleaseDates,
-  getBestRating,
-} from "lib/movies/fetchMovieReleaseDates";
+import { getCertification } from "lib/movies/utils/normalizeCertification";
 
 export interface MovieDetails extends MovieBaseType {
   genres: { id: number; name: string }[];
-  koreanRating?: string | null;
-  rating?: string | null;
+  certification?: string | null;
 }
 
 export async function fetchMovieDetails(id: number): Promise<MovieDetails> {
@@ -31,11 +28,11 @@ export async function fetchMovieDetails(id: number): Promise<MovieDetails> {
   // 연령등급 정보 가져오기
   try {
     const releaseDates = await fetchMovieReleaseDates(id);
-    const rating = getBestRating(releaseDates);
-    data.rating = rating;
+    const certification = getCertification(releaseDates);
+    data.certification = certification;
   } catch (error) {
     console.error("연령등급 정보를 가져오는데 실패했습니다:", error);
-    data.rating = null;
+    data.certification = null;
   }
 
   return data;

@@ -62,17 +62,27 @@ export async function apiCallWithTokenRefresh<T>(
     try {
       const headers = await getAuthHeaders(attempt > 0); // 재시도 시 토큰 새로고침
       return await apiCall(headers);
-    } catch (error: any) {
+    } catch (error) {
       // 토큰 만료 에러인 경우 재시도
-      if (
-        attempt < maxRetries &&
-        (error.message?.includes("토큰이 만료") ||
-          error.message?.includes("token expired") ||
-          error.status === 401)
-      ) {
-        // 토큰 만료로 인한 재시도
-        attempt++;
-        continue;
+      if (attempt < maxRetries) {
+        let message;
+        let status;
+        if (typeof error === "object" && error !== null) {
+          if ("message" in error)
+            message = (error as { message: string }).message;
+          if ("status" in error) status = (error as { status: number }).status;
+        }
+
+        if (
+          (message &&
+            (message.includes("토큰이 만료") ||
+              message.includes("token expired"))) ||
+          status === 401
+        ) {
+          // 토큰 만료로 인한 재시도
+          attempt++;
+          continue;
+        }
       }
 
       throw error;

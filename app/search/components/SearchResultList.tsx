@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { MovieList } from "lib/movies/fetchNowPlayingMovies";
-import Loading from "app/loading";
-import SwiperCard from "app/components/swiper/swiper-card";
-import Pagination from "app/components/Pagination";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import Pagination from "app/components/ui/layout/Pagination";
+import SwiperCard from "app/components/swiper/swiper-card";
+import Loading from "app/loading";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
 interface SearchMovieResponse {
   movies: MovieList[];
@@ -82,7 +82,7 @@ export default function SearchResultList({
     return (
       <div className="flex h-96 items-center justify-center">
         <p className="text-xl text-white">
-          "{searchQuery}"에 대한 검색 결과가 없습니다.
+          {`"${searchQuery}"에 대한 검색 결과가 없습니다.`}
         </p>
       </div>
     );

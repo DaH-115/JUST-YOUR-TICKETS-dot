@@ -1,8 +1,4 @@
-import { fetchGenres } from "lib/movies/fetchGenres";
-import {
-  fetchMovieReleaseDates,
-  getBestRating,
-} from "lib/movies/fetchMovieReleaseDates";
+import { enrichMovieData } from "lib/movies/utils/enrichMovieData";
 
 export interface MovieBaseType {
   id: number;
@@ -17,10 +13,23 @@ export interface MovieBaseType {
   production_companies: { id: number; name: string }[];
 }
 
-export interface MovieList extends MovieBaseType {
+export interface MovieList {
+  adult: boolean;
+  backdrop_path: string;
   genre_ids: number[];
-  genres: string[];
-  rating?: string | null;
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+  genres?: string[];
+  certification?: string | null;
 }
 
 export async function fetchNowPlayingMovies(): Promise<MovieList[]> {
@@ -42,27 +51,6 @@ export async function fetchNowPlayingMovies(): Promise<MovieList[]> {
   }
 
   const data = await response.json();
-  const genreMap = await fetchGenres();
 
-  // 등급 정보도 포함
-  const movieListwithGenres = await Promise.all(
-    data.results.map(async (movie: MovieList) => {
-      let rating = null;
-      try {
-        const releaseDates = await fetchMovieReleaseDates(movie.id);
-        rating = getBestRating(releaseDates);
-      } catch {
-        rating = null;
-      }
-      return {
-        ...movie,
-        genres: movie.genre_ids
-          .map((genreId) => genreMap[genreId])
-          .filter(Boolean),
-        rating,
-      };
-    }),
-  );
-
-  return movieListwithGenres;
+  return enrichMovieData(data.results);
 }

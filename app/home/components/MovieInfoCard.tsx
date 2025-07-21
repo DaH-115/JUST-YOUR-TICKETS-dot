@@ -1,30 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { MovieList } from "lib/movies/fetchNowPlayingMovies";
-import formatMovieDate from "app/utils/formatMovieDate";
-import { useMovieDetails } from "store/context/movieDetailsContext";
-import { FaInfoCircle } from "react-icons/fa";
+import { FaInfoCircle, FaStar } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
-import AnimatedOverview from "app/components/AnimatedOverview";
-import WriteBtn from "app/components/WriteBtn";
-import Tooltip from "app/components/Tooltip";
-import MovieRating from "app/components/MovieRating";
+import AnimatedOverview from "app/components/movie/AnimatedOverview";
+import GenreList from "app/components/movie/GenreList";
+import MovieCertification from "app/components/movie/MovieCertification";
+import Tooltip from "app/components/ui/feedback/Tooltip";
+import WriteBtn from "app/components/ui/buttons/WriteBtn";
+import formatMovieDate from "app/utils/formatMovieDate";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
+import { useMovieDetails } from "store/context/movieDetailsContext";
 
 export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   const { id, title, original_title, release_date, vote_average, overview } =
     movie;
   const releaseDate = formatMovieDate(release_date);
-  const { genres, cast, uniqueDirectors } = useMovieDetails();
+  const { genres, uniqueDirectors } = useMovieDetails();
 
   return (
-    <section className="mx-auto w-full overflow-hidden break-keep rounded-2xl bg-gradient-to-br from-white to-gray-50">
+    <section className="mx-auto w-full overflow-hidden break-keep rounded-2xl bg-white">
       <div className="p-2">
-        <div className="p-2 md:p-4">
+        <div className="p-2 md:p-4 md:pb-2">
           <div className="mb-4 flex justify-between">
-            <span className="inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
+            <p className="inline-block rounded-lg bg-primary-500 px-2 py-1 font-mono text-xs font-bold tracking-wider text-accent-50">
               RECOMMEND MOVIE
-            </span>
+            </p>
             <div className="relative">
               <Link
                 href={`/movie-details/${id}`}
@@ -39,43 +40,18 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
               </Tooltip>
             </div>
           </div>
-
-          <h1 className="text-3xl font-bold md:text-3xl">{title}</h1>
-
+          <h2 className="text-3xl font-bold">{title}</h2>
           <div className="flex items-center gap-2">
-            <h2 className="text-gray-600 md:text-lg">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
-            {movie.rating && <MovieRating rating={movie.rating} />}
+            <h2 className="text-gray-600">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
+            <FaStar className="text-yellow-400" />
+            <p className="text-lg font-bold">{vote_average.toFixed(1)}</p>
+            <MovieCertification certification={movie.certification ?? null} />
           </div>
         </div>
-        <ul className="flex items-center space-x-2 overflow-x-scroll border-y-4 border-dotted p-2 text-sm scrollbar-hide md:text-xs">
-          {genres.length > 0 ? (
-            genres.map((genre, idx) => (
-              <li
-                className="rounded-full border border-black bg-white px-2 py-1 text-black transition-colors duration-300 hover:bg-primary-500 hover:text-white active:bg-white active:text-black"
-                key={idx}
-              >
-                {genre}
-              </li>
-            ))
-          ) : (
-            <li className="px-2 py-1 text-gray-300 lg:text-sm">
-              장르 정보가 없습니다
-            </li>
-          )}
-        </ul>
-        {overview && <AnimatedOverview overview={overview} />}
-        <div className="flex flex-1 items-center justify-between border-b-4 border-dotted">
-          <ul className="flex w-full items-center justify-center gap-4 py-4 text-center text-sm md:text-xs">
-            {cast.slice(0, 3).map((actor) => (
-              <li key={actor.id} className="font-bold">
-                {actor.name}
-                <span className="block font-normal text-gray-600">
-                  {actor.character}
-                </span>
-              </li>
-            ))}
-          </ul>
+        <div className="border-b-4 border-dotted px-2">
+          <GenreList genres={genres} />
         </div>
+        {overview && <AnimatedOverview overview={overview} />}
         <div className="flex p-2">
           <div className="flex-1 border-r-4 border-dotted">
             <p className="pr-2 text-xs font-bold text-black">개봉일</p>

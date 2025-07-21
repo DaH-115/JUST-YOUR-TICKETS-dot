@@ -57,8 +57,12 @@ export default function useMyReviews({
 
         setReviews(data.reviews);
         setTotalPages(data.totalPages);
-      } catch (error: any) {
-        setError(error.message || "리뷰 데이터를 불러오는데 실패했습니다.");
+      } catch (error) {
+        let message = "리뷰 데이터를 불러오는데 실패했습니다.";
+        if (error instanceof Error) {
+          message = error.message;
+        }
+        setError(message);
       } finally {
         setLoading(false);
       }

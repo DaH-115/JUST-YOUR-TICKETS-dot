@@ -1,18 +1,14 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
-import { fetchMovieCredits } from "lib/movies/fetchMovieCredits";
-import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
-import { fetchSimilarMovies } from "lib/movies/fetchSimilarMovies";
-import {
-  fetchMovieReleaseDates,
-  getKoreanRating,
-} from "lib/movies/fetchMovieReleaseDates";
+import MovieDetailCard from "app/movie-details/[id]/components/MovieDetails";
+import MovieTrailerList from "app/movie-details/[id]/components/MovieTrailerList";
+import Background from "app/components/ui/layout/Background";
 import getMovieTitle from "app/utils/getMovieTitle";
-import Background from "app/ui/layout/Background";
-import SimilarMovies from "app/movie-details/components/SimilarMovies";
-import AllMovieTrailers from "app/movie-details/components/MovieTrailers";
-import MovieDetailCard from "app/movie-details/components/MovieDetails";
+import { fetchMovieCredits } from "lib/movies/fetchMovieCredits";
+import { fetchMovieDetails } from "lib/movies/fetchMovieDetails";
+import { fetchSimilarMovies } from "lib/movies/fetchSimilarMovies";
+import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";
+import SimilarMovieList from "app/movie-details/[id]/components/SimilarMovieList";
 
 export async function generateMetadata({
   params,
@@ -47,7 +43,8 @@ export async function generateMetadata({
           : [],
       },
     };
-  } catch (error) {
+  } catch (error: unknown) {
+    console.error("메타데이터 생성 실패:", error);
     return {
       title: "오류",
       description: "요청하신 영화 정보를 불러오는데 실패했습니다.",
@@ -65,48 +62,31 @@ export default async function MovieDetailPage({
   }
 
   try {
-    const [
-      movieDetails,
-      movieCredits,
-      movieTrailerData,
-      similarMovies,
-      releaseDates,
-    ] = await Promise.all([
-      fetchMovieDetails(params.id),
-      fetchMovieCredits(params.id),
-      fetchVideosMovies(params.id),
-      fetchSimilarMovies(params.id),
-      fetchMovieReleaseDates(params.id),
-    ]).catch((error) => {
-      if (error.message.includes("TMDB API 키가 설정되지 않았습니다")) {
-        throw new Error("서버 설정 오류가 발생했습니다.");
-      }
-      throw error;
-    });
-
-    if (!movieDetails || !movieCredits) {
+    const movieDetails = await fetchMovieDetails(params.id);
+    if (!movieDetails) {
       return notFound();
     }
 
-    const movieDetailsWithRating = {
-      ...movieDetails,
-      koreanRating: getKoreanRating(releaseDates),
-    };
+    const [movieCredits, movieTrailerData, similarMovies] = await Promise.all([
+      fetchMovieCredits(params.id),
+      fetchVideosMovies(params.id),
+      fetchSimilarMovies(params.id),
+    ]);
 
-    const { backdrop_path } = movieDetailsWithRating;
+    const { backdrop_path } = movieDetails;
 
     return (
       <>
         <Background imageUrl={backdrop_path || ""} />
         <MovieDetailCard
-          movieDetails={movieDetailsWithRating}
+          movieDetails={movieDetails}
           movieCredits={movieCredits}
         />
-        <AllMovieTrailers movieTrailer={movieTrailerData.results} />
-        <SimilarMovies similarMovies={similarMovies} />
+        <MovieTrailerList trailerList={movieTrailerData.results} />
+        <SimilarMovieList movieList={similarMovies} />
       </>
     );
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       throw error;
     }

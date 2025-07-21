@@ -1,109 +1,91 @@
 "use client";
 
 import { useState, ChangeEvent, useRef } from "react";
-import { updateProfile } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
-import { db, isAuth } from "firebase-config";
-import { useAppDispatch } from "store/redux-toolkit/hooks";
-import { updatePhotoURL } from "store/redux-toolkit/slice/userSlice";
+import { MAX_FILE_SIZE, ALLOWED_CONTENT_TYPES } from "app/constants/fileUpload";
+import { ALLOWED_EXTENSIONS } from "app/my-page/components/profile-avatar/utils/allowedExtensions";
+import { formatFileSize } from "app/my-page/components/profile-avatar/utils/formatFileSize";
+import { validateFileExtension } from "app/my-page/components/profile-avatar/utils/validateFileExtension";
 
 interface AvatarUploaderProps {
-  previewSrc: string | null;
   onPreview: (url: string | null) => void;
   onCancelPreview: () => void;
+  onFileSelect: (file: File | null) => void;
   onImageChange?: (hasChanged: boolean) => void;
+  onError?: (message: string) => void;
 }
 
 export default function AvatarUploader({
-  previewSrc,
   onPreview,
   onCancelPreview,
+  onFileSelect,
   onImageChange,
+  onError,
 }: AvatarUploaderProps) {
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const dispatch = useAppDispatch();
 
   const onEditToggle = () => {
-    setIsEditing((prev) => !prev);
-    setFile(null);
-    onCancelPreview();
-    onImageChange?.(false); // 편집 취소 시 변경 상태 초기화
-    if (inputRef.current) {
-      inputRef.current.value = ""; // 파일 선택 초기화
-    }
-  };
+    const nextIsEditing = !isEditing;
+    setIsEditing(nextIsEditing);
 
-  const onUploadComplete = () => {
-    setIsEditing(false);
-    setFile(null);
-    onCancelPreview();
-    // 업로드 완료 후에는 이미지 변경 상태를 초기화하지 않음
-    if (inputRef.current) {
-      inputRef.current.value = ""; // 파일 선택 초기화
+    if (!nextIsEditing) {
+      onCancelPreview();
+      onFileSelect(null);
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
     }
+
+    onImageChange?.(false);
   };
 
   const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
-    setFile(file);
 
-    if (file) {
-      const url = URL.createObjectURL(file);
-      onPreview(url);
-      // 파일 선택 시점에서는 아직 업로드되지 않았으므로 변경 상태를 true로 하지 않음
-    } else {
+    // 파일이 선택되지 않은 경우
+    if (!file) {
+      onFileSelect(null);
       onCancelPreview();
-      onImageChange?.(false); // 이미지 선택 취소 시 변경 상태 false
+      onImageChange?.(false);
+      return;
     }
-  };
 
-  const onUploadHandler = async () => {
-    if (!file || !isAuth.currentUser) return;
-    setUploading(true);
-
-    try {
-      // 1) Presigned URL 발급
-      const res = await fetch("/api/s3", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          filename: file.name,
-          contentType: file.type,
-          userId: isAuth.currentUser.uid,
-        }),
-      });
-      const { url, key } = await res.json();
-
-      // 2) S3에 직접 PUT
-      await fetch(url, {
-        method: "PUT",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-
-      // 3) 프로필에 key 저장 (Firebase Auth & Firestore)
-      await updateProfile(isAuth.currentUser, { photoURL: key });
-      const userRef = doc(db, "users", isAuth.currentUser.uid);
-      await updateDoc(userRef, { photoKey: key });
-
-      // 4) Redux 상태 업데이트
-      dispatch(updatePhotoURL(key));
-
-      // 5) Firebase Auth 사용자 정보 새로고침
-      await isAuth.currentUser.reload();
-
-      setUploading(false);
-      alert("프로필 이미지 업로드 완료");
-      onImageChange?.(true); // 업로드 완료 시 변경 상태 true로 설정
-      onUploadComplete();
-    } catch (error) {
-      console.error("프로필 이미지 업로드 실패:", error);
-      setUploading(false);
-      alert("프로필 이미지 업로드에 실패했습니다.");
+    // 파일 확장자 검증
+    if (!validateFileExtension(file.name)) {
+      const message = `지원하지 않는 파일 형식입니다. (${ALLOWED_EXTENSIONS.join(", ")} 파일만 업로드 가능)`;
+      onError?.(message);
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
+      return;
     }
+
+    // 파일 타입 검증
+    if (!ALLOWED_CONTENT_TYPES.includes(file.type)) {
+      const message =
+        "지원하지 않는 파일 형식입니다. (JPG, PNG, GIF 파일만 업로드 가능)";
+      onError?.(message);
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
+      return;
+    }
+
+    // 파일 크기 검증
+    if (file.size > MAX_FILE_SIZE) {
+      const message = `파일 크기가 너무 큽니다. (최대 ${formatFileSize(MAX_FILE_SIZE)}, 현재 파일: ${formatFileSize(file.size)})`;
+      onError?.(message);
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
+      return;
+    }
+
+    // 모든 검증 통과 시 파일 처리
+    onFileSelect(file);
+    const url = URL.createObjectURL(file);
+    onPreview(url);
+    onImageChange?.(true);
   };
 
   return (
@@ -112,49 +94,43 @@ export default function AvatarUploader({
         <button
           type="button"
           onClick={onEditToggle}
-          className="rounded-xl bg-gray-800 px-3 py-2 text-white"
+          className="rounded-xl bg-gray-800 px-3 py-2 text-white transition-colors hover:bg-gray-700"
         >
           프로필 이미지 수정
         </button>
       ) : (
-        <div className="space-x-2">
-          {/* 파일 선택 버튼 */}
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={onFileChange}
-          />
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="rounded-xl bg-gray-200 px-3 py-2 hover:bg-gray-300"
-          >
-            이미지 선택
-          </button>
-
-          {/* 3. 업로드 버튼 */}
-          {previewSrc && (
+        <div className="space-y-3">
+          <div className="space-x-2">
+            <input
+              ref={inputRef}
+              type="file"
+              accept={ALLOWED_EXTENSIONS.join(",")}
+              className="hidden"
+              onChange={onFileChange}
+              data-testid="avatar-file-input"
+            />
             <button
               type="button"
-              onClick={onUploadHandler}
-              disabled={uploading}
-              className="rounded-xl bg-black px-3 py-2 text-white disabled:opacity-50"
+              onClick={() => inputRef.current?.click()}
+              className="rounded-xl bg-gray-200 px-3 py-2 transition-colors hover:bg-gray-300"
             >
-              {uploading ? "업로드 중…" : "업로드"}
+              이미지 선택
             </button>
-          )}
 
-          {/* 4. 취소 버튼 */}
-          <button
-            type="button"
-            onClick={onEditToggle}
-            disabled={uploading}
-            className="rounded-xl border border-black px-3 py-2 hover:border-red-600 hover:bg-red-600 hover:text-white disabled:opacity-50"
-          >
-            취소
-          </button>
+            <button
+              type="button"
+              onClick={onEditToggle}
+              className="rounded-xl border border-black px-3 py-2 transition-colors hover:border-red-600 hover:bg-red-600 hover:text-white"
+            >
+              취소
+            </button>
+          </div>
+
+          {/* 파일 제한 안내 */}
+          <div className="space-y-1 text-xs text-gray-500">
+            <p>• 지원 형식: JPG, PNG, GIF</p>
+            <p>• 최대 크기: {formatFileSize(MAX_FILE_SIZE)}</p>
+          </div>
         </div>
       )}
     </div>

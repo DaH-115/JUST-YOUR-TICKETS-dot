@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { MovieList } from "lib/movies/fetchNowPlayingMovies";
-import getMovieTitle from "app/utils/getMovieTitle";
+import MoviePoster from "app/components/movie/MoviePoster";
 import MovieInfoCard from "app/home/components/MovieInfoCard";
-import MoviePoster from "app/components/MoviePoster";
+import getMovieTitle from "app/utils/getMovieTitle";
+import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
 // 도트 컴포넌트 분리
 const StaticDots = () => (

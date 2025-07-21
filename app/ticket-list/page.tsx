@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
 import TicketListPage from "app/ticket-list/components/TicketListPage";
+import { fetchReviewsPaginated } from "lib/reviews/fetchReviewsPaginated";
 
 export const metadata: Metadata = {
   title: "Ticket List",
@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 };
 
 interface searchParamsProps {
-  search?: string;
   page?: string;
+  search?: string;
 }
 
 export default async function Page({

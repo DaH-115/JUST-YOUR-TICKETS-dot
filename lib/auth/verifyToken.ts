@@ -1,5 +1,5 @@
-import { adminAuth } from "firebase-admin-config";
 import { NextRequest } from "next/server";
+import { adminAuth } from "firebase-admin-config";
 
 export interface AuthResult {
   success: boolean;
@@ -52,37 +52,29 @@ export async function verifyAuthToken(req: NextRequest): Promise<AuthResult> {
       success: true,
       uid: decodedToken.uid,
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error("토큰 검증 실패:", error);
 
-    // Firebase 에러 타입별 처리
-    if (error.code === "auth/id-token-expired") {
-      return {
-        success: false,
-        error: "토큰이 만료되었습니다. 다시 로그인해주세요.",
-        statusCode: 401,
-      };
-    }
+    const AUTH_ERRORS: { [key: string]: string } = {
+      "auth/id-token-expired": "토큰이 만료되었습니다. 다시 로그인해주세요.",
+      "auth/id-token-revoked": "토큰이 취소되었습니다. 다시 로그인해주세요.",
+      "auth/invalid-id-token": "유효하지 않은 토큰입니다.",
+    };
 
-    if (error.code === "auth/id-token-revoked") {
-      return {
-        success: false,
-        error: "토큰이 취소되었습니다. 다시 로그인해주세요.",
-        statusCode: 401,
-      };
-    }
-
-    if (error.code === "auth/invalid-id-token") {
-      return {
-        success: false,
-        error: "유효하지 않은 토큰입니다.",
-        statusCode: 401,
-      };
+    let errorMessage = "인증에 실패했습니다.";
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      typeof (error as { code: string }).code === "string"
+    ) {
+      errorMessage =
+        AUTH_ERRORS[(error as { code: string }).code] || errorMessage;
     }
 
     return {
       success: false,
-      error: "인증에 실패했습니다.",
+      error: errorMessage,
       statusCode: 401,
     };
   }

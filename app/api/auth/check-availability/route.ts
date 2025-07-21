@@ -62,8 +62,13 @@ export async function POST(req: NextRequest) {
           },
           { status: 200 },
         );
-      } catch (error: any) {
-        if (error.code === "auth/user-not-found") {
+      } catch (error) {
+        if (
+          error &&
+          typeof error === "object" &&
+          "code" in error &&
+          error.code === "auth/user-not-found"
+        ) {
           // 사용자가 없으면 사용 가능
           return NextResponse.json(
             {
@@ -82,7 +87,7 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error("중복 검사 API 에러:", error);
     return NextResponse.json(
       { error: "중복 검사 처리 중 오류가 발생했습니다." },

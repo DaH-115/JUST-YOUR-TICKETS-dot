@@ -1,6 +1,6 @@
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminFirestore } from "firebase-admin-config";
-import { revalidatePath } from "next/cache";
 
 // POST /api/auth/signup - 이메일 회원가입
 export async function POST(req: NextRequest) {
@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
 
     // Firebase Admin SDK를 사용한 트랜잭션 처리
     const batch = adminFirestore.batch();
+    let userCreated = false; // Firebase Auth 사용자 생성 성공 여부 추적
 
     try {
       // 1. 닉네임 중복 검사
@@ -66,6 +67,7 @@ export async function POST(req: NextRequest) {
         password: password,
         displayName: displayName.trim(),
       });
+      userCreated = true; // 사용자 생성 성공
 
       // 3. Firestore 트랜잭션: usernames 컬렉션에 닉네임 등록
       batch.set(usernameRef, {
@@ -76,6 +78,7 @@ export async function POST(req: NextRequest) {
       // 4. Firestore 트랜잭션: users 컬렉션에 사용자 프로필 저장
       const userRef = adminFirestore.collection("users").doc(userRecord.uid);
       batch.set(userRef, {
+        displayName: displayName.trim(),
         provider: "email",
         biography: "Make a ticket for your own movie review.",
         createdAt: new Date(),
@@ -100,9 +103,9 @@ export async function POST(req: NextRequest) {
         },
         { status: 201 },
       );
-    } catch (error: any) {
-      // Firebase Auth 계정이 생성된 경우 롤백
-      if (error.code !== "auth/email-already-exists") {
+    } catch (error) {
+      // Firebase Auth 사용자가 실제로 생성된 경우에만 롤백 수행
+      if (userCreated) {
         try {
           // 생성된 사용자가 있다면 삭제
           const users = await adminAuth.getUserByEmail(email);
@@ -115,30 +118,37 @@ export async function POST(req: NextRequest) {
       }
 
       // Firebase Auth 에러 처리
-      if (error.code === "auth/email-already-exists") {
-        return NextResponse.json(
-          { error: "이미 사용 중인 이메일입니다." },
-          { status: 409 },
-        );
-      }
+      if (
+        error &&
+        typeof error === "object" &&
+        "code" in error &&
+        typeof error.code === "string"
+      ) {
+        if (error.code === "auth/email-already-exists") {
+          return NextResponse.json(
+            { error: "이미 사용 중인 이메일입니다." },
+            { status: 409 },
+          );
+        }
 
-      if (error.code === "auth/invalid-email") {
-        return NextResponse.json(
-          { error: "유효하지 않은 이메일입니다." },
-          { status: 400 },
-        );
-      }
+        if (error.code === "auth/invalid-email") {
+          return NextResponse.json(
+            { error: "유효하지 않은 이메일입니다." },
+            { status: 400 },
+          );
+        }
 
-      if (error.code === "auth/weak-password") {
-        return NextResponse.json(
-          { error: "비밀번호가 너무 약합니다." },
-          { status: 400 },
-        );
+        if (error.code === "auth/weak-password") {
+          return NextResponse.json(
+            { error: "비밀번호가 너무 약합니다." },
+            { status: 400 },
+          );
+        }
       }
 
       throw error;
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error("회원가입 API 에러:", error);
     return NextResponse.json(
       { error: "회원가입 처리 중 오류가 발생했습니다." },

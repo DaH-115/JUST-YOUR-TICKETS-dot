@@ -12,9 +12,7 @@ import { isAuth } from "firebase-config";
 import { useAppDispatch } from "store/redux-toolkit/hooks";
 import {
   clearUser,
-  fetchUserMetaData,
-  SerializableUser,
-  setAuthUser,
+  fetchUserProfile,
 } from "store/redux-toolkit/slice/userSlice";
 import { useRouter } from "next/navigation";
 import { useAlert } from "store/context/alertContext";
@@ -59,22 +57,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const unsubscribe = onAuthStateChanged(isAuth, (user) => {
       if (user) {
-        const userData: SerializableUser = {
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        };
-        dispatch(setAuthUser(userData));
-        dispatch(fetchUserMetaData(userData.uid));
-
+        // 완전한 프로필 정보 가져오기 (Firestore 데이터 포함)
+        dispatch(fetchUserProfile(user.uid));
         setAuthState({ isAuthenticated: true, isLoading: false });
       } else {
         dispatch(clearUser());
         setAuthState({ isAuthenticated: false, isLoading: false });
       }
     });
-    return () => unsubscribe();
+
+    return unsubscribe;
   }, [dispatch]);
 
   return (

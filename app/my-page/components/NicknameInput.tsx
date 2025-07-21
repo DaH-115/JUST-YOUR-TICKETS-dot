@@ -1,7 +1,6 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import { useEffect, useMemo, useState, useCallback } from "react";
-import debounce from "lodash/debounce";
-import { useNicknameValidation } from "app/my-page/hooks/useNicknameValidation";
+import DuplicateCheckButton from "app/components/ui/buttons/DuplicateCheckButton";
+import { useNicknameCheck } from "app/my-page/hooks/useNicknameCheck";
 
 interface NicknameInputProps {
   originalValue?: string | null;
@@ -15,29 +14,32 @@ export default function NicknameInput({
   const {
     register,
     control,
-    formState: { errors },
+    formState: { errors: formErrors },
   } = useFormContext();
-  const [duplicateError, setDuplicateError] = useState<string | null>(null);
-  const watchedValue = useWatch({ name: "displayName", control });
-  const { checkNicknameDuplicate } = useNicknameValidation();
 
-  const debounceHandler = useMemo(
-    () =>
-      debounce(async (value: string) => {
-        const isDup = await checkNicknameDuplicate(value);
-        setDuplicateError(isDup ? "이미 사용 중인 닉네임입니다." : null);
-      }, 500),
-    [checkNicknameDuplicate],
-  );
+  const watchedNickname = useWatch({ name: "displayName", control });
 
-  useEffect(() => {
-    if (!watchedValue || watchedValue === originalValue) {
-      setDuplicateError(null);
-      return;
-    }
-    debounceHandler(watchedValue);
-    return () => debounceHandler.cancel();
-  }, [watchedValue, originalValue, debounceHandler]);
+  const { isChecking, isChecked, isAvailable, message, checkNickname } =
+    useNicknameCheck({
+      nickname: watchedNickname,
+      originalNickname: originalValue,
+    });
+
+  // 닉네임 유효성 검사 에러 또는 중복 확인 에러를 표시
+  const displayError =
+    formErrors.displayName?.message || (isAvailable === false ? message : null);
+
+  // 중복 확인 버튼의 비활성화 조건
+  const isDuplicateCheckDisabled =
+    !watchedNickname ||
+    watchedNickname.trim() === "" ||
+    !!formErrors.displayName ||
+    isChecking ||
+    (isChecked && isAvailable === true);
+
+  // 중복 확인 성공 메시지를 보여줄 조건
+  const showSuccessMessage =
+    isChecked && isAvailable && message && watchedNickname !== originalValue;
 
   return (
     <div>
@@ -49,19 +51,27 @@ export default function NicknameInput({
       </label>
       {isEditing ? (
         <>
-          <input
-            id="displayName"
-            {...register("displayName")}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1"
-            placeholder="닉네임을 입력하세요"
-          />
-          {errors.displayName?.message && (
+          <div className="flex gap-2">
+            <input
+              id="displayName"
+              {...register("displayName")}
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1"
+              placeholder="닉네임을 입력하세요"
+            />
+            <DuplicateCheckButton
+              onClick={checkNickname}
+              disabled={isDuplicateCheckDisabled}
+              isChecking={isChecking}
+              className="self-start"
+            />
+          </div>
+          {displayError && (
             <p className="mt-1 text-xs text-red-500">
-              {errors.displayName.message as string}
+              {displayError as string}
             </p>
           )}
-          {duplicateError && !errors.displayName && (
-            <p className="mt-1 text-xs text-red-500">{duplicateError}</p>
+          {showSuccessMessage && (
+            <p className="mt-1 text-xs text-green-600">{message}</p>
           )}
         </>
       ) : (

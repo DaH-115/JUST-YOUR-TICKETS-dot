@@ -51,7 +51,9 @@ export default function useLikedReviews({
           params.set("search", search);
         }
 
-        const res = await fetch(`/api/reviews/liked?${params.toString()}`);
+        const res = await fetch(
+          `/api/reviews/liked-by-user?${params.toString()}`,
+        );
 
         if (!res.ok) {
           throw new Error("좋아요 리뷰 로딩에 실패했습니다");
@@ -64,8 +66,12 @@ export default function useLikedReviews({
 
         setReviews(reviews);
         setTotalPages(totalPages);
-      } catch (error: any) {
-        setError(error.message);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("알 수 없는 오류가 발생했습니다.");
+        }
       } finally {
         setLoading(false);
       }

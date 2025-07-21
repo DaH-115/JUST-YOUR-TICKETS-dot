@@ -1,12 +1,12 @@
-import { useFormContext, Controller } from "react-hook-form";
-import { ReviewFormValues } from "app/write-review/types";
-import { IoStar, IoChevronDown } from "react-icons/io5";
 import {
   Listbox,
   ListboxButton,
   ListboxOptions,
   ListboxOption,
 } from "@headlessui/react";
+import { useFormContext, Controller } from "react-hook-form";
+import { IoStar, IoChevronDown } from "react-icons/io5";
+import { ReviewFormValues } from "app/write-review/types";
 
 const ratingOptions = [
   { value: 1, label: "1점", stars: 1, description: "매우 나쁨" },

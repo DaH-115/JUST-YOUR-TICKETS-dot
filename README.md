@@ -81,6 +81,45 @@ yarn build
 - **Server Components** - 초기 로딩 최적화
 - **Intersection Observer** - lazy loading 구현
 - **번들 분석** - Webpack Bundle Analyzer 통합
+- **API 캐싱 시스템** - 영화 등급 정보 메모리 캐시 (N+1 문제 해결)
+- **백그라운드 프리페칭** - 사용자 인터랙션 예측 기반 데이터 미리 로드
+- **지연 로딩** - 우선순위 기반 데이터 로딩 전략
+
+#### 🚀 N+1 문제 해결 사례
+
+영화 목록 조회 시 발생하는 N+1 문제를 해결하여 **API 호출 횟수를 감소**시켰습니다.
+
+**Before (N+1 문제):**
+
+```typescript
+// 인기 영화 20개 → 21번의 API 호출
+const movies = await getMovieList(); // 1번
+for (const movie of movies) {
+  movie.releaseDate = await getReleaseDate(movie.id); // 20번
+}
+```
+
+**After (최적화):**
+
+```typescript
+// 인기 영화 20개 → 1번의 배치 호출 + 캐시 활용
+const movies = await getMovieList(); // 1번
+const movieIds = movies.map((m) => m.id);
+const releaseDates = await getBatchReleaseDates(movieIds); // 동시 처리
+```
+
+**개선 효과:**
+
+- API 호출 횟수: 21회 → 동시 처리로 대폭 감소
+- 순차 처리 → 병렬 처리로 전환
+- 중복 요청 제거 (캐시 활용)
+- API 레이트 리밋 위험 감소
+
+**적용된 최적화 기법:**
+
+- **메모리 캐시**: `Map` 기반 간단한 캐시 시스템
+- **배치 처리**: `Promise.all()`을 활용한 동시 API 호출
+- **지능형 캐싱**: 중복 요청 자동 제거
 
 ### 🎯 SEO 및 접근성
 
@@ -269,7 +308,7 @@ yarn build
 
 #### `GET /api/users/[uid]`
 
-사용자 프로필 정보를 조회합니다.
+사용자 프로필 정보와 통계를 조회합니다.
 
 **응답:**
 
@@ -277,6 +316,10 @@ yarn build
 {
   "provider": "google",
   "biography": "영화를 사랑하는 개발자입니다.",
+  "photoKey": "profile-images/user123.jpg",
+  "activityLevel": "NEWBIE",
+  "myTicketsCount": 15,
+  "likedTicketsCount": 8,
   "createdAt": "2023-01-01T00:00:00.000Z",
   "updatedAt": "2023-01-02T00:00:00.000Z"
 }
@@ -435,6 +478,13 @@ const uid = decodedToken.uid; // 검증된 사용자 ID
 자세한 구현 가이드는 [Firebase Admin SDK 가이드](./docs/FIREBASE_ADMIN_SDK_GUIDE.md)를 참조하세요.
 
 ## 📝 버전 히스토리
+
+### v2.3.0 (2025-01-13)
+
+- **N+1 문제 해결**: 영화 API 호출 최적화로 성능 대폭 개선
+- **배치 처리 시스템**: Promise.all() 기반 동시 API 처리
+- **메모리 캐시 도입**: Map 기반 중복 요청 제거
+- **성능 모니터링**: API 호출 횟수 및 응답 시간 최적화
 
 ### v2.2.0 (2025-06-16)
 

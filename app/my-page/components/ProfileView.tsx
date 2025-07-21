@@ -1,154 +1,179 @@
 "use client";
 
-import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
-import { FaEdit, FaArrowRight, FaSignOutAlt } from "react-icons/fa";
+import { signOut } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo } from "react";
-import { signOut } from "firebase/auth";
-import { isAuth } from "firebase-config";
-import { clearUser } from "store/redux-toolkit/slice/userSlice";
+import { useCallback, useMemo, useEffect } from "react";
+import { FaEdit, FaArrowRight, FaSignOutAlt } from "react-icons/fa";
+import Loading from "app/loading";
+import ProfileAvatar from "app/components/user/ProfileAvatar";
+import UserGradeInfo from "app/my-page/components/UserGradeInfo";
 import { clearAuthPersistence } from "app/utils/authPersistence";
 import formatDate from "app/utils/formatDate";
-import ProfileAvatar from "app/my-page/components/profile-avatar/ProfileAvatar";
-import useProfileStats from "app/my-page/hooks/useProfileStats";
-import UserGradeInfo from "app/my-page/components/UserGradeInfo";
+import { isAuth } from "firebase-config";
 import {
   getActivityLevel,
+  getActivityLevelInfo,
   getLoadingActivityLevel,
 } from "lib/utils/getActivityLevel";
+import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
+import {
+  clearUser,
+  selectUser,
+  selectUserStatus,
+  fetchUserProfile,
+} from "store/redux-toolkit/slice/userSlice";
 
 export default function ProfileView() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const userAuth = useAppSelector((state) => state.userData.auth);
-  const uid = useAppSelector((state) => state.userData.auth?.uid);
-  const userMetaData = useAppSelector((state) => state.userData.metaData);
-  const {
-    myTicketsCount,
-    likedTicketsCount,
-    activityLevel: dbActivityLevel,
-    loading: statsLoading,
-  } = useProfileStats(uid);
+  const user = useAppSelector(selectUser);
+  const userStatus = useAppSelector(selectUserStatus);
 
-  // 활동 레벨 - DB에서 가져온 값 우선 사용, 없으면 계산
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    // 아직 프로필 데이터를 받아온 적이 없을 때(idle)만 fetch
+    if (userStatus === "idle") {
+      const needsProfileData =
+        !user.biography ||
+        !user.activityLevel ||
+        !user.provider ||
+        user.myTicketsCount === undefined ||
+        user.likedTicketsCount === undefined;
+
+      if (needsProfileData) {
+        dispatch(fetchUserProfile(user.uid));
+      }
+    }
+  }, [
+    dispatch,
+    user?.uid,
+    userStatus,
+    user?.biography,
+    user?.activityLevel,
+    user?.provider,
+    user?.myTicketsCount,
+    user?.likedTicketsCount,
+  ]);
+
+  // useEffect(() => {
+  //   if (user?.uid && userStatus !== "loading") {
+  //     // 프로필 정보나 통계 정보가 없는 경우 API 호출
+  //     const needsProfileData =
+  //       !user.biography ||
+  //       !user.activityLevel ||
+  //       !user.provider ||
+  //       user.myTicketsCount === undefined ||
+  //       user.likedTicketsCount === undefined;
+
+  //     if (needsProfileData) {
+  //       dispatch(fetchUserProfile(user.uid));
+  //     }
+  //   }
+  // }, [
+  //   dispatch,
+  //   user?.uid,
+  //   user?.biography,
+  //   user?.activityLevel,
+  //   user?.provider,
+  //   user?.myTicketsCount,
+  //   user?.likedTicketsCount,
+  //   userStatus,
+  // ]);
+
   const activityLevel = useMemo(() => {
-    if (statsLoading) {
+    if (userStatus === "loading") {
       return getLoadingActivityLevel();
     }
 
-    // DB에서 가져온 activityLevel이 있으면 사용
-    if (dbActivityLevel) {
-      switch (dbActivityLevel) {
-        case "EXPERT":
-          return {
-            label: "EXPERT",
-            badgeColor: "bg-purple-100 text-purple-700",
-            bgGradient: "from-purple-50 to-purple-100",
-          };
-        case "ACTIVE":
-          return {
-            label: "ACTIVE",
-            badgeColor: "bg-blue-100 text-blue-700",
-            bgGradient: "from-blue-50 to-blue-100",
-          };
-        case "REGULAR":
-          return {
-            label: "REGULAR",
-            badgeColor: "bg-green-100 text-green-700",
-            bgGradient: "from-green-50 to-green-100",
-          };
-        case "NEWBIE":
-        default:
-          return {
-            label: "NEWBIE",
-            badgeColor: "bg-yellow-100 text-yellow-700",
-            bgGradient: "from-yellow-50 to-yellow-100",
-          };
-      }
+    if (user?.activityLevel) {
+      return getActivityLevelInfo(user.activityLevel);
     }
 
-    // 백업: 리뷰 개수로 계산
-    return getActivityLevel(myTicketsCount);
-  }, [statsLoading, dbActivityLevel, myTicketsCount]);
+    return getActivityLevel(user?.myTicketsCount || 0);
+  }, [userStatus, user?.activityLevel, user?.myTicketsCount]);
 
   const logoutHandler = useCallback(async () => {
     try {
-      // 1. Firebase 로그아웃
       await signOut(isAuth);
 
-      // 2. 모든 인증 관련 데이터 정리
       clearAuthPersistence();
 
-      // 3. Redux 상태 초기화
       dispatch(clearUser());
 
-      // 4. 로그인 페이지로 이동
       router.replace("/login");
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error("로그아웃 실패:", error);
       window.alert("로그아웃 중 오류가 발생했습니다.");
     }
   }, [dispatch, router]);
 
+  if (userStatus === "loading") {
+    return <Loading />;
+  }
+
+  if (!user) {
+    return <div>사용자 정보를 찾을 수 없습니다.</div>;
+  }
+
   return (
     <main className="flex min-h-full w-full flex-col pl-0 md:w-3/4 md:pl-4">
-      {/* 프로필 티켓 카드 */}
       <div className="mb-8 flex flex-col items-stretch overflow-hidden rounded-xl bg-white shadow-xl md:flex-row">
-        {/* 프로필 이미지 섹션 (데스크톱: 티켓 왼쪽, 모바일: 티켓 상단) */}
         <div
           className={`flex flex-col items-center justify-center bg-gradient-to-b ${activityLevel.bgGradient} p-6 md:w-1/3`}
         >
-          <ProfileAvatar />
+          <ProfileAvatar
+            userDisplayName={user?.displayName || "사용자"}
+            photoKey={user?.photoKey || null}
+            size={128}
+            showLoading={true}
+          />
         </div>
 
-        {/* 프로필 정보 섹션 (데스크톱: 티켓 오른쪽, 모바일: 티켓 하단) */}
         <div className="flex flex-1 flex-col p-6">
-          {/* 상단: 사용자명 & 이메일 & 편집 버튼 */}
           <div className="border-b-4 border-dotted pb-3">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-xl font-bold text-gray-800">
-                    {userAuth?.displayName || "사용자"}
+                    {user?.displayName || "사용자"}
                   </h1>
                   <UserGradeInfo
                     currentLevel={activityLevel}
-                    currentReviewCount={myTicketsCount}
+                    currentReviewCount={user?.myTicketsCount || 0}
                   />
                 </div>
-                <p className="text-sm text-gray-600">{userAuth?.email}</p>
+                <p className="text-sm text-gray-600">{user?.email}</p>
               </div>
-              <div className="flex items-center">
-                <Link
-                  href="/my-page/edit"
-                  className="flex items-center gap-1 rounded-lg bg-gray-800 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-black"
-                >
-                  <FaEdit size={10} />
-                  편집
-                </Link>
-              </div>
+              <Link
+                href="/my-page/edit"
+                className="flex items-center gap-2 rounded-lg bg-accent-300 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-500"
+              >
+                <FaEdit size={12} />
+                프로필 편집
+              </Link>
             </div>
           </div>
 
-          {/* 중간: 통계 정보 */}
           <div className="border-b-4 border-dotted py-3">
             <div className="flex gap-6">
               <Link
-                href={`/my-page/my-ticket-list?uid=${uid}`}
+                href={`/my-page/my-ticket-list?uid=${user?.uid}`}
                 className="text-center transition-opacity hover:opacity-80"
               >
                 <div className="text-lg font-bold text-gray-800">
-                  {statsLoading ? "..." : myTicketsCount}
+                  {user?.myTicketsCount || 0}
                 </div>
                 <div className="text-xs text-gray-600">내 티켓</div>
               </Link>
               <div className="border-l-2 border-dotted pl-6">
                 <Link
-                  href={`/my-page/liked-ticket-list?uid=${uid}`}
+                  href={`/my-page/liked-ticket-list?uid=${user?.uid}`}
                   className="text-center transition-opacity hover:opacity-80"
                 >
                   <div className="text-lg font-bold text-gray-800">
-                    {statsLoading ? "..." : likedTicketsCount}
+                    {user?.likedTicketsCount || 0}
                   </div>
                   <div className="text-xs text-gray-600">좋아요</div>
                 </Link>
@@ -156,21 +181,19 @@ export default function ProfileView() {
             </div>
           </div>
 
-          {/* 하단: 바이오 */}
           <div className="flex-1 pt-3">
             <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-800">
               Biography
             </div>
             <p className="text-sm leading-relaxed text-gray-700">
-              {userMetaData?.biography || "소개글이 없습니다."}
+              {user?.biography || "소개글이 없습니다."}
             </p>
 
-            {/* 가입일 */}
             <div className="mt-4 border-t-4 border-dotted pt-3">
               <div className="text-xs text-gray-400">가입일</div>
               <div className="text-sm text-gray-600">
-                {userMetaData?.createdAt
-                  ? formatDate(new Date(userMetaData.createdAt).toISOString())
+                {user?.createdAt
+                  ? formatDate(new Date(user.createdAt).toISOString())
                   : "정보 없음"}
               </div>
             </div>
@@ -178,16 +201,34 @@ export default function ProfileView() {
         </div>
       </div>
 
-      {/* 모바일 전용 링크 */}
       <div className="mt-auto block pt-8 md:hidden">
         <div className="space-y-4">
-          <Link href={`/my-page/my-ticket-list?uid=${uid}`} className="block">
+          <Link href="/my-page/edit" className="block">
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-accent-300 to-accent-500 p-5 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-white">프로필 편집</h3>
+                  <p className="mt-1 text-sm text-accent-100">
+                    프로필 정보를 수정하세요
+                  </p>
+                </div>
+                <div className="rounded-full bg-white bg-opacity-20 p-2 transition-transform group-hover:translate-x-1">
+                  <FaEdit className="text-white" size={14} />
+                </div>
+              </div>
+              <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white opacity-10"></div>
+            </div>
+          </Link>
+          <Link
+            href={`/my-page/my-ticket-list?uid=${user?.uid}`}
+            className="block"
+          >
             <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 p-5 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold text-gray-800">내 티켓 목록</h3>
                   <p className="mt-1 text-sm text-gray-600">
-                    {statsLoading ? "..." : `${myTicketsCount}개의 티켓`}
+                    {user?.myTicketsCount || 0}개의 티켓
                   </p>
                 </div>
                 <div className="rounded-full bg-gray-200 p-2 transition-transform group-hover:translate-x-1">
@@ -198,7 +239,7 @@ export default function ProfileView() {
             </div>
           </Link>
           <Link
-            href={`/my-page/liked-ticket-list?uid=${uid}`}
+            href={`/my-page/liked-ticket-list?uid=${user?.uid}`}
             className="block"
           >
             <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 p-5 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
@@ -206,7 +247,7 @@ export default function ProfileView() {
                 <div>
                   <h3 className="font-semibold text-gray-800">좋아요한 티켓</h3>
                   <p className="mt-1 text-sm text-gray-600">
-                    {statsLoading ? "..." : `${likedTicketsCount}개의 티켓`}
+                    {user?.likedTicketsCount || 0}개의 티켓
                   </p>
                 </div>
                 <div className="rounded-full bg-gray-200 p-2 transition-transform group-hover:translate-x-1">
@@ -216,21 +257,23 @@ export default function ProfileView() {
               <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-gray-200 opacity-20"></div>
             </div>
           </Link>
-          <button onClick={logoutHandler} className="block w-full text-left">
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-50 to-gray-100 p-5 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md">
-              <div className="flex items-center justify-between">
-                <div className="text-left">
-                  <h3 className="font-semibold text-gray-800">로그아웃</h3>
-                  <p className="mt-1 text-sm text-gray-600">
-                    계정에서 안전하게 로그아웃
-                  </p>
-                </div>
-                <div className="rounded-full bg-gray-200 p-2 transition-transform group-hover:translate-x-1">
-                  <FaSignOutAlt className="text-gray-700" size={14} />
-                </div>
+
+          <button
+            onClick={logoutHandler}
+            className="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-red-400 to-red-600 p-5 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-semibold text-white">로그아웃</h3>
+                <p className="mt-1 text-sm text-red-100">
+                  안전하게 로그아웃합니다
+                </p>
               </div>
-              <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-gray-200 opacity-20"></div>
+              <div className="rounded-full bg-white bg-opacity-20 p-2 transition-transform group-hover:translate-x-1">
+                <FaSignOutAlt className="text-white" size={14} />
+              </div>
             </div>
+            <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white opacity-10"></div>
           </button>
         </div>
       </div>
