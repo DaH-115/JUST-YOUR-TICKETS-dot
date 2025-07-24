@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Pagination from "app/components/ui/layout/Pagination";
-import SwiperCard from "app/components/swiper/swiper-card";
+import SwiperItem from "app/components/swiper/SwiperItem";
 import Loading from "app/loading";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
@@ -92,7 +92,7 @@ export default function SearchResultList({
     <>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
         {searchResults.map((movie, idx) => (
-          <SwiperCard key={movie.id} movie={movie} idx={idx} />
+          <SwiperItem key={movie.id} movie={movie} idx={idx} />
         ))}
       </div>
       <Pagination

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import MovieDetailCard from "app/movie-details/[id]/components/MovieDetails";
+import MovieDetailCard from "app/movie-details/[id]/components/MovieDetailCard";
 import MovieTrailerList from "app/movie-details/[id]/components/MovieTrailerList";
 import Background from "app/components/ui/layout/Background";
 import getMovieTitle from "app/utils/getMovieTitle";

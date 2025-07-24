@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ActivityBadge from "app/components/ui/feedback/ActivityBadge";
-import ProfileImage from "app/components/user/ProfileImage";
+import ProfileAvatar from "app/components/user/ProfileAvatar";
 import formatDate from "app/utils/formatDate";
 import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
@@ -236,7 +236,7 @@ export default function CommentList({
         </div>
       )}
       <div
-        className={`${!isLoading && comments.length > 0 ? "max-h-80 overflow-y-auto scrollbar-hide" : "hidden"}`}
+        className={`${!isLoading && comments.length > 0 ? "overflow-y-auto scrollbar-hide" : "hidden"}`}
       >
         <ul className="space-y-2">
           {comments.map((comment, idx) => (
@@ -248,11 +248,12 @@ export default function CommentList({
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
                     <span className="text-xs font-normal text-gray-800">
-                      {idx + 1}.
+                      {`${idx + 1}.`}
                     </span>
-                    <ProfileImage
-                      photoKey={comment.photoKey}
+                    <ProfileAvatar
+                      s3photoKey={comment.photoKey || undefined}
                       userDisplayName={comment.displayName || "익명"}
+                      size={24}
                     />
                     <p className="text-xs font-bold text-gray-800">
                       {comment.displayName || "익명"}
@@ -328,7 +329,7 @@ export default function CommentList({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-xl bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 active:bg-primary-700 disabled:opacity-50"
+              className="rounded-full bg-primary-600 px-4 py-2 text-white transition-colors duration-300 hover:bg-primary-400 disabled:bg-gray-400"
               aria-label={editingId ? "댓글 수정 완료" : "댓글 등록"}
             >
               {editingId ? "수정 완료" : "등록"}

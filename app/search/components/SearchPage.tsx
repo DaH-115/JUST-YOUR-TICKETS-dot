@@ -7,7 +7,7 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { IoSearchOutline } from "react-icons/io5";
 import * as z from "zod";
-import SwiperCard from "app/components/swiper/swiper-card";
+import SwiperItem from "app/components/swiper/SwiperItem";
 import SearchResultList from "app/search/components/SearchResultList";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
@@ -105,7 +105,7 @@ export default function SearchPage({
           </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-5 xl:grid-cols-6">
             {nowPlayingMovies.map((movie, idx) => (
-              <SwiperCard key={movie.id} movie={movie} idx={idx} />
+              <SwiperItem key={movie.id} movie={movie} idx={idx} />
             ))}
           </div>
         </section>

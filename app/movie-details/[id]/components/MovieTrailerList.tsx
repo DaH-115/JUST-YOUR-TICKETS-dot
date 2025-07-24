@@ -102,7 +102,9 @@ export default function MovieTrailerList({
           )}
         </>
       ) : (
-        <p className="w-full text-gray-400">등록된 예고편이 없습니다</p>
+        <p className="w-full text-center text-sm text-gray-400">
+          등록된 예고편이 없습니다
+        </p>
       )}
     </section>
   );

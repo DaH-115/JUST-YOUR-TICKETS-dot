@@ -89,7 +89,7 @@ export default function HeaderSideMenu({
             <div className="flex items-center space-x-4">
               <ProfileAvatar
                 userDisplayName={userDisplayName}
-                photoKey={userPhotoURL}
+                s3photoKey={userPhotoURL || undefined}
                 size={48}
                 showLoading={true}
               />

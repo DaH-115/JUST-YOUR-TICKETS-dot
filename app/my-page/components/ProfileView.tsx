@@ -33,15 +33,13 @@ export default function ProfileView() {
   useEffect(() => {
     if (!user?.uid) return;
 
-    // 아직 프로필 데이터를 받아온 적이 없을 때(idle)만 fetch
-    if (userStatus === "idle") {
+    if (userStatus === "idle" || userStatus === "loading") {
       const needsProfileData =
         !user.biography ||
         !user.activityLevel ||
         !user.provider ||
         user.myTicketsCount === undefined ||
         user.likedTicketsCount === undefined;
-
       if (needsProfileData) {
         dispatch(fetchUserProfile(user.uid));
       }
@@ -57,51 +55,21 @@ export default function ProfileView() {
     user?.likedTicketsCount,
   ]);
 
-  // useEffect(() => {
-  //   if (user?.uid && userStatus !== "loading") {
-  //     // 프로필 정보나 통계 정보가 없는 경우 API 호출
-  //     const needsProfileData =
-  //       !user.biography ||
-  //       !user.activityLevel ||
-  //       !user.provider ||
-  //       user.myTicketsCount === undefined ||
-  //       user.likedTicketsCount === undefined;
-
-  //     if (needsProfileData) {
-  //       dispatch(fetchUserProfile(user.uid));
-  //     }
-  //   }
-  // }, [
-  //   dispatch,
-  //   user?.uid,
-  //   user?.biography,
-  //   user?.activityLevel,
-  //   user?.provider,
-  //   user?.myTicketsCount,
-  //   user?.likedTicketsCount,
-  //   userStatus,
-  // ]);
-
   const activityLevel = useMemo(() => {
     if (userStatus === "loading") {
       return getLoadingActivityLevel();
     }
-
     if (user?.activityLevel) {
       return getActivityLevelInfo(user.activityLevel);
     }
-
     return getActivityLevel(user?.myTicketsCount || 0);
   }, [userStatus, user?.activityLevel, user?.myTicketsCount]);
 
   const logoutHandler = useCallback(async () => {
     try {
       await signOut(isAuth);
-
       clearAuthPersistence();
-
       dispatch(clearUser());
-
       router.replace("/login");
     } catch (error: unknown) {
       console.error("로그아웃 실패:", error);
@@ -113,10 +81,6 @@ export default function ProfileView() {
     return <Loading />;
   }
 
-  if (!user) {
-    return <div>사용자 정보를 찾을 수 없습니다.</div>;
-  }
-
   return (
     <main className="flex min-h-full w-full flex-col pl-0 md:w-3/4 md:pl-4">
       <div className="mb-8 flex flex-col items-stretch overflow-hidden rounded-xl bg-white shadow-xl md:flex-row">
@@ -125,7 +89,7 @@ export default function ProfileView() {
         >
           <ProfileAvatar
             userDisplayName={user?.displayName || "사용자"}
-            photoKey={user?.photoKey || null}
+            s3photoKey={user?.photoKey || undefined}
             size={128}
             showLoading={true}
           />

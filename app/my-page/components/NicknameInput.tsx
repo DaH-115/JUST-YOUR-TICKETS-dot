@@ -63,6 +63,8 @@ export default function NicknameInput({
               disabled={isDuplicateCheckDisabled}
               isChecking={isChecking}
               className="self-start"
+              aria-label="닉네임 중복 확인"
+              aria-describedby={isChecking ? "nickname-checking" : undefined}
             />
           </div>
           {displayError && (

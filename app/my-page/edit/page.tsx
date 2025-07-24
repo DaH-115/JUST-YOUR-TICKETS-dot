@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import ProfileEditForm from "app/my-page/components/ProfileEditForm";
+import ProfileEditForm from "app/my-page/edit/ProfileEditForm";
 
 export const metadata: Metadata = {
   title: "프로필 편집 - My Page",

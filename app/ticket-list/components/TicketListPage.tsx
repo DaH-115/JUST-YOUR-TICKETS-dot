@@ -45,28 +45,21 @@ export default function TicketListPage({
   );
 
   return (
-    <div className="flex flex-col p-6">
+    <main className="flex flex-col p-6">
       {/* 헤더 */}
-      <section className="mb-4">
+      <header className="mb-8">
         <div className="mb-2 flex items-center space-x-3">
           <h1 className="text-2xl font-bold tracking-tight text-white">
             All Ticket List
           </h1>
           <span className="ml-2 font-bold text-accent-300">
-            {initialReviews.length}장
+            {initialReviews.length}
           </span>
         </div>
         <p className="text-sm text-gray-300">
           모든 사용자들의 리뷰 티켓을 확인해보세요
         </p>
-      </section>
-
-      {/* 검색 폼 & 결과 정보 */}
-      <SearchSection
-        searchTerm={searchTerm}
-        resultCount={initialReviews.length}
-        onSearch={searchHandler}
-      />
+      </header>
 
       {/* 리뷰 리스트 */}
       {initialReviews.length > 0 ? (
@@ -81,6 +74,13 @@ export default function TicketListPage({
         totalPages={totalPages}
         onPageChange={pageChangeHandler}
       />
-    </div>
+
+      {/* 검색 폼 & 결과 정보 */}
+      <SearchSection
+        searchTerm={searchTerm}
+        resultCount={initialReviews.length}
+        onSearch={searchHandler}
+      />
+    </main>
   );
 }

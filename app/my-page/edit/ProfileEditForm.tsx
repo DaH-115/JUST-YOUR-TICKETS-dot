@@ -11,7 +11,7 @@ import BioInput from "app/my-page/components/BioInput";
 import ChangePassword from "app/my-page/components/ChangePassword";
 import NicknameInput from "app/my-page/components/NicknameInput";
 import AvatarUploader from "app/my-page/components/profile-avatar/AvatarUploader";
-import ProfileImage from "app/my-page/components/profile-avatar/ProfileImage";
+import ProfileAvatar from "app/components/user/ProfileAvatar";
 import { isAuth } from "firebase-config";
 import { useAlert } from "store/context/alertContext";
 import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
@@ -217,7 +217,13 @@ export default function ProfileEditForm() {
           <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="mb-4 text-lg font-medium">프로필 사진</h2>
             <div className="flex flex-col items-center gap-4">
-              <ProfileImage previewSrc={previewSrc} />
+              <ProfileAvatar
+                userDisplayName={user?.displayName ?? "사용자"}
+                previewSrc={previewSrc || undefined}
+                size={96}
+                className="mx-auto"
+                showLoading={true}
+              />
               <AvatarUploader
                 onPreview={(url) => setPreviewSrc(url)}
                 onCancelPreview={() => setPreviewSrc(null)}

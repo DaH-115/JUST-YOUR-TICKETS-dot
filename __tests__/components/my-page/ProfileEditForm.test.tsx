@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useAlert } from "store/context/alertContext";
 import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
 import { isAuth } from "firebase-config";
-import ProfileEditForm from "app/my-page/components/ProfileEditForm";
+import ProfileEditForm from "app/my-page/edit/ProfileEditForm";
 
 // Mock modules
 jest.mock("next/navigation", () => ({
@@ -49,9 +49,9 @@ jest.mock("app/my-page/components/profile-avatar/AvatarUploader", () => {
   };
 });
 
-jest.mock("app/my-page/components/profile-avatar/ProfileImage", () => {
+jest.mock("app/components/user/ProfileAvatar", () => {
   return function MockProfileImage() {
-    return <div data-testid="profile-image">프로필 이미지</div>;
+    return <div data-testid="profile-avatar">프로필 이미지</div>;
   };
 });
 
@@ -110,7 +110,7 @@ describe("ProfileEditForm", () => {
     expect(screen.getByTestId("nickname-input")).toBeInTheDocument();
     expect(screen.getByTestId("bio-input")).toBeInTheDocument();
     expect(screen.getByTestId("avatar-uploader")).toBeInTheDocument();
-    expect(screen.getByTestId("profile-image")).toBeInTheDocument();
+    expect(screen.getByTestId("profile-avatar")).toBeInTheDocument();
   });
 
   it("이메일 제공자인 경우 비밀번호 변경 섹션이 표시된다", () => {

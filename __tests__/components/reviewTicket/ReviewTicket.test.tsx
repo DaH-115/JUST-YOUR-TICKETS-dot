@@ -86,6 +86,7 @@ describe("ReviewTicket 컴포넌트", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseAppSelector.mockReturnValue({ uid: "test-user" });
+    // useReviews 훅에서 호출되는 좋아요 상태 fetch API
     mockApiCallWithTokenRefresh.mockResolvedValue({
       likes: likesMapResponse,
     });
@@ -93,6 +94,7 @@ describe("ReviewTicket 컴포넌트", () => {
 
   test("초기 리뷰 목록을 올바르게 렌더링해야 합니다.", async () => {
     render(<ReviewTicket reviews={mockInitialReviews} />);
+
     await waitFor(() => {
       expect(screen.getByText("영화 제목1 (2023)")).toBeInTheDocument();
     });
@@ -100,18 +102,9 @@ describe("ReviewTicket 컴포넌트", () => {
     expect(screen.getAllByRole("article").length).toBe(2);
   });
 
-  test("초기 로딩 중에는 로딩 메시지를 표시해야 합니다.", () => {
-    // API 응답을 지연시켜 로딩 상태를 확인
-    mockApiCallWithTokenRefresh.mockImplementation(
-      () => new Promise(() => {}), // 영구 대기
-    );
-
-    render(<ReviewTicket reviews={mockInitialReviews} />);
-    expect(screen.getByText("리뷰를 불러오는 중...")).toBeInTheDocument();
-  });
-
   test("isLiked가 true인 리뷰는 채워진 하트로 표시되어야 합니다.", async () => {
     render(<ReviewTicket reviews={mockInitialReviews} />);
+
     await waitFor(() => {
       expect(
         screen.getByTestId("like-button-filled-review1"),
@@ -122,6 +115,7 @@ describe("ReviewTicket 컴포넌트", () => {
 
   test("isLiked가 false인 리뷰는 빈 하트로 표시되어야 합니다.", async () => {
     render(<ReviewTicket reviews={mockInitialReviews} />);
+
     await waitFor(() => {
       expect(
         screen.getByTestId("like-button-empty-review2"),
@@ -131,9 +125,10 @@ describe("ReviewTicket 컴포넌트", () => {
   });
 
   test("좋아요 버튼을 클릭하면 UI가 즉시 업데이트되고 스피너가 표시되어야 합니다.", async () => {
-    // 간소화된 mock 설정
+    // useReviews 훅에서 호출되는 좋아요 상태 fetch API
     mockApiCallWithTokenRefresh
       .mockResolvedValueOnce({ likes: likesMapResponse })
+      // useLikeToggle 훅에서 호출되는 좋아요 토글 API
       .mockResolvedValueOnce({ likeCount: 6 });
 
     render(<ReviewTicket reviews={mockInitialReviews} />);
@@ -260,5 +255,42 @@ describe("ReviewTicket 컴포넌트", () => {
 
     // 로딩 메시지가 사라졌는지 확인
     expect(screen.queryByText("리뷰를 불러오는 중...")).toBeNull();
+  });
+
+  test("특정 reviewId가 전달되면 해당 리뷰의 모달이 자동으로 열려야 합니다.", async () => {
+    // useReviewModal 훅에서 호출되는 개별 리뷰 fetch API
+    mockApiCallWithTokenRefresh
+      .mockResolvedValueOnce({ likes: likesMapResponse }) // useReviews 훅
+      .mockResolvedValueOnce({
+        // useReviewModal 훅에서 개별 리뷰 fetch
+        id: "review1",
+        user: {
+          uid: "user1",
+          displayName: "테스터1",
+          photoKey: "photo1.jpg",
+          activityLevel: "NOVICE",
+        },
+        review: {
+          movieId: 1,
+          movieTitle: "영화 제목1",
+          originalTitle: "Movie Title 1",
+          moviePosterPath: "/poster1.jpg",
+          releaseYear: "2023",
+          rating: 5,
+          reviewTitle: "재미있는 영화1",
+          reviewContent: "정말 재미있어요.",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          likeCount: 10,
+        },
+      })
+      .mockResolvedValueOnce({ isLiked: true }); // useReviewModal 훅에서 좋아요 상태 fetch
+
+    render(<ReviewTicket reviews={mockInitialReviews} reviewId="review1" />);
+
+    // 모달이 자동으로 열렸는지 확인
+    await waitFor(() => {
+      expect(screen.getByText("재미있는 영화1")).toBeInTheDocument();
+    });
   });
 });

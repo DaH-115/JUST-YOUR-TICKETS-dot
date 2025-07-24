@@ -13,7 +13,7 @@ export default function SearchSection({
 }: SearchSectionProps) {
   return (
     <div className="my-8 flex flex-col gap-2">
-      <div className="flex justify-end">
+      <div className="flex items-center justify-center">
         <SearchForm
           placeholder="영화 제목으로 검색해 보세요"
           onSearch={onSearch}

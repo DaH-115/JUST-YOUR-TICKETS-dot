@@ -5,7 +5,8 @@ import {
   ListboxOption,
 } from "@headlessui/react";
 import { useFormContext, Controller } from "react-hook-form";
-import { IoStar, IoChevronDown } from "react-icons/io5";
+import { IoChevronDown } from "react-icons/io5";
+import { FaExclamationTriangle, FaStar } from "react-icons/fa";
 import { ReviewFormValues } from "app/write-review/types";
 
 const ratingOptions = [
@@ -24,7 +25,7 @@ const ratingOptions = [
 const Stars = ({ count }: { count: number }) => (
   <div className="flex space-x-1">
     {Array.from({ length: count }, (_, i) => (
-      <IoStar key={i} className="text-accent-400" size={14} />
+      <FaStar key={i} className="text-accent-400" size={14} />
     ))}
   </div>
 );
@@ -99,7 +100,9 @@ export default function ReviewFormRating() {
 
               {error && (
                 <p className="mt-1 flex items-center space-x-1 text-sm text-red-600">
-                  <span>⚠</span>
+                  <span>
+                    <FaExclamationTriangle />
+                  </span>
                   <span>{error.message}</span>
                 </p>
               )}

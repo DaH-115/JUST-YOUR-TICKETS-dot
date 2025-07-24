@@ -1,7 +1,13 @@
 "use client";
 
-import { Dialog, DialogPanel, DialogBackdrop } from "@headlessui/react";
-import { ReactNode } from "react";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
+import { Fragment, ReactNode } from "react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,14 +17,42 @@ interface ModalProps {
 
 export default function Modal({ isOpen, onClose, children }: ModalProps) {
   return (
-    <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <DialogBackdrop className="fixed inset-0 bg-black/50 transition-opacity data-[closed]:opacity-0" />
+    <Transition show={isOpen} as={Fragment}>
+      <Dialog
+        onClose={onClose}
+        className="fixed inset-0 z-50 flex items-start justify-center pt-20 md:items-center md:pt-0"
+      >
+        {/* 백드롭: 페이드 인/아웃 */}
+        <TransitionChild
+          as={Fragment}
+          enter="transition-opacity duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <DialogBackdrop className="fixed inset-0 bg-black/50" />
+        </TransitionChild>
 
-      <div className="fixed inset-0 flex items-start justify-center p-2 pt-20 md:items-center md:p-4 md:pt-0">
-        <DialogPanel className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-3 shadow-xl transition-all scrollbar-hide data-[closed]:scale-95 data-[closed]:opacity-0 md:w-11/12 md:p-4">
-          {children}
-        </DialogPanel>
-      </div>
-    </Dialog>
+        {/* 패널 컨테이너 */}
+        <div className="fixed inset-0 flex items-start justify-center pt-20 md:items-center md:pt-0">
+          {/* 패널: 슬라이드업 + 페이드 */}
+          <TransitionChild
+            as={Fragment}
+            enter="transition-all duration-300"
+            enterFrom="opacity-0 translate-y-full"
+            enterTo="opacity-100 translate-y-0"
+            leave="transition-all duration-200"
+            leaveFrom="opacity-100 translate-y-0"
+            leaveTo="opacity-0 translate-y-full"
+          >
+            <DialogPanel className="relative max-h-[90vh] w-full max-w-lg transform overflow-y-auto rounded-2xl bg-white p-6 shadow-xl scrollbar-hide">
+              {children}
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </Transition>
   );
 }

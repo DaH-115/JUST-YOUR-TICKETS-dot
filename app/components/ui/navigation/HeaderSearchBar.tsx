@@ -105,7 +105,7 @@ export default function HeaderSearchBar({
       <Combobox value={selectedMovie} onChange={handleMovieSelect}>
         <div className="relative flex items-center justify-end">
           <div
-            className={`relative flex items-center rounded-full border-2 border-white/30 bg-white/10 transition-all duration-300 ease-in-out hover:border-white/50 hover:bg-white/20 ${
+            className={`relative flex items-center rounded-full border border-white/30 bg-white/10 transition-all duration-300 ease-in-out hover:border-white/50 hover:bg-white/20 ${
               !isSideMenuOpen ? "backdrop-blur-sm" : ""
             } ${isSearchOpen ? "h-12 w-64" : "h-12 w-12"}`}
           >
@@ -119,7 +119,7 @@ export default function HeaderSearchBar({
               displayValue={() => searchQuery}
             />
             <div
-              className="absolute right-0 top-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full pb-1 transition-all duration-300 ease-in-out hover:bg-white/10"
+              className="absolute right-0 top-0 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full transition-all duration-300 ease-in-out hover:bg-white/10"
               onClick={iconClickHandler}
             >
               <IoSearchOutline size={18} color="white" />
