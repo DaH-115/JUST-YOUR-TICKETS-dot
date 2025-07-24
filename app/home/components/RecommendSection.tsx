@@ -29,11 +29,11 @@ export default function RecommendSection({
   }, []);
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
+    <section className="relative min-h-screen overflow-hidden py-8">
       {movie?.backdrop_path && (
         <Background imageUrl={movie.backdrop_path} isFixed={true} />
       )}
-      <div className="relative z-10 flex min-h-screen items-center px-6 py-8 lg:px-8">
+      <div className="relative z-10 flex min-h-screen items-center">
         <div className="mx-auto w-full max-w-6xl">
           <div className="pb-10 md:pb-8">
             <div
@@ -65,24 +65,24 @@ export default function RecommendSection({
                 : "translate-y-8 opacity-0"
             }`}
           >
-            <div className="aspect-[2/3] w-60 overflow-hidden rounded-2xl transition-transform duration-300 ease-out hover:scale-105 md:w-72 lg:w-80">
+            <div className="aspect-[2/3] w-60 overflow-hidden rounded-2xl transition-transform duration-500 ease-out hover:scale-105 md:w-72 lg:w-80">
               <MoviePoster posterPath={movie.poster_path} title={movieTitle} />
             </div>
 
-            <div className="flex-1 transition-transform duration-300 ease-out hover:scale-105">
+            <div className="flex-1 transition-transform duration-500 ease-out hover:scale-105">
               <MovieInfoCard movie={movie} />
             </div>
           </div>
 
           {trailerKey && (
             <section
-              className={`w-full transition-all duration-500 ease-out ${
+              className={`w-full pt-16 transition-all duration-500 ease-out ${
                 isHydrated
                   ? "translate-y-0 opacity-100 transition-delay-700"
                   : "translate-y-8 opacity-0"
               }`}
             >
-              <header className="py-6 md:py-8">
+              <header className="mb-8">
                 <div className="mb-2 flex items-center justify-center space-x-3 md:justify-start">
                   <h2 className="bg-gradient-to-r from-white via-accent-200 to-white bg-clip-text text-3xl font-bold tracking-tight text-transparent md:text-4xl">
                     Movie Trailer

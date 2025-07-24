@@ -22,7 +22,7 @@ export default function HeaderDropDownMenu({
       <MenuButton className="flex items-center gap-3 transition-opacity hover:opacity-80">
         <ProfileAvatar
           userDisplayName={userDisplayName || "Guest"}
-          photoKey={userPhotoURL}
+          s3photoKey={userPhotoURL || undefined}
           size={32}
           showLoading={true}
         />

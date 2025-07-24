@@ -30,6 +30,7 @@ export default function Header() {
   const userDisplayName = user?.displayName;
   const userPhotoURL = user?.photoKey;
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
+  // 스크롤 여부 상태 (20px 이상 스크롤 시 true)
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -52,7 +53,7 @@ export default function Header() {
     }
   }, [dispatch, router]);
 
-  // 스크롤 감지 효과
+  // 스크롤 감지 효과: 스크롤이 20px 이상이면 isScrolled를 true로 설정
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -77,8 +78,9 @@ export default function Header() {
   return (
     <header
       className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-4 py-4 text-xs transition-all duration-300 ease-in-out ${
+        // 스크롤 시 블러 효과 없이 블랙→투명 그라데이션만 적용
         isScrolled && !isSideMenuOpen
-          ? "bg-gradient-to-b from-black/90 via-black/70 to-transparent backdrop-blur-sm"
+          ? "bg-gradient-to-b from-black via-black/80 to-transparent"
           : "bg-transparent"
       }`}
     >
@@ -91,7 +93,7 @@ export default function Header() {
       {/* DESKTOP NAVIGATION - 중앙 배치 */}
       <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 md:block">
         <div
-          className={`flex items-center justify-center rounded-full border-2 border-white/30 bg-white/10 px-6 py-3 transition-all duration-300 hover:border-white/50 hover:bg-white/20 ${
+          className={`flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-3 transition-all duration-300 hover:border-white/50 hover:bg-white/20 ${
             !isSideMenuOpen ? "backdrop-blur-sm" : ""
           }`}
         >

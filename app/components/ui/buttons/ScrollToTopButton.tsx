@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { FaArrowUp } from "react-icons/fa";
 
-const ScrollToTopBtn = () => {
+const ScrollToTopButton = () => {
   const [showScrollTopButton, setShowScrollTopButton] = useState(false);
 
   useEffect(() => {
@@ -34,10 +34,9 @@ const ScrollToTopBtn = () => {
     >
       <div className="flex flex-col items-center">
         <FaArrowUp className="mb-1" />
-        <span className="text-xs font-medium">TOP</span>
       </div>
     </button>
   );
 };
 
-export default ScrollToTopBtn;
+export default ScrollToTopButton;

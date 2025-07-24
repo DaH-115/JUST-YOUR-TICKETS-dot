@@ -1,4 +1,4 @@
-import HomePage from "app/home/home-page";
+import HomePage from "app/home/HomePage";
 import { fetchNowPlayingMovies } from "lib/movies/fetchNowPlayingMovies";
 import { fetchTrendingMovies } from "lib/movies/fetchTrendingMovies";
 import { fetchVideosMovies } from "lib/movies/fetchVideosMovies";

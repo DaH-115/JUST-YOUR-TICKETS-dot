@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css/bundle";
 import { Navigation } from "swiper/modules";
-import SwiperButton from "app/components/swiper/swiper-button";
-import SwiperCard from "app/components/swiper/swiper-card";
+import SwiperButton from "app/components/swiper/SwiperButton";
+import SwiperItem from "app/components/swiper/SwiperItem";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
 // TicketSwiper용 스켈레톤 컴포넌트
-function TicketSwiperSkeleton() {
+function SwiperListSkeleton() {
   const skeletonItems = Array.from({ length: 8 });
 
   return (
@@ -66,11 +66,7 @@ function TicketSwiperSkeleton() {
   );
 }
 
-export default function TicketSwiper({
-  movieList,
-}: {
-  movieList: MovieList[];
-}) {
+export default function SwiperList({ movieList }: { movieList: MovieList[] }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -80,7 +76,7 @@ export default function TicketSwiper({
 
   // 로딩 중일 때 스켈레톤 표시
   if (!isLoaded) {
-    return <TicketSwiperSkeleton />;
+    return <SwiperListSkeleton />;
   }
 
   return (
@@ -92,37 +88,30 @@ export default function TicketSwiper({
       breakpoints={{
         320: {
           slidesPerView: 2.5,
-          spaceBetween: 8,
         },
         480: {
           slidesPerView: 3,
-          spaceBetween: 10,
         },
         640: {
           slidesPerView: 3.5,
-          spaceBetween: 12,
         },
         768: {
           slidesPerView: 4,
-          spaceBetween: 14,
         },
         1024: {
           slidesPerView: 5,
-          spaceBetween: 16,
         },
         1280: {
           slidesPerView: 6,
-          spaceBetween: 18,
         },
         1440: {
           slidesPerView: 6.5,
-          spaceBetween: 20,
         },
       }}
     >
       {movieList.map((movie, idx) => (
-        <SwiperSlide key={movie.id} className="pt-6">
-          <SwiperCard idx={idx} movie={movie} />
+        <SwiperSlide key={movie.id} className="px-1 pt-6">
+          <SwiperItem idx={idx} movie={movie} />
         </SwiperSlide>
       ))}
       <SwiperButton direction="prev" />

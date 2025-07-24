@@ -92,7 +92,7 @@ export default function AnimatedOverview({
         <div className="flex justify-end">
           <button
             onClick={toggleExpanded}
-            className="mt-2 rounded-lg px-3 py-1 text-xs text-gray-600 transition-all duration-200 hover:bg-primary-600 hover:text-white focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1"
+            className="mt-2 rounded-full px-3 py-1 text-xs text-gray-600 transition-all duration-200 hover:bg-primary-600 hover:text-white focus:outline-none focus:ring-1 focus:ring-accent-300 focus:ring-offset-1"
             aria-expanded={isExpanded}
             aria-label={isExpanded ? "줄거리 접기" : "줄거리 더 보기"}
           >

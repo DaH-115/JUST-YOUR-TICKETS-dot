@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import ScrollToTopBtn from "app/components/ui/buttons/ScrollToTopBtn";
+import ScrollToTopButton from "app/components/ui/buttons/ScrollToTopButton";
 import LoginHeader from "app/login/components/LoginHeader";
 import Footer from "app/components/ui/layout/Footer";
 import Header from "app/components/ui/layout/header/Header";
@@ -25,7 +25,7 @@ export default function ConditionalLayout({
         <div id="modal-root" />
         <div id="alert-root" />
         <Footer />
-        <ScrollToTopBtn />
+        <ScrollToTopButton />
       </>
     );
   }
@@ -38,7 +38,7 @@ export default function ConditionalLayout({
       <div id="modal-root" />
       <div id="alert-root" />
       <Footer />
-      <ScrollToTopBtn />
+      <ScrollToTopButton />
     </div>
   );
 }

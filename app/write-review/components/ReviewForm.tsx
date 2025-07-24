@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { MdDriveFileRenameOutline, MdWarning } from "react-icons/md";
 import Background from "app/components/ui/layout/Background";
@@ -11,6 +11,13 @@ import ReviewFormTitle from "app/write-review/components/ReviewFormTitle";
 import { useReviewForm } from "app/write-review/hook/useReviewForm";
 import type { ReviewFormValues } from "app/write-review/types";
 import type { MovieDetails } from "lib/movies/fetchMovieDetails";
+import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
+import {
+  selectUser,
+  fetchUserProfile,
+} from "store/redux-toolkit/slice/userSlice";
+import { useLevelUpCheck } from "app/write-review/hook/useLevelUpCheck";
+import LevelUpModal from "app/my-page/components/LevelUpModal";
 
 interface ReviewFormProps {
   onSubmitMode: "new" | "edit";
@@ -25,7 +32,22 @@ export default function ReviewForm({
   movieData,
   reviewId,
 }: ReviewFormProps) {
-  const [isNavigating, setIsNavigating] = useState(false);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  // 등급 변화 감지 및 모달 트리거를 위한 상태와 참조값
+  const [reviewSubmitted, setReviewSubmitted] = useState(false); // 리뷰 작성 성공 여부
+  const [currentLevel, setCurrentLevel] = useState(user?.activityLevel ?? null); // 최신 등급 상태
+  const prevLevelRef = useRef(user?.activityLevel ?? null); // 이전 등급 추적
+  const updatedUser = useAppSelector(selectUser);
+  const LEVELS = ["NEWBIE", "REGULAR", "ACTIVE", "EXPERT"];
+
+  // 리뷰 작성 성공 후 등급이 상승하면 모달이 뜨는 훅
+  const [levelUpOpen, setLevelUpOpen] = useLevelUpCheck({
+    prevLevel: prevLevelRef.current,
+    currentLevel,
+    levels: LEVELS,
+    reviewSubmitted,
+  });
 
   const { onSubmit } = useReviewForm({
     mode: onSubmitMode,
@@ -55,30 +77,27 @@ export default function ReviewForm({
     }
   }, [initialData, reset]);
 
-  // 페이지 이탈 방지 기능
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (isDirty && !isNavigating) {
-        e.preventDefault();
-        return "작성 중인 리뷰가 있습니다. 정말로 페이지를 떠나시겠습니까?";
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [isDirty, isNavigating]);
-
-  // 폼 제출 시 네비게이션 허용
-  const handleFormSubmit = async (data: ReviewFormValues) => {
-    setIsNavigating(true);
-    await onSubmit(data);
+  // 리뷰 작성 폼 제출 핸들러
+  const submitHandler = async (data: ReviewFormValues) => {
+    await onSubmit(data); // 실제 리뷰 작성 API 호출
+    // 리뷰 작성 성공 후 프로필 refetch (서버에서 등급이 변경될 수 있음)
+    if (user?.uid) {
+      await dispatch(fetchUserProfile(user.uid));
+      // 최신 등급을 store에서 가져와 상태에 반영
+      setCurrentLevel(updatedUser?.activityLevel ?? null);
+      setReviewSubmitted(true); // 리뷰 작성 성공 시점 표시
+      prevLevelRef.current = updatedUser?.activityLevel ?? null; // 이전 등급 갱신
+    }
   };
 
   return (
     <>
+      {/* 등급 업그레이드 시 축하 모달 */}
+      <LevelUpModal
+        open={levelUpOpen}
+        onClose={() => setLevelUpOpen(false)}
+        newLevel={currentLevel || ""}
+      />
       {movieData.backdrop_path && (
         <Background imageUrl={movieData.backdrop_path} />
       )}
@@ -88,7 +107,7 @@ export default function ReviewForm({
           {/* 티켓 메인 부분 */}
           <div className="relative rounded-3xl border-2 border-accent-300/30 bg-white p-8 shadow-2xl">
             <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(handleFormSubmit)}>
+              <form onSubmit={handleSubmit(submitHandler)}>
                 {/* 티켓 헤더 */}
                 <div className="mb-8 border-b-2 border-dashed border-accent-300/50 pb-6">
                   <ReviewFormHeader isEditMode={onSubmitMode === "edit"} />

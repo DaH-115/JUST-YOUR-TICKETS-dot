@@ -1,7 +1,12 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from "tailwindcss";
+import scrollbarHide from "tailwind-scrollbar-hide";
+
+const config: Config = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}", // Note the addition of the `app` directory.
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -69,7 +74,6 @@ module.exports = {
           "100%": { transform: "scale(1)", opacity: "1" },
         },
       },
-
       spacing: {
         18: "4.5rem",
         88: "22rem",
@@ -80,8 +84,13 @@ module.exports = {
     },
   },
   plugins: [
-    require("tailwind-scrollbar-hide"),
-    function ({ addUtilities }) {
+    scrollbarHide,
+    // 커스텀 유틸리티 플러그인
+    function ({
+      addUtilities,
+    }: {
+      addUtilities: (utilities: Record<string, Record<string, string>>) => void;
+    }) {
       const newUtilities = {
         ".mask-linear-gradient": {
           "mask-image":
@@ -89,7 +98,6 @@ module.exports = {
           "-webkit-mask-image":
             "linear-gradient(to bottom, black 60%, transparent 100%)",
         },
-
         ".transition-delay-300": {
           "transition-delay": "300ms",
         },
@@ -104,3 +112,5 @@ module.exports = {
     },
   ],
 };
+
+export default config;
