@@ -1,33 +1,21 @@
 import { useRouter } from "next/navigation";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
-import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
 import { ReviewContainerProps } from "app/write-review/components/ReviewContainer";
 import { ReviewFormValues } from "app/write-review/types";
 import { useAlert } from "store/context/alertContext";
-import { useAppSelector } from "store/redux-toolkit/hooks";
-import { selectUser } from "store/redux-toolkit/slice/userSlice";
+import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
+import {
+  selectUser,
+  fetchUserProfile,
+} from "store/redux-toolkit/slice/userSlice";
+import { useLevelUpCheck } from "app/write-review/hook/useLevelUpCheck";
+import { useState, useRef } from "react";
+import { postReview } from "app/utils/api/postReview";
+import { putReview } from "app/utils/api/putReview";
+import type { ReviewApiData } from "app/utils/api/postReview";
+import { getIdToken } from "app/utils/getIdToken/getIdToken";
 
-interface ReviewUserData {
-  uid: string | null;
-  displayName: string | null;
-  photoKey: string | null;
-}
-
-interface ReviewApiData {
-  user: ReviewUserData;
-  review: {
-    movieId: number;
-    movieTitle: string;
-    originalTitle: string;
-    moviePosterPath: string | undefined;
-    releaseYear: string;
-    rating: number;
-    reviewTitle: string;
-    reviewContent: string;
-    likeCount: number;
-  };
-}
-
+// 리뷰 작성/수정 폼의 비즈니스 로직(상태, API, 등급 변화, Alert 등)을 담당하는 커스텀 훅
 export const useReviewForm = ({
   mode,
   reviewId,
@@ -35,98 +23,100 @@ export const useReviewForm = ({
 }: ReviewContainerProps) => {
   const router = useRouter();
   const userState = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
   const { showErrorHandler, showSuccessHandler, hideSuccessHandler } =
     useAlert();
+  // 등급 변화 감지 상태 (내부에서만 사용)
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  // 현재 등급 상태
+  const [currentLevel, setCurrentLevel] = useState(
+    userState?.activityLevel ?? null,
+  );
+  // 이전 등급 상태(Ref)
+  const prevLevelRef = useRef(userState?.activityLevel ?? null);
+  // 등급 단계
+  const LEVELS = ["NEWBIE", "REGULAR", "ACTIVE", "EXPERT"];
+  // 등업 모달 상태
+  const [levelUpOpen, setLevelUpOpen] = useLevelUpCheck({
+    prevLevel: prevLevelRef.current,
+    currentLevel,
+    levels: LEVELS,
+    reviewSubmitted,
+  });
 
+  /**
+   * 리뷰 작성/수정 폼 제출 핸들러
+   * - mode에 따라 리뷰 생성/수정 API 호출
+   */
   const onSubmit = async (data: ReviewFormValues) => {
     if (!userState) return;
     const { reviewTitle, reviewContent, rating } = data;
 
     try {
-      const newData: ReviewApiData = {
-        // ✅ 리뷰에 필요한 최소한의 사용자 정보만 전송
-        user: {
-          uid: userState.uid,
-          displayName: userState.displayName,
-          photoKey: userState.photoKey,
-        },
-        review: {
-          movieId: movieData.id,
-          movieTitle: movieData.title,
-          originalTitle: movieData.original_title,
-          moviePosterPath: movieData.poster_path,
-          releaseYear: movieData.release_date.slice(0, 4),
-          rating,
-          reviewTitle,
-          reviewContent,
-          likeCount: 0,
-        },
+      // 로그인 유저의 인증 토큰을 헤더에 포함
+      const idToken = await getIdToken();
+      const authHeaders: Record<string, string> = {
+        Authorization: `Bearer ${idToken}`,
       };
 
       if (mode === "new") {
-        await apiCallWithTokenRefresh(async (authHeaders) => {
-          const response = await fetch("/api/reviews", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              ...authHeaders,
-            },
-            body: JSON.stringify(newData),
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "생성에 실패했습니다.");
-          }
-
-          return response.json();
+        const reviewApiData: ReviewApiData = {
+          user: {
+            uid: userState.uid,
+            displayName: userState.displayName,
+            photoKey: userState.photoKey,
+          },
+          review: {
+            movieId: movieData.id,
+            movieTitle: movieData.title,
+            originalTitle: movieData.original_title,
+            moviePosterPath: movieData.poster_path,
+            releaseYear: movieData.release_date.slice(0, 4),
+            rating,
+            reviewTitle,
+            reviewContent,
+            likeCount: 0,
+          },
+        };
+        await postReview({
+          reviewData: reviewApiData,
+          authHeaders,
         });
 
         showSuccessHandler("알림", "리뷰가 성공적으로 생성되었습니다.", () => {
           hideSuccessHandler();
           router.push("/ticket-list");
-          router.refresh(); // 페이지 새로고침으로 최신 데이터 확보
         });
       } else if (mode === "edit" && reviewId) {
-        const updateData: ReviewFormValues = {
-          reviewTitle,
-          reviewContent,
-          rating,
-        };
-
-        await apiCallWithTokenRefresh(async (authHeaders) => {
-          const response = await fetch(`/api/reviews/${reviewId}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              ...authHeaders,
-            },
-            body: JSON.stringify(updateData),
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "수정에 실패했습니다.");
-          }
-
-          return response.json();
+        await putReview({
+          reviewId,
+          reviewData: { reviewTitle, reviewContent, rating },
+          authHeaders,
         });
-
         showSuccessHandler("알림", "리뷰가 성공적으로 수정되었습니다.", () => {
           hideSuccessHandler();
           router.push("/");
         });
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("리뷰 티켓 처리 중 오류 발생:", error.message);
-        showErrorHandler("오류", error.message);
-      } else {
-        const { title, message } = firebaseErrorHandler(error);
-        showErrorHandler(title, message);
+
+      // 리뷰 작성 성공 후 프로필 refetch 및 등급 변화 감지
+      if (userState?.uid) {
+        await dispatch(fetchUserProfile(userState.uid));
+        setCurrentLevel(userState?.activityLevel ?? null);
+        setReviewSubmitted(true);
+        prevLevelRef.current = userState?.activityLevel ?? null;
       }
+    } catch (error) {
+      const { title, message } = firebaseErrorHandler(error);
+      showErrorHandler(title, message);
+      return;
     }
   };
 
-  return { onSubmit };
+  return {
+    onSubmit,
+    currentLevel,
+    levelUpOpen,
+    setLevelUpOpen,
+  };
 };

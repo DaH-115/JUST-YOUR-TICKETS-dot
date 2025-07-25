@@ -200,7 +200,7 @@ export default function ProfileEditForm() {
           type="submit"
           form="profile-edit-form"
           disabled={!hasDirty || isSubmitting}
-          className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+          className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
             hasDirty && !isSubmitting
               ? "bg-accent-300 text-white hover:bg-accent-500"
               : "cursor-not-allowed bg-gray-200 text-gray-400"

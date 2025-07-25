@@ -2,13 +2,13 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import ProfileAvatar from "app/components/user/ProfileAvatar";
 
 // 간단한 렌더링 테스트
-it("이름의 첫 글자가 fallback으로 보인다", () => {
+test("이름의 첫 글자가 fallback으로 보인다", () => {
   render(<ProfileAvatar userDisplayName="홍길동" />);
   expect(screen.getByText("홍")).toBeInTheDocument();
 });
 
 // 외부 이미지가 정상적으로 렌더링되는지 테스트
-it("previewSrc가 있으면 이미지를 렌더링한다", () => {
+test("previewSrc가 있으면 이미지를 렌더링한다", () => {
   render(
     <ProfileAvatar
       userDisplayName="테스트"
@@ -21,7 +21,7 @@ it("previewSrc가 있으면 이미지를 렌더링한다", () => {
 });
 
 // 이미지 로딩 실패 시 fallback(이니셜)이 보이는지 테스트
-it("이미지 로딩 실패 시 fallback(이니셜)이 보인다", () => {
+test("이미지 로딩 실패 시 fallback(이니셜)이 보인다", () => {
   render(
     <ProfileAvatar
       userDisplayName="김철수"

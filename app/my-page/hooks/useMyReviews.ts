@@ -1,7 +1,7 @@
+// 내 리뷰 목록(페이지네이션, 검색 등) 비동기 조회 및 상태 관리 커스텀 훅
 "use client";
 
-import { useEffect, useState } from "react";
-import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { useEffect, useState, useCallback } from "react";
 
 interface UseMyReviewsOptions {
   uid: string;
@@ -10,66 +10,53 @@ interface UseMyReviewsOptions {
   pageSize?: number;
 }
 
-interface UseMyReviewsResult {
-  reviews: ReviewDoc[];
-  totalPages: number;
-  loading: boolean;
-  error: string | null;
-}
-
 export default function useMyReviews({
   uid,
   search = "",
   page,
   pageSize = 10,
-}: UseMyReviewsOptions): UseMyReviewsResult {
-  const [reviews, setReviews] = useState<ReviewDoc[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
+}: UseMyReviewsOptions) {
+  const [reviews, setReviews] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     if (!uid) {
       setReviews([]);
       setTotalPages(0);
       return;
     }
-
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const params = new URLSearchParams({
-          page: page.toString(),
-          pageSize: pageSize.toString(),
-          uid,
-          ...(search && { search }),
-        });
-
-        const response = await fetch(`/api/reviews?${params}`);
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch reviews");
-        }
-
-        const data = await response.json();
-
-        setReviews(data.reviews);
-        setTotalPages(data.totalPages);
-      } catch (error) {
-        let message = "리뷰 데이터를 불러오는데 실패했습니다.";
-        if (error instanceof Error) {
-          message = error.message;
-        }
-        setError(message);
-      } finally {
-        setLoading(false);
+    setLoading(true);
+    setError(null);
+    try {
+      const searchParams = new URLSearchParams();
+      Object.entries({ uid, search, page, pageSize }).forEach(
+        ([key, value]) => {
+          if (value !== undefined && value !== "") {
+            searchParams.set(key, String(value));
+          }
+        },
+      );
+      const response = await fetch(`/api/reviews?${searchParams.toString()}`);
+      if (!response.ok) {
+        throw new Error("리뷰 데이터를 불러오는데 실패했습니다.");
       }
-    };
+      const data = await response.json();
+      setReviews(data.reviews);
+      setTotalPages(data.totalPages);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [uid, search, page, pageSize]);
 
+  useEffect(() => {
     fetchData();
-  }, [uid, page, pageSize, search]);
+  }, [fetchData]);
 
-  return { reviews, totalPages, loading, error };
+  return { reviews, totalPages, loading, error, refetch: fetchData };
 }

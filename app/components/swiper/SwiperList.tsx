@@ -110,7 +110,7 @@ export default function SwiperList({ movieList }: { movieList: MovieList[] }) {
       }}
     >
       {movieList.map((movie, idx) => (
-        <SwiperSlide key={movie.id} className="px-1 pt-6">
+        <SwiperSlide key={movie.id} className="px-2 pt-6">
           <SwiperItem idx={idx} movie={movie} />
         </SwiperSlide>
       ))}

@@ -9,19 +9,22 @@ interface MockUser {
   emailVerified: boolean;
 }
 
-interface MockSignupData {
+export interface MockSignupData {
   displayName: string;
   email: string;
   password: string;
+  [key: string]: unknown; // 타입 안전성 보장
 }
 
-interface MockSocialSetupData {
+export interface MockSocialSetupData {
   provider: string;
+  [key: string]: unknown; // 타입 안전성 보장
 }
 
 interface MockAvailabilityCheckData {
   type: string;
   value: string;
+  [key: string]: unknown;
 }
 
 interface FirebaseError extends Error {

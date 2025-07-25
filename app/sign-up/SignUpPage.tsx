@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import DuplicateCheckButton from "app/components/ui/buttons/DuplicateCheckButton";
 import InputField from "app/components/ui/forms/InputField";
-import { useNicknameCheck } from "app/my-page/hooks/useNicknameCheck";
+import { useDuplicateCheck } from "app/my-page/hooks/useDuplicateCheck";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { isAuth } from "firebase-config";
 import { useAlert } from "store/context/alertContext";
@@ -49,16 +49,11 @@ export default function SignUpPage() {
   const router = useRouter();
   const { showErrorHandler, showSuccessHandler } = useAlert();
   const [isLoading, setIsLoading] = useState(false);
-  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
-  const [isEmailAvailable, setIsEmailAvailable] = useState<boolean | null>(
-    null,
-  );
 
   const {
     register,
     handleSubmit,
     watch,
-    getValues,
     formState: { errors, touchedFields },
   } = useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),
@@ -68,14 +63,22 @@ export default function SignUpPage() {
   const displayNameValue = watch("displayName");
   const emailValue = watch("email");
 
+  // 닉네임/이메일 중복 체크 훅 사용
   const {
     isChecking: isCheckingName,
     isChecked: isNameChecked,
     isAvailable: isDisplayNameAvailable,
     message: displayNameMessage,
-    checkNickname,
-  } = useNicknameCheck({ nickname: displayNameValue });
+    check: checkNickname,
+  } = useDuplicateCheck({ type: "displayName", value: displayNameValue });
 
+  const {
+    isChecking: isCheckingEmail,
+    isAvailable: isEmailAvailable,
+    check: checkEmail,
+  } = useDuplicateCheck({ type: "email", value: emailValue });
+
+  // 닉네임 중복 체크 성공/실패 시 알림 표시
   useEffect(() => {
     if (isNameChecked && displayNameMessage) {
       if (isDisplayNameAvailable) {
@@ -91,53 +94,6 @@ export default function SignUpPage() {
     showErrorHandler,
     showSuccessHandler,
   ]);
-
-  // 값 변경 시 이전 중복 검사 결과 초기화
-  useEffect(() => {
-    setIsEmailAvailable(null);
-  }, [emailValue]);
-
-  // 이메일 중복 확인
-  const checkEmail = useCallback(async () => {
-    const email = getValues("email");
-    if (!email) {
-      showErrorHandler("알림", "이메일을 입력해주세요.");
-      return;
-    }
-    setIsCheckingEmail(true);
-    try {
-      const response = await fetch("/api/auth/check-availability", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: "email",
-          value: email,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "중복 확인에 실패했습니다.");
-      }
-
-      if (result.available) {
-        setIsEmailAvailable(true);
-        showSuccessHandler("성공", result.message);
-      } else {
-        setIsEmailAvailable(false);
-        showErrorHandler("실패", result.message);
-      }
-    } catch (error) {
-      const { title, message } = firebaseErrorHandler(error);
-      showErrorHandler(title, message);
-      setIsEmailAvailable(false);
-    } finally {
-      setIsCheckingEmail(false);
-    }
-  }, [getValues, showErrorHandler, showSuccessHandler]);
 
   // 회원가입 처리
   const onSubmit = useCallback(

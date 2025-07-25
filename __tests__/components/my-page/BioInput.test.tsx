@@ -1,4 +1,3 @@
-import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,7 +33,7 @@ const TestWrapper = ({
 
 describe("BioInput", () => {
   describe("편집 모드", () => {
-    it("편집 모드에서 텍스트 영역이 렌더링된다", () => {
+    test("편집 모드에서 텍스트 영역이 렌더링된다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -48,7 +47,7 @@ describe("BioInput", () => {
       expect(screen.getByRole("textbox")).toBeInTheDocument();
     });
 
-    it("바이오 입력 시 값이 변경된다", () => {
+    test("바이오 입력 시 값이 변경된다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -61,7 +60,7 @@ describe("BioInput", () => {
       expect(textarea).toHaveValue("새로운 바이오입니다.");
     });
 
-    it("텍스트 영역이 3행으로 설정되어 있다", () => {
+    test("텍스트 영역이 3행으로 설정되어 있다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -72,7 +71,7 @@ describe("BioInput", () => {
       expect(textarea).toHaveAttribute("rows", "3");
     });
 
-    it("리사이즈가 비활성화되어 있다", () => {
+    test("리사이즈가 비활성화되어 있다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -83,7 +82,7 @@ describe("BioInput", () => {
       expect(textarea).toHaveClass("resize-none");
     });
 
-    it("100자를 초과할 때 에러 메시지가 표시된다", async () => {
+    test("100자를 초과할 때 에러 메시지가 표시된다", async () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -102,7 +101,7 @@ describe("BioInput", () => {
       });
     });
 
-    it("에러 메시지가 빨간색으로 표시된다", async () => {
+    test("에러 메시지가 빨간색으로 표시된다", async () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -122,7 +121,7 @@ describe("BioInput", () => {
       });
     });
 
-    it("유효한 바이오 입력 시 에러 메시지가 표시되지 않는다", async () => {
+    test("유효한 바이오 입력 시 에러 메시지가 표시되지 않는다", async () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -140,7 +139,7 @@ describe("BioInput", () => {
       });
     });
 
-    it("빈 문자열 입력이 허용된다", async () => {
+    test("빈 문자열 입력이 허용된다", async () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -158,7 +157,7 @@ describe("BioInput", () => {
       });
     });
 
-    it("정확히 100자일 때 에러가 발생하지 않는다", async () => {
+    test("정확히 100자일 때 에러가 발생하지 않는다", async () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -177,7 +176,7 @@ describe("BioInput", () => {
       });
     });
 
-    it("포커스 스타일이 올바르게 적용된다", () => {
+    test("포커스 스타일이 올바르게 적용된다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -191,7 +190,7 @@ describe("BioInput", () => {
   });
 
   describe("읽기 전용 모드", () => {
-    it("읽기 전용 모드에서 바이오 값이 표시된다", () => {
+    test("읽기 전용 모드에서 바이오 값이 표시된다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="표시될 바이오입니다." isEditing={false} />
@@ -202,7 +201,7 @@ describe("BioInput", () => {
       expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     });
 
-    it("바이오가 없을 때 '바이오 없음'이 표시된다", () => {
+    test("바이오가 없을 때 '바이오 없음'이 표시된다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue={null} isEditing={false} />
@@ -212,7 +211,7 @@ describe("BioInput", () => {
       expect(screen.getByText("바이오 없음")).toBeInTheDocument();
     });
 
-    it("빈 문자열일 때 '바이오 없음'이 표시된다", () => {
+    test("빈 문자열일 때 '바이오 없음'이 표시된다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="" isEditing={false} />
@@ -222,7 +221,7 @@ describe("BioInput", () => {
       expect(screen.getByText("바이오 없음")).toBeInTheDocument();
     });
 
-    it("읽기 전용 모드에서 라벨이 표시된다", () => {
+    test("읽기 전용 모드에서 라벨이 표시된다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="바이오 내용" isEditing={false} />
@@ -232,7 +231,7 @@ describe("BioInput", () => {
       expect(screen.getByText("소개")).toBeInTheDocument();
     });
 
-    it("읽기 전용 모드에서 올바른 스타일이 적용된다", () => {
+    test("읽기 전용 모드에서 올바른 스타일이 적용된다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="바이오 내용" isEditing={false} />
@@ -248,7 +247,7 @@ describe("BioInput", () => {
   });
 
   describe("라벨 및 접근성", () => {
-    it("라벨이 입력 필드와 올바르게 연결되어 있다", () => {
+    test("라벨이 입력 필드와 올바르게 연결되어 있다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -262,7 +261,7 @@ describe("BioInput", () => {
       expect(textarea).toHaveAttribute("id", "biography");
     });
 
-    it("라벨에 올바른 스타일이 적용되어 있다", () => {
+    test("라벨에 올바른 스타일이 적용되어 있다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue="기존 바이오" isEditing={true} />
@@ -279,7 +278,7 @@ describe("BioInput", () => {
   });
 
   describe("기본값 처리", () => {
-    it("originalValue가 undefined일 때 올바르게 처리된다", () => {
+    test("originalValue가 undefined일 때 올바르게 처리된다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue={undefined} isEditing={false} />
@@ -289,7 +288,7 @@ describe("BioInput", () => {
       expect(screen.getByText("바이오 없음")).toBeInTheDocument();
     });
 
-    it("originalValue가 null일 때 올바르게 처리된다", () => {
+    test("originalValue가 null일 때 올바르게 처리된다", () => {
       render(
         <TestWrapper>
           <BioInput originalValue={null} isEditing={false} />

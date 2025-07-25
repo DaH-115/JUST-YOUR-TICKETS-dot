@@ -112,7 +112,7 @@ export default function ProfileView() {
               </div>
               <Link
                 href="/my-page/edit"
-                className="flex items-center gap-2 rounded-lg bg-accent-300 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-500"
+                className="flex items-center gap-2 rounded-full bg-accent-300 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-500"
               >
                 <FaEdit size={12} />
                 프로필 편집
@@ -131,7 +131,7 @@ export default function ProfileView() {
                 </div>
                 <div className="text-xs text-gray-600">내 티켓</div>
               </Link>
-              <div className="border-l-2 border-dotted pl-6">
+              <div className="border-l-4 border-dotted pl-6">
                 <Link
                   href={`/my-page/liked-ticket-list?uid=${user?.uid}`}
                   className="text-center transition-opacity hover:opacity-80"
@@ -154,8 +154,8 @@ export default function ProfileView() {
             </p>
 
             <div className="mt-4 border-t-4 border-dotted pt-3">
-              <div className="text-xs text-gray-400">가입일</div>
-              <div className="text-sm text-gray-600">
+              <div className="mb-1 text-xs text-gray-800">가입일</div>
+              <div className="text-xs text-gray-700">
                 {user?.createdAt
                   ? formatDate(new Date(user.createdAt).toISOString())
                   : "정보 없음"}

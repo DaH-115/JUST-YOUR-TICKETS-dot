@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { MdDriveFileRenameOutline, MdWarning } from "react-icons/md";
+import { MdWarning } from "react-icons/md";
 import Background from "app/components/ui/layout/Background";
 import ReviewFormContent from "app/write-review/components/ReviewFormContent";
 import ReviewFormHeader from "app/write-review/components/ReviewFormHeader";
@@ -11,12 +11,6 @@ import ReviewFormTitle from "app/write-review/components/ReviewFormTitle";
 import { useReviewForm } from "app/write-review/hook/useReviewForm";
 import type { ReviewFormValues } from "app/write-review/types";
 import type { MovieDetails } from "lib/movies/fetchMovieDetails";
-import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
-import {
-  selectUser,
-  fetchUserProfile,
-} from "store/redux-toolkit/slice/userSlice";
-import { useLevelUpCheck } from "app/write-review/hook/useLevelUpCheck";
 import LevelUpModal from "app/my-page/components/LevelUpModal";
 
 interface ReviewFormProps {
@@ -32,28 +26,13 @@ export default function ReviewForm({
   movieData,
   reviewId,
 }: ReviewFormProps) {
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
-  // 등급 변화 감지 및 모달 트리거를 위한 상태와 참조값
-  const [reviewSubmitted, setReviewSubmitted] = useState(false); // 리뷰 작성 성공 여부
-  const [currentLevel, setCurrentLevel] = useState(user?.activityLevel ?? null); // 최신 등급 상태
-  const prevLevelRef = useRef(user?.activityLevel ?? null); // 이전 등급 추적
-  const updatedUser = useAppSelector(selectUser);
-  const LEVELS = ["NEWBIE", "REGULAR", "ACTIVE", "EXPERT"];
-
-  // 리뷰 작성 성공 후 등급이 상승하면 모달이 뜨는 훅
-  const [levelUpOpen, setLevelUpOpen] = useLevelUpCheck({
-    prevLevel: prevLevelRef.current,
-    currentLevel,
-    levels: LEVELS,
-    reviewSubmitted,
-  });
-
-  const { onSubmit } = useReviewForm({
-    mode: onSubmitMode,
-    movieData,
-    reviewId,
-  });
+  const { onSubmit, currentLevel, levelUpOpen, setLevelUpOpen } = useReviewForm(
+    {
+      mode: onSubmitMode,
+      movieData,
+      reviewId,
+    },
+  );
 
   const methods = useForm<ReviewFormValues>({
     defaultValues: {
@@ -77,17 +56,9 @@ export default function ReviewForm({
     }
   }, [initialData, reset]);
 
-  // 리뷰 작성 폼 제출 핸들러
+  // 폼 제출 핸들러는 훅의 onSubmit만 호출
   const submitHandler = async (data: ReviewFormValues) => {
-    await onSubmit(data); // 실제 리뷰 작성 API 호출
-    // 리뷰 작성 성공 후 프로필 refetch (서버에서 등급이 변경될 수 있음)
-    if (user?.uid) {
-      await dispatch(fetchUserProfile(user.uid));
-      // 최신 등급을 store에서 가져와 상태에 반영
-      setCurrentLevel(updatedUser?.activityLevel ?? null);
-      setReviewSubmitted(true); // 리뷰 작성 성공 시점 표시
-      prevLevelRef.current = updatedUser?.activityLevel ?? null; // 이전 등급 갱신
-    }
+    await onSubmit(data);
   };
 
   return (
@@ -150,16 +121,10 @@ export default function ReviewForm({
                   <div className="pt-4">
                     <button
                       type="submit"
+                      className="w-full rounded-xl bg-accent-400 p-4 text-base font-semibold text-white transition-all duration-300 hover:bg-accent-500 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
                       disabled={!isValid}
-                      className="w-full rounded-xl bg-accent-400 p-4 font-semibold text-white transition-all duration-300 hover:bg-accent-500 hover:shadow-lg disabled:cursor-not-allowed disabled:text-gray-500 disabled:opacity-50"
                     >
-                      <MdDriveFileRenameOutline
-                        className="mr-2 inline"
-                        size={18}
-                      />
-                      {onSubmitMode === "new"
-                        ? "리뷰 작성하기"
-                        : "리뷰 수정하기"}
+                      {onSubmitMode === "edit" ? "리뷰 수정" : "리뷰 등록"}
                     </button>
                   </div>
                 </div>

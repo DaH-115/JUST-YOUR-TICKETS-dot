@@ -50,7 +50,7 @@ beforeEach(() => {
   mockUseAlert.mockReturnValue({
     showErrorHandler: mockShowErrorHandler,
     showSuccessHandler: mockShowSuccessHandler,
-    hideErrorHanlder: jest.fn(),
+    hideErrorHandler: jest.fn(),
     hideSuccessHandler: jest.fn(),
   });
 

@@ -8,10 +8,23 @@ import type { ReviewFormValues } from "app/write-review/types";
 
 type useReviewDataProps = Pick<ReviewContainerProps, "mode" | "reviewId">;
 
+/**
+ * 리뷰 데이터(초기값) 비동기 로딩 커스텀 훅
+ * - 리뷰 수정 시 Firestore에서 기존 리뷰 데이터를 불러와 폼에 초기값으로 제공
+ * @param mode - "edit"(수정) | "new"(작성)
+ * @param reviewId - 리뷰 ID (수정 시)
+ * @returns initialData, loading
+ */
 export function useReviewData({ mode, reviewId }: useReviewDataProps) {
+  // 폼 초기값 상태
   const [initialData, setInitialData] = useState<ReviewFormValues>();
+  // 로딩 상태
   const [loading, setLoading] = useState(true);
 
+  /**
+   * mode/reviewId 변경 시 Firestore에서 리뷰 데이터 비동기 로딩
+   * - Firestore 문서 구조에서 review 객체 안의 데이터 추출
+   */
   useEffect(() => {
     (async () => {
       try {
@@ -35,5 +48,6 @@ export function useReviewData({ mode, reviewId }: useReviewDataProps) {
     })();
   }, [mode, reviewId]);
 
+  // UI에서 사용할 상태 반환
   return { initialData, loading };
 }

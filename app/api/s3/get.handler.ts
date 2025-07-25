@@ -15,15 +15,15 @@ export async function GET(req: NextRequest) {
       const authResult = await verifyAuthToken(req);
       if (!authResult.success) {
         return NextResponse.json(
-          { error: authResult.error },
-          { status: authResult.statusCode },
+          { error: true, message: "인증이 필요합니다." },
+          { status: 401 },
         );
       }
     }
 
     if (!key) {
       return NextResponse.json(
-        { message: "key 파라미터가 필요합니다." },
+        { error: true, message: "key 파라미터가 필요합니다." },
         { status: 400 },
       );
     }
@@ -35,13 +35,14 @@ export async function GET(req: NextRequest) {
     });
 
     const url = await getSignedUrl(s3, command, { expiresIn: ttl });
-    return NextResponse.json({ url });
+    return NextResponse.json({ url, expiresIn: ttl });
   } catch (err) {
     console.error("S3 download presign error:", err);
     const errorMessage =
-      err instanceof Error
-        ? err.message
-        : "An unknown error has occurred while creating a presigned URL.";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+      err instanceof Error ? err.message : "알 수 없는 에러가 발생했습니다.";
+    return NextResponse.json(
+      { error: true, message: errorMessage },
+      { status: 500 },
+    );
   }
 }

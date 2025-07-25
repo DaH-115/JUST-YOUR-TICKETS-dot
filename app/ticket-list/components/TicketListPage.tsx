@@ -63,7 +63,13 @@ export default function TicketListPage({
 
       {/* 리뷰 리스트 */}
       {initialReviews.length > 0 ? (
-        <ReviewTicket reviews={initialReviews} reviewId={reviewId} />
+        <ReviewTicket
+          reviews={initialReviews.map((review) => ({
+            ...review,
+            isLiked: false,
+          }))}
+          reviewId={reviewId}
+        />
       ) : (
         <EmptyState message="등록된 리뷰 티켓이 없습니다" />
       )}

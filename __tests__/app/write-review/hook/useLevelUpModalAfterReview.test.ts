@@ -4,7 +4,7 @@ import { useLevelUpCheck } from "app/write-review/hook/useLevelUpCheck";
 const LEVELS = ["NEWBIE", "REGULAR", "ACTIVE", "EXPERT"];
 
 describe("useLevelUpModal (리뷰 작성 후 등급 상승 모달)", () => {
-  it("리뷰 작성 후 등급이 상승하면 모달이 열린다", () => {
+  test("리뷰 작성 후 등급이 상승하면 모달이 열린다", () => {
     const { result, rerender } = renderHook(
       ({ prevLevel, currentLevel, reviewSubmitted }) =>
         useLevelUpCheck({
@@ -32,7 +32,7 @@ describe("useLevelUpModal (리뷰 작성 후 등급 상승 모달)", () => {
     expect(result.current[0]).toBe(true);
   });
 
-  it("리뷰 작성 후 등급이 같거나 하락하면 모달이 안 열린다", () => {
+  test("리뷰 작성 후 등급이 같거나 하락하면 모달이 안 열린다", () => {
     const { result, rerender } = renderHook(
       ({ prevLevel, currentLevel, reviewSubmitted }) =>
         useLevelUpCheck({

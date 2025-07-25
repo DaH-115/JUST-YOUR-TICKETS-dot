@@ -10,7 +10,7 @@ interface AlertContextType {
     message: string,
     onConfirm?: () => void,
   ) => void;
-  hideErrorHanlder: () => void;
+  hideErrorHandler: () => void;
   hideSuccessHandler: () => void;
 }
 
@@ -31,7 +31,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   const [errorState, setErrorState] = useState<ErrorType | null>(null);
   const [successState, setSuccessState] = useState<SuccessType | null>(null);
 
-  const hideErrorHanlder = useCallback(() => {
+  const hideErrorHandler = useCallback(() => {
     setErrorState(null);
   }, []);
 
@@ -67,7 +67,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
     <AlertContext.Provider
       value={{
         showErrorHandler,
-        hideErrorHanlder,
+        hideErrorHandler,
         showSuccessHandler,
         hideSuccessHandler,
       }}
@@ -78,7 +78,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
         <UserAlert
           title={errorState.title}
           description={errorState.message}
-          onConfirm={hideErrorHanlder}
+          onConfirm={hideErrorHandler}
         />
       )}
       {/* Success Alert */}

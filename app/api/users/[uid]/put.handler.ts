@@ -142,7 +142,7 @@ export async function PUT(
         }
         console.error("닉네임 업데이트 중 오류 발생:", error);
         return NextResponse.json(
-          { error: "닉네임 업데이트 중 오류가 발생했습니다." },
+          { error: "profile/update-failed" },
           { status: 500 },
         );
       }

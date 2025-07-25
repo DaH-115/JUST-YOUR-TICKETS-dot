@@ -1,10 +1,10 @@
-import SearchForm from "./SearchForm";
+import SearchForm from "app/components/search/SearchForm";
 
-type SearchSectionProps = {
+interface SearchSectionProps {
   searchTerm: string;
   resultCount: number;
   onSearch: (term: string) => void;
-};
+}
 
 export default function SearchSection({
   searchTerm,

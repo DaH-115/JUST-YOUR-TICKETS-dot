@@ -114,7 +114,7 @@ export async function POST(
   } catch (error) {
     console.error("댓글 생성 실패:", error);
     return NextResponse.json(
-      { error: "댓글 생성에 실패했습니다." },
+      { error: "comment/create-failed" },
       { status: 500 },
     );
   }
