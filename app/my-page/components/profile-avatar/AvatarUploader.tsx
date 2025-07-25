@@ -1,92 +1,17 @@
 "use client";
 
-import { useState, ChangeEvent, useRef } from "react";
-import { MAX_FILE_SIZE, ALLOWED_CONTENT_TYPES } from "app/constants/fileUpload";
-import { ALLOWED_EXTENSIONS } from "app/my-page/components/profile-avatar/utils/allowedExtensions";
-import { formatFileSize } from "app/my-page/components/profile-avatar/utils/formatFileSize";
-import { validateFileExtension } from "app/my-page/components/profile-avatar/utils/validateFileExtension";
+// 파일 업로드 관련 상수/유틸을 통합 유틸에서 import
+import { MAX_FILE_SIZE } from "app/utils/file/validateFileSize";
+import { ALLOWED_EXTENSIONS } from "app/utils/file/validateFileExtension";
+import { formatFileSize } from "app/utils/file/formatFileSize";
+import {
+  useAvatarUpload,
+  AvatarUploadCallbacks,
+} from "app/my-page/hooks/useAvatarUpload";
 
-interface AvatarUploaderProps {
-  onPreview: (url: string | null) => void;
-  onCancelPreview: () => void;
-  onFileSelect: (file: File | null) => void;
-  onImageChange?: (hasChanged: boolean) => void;
-  onError?: (message: string) => void;
-}
-
-export default function AvatarUploader({
-  onPreview,
-  onCancelPreview,
-  onFileSelect,
-  onImageChange,
-  onError,
-}: AvatarUploaderProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const onEditToggle = () => {
-    const nextIsEditing = !isEditing;
-    setIsEditing(nextIsEditing);
-
-    if (!nextIsEditing) {
-      onCancelPreview();
-      onFileSelect(null);
-      if (inputRef.current) {
-        inputRef.current.value = "";
-      }
-    }
-
-    onImageChange?.(false);
-  };
-
-  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] ?? null;
-
-    // 파일이 선택되지 않은 경우
-    if (!file) {
-      onFileSelect(null);
-      onCancelPreview();
-      onImageChange?.(false);
-      return;
-    }
-
-    // 파일 확장자 검증
-    if (!validateFileExtension(file.name)) {
-      const message = `지원하지 않는 파일 형식입니다. (${ALLOWED_EXTENSIONS.join(", ")} 파일만 업로드 가능)`;
-      onError?.(message);
-      if (inputRef.current) {
-        inputRef.current.value = "";
-      }
-      return;
-    }
-
-    // 파일 타입 검증
-    if (!ALLOWED_CONTENT_TYPES.includes(file.type)) {
-      const message =
-        "지원하지 않는 파일 형식입니다. (JPG, PNG, GIF 파일만 업로드 가능)";
-      onError?.(message);
-      if (inputRef.current) {
-        inputRef.current.value = "";
-      }
-      return;
-    }
-
-    // 파일 크기 검증
-    if (file.size > MAX_FILE_SIZE) {
-      const message = `파일 크기가 너무 큽니다. (최대 ${formatFileSize(MAX_FILE_SIZE)}, 현재 파일: ${formatFileSize(file.size)})`;
-      onError?.(message);
-      if (inputRef.current) {
-        inputRef.current.value = "";
-      }
-      return;
-    }
-
-    // 모든 검증 통과 시 파일 처리
-    onFileSelect(file);
-    const url = URL.createObjectURL(file);
-    onPreview(url);
-    onImageChange?.(true);
-  };
+export default function AvatarUploader(props: AvatarUploadCallbacks) {
+  const { isEditing, inputRef, onEditToggle, onFileChange } =
+    useAvatarUpload(props);
 
   return (
     <div className="text-xs">

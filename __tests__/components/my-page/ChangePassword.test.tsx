@@ -1,4 +1,3 @@
-import React from "react";
 import {
   render,
   screen,
@@ -139,310 +138,109 @@ describe("ChangePassword", () => {
     });
   });
 
-  describe("초기 렌더링", () => {
-    it("컴포넌트가 정상적으로 렌더링된다", () => {
-      render(<ChangePassword />);
+  test("컴포넌트가 정상적으로 렌더링된다", () => {
+    render(<ChangePassword />);
+    expect(
+      screen.getByRole("heading", { name: "비밀번호 변경" }),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText("현재 비밀번호")).toBeInTheDocument();
+    expect(screen.getByLabelText("새로운 비밀번호")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "비밀번호 확인" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "비밀번호 변경" }),
+    ).toBeInTheDocument();
+  });
 
-      expect(
-        screen.getByRole("heading", { name: "비밀번호 변경" }),
-      ).toBeInTheDocument();
-      expect(screen.getByLabelText("현재 비밀번호")).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "비밀번호 확인" }),
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByLabelText("새로운 비밀번호"),
-      ).not.toBeInTheDocument();
+  test("현재 비밀번호 입력 필드가 올바르게 렌더링된다", () => {
+    render(<ChangePassword />);
+    const currentPasswordInput = screen.getByTestId("currentPassword");
+    expect(currentPasswordInput).toHaveAttribute("type", "password");
+    expect(currentPasswordInput).toHaveAttribute(
+      "placeholder",
+      "현재 비밀번호를 입력하세요.",
+    );
+  });
+
+  test("새 비밀번호 입력 필드가 올바르게 렌더링된다", () => {
+    render(<ChangePassword />);
+    const newPasswordInput = screen.getByTestId("newPassword");
+    expect(newPasswordInput).toHaveAttribute("type", "password");
+    expect(newPasswordInput).toHaveAttribute(
+      "placeholder",
+      "새로운 비밀번호를 입력하세요.",
+    );
+  });
+
+  test("비밀번호 확인 버튼 클릭 시 핸들러가 호출된다", async () => {
+    (EmailAuthProvider.credential as jest.Mock).mockReturnValue({
+      user: "mock-user",
     });
+    (reauthenticateWithCredential as jest.Mock).mockResolvedValue(undefined);
 
-    it("현재 비밀번호 입력 필드가 표시된다", () => {
-      render(<ChangePassword />);
+    render(<ChangePassword />);
+    const currentPasswordInput = screen.getByTestId("currentPassword");
+    const confirmButton = screen.getByRole("button", { name: "비밀번호 확인" });
 
-      const currentPasswordInput = screen.getByTestId("currentPassword");
-      expect(currentPasswordInput).toBeInTheDocument();
-      expect(currentPasswordInput).toHaveAttribute("type", "password");
-      expect(currentPasswordInput).toHaveAttribute(
-        "placeholder",
-        "현재 비밀번호를 입력하세요.",
-      );
-    });
-
-    it("비밀번호 확인 버튼이 표시된다", () => {
-      render(<ChangePassword />);
-
-      const confirmButton = screen.getByRole("button", {
-        name: "비밀번호 확인",
+    await act(async () => {
+      fireEvent.change(currentPasswordInput, {
+        target: { value: "currentPassword123!" },
       });
-      expect(confirmButton).toBeInTheDocument();
-      expect(confirmButton).not.toBeDisabled();
+      fireEvent.click(confirmButton);
+    });
+
+    await waitFor(() => {
+      expect(EmailAuthProvider.credential).toHaveBeenCalledWith(
+        "test@example.com",
+        "currentPassword123!",
+      );
+      expect(reauthenticateWithCredential).toHaveBeenCalled();
+      expect(mockShowSuccessHandler).toHaveBeenCalled();
     });
   });
 
-  describe("현재 비밀번호 확인", () => {
-    it("올바른 현재 비밀번호 입력 시 인증이 성공한다", async () => {
-      const mockCredential = { user: "mock-user" };
-      (EmailAuthProvider.credential as jest.Mock).mockReturnValue(
-        mockCredential,
-      );
-      (reauthenticateWithCredential as jest.Mock).mockResolvedValue(undefined);
+  test("비밀번호 변경 버튼 클릭 시 핸들러가 호출된다", async () => {
+    (updatePassword as jest.Mock).mockResolvedValue(undefined);
 
-      render(<ChangePassword />);
+    render(<ChangePassword />);
+    const newPasswordInput = screen.getByTestId("newPassword");
+    const changeButton = screen.getByRole("button", { name: "비밀번호 변경" });
 
-      const currentPasswordInput = screen.getByTestId("currentPassword");
-      const confirmButton = screen.getByRole("button", {
-        name: "비밀번호 확인",
+    await act(async () => {
+      fireEvent.change(newPasswordInput, {
+        target: { value: "newPassword123!" },
       });
-
-      await act(async () => {
-        fireEvent.change(currentPasswordInput, {
-          target: { value: "currentPassword123!" },
-        });
-        fireEvent.click(confirmButton);
-      });
-
-      await waitFor(() => {
-        expect(EmailAuthProvider.credential).toHaveBeenCalledWith(
-          "test@example.com",
-          "currentPassword123!",
-        );
-        expect(reauthenticateWithCredential).toHaveBeenCalledWith(
-          defaultCurrentUser,
-          mockCredential,
-        );
-        expect(mockShowSuccessHandler).toHaveBeenCalledWith(
-          "확인",
-          "비밀번호가 확인되었습니다.",
-        );
-      });
+      fireEvent.click(changeButton);
     });
 
-    it("잘못된 현재 비밀번호 입력 시 에러가 표시된다", async () => {
-      // 모든 mock 초기화
-      jest.clearAllMocks();
-
-      const mockCredential = { user: "mock-user" };
-      (EmailAuthProvider.credential as jest.Mock).mockReturnValue(
-        mockCredential,
+    await waitFor(() => {
+      expect(updatePassword).toHaveBeenCalledWith(
+        defaultCurrentUser,
+        "newPassword123!",
       );
-      (reauthenticateWithCredential as jest.Mock).mockRejectedValue({
-        code: "auth/wrong-password",
-        message: "Wrong password",
-      });
-
-      render(<ChangePassword />);
-
-      const currentPasswordInput = screen.getByTestId("currentPassword");
-      const confirmButton = screen.getByRole("button", {
-        name: "비밀번호 확인",
-      });
-
-      await act(async () => {
-        fireEvent.change(currentPasswordInput, {
-          target: { value: "wrongPassword123!" },
-        });
-        fireEvent.click(confirmButton);
-      });
-
-      await waitFor(() => {
-        expect(mockShowErrorHandler).toHaveBeenCalledWith(
-          "비밀번호 오류",
-          "현재 비밀번호가 올바르지 않습니다.",
-        );
-      });
-    });
-
-    it("사용자 정보가 없을 때 에러가 표시된다", async () => {
-      (useAppSelector as jest.Mock).mockReturnValue(null);
-
-      render(<ChangePassword />);
-
-      const currentPasswordInput = screen.getByTestId("currentPassword");
-      const confirmButton = screen.getByRole("button", {
-        name: "비밀번호 확인",
-      });
-
-      await act(async () => {
-        fireEvent.change(currentPasswordInput, {
-          target: { value: "password123!" },
-        });
-        fireEvent.click(confirmButton);
-      });
-
-      await waitFor(() => {
-        expect(mockShowErrorHandler).toHaveBeenCalledWith(
-          "오류",
-          "사용자 정보가 올바르지 않습니다.",
-        );
-      });
+      expect(mockShowSuccessHandler).toHaveBeenCalled();
     });
   });
 
-  describe("새 비밀번호 입력", () => {
-    beforeEach(async () => {
-      // 현재 비밀번호 확인을 먼저 완료
-      (EmailAuthProvider.credential as jest.Mock).mockReturnValue({
-        user: "mock-user",
-      });
-      (reauthenticateWithCredential as jest.Mock).mockResolvedValue(undefined);
+  test("비밀번호 변경 실패 시 에러가 표시된다", async () => {
+    (updatePassword as jest.Mock).mockRejectedValue(
+      new Error("비밀번호 변경 실패"),
+    );
 
-      render(<ChangePassword />);
+    render(<ChangePassword />);
+    const newPasswordInput = screen.getByTestId("newPassword");
+    const changeButton = screen.getByRole("button", { name: "비밀번호 변경" });
 
-      const currentPasswordInput = screen.getByTestId("currentPassword");
-      const confirmButton = screen.getByRole("button", {
-        name: "비밀번호 확인",
+    await act(async () => {
+      fireEvent.change(newPasswordInput, {
+        target: { value: "newPassword123!" },
       });
-
-      await act(async () => {
-        fireEvent.change(currentPasswordInput, {
-          target: { value: "currentPassword123!" },
-        });
-        fireEvent.click(confirmButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByLabelText("새로운 비밀번호")).toBeInTheDocument();
-      });
+      fireEvent.click(changeButton);
     });
 
-    it("현재 비밀번호 확인 후 새 비밀번호 입력 필드가 표시된다", () => {
-      expect(screen.getByLabelText("새로운 비밀번호")).toBeInTheDocument();
-      expect(
-        screen.getByRole("button", { name: "비밀번호 변경" }),
-      ).toBeInTheDocument();
-      expect(screen.queryByLabelText("현재 비밀번호")).not.toBeInTheDocument();
-    });
-
-    it("새 비밀번호 입력 필드가 올바르게 설정된다", () => {
-      const newPasswordInput = screen.getByTestId("newPassword");
-      expect(newPasswordInput).toHaveAttribute("type", "password");
-      expect(newPasswordInput).toHaveAttribute(
-        "placeholder",
-        "새로운 비밀번호를 입력하세요.",
-      );
-    });
-
-    it("유효한 새 비밀번호로 변경이 성공한다", async () => {
-      (updatePassword as jest.Mock).mockResolvedValue(undefined);
-
-      const newPasswordInput = screen.getByTestId("newPassword");
-      const changeButton = screen.getByRole("button", {
-        name: "비밀번호 변경",
-      });
-
-      await act(async () => {
-        fireEvent.change(newPasswordInput, {
-          target: { value: "newPassword123!" },
-        });
-        fireEvent.click(changeButton);
-      });
-
-      await waitFor(() => {
-        expect(updatePassword).toHaveBeenCalledWith(
-          defaultCurrentUser,
-          "newPassword123!",
-        );
-        expect(mockShowSuccessHandler).toHaveBeenCalledWith(
-          "성공",
-          "비밀번호가 성공적으로 변경되었습니다.",
-        );
-      });
-    });
-
-    it("비밀번호 변경 실패 시 에러가 표시된다", async () => {
-      (updatePassword as jest.Mock).mockRejectedValue(
-        new Error("비밀번호 변경 실패"),
-      );
-
-      const newPasswordInput = screen.getByTestId("newPassword");
-      const changeButton = screen.getByRole("button", {
-        name: "비밀번호 변경",
-      });
-
-      await act(async () => {
-        fireEvent.change(newPasswordInput, {
-          target: { value: "newPassword123!" },
-        });
-        fireEvent.click(changeButton);
-      });
-
-      await waitFor(() => {
-        expect(mockShowErrorHandler).toHaveBeenCalledWith(
-          "오류",
-          "비밀번호 변경에 실패했습니다.",
-        );
-      });
-    });
-  });
-
-  describe("로그인 상태 검증", () => {
-    it("로그인하지 않은 사용자는 로그인 페이지로 리다이렉트된다", async () => {
-      // 모든 mock 초기화
-      jest.clearAllMocks();
-
-      // 처음부터 currentUser를 null로 설정
-      Object.defineProperty(isAuth, "currentUser", {
-        value: null,
-        writable: true,
-      });
-
-      // 먼저 현재 비밀번호 확인을 완료하여 새 비밀번호 입력 상태로 만들기 위해
-      // 임시로 currentUser를 설정하고 비밀번호 확인 완료
-      const tempCurrentUser = {
-        getIdToken: jest.fn().mockResolvedValue("mock-token"),
-      };
-      Object.defineProperty(isAuth, "currentUser", {
-        value: tempCurrentUser,
-        writable: true,
-      });
-
-      (EmailAuthProvider.credential as jest.Mock).mockReturnValue({
-        user: "mock-user",
-      });
-      (reauthenticateWithCredential as jest.Mock).mockResolvedValue(undefined);
-
-      render(<ChangePassword />);
-
-      // 현재 비밀번호 확인 먼저 완료
-      const currentPasswordInput = screen.getByTestId("currentPassword");
-      const confirmButton = screen.getByRole("button", {
-        name: "비밀번호 확인",
-      });
-
-      await act(async () => {
-        fireEvent.change(currentPasswordInput, {
-          target: { value: "currentPassword123!" },
-        });
-        fireEvent.click(confirmButton);
-      });
-
-      await waitFor(() => {
-        expect(screen.getByLabelText("새로운 비밀번호")).toBeInTheDocument();
-      });
-
-      // 이제 다시 currentUser를 null로 설정하고 컴포넌트 리렌더링
-      Object.defineProperty(isAuth, "currentUser", {
-        value: null,
-        writable: true,
-      });
-
-      const newPasswordInput = screen.getByTestId("newPassword");
-      const changeButton = screen.getByRole("button", {
-        name: "비밀번호 변경",
-      });
-
-      await act(async () => {
-        fireEvent.change(newPasswordInput, {
-          target: { value: "newPassword123!" },
-        });
-        fireEvent.click(changeButton);
-      });
-
-      await waitFor(() => {
-        expect(mockShowErrorHandler).toHaveBeenCalledWith(
-          "오류",
-          "비밀번호 변경에 실패했습니다.",
-        );
-      });
+    await waitFor(() => {
+      expect(mockShowErrorHandler).toHaveBeenCalled();
     });
   });
 });

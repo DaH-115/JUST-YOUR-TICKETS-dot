@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 import { useAlert } from "store/context/alertContext";
-import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
+import { apiCallWithTokenRefresh } from "app/utils/getIdToken/apiCallWithTokenRefresh";
 import { ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
 
 // 리뷰 모달 상태 관리 훅

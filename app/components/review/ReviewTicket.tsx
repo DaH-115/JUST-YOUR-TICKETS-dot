@@ -6,7 +6,7 @@ import ActivityBadge from "app/components/ui/feedback/ActivityBadge";
 import MoviePoster from "app/components/movie/MoviePoster";
 import ProfileAvatar from "app/components/user/ProfileAvatar";
 import ReviewDetailsModal from "app/components/review/ReviewDetailsModal";
-import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
 import { useReviews } from "app/components/review/hooks/useReviews";
 import { useLikeToggle } from "app/components/review/hooks/useLikeToggle";
 import { useReviewModal } from "app/components/review/hooks/useReviewModal";
@@ -15,8 +15,9 @@ import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 import { ImSpinner2 } from "react-icons/im";
 
+// ReviewWithLike 타입을 사용하도록 수정
 interface ReviewTicketProps {
-  reviews: ReviewDoc[];
+  reviews: ReviewWithLike[];
   reviewId?: string | null;
   onLikeToggled?: (
     reviewId: string,
@@ -32,7 +33,7 @@ export default function ReviewTicket({
 }: ReviewTicketProps) {
   const userState = useAppSelector(selectUser);
 
-  // 리뷰 데이터 상태 관리
+  // 리뷰 데이터 상태 관리 (isLiked 필드가 유지되도록 ReviewWithLike[] 사용)
   const { reviews, isLoading, setReviews } = useReviews(initialReviews);
 
   // 모달 상태 관리

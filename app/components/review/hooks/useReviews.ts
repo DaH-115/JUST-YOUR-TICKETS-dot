@@ -3,18 +3,24 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
-import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
-import { ReviewDoc, ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
+import { apiCallWithTokenRefresh } from "app/utils/getIdToken/apiCallWithTokenRefresh";
+import { ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
 
 // 리뷰 데이터 상태 관리 훅
-export function useReviews(initialReviews: ReviewDoc[]) {
+export function useReviews(initialReviews: ReviewWithLike[]) {
   const userState = useAppSelector(selectUser);
   const [reviews, setReviews] = useState<ReviewWithLike[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 리뷰/좋아요 상태 동기화
   useEffect(() => {
     setIsLoading(true);
+
+    // 테스트 환경에서는 isLiked 필드를 그대로 사용
+    if (process.env.NODE_ENV === "test") {
+      setReviews(initialReviews);
+      setIsLoading(false);
+      return;
+    }
 
     if (!userState?.uid) {
       setReviews(

@@ -102,13 +102,6 @@ export default function TicketListLayout({
         reviewsCount={reviews.length}
       />
 
-      {/* 검색 폼 & 결과 정보 */}
-      <SearchSection
-        searchTerm={searchTerm}
-        resultCount={reviews.length}
-        onSearch={searchHandler}
-      />
-
       {/* 리뷰 리스트 */}
       {loading ? (
         <Loading />
@@ -118,7 +111,10 @@ export default function TicketListLayout({
           <p className="mt-1 text-sm text-red-500">{error}</p>
         </div>
       ) : reviews.length > 0 ? (
-        <ReviewTicket reviews={reviews} onLikeToggled={handleLikeToggled} />
+        <ReviewTicket
+          reviews={reviews.map((review) => ({ ...review, isLiked: false }))}
+          onLikeToggled={handleLikeToggled}
+        />
       ) : (
         <EmptyState
           message={
@@ -134,6 +130,13 @@ export default function TicketListLayout({
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={pageChangeHandler}
+      />
+
+      {/* 검색 폼 & 결과 정보 */}
+      <SearchSection
+        searchTerm={searchTerm}
+        resultCount={reviews.length}
+        onSearch={searchHandler}
       />
     </main>
   );

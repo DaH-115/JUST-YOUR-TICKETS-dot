@@ -10,7 +10,7 @@ import { FcGoogle } from "react-icons/fc";
 import SocialLoginBtn from "app/login/components/SocialLoginBtn";
 import { setRememberMe } from "app/utils/authPersistence";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
-import { getIdToken } from "app/utils/getIdToken";
+import { getIdToken } from "app/utils/getIdToken/getIdToken";
 import { isAuth } from "firebase-config";
 import { useAlert } from "store/context/alertContext";
 

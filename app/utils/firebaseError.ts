@@ -83,6 +83,46 @@ const firestoreErrorMessages: Record<string, ErrorMessage> = {
   },
 };
 
+// 커스텀 비즈니스 에러 메시지 맵
+const customErrorMessages: Record<string, ErrorMessage> = {
+  // 리뷰 관련
+  "review/create-failed": {
+    title: "리뷰 생성 실패",
+    message: "리뷰를 생성하는 데 실패했습니다. 잠시 후 다시 시도해주세요.",
+  },
+  "review/update-failed": {
+    title: "리뷰 수정 실패",
+    message: "리뷰를 수정하는 데 실패했습니다. 잠시 후 다시 시도해주세요.",
+  },
+  "review/delete-failed": {
+    title: "리뷰 삭제 실패",
+    message: "리뷰를 삭제하는 데 실패했습니다. 잠시 후 다시 시도해주세요.",
+  },
+  // 댓글 관련
+  "comment/create-failed": {
+    title: "댓글 등록 실패",
+    message: "댓글을 등록하는 데 실패했습니다. 잠시 후 다시 시도해주세요.",
+  },
+  "comment/update-failed": {
+    title: "댓글 수정 실패",
+    message: "댓글을 수정하는 데 실패했습니다. 잠시 후 다시 시도해주세요.",
+  },
+  "comment/delete-failed": {
+    title: "댓글 삭제 실패",
+    message: "댓글을 삭제하는 데 실패했습니다. 잠시 후 다시 시도해주세요.",
+  },
+  // 프로필 관련
+  "profile/update-failed": {
+    title: "프로필 수정 실패",
+    message: "프로필을 수정하는 데 실패했습니다. 잠시 후 다시 시도해주세요.",
+  },
+  // 기타
+  "network-failed": {
+    title: "네트워크 오류",
+    message: "네트워크 연결에 실패했습니다. 인터넷 상태를 확인해주세요.",
+  },
+};
+
 export const firebaseErrorHandler = (error: unknown): ErrorMessage => {
   const defaultError = {
     title: "오류 발생",
@@ -91,7 +131,7 @@ export const firebaseErrorHandler = (error: unknown): ErrorMessage => {
 
   if (!error) return defaultError;
 
-  // Firebase 에러 (코드 속성 존재)
+  // 커스텀 에러 코드 처리
   if (
     typeof error === "object" &&
     error !== null &&
@@ -102,11 +142,17 @@ export const firebaseErrorHandler = (error: unknown): ErrorMessage => {
     if (code.startsWith("auth/")) {
       return firebaseErrorMessages[code] || defaultError;
     }
+    if (customErrorMessages[code]) {
+      return customErrorMessages[code];
+    }
     return firestoreErrorMessages[code] || defaultError;
   }
 
-  // 일반 Error 객체
+  // 일반 Error 객체 (message가 커스텀 코드일 수 있음)
   if (error instanceof Error) {
+    if (customErrorMessages[error.message]) {
+      return customErrorMessages[error.message];
+    }
     return {
       title: "에러",
       message: error.message || defaultError.message,

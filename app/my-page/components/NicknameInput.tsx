@@ -1,6 +1,6 @@
 import { useFormContext, useWatch } from "react-hook-form";
 import DuplicateCheckButton from "app/components/ui/buttons/DuplicateCheckButton";
-import { useNicknameCheck } from "app/my-page/hooks/useNicknameCheck";
+import { useDuplicateCheck } from "app/my-page/hooks/useDuplicateCheck";
 
 interface NicknameInputProps {
   originalValue?: string | null;
@@ -19,10 +19,11 @@ export default function NicknameInput({
 
   const watchedNickname = useWatch({ name: "displayName", control });
 
-  const { isChecking, isChecked, isAvailable, message, checkNickname } =
-    useNicknameCheck({
-      nickname: watchedNickname,
-      originalNickname: originalValue,
+  const { isChecking, isChecked, isAvailable, message, check } =
+    useDuplicateCheck({
+      type: "displayName",
+      value: watchedNickname,
+      originalValue: originalValue ?? undefined,
     });
 
   // 닉네임 유효성 검사 에러 또는 중복 확인 에러를 표시
@@ -59,7 +60,7 @@ export default function NicknameInput({
               placeholder="닉네임을 입력하세요"
             />
             <DuplicateCheckButton
-              onClick={checkNickname}
+              onClick={check}
               disabled={isDuplicateCheckDisabled}
               isChecking={isChecking}
               className="self-start"

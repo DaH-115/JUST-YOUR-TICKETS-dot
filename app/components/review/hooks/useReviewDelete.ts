@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 import { useAlert } from "store/context/alertContext";
-import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
+import { apiCallWithTokenRefresh } from "app/utils/getIdToken/apiCallWithTokenRefresh";
 
 // 리뷰 삭제 기능 훅
 export function useReviewDelete(closeModalHandler: () => void) {

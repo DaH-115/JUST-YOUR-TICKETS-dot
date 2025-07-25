@@ -1,7 +1,7 @@
+// 좋아요한 리뷰 목록(페이지네이션, 검색 등) 비동기 조회 및 상태 관리 커스텀 훅
 "use client";
 
-import { useState, useEffect } from "react";
-import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
+import { useEffect, useState, useCallback } from "react";
 
 interface UseLikedReviewsOptions {
   uid: string;
@@ -10,81 +10,55 @@ interface UseLikedReviewsOptions {
   pageSize?: number;
 }
 
-interface UseLikedReviewsResult {
-  reviews: ReviewDoc[];
-  totalPages: number;
-  loading: boolean;
-  error: string | null;
-  removeReview: (reviewId: string) => void;
-}
-
 export default function useLikedReviews({
   uid,
   search = "",
   page,
   pageSize = 10,
-}: UseLikedReviewsOptions): UseLikedReviewsResult {
-  const [reviews, setReviews] = useState<ReviewDoc[]>([]);
+}: UseLikedReviewsOptions) {
+  const [reviews, setReviews] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     if (!uid) {
       setReviews([]);
       setTotalPages(0);
       return;
     }
-
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const params = new URLSearchParams({
-          uid,
-          page: String(page),
-          pageSize: String(pageSize),
-        });
-
-        if (search) {
-          params.set("search", search);
-        }
-
-        const res = await fetch(
-          `/api/reviews/liked-by-user?${params.toString()}`,
-        );
-
-        if (!res.ok) {
-          throw new Error("좋아요 리뷰 로딩에 실패했습니다");
-        }
-
-        const {
-          reviews,
-          totalPages,
-        }: { reviews: ReviewDoc[]; totalPages: number } = await res.json();
-
-        setReviews(reviews);
-        setTotalPages(totalPages);
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("알 수 없는 오류가 발생했습니다.");
-        }
-      } finally {
-        setLoading(false);
+    setLoading(true);
+    setError(null);
+    try {
+      const searchParams = new URLSearchParams();
+      Object.entries({ uid, search, page, pageSize }).forEach(
+        ([key, value]) => {
+          if (value !== undefined && value !== "") {
+            searchParams.set(key, String(value));
+          }
+        },
+      );
+      const response = await fetch(
+        `/api/reviews/liked-by-user?${searchParams.toString()}`,
+      );
+      if (!response.ok) {
+        throw new Error("리뷰 데이터를 불러오는데 실패했습니다.");
       }
-    };
-
-    fetchData();
+      const data = await response.json();
+      setReviews(data.reviews);
+      setTotalPages(data.totalPages);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.",
+      );
+    } finally {
+      setLoading(false);
+    }
   }, [uid, search, page, pageSize]);
 
-  const removeReview = (reviewId: string) => {
-    setReviews((prevReviews) =>
-      prevReviews.filter((review) => review.id !== reviewId),
-    );
-  };
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-  return { reviews, totalPages, loading, error, removeReview };
+  return { reviews, totalPages, loading, error, refetch: fetchData };
 }

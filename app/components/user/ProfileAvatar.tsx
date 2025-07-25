@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { usePresignedUrl } from "app/hooks/usePresignedUrl";
+import { usePresignedUrl } from "app/components/user/hooks/usePresignedUrl";
 
 /**
  * 프로필 아바타 컴포넌트

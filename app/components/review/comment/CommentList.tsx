@@ -5,10 +5,11 @@ import { z } from "zod";
 import ActivityBadge from "app/components/ui/feedback/ActivityBadge";
 import ProfileAvatar from "app/components/user/ProfileAvatar";
 import formatDate from "app/utils/formatDate";
-import { apiCallWithTokenRefresh } from "app/utils/getIdToken";
+import { apiCallWithTokenRefresh } from "app/utils/getIdToken/apiCallWithTokenRefresh";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
+import { firebaseErrorHandler } from "app/utils/firebaseError";
 
 const commentSchema = z.object({
   comment: z
@@ -130,7 +131,7 @@ export default function CommentList({
 
             if (!response.ok) {
               const errorData = await response.json();
-              throw new Error(errorData.error || "댓글 등록에 실패했습니다.");
+              throw new Error(errorData.error || "comment/create-failed");
             }
 
             return response.json();
@@ -143,10 +144,8 @@ export default function CommentList({
         }
         await fetchComments(); // 댓글 목록 새로고침
       } catch (error) {
-        console.error("댓글 처리 실패:", error);
-        alert(
-          error instanceof Error ? error.message : "댓글 처리에 실패했습니다.",
-        );
+        const { message } = firebaseErrorHandler(error);
+        alert(message);
       } finally {
         setIsPosting(false);
       }

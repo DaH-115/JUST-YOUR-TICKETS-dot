@@ -2,9 +2,7 @@ import { PUT } from "app/api/comments/[reviewId]/[commentId]/put.handler";
 import { NextRequest } from "next/server";
 import { verifyAuthToken, verifyResourceOwnership } from "lib/auth/verifyToken";
 import { createMockRequest } from "__tests__/utils/test-utils";
-import { FieldValue } from "firebase-admin/firestore";
 
-// ==== 테스트 설정: 외부 모듈 모킹(Mocking) ====
 jest.mock("lib/auth/verifyToken");
 jest.mock("next/cache", () => ({ revalidatePath: jest.fn() }));
 jest.mock("firebase-admin/firestore", () => ({
@@ -13,13 +11,9 @@ jest.mock("firebase-admin/firestore", () => ({
   },
 }));
 
-const mockCommentDoc = {
-  get: jest.fn(),
-  update: jest.fn(),
-};
+const mockCommentDoc = { get: jest.fn(), update: jest.fn() };
 const mockSubCollection = { doc: jest.fn(() => mockCommentDoc) };
 const mockMainDoc = { collection: jest.fn(() => mockSubCollection) };
-
 jest.mock("firebase-admin-config", () => ({
   adminFirestore: {
     collection: jest.fn(() => ({ doc: jest.fn(() => mockMainDoc) })),
@@ -36,29 +30,25 @@ describe("PUT /api/comments/[reviewId]/[commentId]", () => {
   const mockContent = "Updated comment content.";
 
   beforeEach(() => {
+    // 각 테스트 전 mock 및 상태 초기화
     jest.clearAllMocks();
   });
 
-  it("성공적으로 댓글을 수정하고 200 상태 코드를 반환해야 합니다", async () => {
-    // GIVEN
+  test("성공적으로 댓글을 수정하고 200 상태 코드를 반환해야 합니다", async () => {
+    // 정상적으로 인증, 소유권, Firestore update까지 모두 성공하는 경우
     mockedVerifyAuthToken.mockResolvedValue({ success: true, uid: mockUid });
     mockCommentDoc.get.mockResolvedValue({
       exists: true,
       data: () => ({ authorId: mockUid }),
     });
     mockedVerifyResourceOwnership.mockReturnValue({ success: true });
-
     const request = createMockRequest({
       method: "PUT",
       body: { content: mockContent },
     });
     const params = { reviewId: mockReviewId, commentId: mockCommentId };
-
-    // WHEN
     const response = await PUT(request as NextRequest, { params });
     const body = await response.json();
-
-    // THEN
     expect(response.status).toBe(200);
     expect(body.success).toBe(true);
     expect(mockCommentDoc.update).toHaveBeenCalledWith({
@@ -67,24 +57,20 @@ describe("PUT /api/comments/[reviewId]/[commentId]", () => {
     });
   });
 
-  it("content가 없으면 400 에러를 반환해야 합니다", async () => {
-    // GIVEN
+  test("content가 없으면 400 에러를 반환해야 합니다", async () => {
+    // content가 없거나 공백일 때 400 반환
     mockedVerifyAuthToken.mockResolvedValue({ success: true, uid: mockUid });
     const request = createMockRequest({
       method: "PUT",
       body: { content: "  " },
-    }); // 공백 content
+    });
     const params = { reviewId: mockReviewId, commentId: mockCommentId };
-
-    // WHEN
     const response = await PUT(request as NextRequest, { params });
-
-    // THEN
     expect(response.status).toBe(400);
   });
 
-  // 404, 403, 500 에러 케이스는 DELETE 핸들러와 동일한 패턴으로 테스트
-  it("댓글을 찾을 수 없으면 404 에러를 반환해야 합니다", async () => {
+  test("댓글을 찾을 수 없으면 404 에러를 반환해야 합니다", async () => {
+    // 댓글 문서가 존재하지 않을 때 404 반환
     mockedVerifyAuthToken.mockResolvedValue({ success: true, uid: mockUid });
     mockCommentDoc.get.mockResolvedValue({ exists: false });
     const request = createMockRequest({
@@ -96,7 +82,8 @@ describe("PUT /api/comments/[reviewId]/[commentId]", () => {
     expect(response.status).toBe(404);
   });
 
-  it("리소스 소유자가 아니면 403 에러를 반환해야 합니다", async () => {
+  test("리소스 소유자가 아니면 403 에러를 반환해야 합니다", async () => {
+    // 인증된 사용자와 댓글 작성자의 UID가 다를 때 403 반환
     mockedVerifyAuthToken.mockResolvedValue({
       success: true,
       uid: "another-uid",
@@ -118,7 +105,8 @@ describe("PUT /api/comments/[reviewId]/[commentId]", () => {
     expect(response.status).toBe(403);
   });
 
-  it("DB 수정 중 에러가 발생하면 500 에러를 반환해야 합니다", async () => {
+  test("DB 수정 중 에러가 발생하면 500 에러를 반환해야 합니다", async () => {
+    // Firestore update 중 에러 발생 시 500 반환
     mockedVerifyAuthToken.mockResolvedValue({ success: true, uid: mockUid });
     mockCommentDoc.get.mockResolvedValue({
       exists: true,

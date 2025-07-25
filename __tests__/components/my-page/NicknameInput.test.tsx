@@ -1,13 +1,12 @@
-import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import NicknameInput from "app/my-page/components/NicknameInput";
-import { useNicknameCheck } from "app/my-page/hooks/useNicknameCheck";
+import { useDuplicateCheck } from "app/my-page/hooks/useDuplicateCheck";
 
 // Mock modules
-jest.mock("app/my-page/hooks/useNicknameCheck");
+jest.mock("app/my-page/hooks/useDuplicateCheck");
 jest.mock("app/components/ui/buttons/DuplicateCheckButton", () => {
   return function MockDuplicateCheckButton({
     onClick,
@@ -62,24 +61,24 @@ const TestWrapper = ({
 
 describe("NicknameInput", () => {
   const mockCheckNickname = jest.fn();
-  const mockUseNicknameCheck = useNicknameCheck as jest.MockedFunction<
-    typeof useNicknameCheck
+  const mockUseDuplicateCheck = useDuplicateCheck as jest.MockedFunction<
+    typeof useDuplicateCheck
   >;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    mockUseNicknameCheck.mockReturnValue({
+    mockUseDuplicateCheck.mockReturnValue({
+      check: mockCheckNickname,
       isChecking: false,
       isChecked: false,
       isAvailable: null,
       message: null,
-      checkNickname: mockCheckNickname,
     });
   });
 
   describe("편집 모드", () => {
-    it("편집 모드에서 입력 필드와 중복 확인 버튼이 렌더링된다", () => {
+    test("편집 모드에서 입력 필드와 중복 확인 버튼이 렌더링된다", () => {
       render(
         <TestWrapper>
           <NicknameInput originalValue="기존닉네임" isEditing={true} />
@@ -93,7 +92,7 @@ describe("NicknameInput", () => {
       expect(screen.getByTestId("duplicate-check-button")).toBeInTheDocument();
     });
 
-    it("닉네임 입력 시 값이 변경된다", () => {
+    test("닉네임 입력 시 값이 변경된다", () => {
       render(
         <TestWrapper>
           <NicknameInput originalValue="기존닉네임" isEditing={true} />
@@ -106,7 +105,7 @@ describe("NicknameInput", () => {
       expect(input).toHaveValue("새닉네임");
     });
 
-    it("중복 확인 버튼 클릭 시 checkNickname 함수가 호출된다", () => {
+    test("중복 확인 버튼 클릭 시 checkNickname 함수가 호출된다", () => {
       render(
         <TestWrapper defaultValues={{ displayName: "새닉네임" }}>
           <NicknameInput originalValue="기존닉네임" isEditing={true} />
@@ -119,13 +118,13 @@ describe("NicknameInput", () => {
       expect(mockCheckNickname).toHaveBeenCalledTimes(1);
     });
 
-    it("중복 확인 중일 때 버튼이 비활성화된다", () => {
-      mockUseNicknameCheck.mockReturnValue({
+    test("중복 확인 중일 때 버튼이 비활성화된다", () => {
+      mockUseDuplicateCheck.mockReturnValue({
+        check: mockCheckNickname,
         isChecking: true,
         isChecked: false,
         isAvailable: null,
         message: null,
-        checkNickname: mockCheckNickname,
       });
 
       render(
@@ -139,7 +138,7 @@ describe("NicknameInput", () => {
       expect(button).toHaveTextContent("확인 중...");
     });
 
-    it("닉네임이 비어있을 때 중복 확인 버튼이 비활성화된다", () => {
+    test("닉네임이 비어있을 때 중복 확인 버튼이 비활성화된다", () => {
       render(
         <TestWrapper defaultValues={{ displayName: "" }}>
           <NicknameInput originalValue="기존닉네임" isEditing={true} />
@@ -150,7 +149,7 @@ describe("NicknameInput", () => {
       expect(button).toBeDisabled();
     });
 
-    it("폼 유효성 검사 에러가 있을 때 중복 확인 버튼이 비활성화된다", async () => {
+    test("폼 유효성 검사 에러가 있을 때 중복 확인 버튼이 비활성화된다", async () => {
       render(
         <TestWrapper>
           <NicknameInput originalValue="기존닉네임" isEditing={true} />
@@ -173,13 +172,13 @@ describe("NicknameInput", () => {
       expect(button).toBeDisabled();
     });
 
-    it("중복 확인 성공 시 성공 메시지가 표시된다", () => {
-      mockUseNicknameCheck.mockReturnValue({
+    test("중복 확인 성공 시 성공 메시지가 표시된다", () => {
+      mockUseDuplicateCheck.mockReturnValue({
+        check: mockCheckNickname,
         isChecking: false,
         isChecked: true,
         isAvailable: true,
         message: "사용 가능한 닉네임입니다.",
-        checkNickname: mockCheckNickname,
       });
 
       render(
@@ -194,13 +193,13 @@ describe("NicknameInput", () => {
       );
     });
 
-    it("중복 확인 실패 시 에러 메시지가 표시된다", () => {
-      mockUseNicknameCheck.mockReturnValue({
+    test("중복 확인 실패 시 에러 메시지가 표시된다", () => {
+      mockUseDuplicateCheck.mockReturnValue({
+        check: mockCheckNickname,
         isChecking: false,
         isChecked: true,
         isAvailable: false,
         message: "이미 사용 중인 닉네임입니다.",
-        checkNickname: mockCheckNickname,
       });
 
       render(
@@ -217,7 +216,7 @@ describe("NicknameInput", () => {
       );
     });
 
-    it("폼 유효성 검사 에러가 표시된다", async () => {
+    test("폼 유효성 검사 에러가 표시된다", async () => {
       render(
         <TestWrapper>
           <NicknameInput originalValue="기존닉네임" isEditing={true} />
@@ -235,7 +234,7 @@ describe("NicknameInput", () => {
       });
     });
 
-    it("닉네임이 20자를 초과할 때 에러 메시지가 표시된다", async () => {
+    test("닉네임이 20자를 초과할 때 에러 메시지가 표시된다", async () => {
       render(
         <TestWrapper>
           <NicknameInput originalValue="기존닉네임" isEditing={true} />
@@ -254,13 +253,13 @@ describe("NicknameInput", () => {
       });
     });
 
-    it("중복 확인 성공 후 다시 버튼이 비활성화된다", () => {
-      mockUseNicknameCheck.mockReturnValue({
+    test("중복 확인 성공 후 다시 버튼이 비활성화된다", () => {
+      mockUseDuplicateCheck.mockReturnValue({
+        check: mockCheckNickname,
         isChecking: false,
         isChecked: true,
         isAvailable: true,
         message: "사용 가능한 닉네임입니다.",
-        checkNickname: mockCheckNickname,
       });
 
       render(
@@ -275,7 +274,7 @@ describe("NicknameInput", () => {
   });
 
   describe("읽기 전용 모드", () => {
-    it("읽기 전용 모드에서 닉네임 값이 표시된다", () => {
+    test("읽기 전용 모드에서 닉네임 값이 표시된다", () => {
       render(
         <TestWrapper>
           <NicknameInput originalValue="표시될닉네임" isEditing={false} />
@@ -289,7 +288,7 @@ describe("NicknameInput", () => {
       ).not.toBeInTheDocument();
     });
 
-    it("닉네임이 없을 때 '없음'이 표시된다", () => {
+    test("닉네임이 없을 때 '없음'이 표시된다", () => {
       render(
         <TestWrapper>
           <NicknameInput originalValue={null} isEditing={false} />
@@ -299,7 +298,7 @@ describe("NicknameInput", () => {
       expect(screen.getByText("없음")).toBeInTheDocument();
     });
 
-    it("빈 문자열일 때 '없음'이 표시된다", () => {
+    test("빈 문자열일 때 '없음'이 표시된다", () => {
       render(
         <TestWrapper>
           <NicknameInput originalValue="" isEditing={false} />
@@ -311,29 +310,31 @@ describe("NicknameInput", () => {
   });
 
   describe("닉네임 중복 확인 훅 연동", () => {
-    it("useNicknameCheck 훅에 올바른 파라미터가 전달된다", () => {
+    test("useDuplicateCheck 훅에 올바른 파라미터가 전달된다", () => {
       render(
         <TestWrapper defaultValues={{ displayName: "테스트닉네임" }}>
           <NicknameInput originalValue="기존닉네임" isEditing={true} />
         </TestWrapper>,
       );
 
-      expect(mockUseNicknameCheck).toHaveBeenCalledWith({
-        nickname: "테스트닉네임",
-        originalNickname: "기존닉네임",
+      expect(mockUseDuplicateCheck).toHaveBeenCalledWith({
+        type: "displayName",
+        value: "테스트닉네임",
+        originalValue: "기존닉네임",
       });
     });
 
-    it("원본 닉네임이 없을 때도 올바르게 처리된다", () => {
+    test("원본 닉네임이 없을 때도 올바르게 처리된다", () => {
       render(
         <TestWrapper defaultValues={{ displayName: "테스트닉네임" }}>
           <NicknameInput originalValue={null} isEditing={true} />
         </TestWrapper>,
       );
 
-      expect(mockUseNicknameCheck).toHaveBeenCalledWith({
-        nickname: "테스트닉네임",
-        originalNickname: null,
+      expect(mockUseDuplicateCheck).toHaveBeenCalledWith({
+        type: "displayName",
+        value: "테스트닉네임",
+        originalValue: undefined,
       });
     });
   });
