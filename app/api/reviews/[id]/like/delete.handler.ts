@@ -87,6 +87,7 @@ export async function DELETE(
         success: true,
         message: "좋아요가 취소되었습니다.",
         likeCount: updatedLikeCount,
+        isLiked: false, // 좋아요 취소 후 상태
       },
       { status: 200 },
     );

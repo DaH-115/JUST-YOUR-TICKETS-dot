@@ -50,7 +50,7 @@ export const useReviewForm = ({
    */
   const onSubmit = async (data: ReviewFormValues) => {
     if (!userState) return;
-    const { reviewTitle, reviewContent, rating } = data;
+    const { reviewTitle, reviewContent, rating, isLiked } = data;
 
     try {
       // 로그인 유저의 인증 토큰을 헤더에 포함
@@ -76,6 +76,7 @@ export const useReviewForm = ({
             reviewTitle,
             reviewContent,
             likeCount: 0,
+            isLiked: false,
           },
         };
         await postReview({
@@ -90,7 +91,7 @@ export const useReviewForm = ({
       } else if (mode === "edit" && reviewId) {
         await putReview({
           reviewId,
-          reviewData: { reviewTitle, reviewContent, rating },
+          reviewData: { reviewTitle, reviewContent, rating, isLiked },
           authHeaders,
         });
         showSuccessHandler("알림", "리뷰가 성공적으로 수정되었습니다.", () => {

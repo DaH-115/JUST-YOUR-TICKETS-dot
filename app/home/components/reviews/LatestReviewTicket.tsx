@@ -4,11 +4,11 @@ import { ImSpinner2 } from "react-icons/im";
 import ActivityBadge from "app/components/ui/feedback/ActivityBadge";
 import MoviePoster from "app/components/movie/MoviePoster";
 import ProfileAvatar from "app/components/user/ProfileAvatar";
-import { ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { useCallback } from "react";
 
 interface LatestReviewTicketProps {
-  review: ReviewWithLike;
+  review: ReviewDoc;
   onReviewClick: (reviewId: string) => void;
   isNavigating?: boolean;
 }

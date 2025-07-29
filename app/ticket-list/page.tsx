@@ -26,5 +26,12 @@ export default async function Page({
     search,
   });
 
-  return <TicketListPage initialReviews={reviews} totalPages={totalPages} />;
+  return (
+    <TicketListPage
+      initialReviews={reviews}
+      initialPage={page}
+      initialSearch={search}
+      initialTotalPages={totalPages}
+    />
+  );
 }

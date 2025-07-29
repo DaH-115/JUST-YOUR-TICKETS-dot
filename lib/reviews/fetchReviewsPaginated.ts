@@ -25,17 +25,15 @@ export interface ReviewDoc {
     createdAt: string; // ISO 문자열
     updatedAt: string;
     likeCount: number;
+    isLiked: boolean; // 리스트/상세 모두 포함
   };
 }
 
-// 좋아요 정보가 포함된 리뷰 타입 (이제 서버에서 바로 이 형태로 반환)
-export type ReviewWithLike = ReviewDoc & { isLiked: boolean };
-
-// Firestore에서 가져온 원본 리뷰 데이터 타입 (날짜는 Timestamp)
+// 'Firestore'에서 가져온 원본 리뷰 데이터 타입 (날짜는 Timestamp)
 interface RawReview {
   id: string;
   user: ReviewUser;
-  likeCount?: number; // 최상위 레벨 likeCount (API 업데이트 후)
+  likeCount?: number;
   review: {
     movieId: number;
     movieTitle: string;
@@ -76,7 +74,7 @@ export async function fetchReviewsPaginated({
   search = "",
 }: FetchReviewsParams): Promise<{ reviews: ReviewDoc[]; totalPages: number }> {
   try {
-    // 1. 기본 쿼리 설정 (movie-reviews 컬렉션에서 가져오기)
+    // 1. 기본 쿼리 설정 ('movie-reviews' 컬렉션에서 가져오기)
     let baseQuery: Query<DocumentData> =
       adminFirestore.collection("movie-reviews");
 
@@ -89,7 +87,7 @@ export async function fetchReviewsPaginated({
     if (search) {
       return await getReviewsWithSearch(baseQuery, search, page, pageSize);
     } else {
-      return await getReviewsNormal(baseQuery, page, pageSize);
+      return await getReviews(baseQuery, page, pageSize);
     }
   } catch (error) {
     console.error("리뷰 조회 실패:", error);
@@ -99,9 +97,7 @@ export async function fetchReviewsPaginated({
 
 /**
  * 검색어가 있을 때 리뷰 가져오기
- *
- * 왜 복잡한가? Firestore는 텍스트 검색을 지원하지 않아서
- * 데이터를 가져온 후 우리가 직접 필터링해야 함
+ * 데이터를 가져온 후 우리가 직접 필터링
  */
 async function getReviewsWithSearch(
   baseQuery: Query<DocumentData>,
@@ -140,11 +136,9 @@ async function getReviewsWithSearch(
 }
 
 /**
- * 일반 모드 (검색어 없음)에서 리뷰 가져오기
- *
- * 이 방식이 더 효율적 - Firestore에서 바로 페이지네이션
+ * 일반 모드(검색어 없음)에서 리뷰 가져오기
  */
-async function getReviewsNormal(
+async function getReviews(
   baseQuery: Query<DocumentData>,
   page: number,
   pageSize: number,
@@ -301,7 +295,6 @@ async function addUserInfoToReviews(
       };
     }
 
-    // 최종 리뷰 데이터 리턴 (날짜를 문자열로 변환)
     return {
       id: review.id,
       user,
@@ -311,6 +304,7 @@ async function addUserInfoToReviews(
         likeCount: review.likeCount || review.review.likeCount || 0,
         createdAt: review.review.createdAt.toDate().toISOString(),
         updatedAt: review.review.updatedAt.toDate().toISOString(),
+        isLiked: false, // 리스트에서는 항상 false
       },
     };
   });

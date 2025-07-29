@@ -17,7 +17,7 @@ import { usePresignedUrl } from "app/components/user/hooks/usePresignedUrl";
  */
 interface ProfileAvatarProps {
   userDisplayName: string;
-  s3photoKey?: string;
+  s3photoKey?: string | null;
   previewSrc?: string;
   size?: number;
   className?: string;

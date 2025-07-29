@@ -279,6 +279,7 @@ async function addUserInfoToReviews(
         ...review.review,
         // 최상위 likeCount를 review 안에 복사 (API 업데이트와 호환성 유지)
         likeCount: review.likeCount || review.review.likeCount || 0,
+        isLiked: true, // 좋아요한 리뷰 목록이므로 항상 true
         createdAt: review.review.createdAt.toDate().toISOString(),
         updatedAt: review.review.updatedAt.toDate().toISOString(),
       },
