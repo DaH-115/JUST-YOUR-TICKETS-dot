@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { isAuth } from "firebase-config";
 
-// 📝 사용자 정보 타입 정의
+// 사용자 정보 타입 정의
 export interface User {
   // Firebase Auth 정보
   uid: string | null;
@@ -12,7 +12,7 @@ export interface User {
   // Firestore 메타데이터
   biography: string | null;
   provider: string | null;
-  activityLevel: string | null;
+  activityLevel: string;
   createdAt: string;
   updatedAt: string;
 
@@ -21,14 +21,14 @@ export interface User {
   likedTicketsCount: number;
 }
 
-// 📊 Redux 상태 타입
+// Redux 상태 타입
 type UserState = {
   user: User | null; // 사용자 정보 (null = 로그아웃 상태)
   status: "idle" | "loading" | "succeeded" | "failed"; // 로딩 상태
   error: string | null; // 에러 메시지
 };
 
-// 🔧 초기 상태
+// 초기 상태
 const initialState: UserState = {
   user: null,
   status: "idle",
@@ -142,7 +142,7 @@ export const fetchUserProfile = createAsyncThunk<
   }
 });
 
-// 📝 프로필 업데이트 요청 데이터 타입
+// 프로필 업데이트 요청 데이터 타입
 interface UpdateProfileData {
   displayName?: string;
   biography?: string;
@@ -207,7 +207,7 @@ export const updateUserProfile = createAsyncThunk<
   },
 );
 
-// 🏪 Redux Slice 생성
+// Redux Slice 생성
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -240,7 +240,7 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // 📖 프로필 조회 처리
+      // 프로필 조회 처리
       .addCase(fetchUserProfile.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -277,7 +277,7 @@ export const { setUser, clearUser, updatePhotoKey, clearError } =
   userSlice.actions;
 export default userSlice.reducer;
 
-// 🔍 상태 선택자 (Selector) - 컴포넌트에서 쉽게 사용할 수 있도록
+// 상태 선택자 (Selector) - 컴포넌트에서 쉽게 사용할 수 있도록
 export const selectUser = (state: { userData: UserState }) =>
   state.userData.user;
 export const selectUserStatus = (state: { userData: UserState }) =>

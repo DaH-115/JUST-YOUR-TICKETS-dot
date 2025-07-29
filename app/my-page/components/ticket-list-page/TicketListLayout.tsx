@@ -11,6 +11,7 @@ import { buildQueryUrl } from "app/my-page/utils/buildQueryUrl";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
+import Link from "next/link";
 
 interface FetchReviewsHook {
   reviews: ReviewDoc[];
@@ -55,12 +56,6 @@ export default function TicketListLayout({
   });
 
   const { reviews, totalPages, loading, error } = fetchResult;
-  const removeReview =
-    "removeReview" in fetchResult ? fetchResult.removeReview : undefined;
-  const updateReviewLikeCount =
-    "updateReviewLikeCount" in fetchResult
-      ? fetchResult.updateReviewLikeCount
-      : undefined;
 
   const searchHandler = (term: string) => {
     const url = buildQueryUrl({
@@ -78,31 +73,15 @@ export default function TicketListLayout({
     router.push(url);
   };
 
-  const handleLikeToggled = (
-    reviewId: string,
-    newLikeCount: number,
-    isLiked: boolean,
-  ) => {
-    // 좋아요 취소 시에만 목록에서 제거 (좋아요한 리뷰 페이지에서만)
-    if (!isLiked && removeReview) {
-      removeReview(reviewId);
-    }
-    // 모든 페이지에서 likeCount 업데이트
-    if (updateReviewLikeCount) {
-      updateReviewLikeCount(reviewId, newLikeCount);
-    }
-  };
-
   return (
-    <main className="flex min-h-full w-full flex-col pl-0 md:w-3/4 md:pl-4">
+    <main className="flex min-h-full w-full flex-col md:w-3/4">
       {/* 헤더 */}
       <MyTicketHeader
         title={header.title}
         content={header.content}
         reviewsCount={reviews.length}
       />
-
-      {/* 리뷰 리스트 */}
+      {/* 리뷰 목록 */}
       {loading ? (
         <Loading />
       ) : error ? (
@@ -111,27 +90,28 @@ export default function TicketListLayout({
           <p className="mt-1 text-sm text-red-500">{error}</p>
         </div>
       ) : reviews.length > 0 ? (
-        <ReviewTicket
-          reviews={reviews.map((review) => ({ ...review, isLiked: false }))}
-          onLikeToggled={handleLikeToggled}
-        />
+        <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+          {reviews.map((review) => (
+            <Link key={review.id} href={`/ticket-list/${review.id}`}>
+              <ReviewTicket review={review} />
+            </Link>
+          ))}
+        </div>
       ) : (
         <EmptyState
           message={
             searchTerm
               ? `"${searchTerm}"에 대한 검색 결과가 없습니다`
-              : "리뷰가 없습니다"
+              : "등록된 리뷰 티켓이 없습니다"
           }
         />
       )}
-
       {/* 페이지네이션 */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={pageChangeHandler}
       />
-
       {/* 검색 폼 & 결과 정보 */}
       <SearchSection
         searchTerm={searchTerm}

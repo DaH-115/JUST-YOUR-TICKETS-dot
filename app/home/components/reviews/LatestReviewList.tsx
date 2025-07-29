@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import LatestReviewTicket from "app/home/components/reviews/LatestReviewTicket";
-import { ReviewDoc, ReviewWithLike } from "lib/reviews/fetchReviewsPaginated";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 export default function LatestReviewList({
   reviews,
@@ -15,7 +15,7 @@ export default function LatestReviewList({
     null,
   );
   const router = useRouter();
-  const reviewsWithLike: ReviewWithLike[] = reviews.map((review) => ({
+  const reviewsWithLike = reviews.map((review) => ({
     ...review,
     isLiked: false,
   }));

@@ -90,6 +90,7 @@ export async function POST(
         success: true,
         message: "좋아요가 추가되었습니다.",
         likeCount: updatedLikeCount,
+        isLiked: true, // 좋아요 추가 후 상태
       },
       { status: 201 },
     );

@@ -39,6 +39,7 @@ export default function ReviewForm({
       reviewTitle: "",
       rating: 5,
       reviewContent: "",
+      isLiked: false,
     },
     mode: "onChange",
   });
@@ -137,7 +138,7 @@ export default function ReviewForm({
                 <div>PERSONAL REVIEW</div>
                 <div>SHARE YOUR THOUGHTS</div>
                 <div className="font-bold text-accent-600">
-                  ★ YOUR OPINION MATTERS ★
+                  YOUR OPINION MATTERS
                 </div>
               </div>
             </div>

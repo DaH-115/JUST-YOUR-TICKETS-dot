@@ -1,8 +1,3 @@
-// Optional: configure or set up a testing framework before each test.
-// If you delete this file, remove `setupFilesAfterEnv` from `jest.config.js`
-
-// Used for __tests__/testing-library.js
-// Learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
 import { TextEncoder, TextDecoder } from "util";
 
@@ -196,71 +191,9 @@ jest.mock("store/context/auth/authContext", () => ({
 }));
 
 // Mock usePresignedUrl hook
-jest.mock("app/hooks/usePresignedUrl", () => ({
+jest.mock("app/components/user/hooks/usePresignedUrl", () => ({
   usePresignedUrl: () => ({
     getPresignedUrl: jest.fn().mockResolvedValue("mock-presigned-url"),
     isLoading: false,
   }),
 }));
-
-// 테스트 중 콘솔 에러를 필터링하여 깔끔한 출력 유지
-const originalError = console.error;
-const originalWarn = console.warn;
-
-console.error = (...args) => {
-  const message = typeof args[0] === "string" ? args[0] : "";
-
-  // 테스트 중 억제할 에러 패턴들
-  const silencedPatterns = [
-    // React 관련 경고/에러
-    /Warning: React/,
-    /Warning: ReactDOM/,
-    /Warning: Each child in a list should have a unique "key" prop/,
-    /Warning: Failed prop type/,
-    /Element type is invalid/,
-    /Check the render method/,
-    /Consider adding an error boundary/,
-
-    // Jest/Testing 관련
-    /The above error occurred in the/,
-    /Error: Uncaught/,
-    /at Object\.<anonymous>/,
-
-    // Firebase/Auth 관련 mock 에러
-    /Firebase/,
-    /auth/,
-
-    // 일반적인 테스트 에러 키워드
-    /실패/,
-    /오류/,
-    /error/i,
-    /failed/i,
-    /exception/i,
-  ];
-
-  // 패턴에 매칭되면 콘솔 출력 억제
-  if (silencedPatterns.some((pattern) => pattern.test(message))) {
-    return;
-  }
-
-  // 그 외의 에러는 원래대로 출력
-  originalError.call(console, ...args);
-};
-
-console.warn = (...args) => {
-  const message = typeof args[0] === "string" ? args[0] : "";
-
-  // 테스트 중 억제할 경고 패턴들
-  const silencedWarnings = [
-    /Warning: React/,
-    /Warning: ReactDOM/,
-    /Warning: Function components cannot be given refs/,
-    /Warning: forwardRef render functions accept exactly two parameters/,
-  ];
-
-  if (silencedWarnings.some((pattern) => pattern.test(message))) {
-    return;
-  }
-
-  originalWarn.call(console, ...args);
-};

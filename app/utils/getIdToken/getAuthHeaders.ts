@@ -11,7 +11,9 @@ export async function getAuthHeaders(
 ): Promise<Record<string, string>> {
   const idToken = await getIdToken(forceRefresh);
   if (!idToken) {
-    return {};
+    return {
+      Authorization: "",
+    };
   }
   return {
     Authorization: `Bearer ${idToken}`,

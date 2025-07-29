@@ -50,6 +50,7 @@ describe("GET /api/s3", () => {
     const response = await GET(req);
     const body = await response.json();
     expect(response.status).toBe(400);
+    expect(body.error).toBe(true);
     expect(body.message).toBe("key 파라미터가 필요합니다.");
     expect(getSignedUrl).not.toHaveBeenCalled();
   });
@@ -68,7 +69,8 @@ describe("GET /api/s3", () => {
     const response = await GET(req);
     const body = await response.json();
     expect(response.status).toBe(401);
-    expect(body.error).toBe("로그인이 필요합니다.");
+    expect(body.error).toBe(true);
+    expect(body.message).toBe("인증이 필요합니다.");
     expect(getSignedUrl).not.toHaveBeenCalled();
   });
 
@@ -84,7 +86,8 @@ describe("GET /api/s3", () => {
     const response = await GET(req);
     const body = await response.json();
     expect(response.status).toBe(500);
-    expect(body.error).toBe(errorMessage);
+    expect(body.error).toBe(true);
+    expect(body.message).toBe(errorMessage);
     expect(getSignedUrl).toHaveBeenCalledTimes(1);
   });
 });

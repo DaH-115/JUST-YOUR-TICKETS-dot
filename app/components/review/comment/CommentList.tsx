@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -10,6 +12,8 @@ import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
+import { isAuth } from "firebase-config";
+import { useAlert } from "store/context/alertContext";
 
 const commentSchema = z.object({
   comment: z
@@ -40,6 +44,7 @@ export default function CommentList({
   const [isLoading, setIsLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null); // null 이면 새 댓글, 댓글ID면 수정 모드
   const userState = useAppSelector(selectUser); // 댓글 작성자 정보
+  const { showErrorHandler } = useAlert();
   // 댓글 작성 폼 상태 관리
   const {
     register,
@@ -80,7 +85,7 @@ export default function CommentList({
   const onSubmit = useCallback(
     async (data: CommentForm) => {
       // 댓글 내용이 비어있거나, 이미 댓글 등록 중이거나, 로그인 상태가 아니면 종료
-      if (!data.comment.trim() || isPosting || !userState) {
+      if (!data.comment.trim() || isPosting || !isAuth.currentUser) {
         return;
       }
 
@@ -124,7 +129,7 @@ export default function CommentList({
                 ...authHeaders,
               },
               body: JSON.stringify({
-                authorId: userState.uid,
+                authorId: userState?.uid,
                 content,
               }),
             });
@@ -145,12 +150,20 @@ export default function CommentList({
         await fetchComments(); // 댓글 목록 새로고침
       } catch (error) {
         const { message } = firebaseErrorHandler(error);
-        alert(message);
+        showErrorHandler("오류", message);
       } finally {
         setIsPosting(false);
       }
     },
-    [isPosting, editingId, reviewId, reset, userState, fetchComments],
+    [
+      isPosting,
+      editingId,
+      reviewId,
+      reset,
+      userState,
+      fetchComments,
+      showErrorHandler,
+    ],
   );
 
   // 댓글 수정 핸들러
@@ -198,14 +211,15 @@ export default function CommentList({
         await fetchComments(); // 댓글 목록 새로고침
       } catch (error) {
         console.error("댓글 삭제 실패:", error);
-        alert(
+        showErrorHandler(
+          "오류",
           error instanceof Error ? error.message : "댓글 삭제에 실패했습니다.",
         );
       } finally {
         setIsPosting(false);
       }
     },
-    [userState?.uid, isPosting, reviewId, fetchComments],
+    [userState?.uid, isPosting, reviewId, fetchComments, showErrorHandler],
   );
 
   // 취소 버튼 핸들러
@@ -215,25 +229,25 @@ export default function CommentList({
   }, [reset]);
 
   return (
-    <>
+    <section className="w-full rounded-2xl border bg-white p-4">
+      {/* 댓글 목록 */}
+      <div className="mb-2 flex items-center justify-between">
+        <p className="text-xs font-medium text-gray-800">
+          댓글 {comments.length}개
+        </p>
+      </div>
+
       {/* 로딩 스피너 */}
       {isLoading && (
-        <div className="flex items-center justify-center border-t-4 border-dotted py-8">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-primary-600"></div>
-          <span className="ml-2 text-sm text-gray-600">
+        <div className="flex items-center justify-center py-8">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-primary-600"></div>
+          <span className="ml-2 text-xs text-gray-600">
             댓글을 불러오는 중...
           </span>
         </div>
       )}
 
       {/* 댓글 목록 */}
-      {!isLoading && comments.length > 0 && (
-        <div className="mb-2 flex items-center justify-between border-t-4 border-dotted pt-2">
-          <p className="text-sm font-medium text-gray-700">
-            댓글 {comments.length}개
-          </p>
-        </div>
-      )}
       <div
         className={`${!isLoading && comments.length > 0 ? "overflow-y-auto scrollbar-hide" : "hidden"}`}
       >
@@ -243,12 +257,10 @@ export default function CommentList({
               key={comment.id}
               className={`py-2 ${idx < comments.length - 1 ? "border-b" : ""}`}
             >
-              <div className="flex items-center justify-between pt-1">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
-                    <span className="text-xs font-normal text-gray-800">
-                      {`${idx + 1}.`}
-                    </span>
+                    <span className="text-sm text-gray-800">{`${idx + 1}.`}</span>
                     <ProfileAvatar
                       s3photoKey={comment.photoKey || undefined}
                       userDisplayName={comment.displayName || "익명"}
@@ -288,8 +300,8 @@ export default function CommentList({
                   </div>
                 )}
               </div>
-              <p className="py-2 text-sm">{comment.content}</p>
-              <span className="mt-2 block text-xs text-gray-600">
+              <p className="py-4 text-sm text-gray-800">{comment.content}</p>
+              <span className="mt-2 block text-right text-xs text-gray-400">
                 {formatDate(comment.createdAt)}
               </span>
             </li>
@@ -299,43 +311,57 @@ export default function CommentList({
 
       {/* 댓글 작성 폼 */}
       {!isLoading && userState?.uid && (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="border-t-4 border-dotted pt-4"
-        >
-          <textarea
-            {...register("comment")}
-            className={`w-full rounded-md border p-2 ${errors.comment ? "border-red-500" : ""}`}
-            rows={2}
-            placeholder="댓글을 입력하세요"
-          />
-          {errors.comment && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.comment.message}
-            </p>
-          )}
-          <div className="mt-2 flex items-center justify-end text-sm">
-            {editingId && (
-              <button
-                type="button"
-                className="mr-4 text-gray-700 hover:underline"
-                onClick={cancelEditHandler}
-                aria-label="댓글 수정 취소"
-              >
-                취소
-              </button>
-            )}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="rounded-full bg-primary-600 px-4 py-2 text-white transition-colors duration-300 hover:bg-primary-400 disabled:bg-gray-400"
-              aria-label={editingId ? "댓글 수정 완료" : "댓글 등록"}
-            >
-              {editingId ? "수정 완료" : "등록"}
-            </button>
+        <>
+          {/* 현재 사용자 프로필 정보 */}
+          <div className="border-t-4 border-dotted pt-6">
+            <div className="mb-3 flex items-center gap-2">
+              <ProfileAvatar
+                s3photoKey={userState.photoKey}
+                userDisplayName={userState.displayName || "Guest"}
+                size={24}
+              />
+              <p className="text-xs font-bold text-gray-800">
+                {userState.displayName || "Guest"}
+              </p>
+              <ActivityBadge
+                activityLevel={userState.activityLevel}
+                size="tiny"
+              />
+            </div>
           </div>
-        </form>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <textarea
+              {...register("comment")}
+              className={`w-full rounded-md border p-2 text-sm ${errors.comment ? "border-red-500" : ""}`}
+              rows={2}
+              placeholder="댓글을 입력하세요"
+            />
+            {errors.comment && (
+              <p className="text-xs text-red-500">{errors.comment.message}</p>
+            )}
+            <div className="mt-2 flex items-center justify-end text-xs">
+              {editingId && (
+                <button
+                  type="button"
+                  className="mr-4 text-gray-700 hover:text-gray-500"
+                  onClick={cancelEditHandler}
+                  aria-label="댓글 수정 취소"
+                >
+                  취소
+                </button>
+              )}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="rounded-full border border-primary-600 bg-primary-600 px-4 py-1.5 text-white transition-colors duration-300 hover:bg-primary-400 disabled:bg-gray-400"
+                aria-label={editingId ? "댓글 수정 완료" : "댓글 등록"}
+              >
+                {editingId ? "수정 완료" : "등록"}
+              </button>
+            </div>
+          </form>
+        </>
       )}
-    </>
+    </section>
   );
 }

@@ -37,6 +37,7 @@ export function useReviewData({ mode, reviewId }: useReviewDataProps) {
               reviewTitle: data.review?.reviewTitle || "",
               reviewContent: data.review?.reviewContent || "",
               rating: data.review?.rating || 5,
+              isLiked: false,
             });
           }
         }
