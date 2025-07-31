@@ -92,7 +92,7 @@ export default function MovieDetailCard({
               {/* 줄거리 */}
               {overview && (
                 <div className="mb-6 px-2">
-                  <p className="break-keep text-sm leading-relaxed text-gray-800">
+                  <p className="break-keep leading-relaxed text-gray-800">
                     {overview}
                   </p>
                 </div>
@@ -187,7 +187,7 @@ export default function MovieDetailCard({
                 <ul className="flex flex-wrap">
                   {movieDetails.production_companies.map(
                     (company, idx, arr) => (
-                      <li key={idx} className="text-xs">
+                      <li key={idx} className="text-sm">
                         {company.name}
                         {/* 마지막 항목이 아니라면 구분 마크(·) 추가 */}
                         {idx < arr.length - 1 && (

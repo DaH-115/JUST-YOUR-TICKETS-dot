@@ -23,7 +23,7 @@ export default function LatestReviewList({
   const onReviewClickHandler = useCallback(
     (reviewId: string) => {
       setNavigatingReviewId(reviewId);
-      router.push(`/ticket-list?reviewId=${reviewId}`);
+      router.push(`/ticket-list/${reviewId}`);
     },
     [router],
   );

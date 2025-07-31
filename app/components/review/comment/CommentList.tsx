@@ -241,7 +241,7 @@ export default function CommentList({
       {isLoading && (
         <div className="flex items-center justify-center py-8">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-primary-600"></div>
-          <span className="ml-2 text-xs text-gray-600">
+          <span className="ml-2 text-sm text-gray-600">
             댓글을 불러오는 중...
           </span>
         </div>
@@ -255,7 +255,7 @@ export default function CommentList({
           {comments.map((comment, idx) => (
             <li
               key={comment.id}
-              className={`py-2 ${idx < comments.length - 1 ? "border-b" : ""}`}
+              className={`py-2 ${idx < comments.length - 1 ? "border-b-4 border-dotted" : ""}`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">

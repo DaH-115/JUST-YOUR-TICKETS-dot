@@ -126,7 +126,7 @@ export default function ReviewDetail({ review, reviewId }: ReviewDetailProps) {
   return (
     <main className="py-24">
       {/* 영화 포스터 */}
-      <div className="mx-auto aspect-[2/3] max-w-lg overflow-hidden rounded-t-2xl">
+      <div className="mx-auto aspect-[2/2.5] max-w-lg overflow-hidden rounded-t-2xl">
         <MoviePoster
           posterPath={content.moviePosterPath}
           title={content.movieTitle}
@@ -144,7 +144,7 @@ export default function ReviewDetail({ review, reviewId }: ReviewDetailProps) {
             </div>
             <div>
               <h3 className="font-bold">{content.reviewTitle}</h3>
-              <div className="text-xs text-gray-500">
+              <div className="text-sm text-gray-500">
                 <Link
                   href={`/movie-details/${content.movieId}`}
                   className="transition-colors duration-300 hover:text-gray-600 hover:underline"
@@ -160,12 +160,12 @@ export default function ReviewDetail({ review, reviewId }: ReviewDetailProps) {
             onClick={likeToggleHandler}
             disabled={isLikeLoading}
             className={`flex items-center text-red-500 transition-colors hover:text-red-600 disabled:opacity-50 ${
-              !isLoggedIn ? "cursor-not-allowed opacity-50" : ""
+              !isLoggedIn ? "cursor-not-allowed" : ""
             }`}
             title={!isLoggedIn ? "로그인이 필요합니다" : ""}
           >
             {isLiked ? <FaHeart size={14} /> : <FaRegHeart size={14} />}
-            <p className="ml-1 text-base text-black">{likeCount}</p>
+            <p className="ml-1 text-black">{likeCount}</p>
           </button>
         </header>
 
