@@ -41,7 +41,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <h2 className="text-gray-600">{`${original_title}(${release_date.slice(0, 4)})`}</h2>
+            <h2 className="text-gray-600">{`${original_title}(${release_date ? release_date.slice(0, 4) : "개봉일 미정"})`}</h2>
             <MovieCertification certification={movie.certification ?? null} />
           </div>
         </header>

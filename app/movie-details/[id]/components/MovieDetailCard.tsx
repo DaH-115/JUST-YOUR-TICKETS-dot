@@ -72,7 +72,8 @@ export default function MovieDetailCard({
                 </div>
                 <div className="flex items-center">
                   <p className="text-gray-600">
-                    {original_title}({release_date.slice(0, 4)})
+                    {original_title}(
+                    {release_date ? release_date.slice(0, 4) : "개봉일 미정"})
                   </p>
                 </div>
               </div>

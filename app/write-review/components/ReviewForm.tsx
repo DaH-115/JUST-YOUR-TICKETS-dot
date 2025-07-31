@@ -94,7 +94,9 @@ export default function ReviewForm({
                     {`${movieData.title}(${movieData.original_title})`}
                   </h2>
                   <p className="text-sm text-gray-600">
-                    {movieData.release_date.replaceAll("-", ".")}
+                    {movieData.release_date
+                      ? movieData.release_date.replaceAll("-", ".")
+                      : "개봉일 미정"}
                   </p>
                 </div>
 
