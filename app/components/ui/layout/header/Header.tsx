@@ -157,7 +157,7 @@ export default function Header() {
 
       {/* MOBILE SIDE MENU */}
       <HeaderSideMenu
-        userDisplayName={userDisplayName || ""}
+        userDisplayName={userDisplayName || "사용자"}
         userPhotoURL={userPhotoURL}
         userEmail={user?.email || ""}
         isOpen={isSideMenuOpen}

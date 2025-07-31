@@ -28,12 +28,13 @@ export default function ReviewTicket({ review }: ReviewTicketProps) {
           <div className="flex min-w-0 flex-1 items-center gap-1.5">
             <ProfileAvatar
               s3photoKey={review.user.photoKey || undefined}
-              userDisplayName={review.user.displayName || "Guest"}
+              userDisplayName={review.user.displayName || "사용자"}
               size={24}
+              isPublic
             />
-            <span className="min-w-0 truncate text-sm">
-              {review.user.displayName || "Guest"}
-            </span>
+            <p className="min-w-0 truncate text-sm">
+              {review.user.displayName || "사용자"}
+            </p>
           </div>
           <ActivityBadge
             activityLevel={review.user.activityLevel}

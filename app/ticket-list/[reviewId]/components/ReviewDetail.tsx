@@ -175,11 +175,12 @@ export default function ReviewDetail({ review, reviewId }: ReviewDetailProps) {
           <div className="flex items-center gap-2">
             <ProfileAvatar
               s3photoKey={user.photoKey || undefined}
-              userDisplayName={user.displayName || "Guest"}
-              size={32}
+              userDisplayName={user.displayName || "사용자"}
+              size={24}
+              isPublic
             />
-            <p className="text-xs font-bold text-gray-800">
-              {user.displayName || "Guest"}
+            <p className="min-w-0 truncate text-sm">
+              {user.displayName || "사용자"}
             </p>
             <ActivityBadge activityLevel={user.activityLevel} size="tiny" />
           </div>
