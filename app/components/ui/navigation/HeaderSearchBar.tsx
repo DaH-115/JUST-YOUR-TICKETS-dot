@@ -142,7 +142,7 @@ export default function HeaderSearchBar({
                 >
                   <p className="font-medium">{result.title}</p>
                   <p className="text-sm text-white/70">
-                    ({result.release_date?.slice(0, 4)})
+                    ({result.release_date?.slice(0, 4) || "개봉일 미정"})
                   </p>
                 </ComboboxOption>
               ))}
