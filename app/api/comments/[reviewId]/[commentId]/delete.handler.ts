@@ -32,7 +32,10 @@ export async function DELETE(
       // 댓글 문서가 존재하는지 확인
       const commentDoc = await transaction.get(commentRef);
       if (!commentDoc.exists) {
-        throw new Error("댓글을 찾을 수 없습니다.");
+        // 트랜잭션 내에서 특정 상태 코드를 반환하기 위해 커스텀 에러 사용
+        throw Object.assign(new Error("댓글을 찾을 수 없습니다."), {
+          statusCode: 404,
+        });
       }
 
       // 댓글 작성자 권한 확인
@@ -74,12 +77,14 @@ export async function DELETE(
   } catch (error) {
     console.error("댓글 삭제 실패:", error);
     // 트랜잭션에서 던져진 커스텀 에러 처리
-    if (
-      error instanceof Error &&
-      "statusCode" in error &&
-      (error as { statusCode: unknown }).statusCode === 403
-    ) {
-      return NextResponse.json({ error: error.message }, { status: 403 });
+    if (error instanceof Error && "statusCode" in error) {
+      const statusCode = (error as { statusCode: unknown }).statusCode;
+      if (statusCode === 403 || statusCode === 404) {
+        return NextResponse.json(
+          { error: error.message },
+          { status: statusCode },
+        );
+      }
     }
     return NextResponse.json(
       { error: "댓글 삭제에 실패했습니다." },

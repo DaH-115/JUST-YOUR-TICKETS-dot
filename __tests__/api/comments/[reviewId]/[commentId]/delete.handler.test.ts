@@ -92,14 +92,14 @@ describe("DELETE /api/comments/[reviewId]/[commentId]", () => {
   });
 
   test("댓글을 찾을 수 없으면 404 에러를 반환해야 합니다", async () => {
-    // 댓글 문서가 존재하지 않을 때 500 반환(트랜잭션 내부 에러)
+    // 댓글 문서가 존재하지 않을 때 404 반환
     mockedVerifyAuthToken.mockResolvedValue({ success: true, uid: mockUid });
     mockTransaction.get.mockResolvedValue({ exists: false });
     const request = createMockRequest({ method: "DELETE" });
     const response = await DELETE(request as NextRequest, {
       params: { reviewId: mockReviewId, commentId: mockCommentId },
     });
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(404);
   });
 
   test("리소스 소유자가 아니면 403 에러를 반환해야 합니다", async () => {

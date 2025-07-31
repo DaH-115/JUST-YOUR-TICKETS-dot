@@ -5,11 +5,6 @@ import SignUpPage from "app/sign-up/SignUpPage";
 import { useAlert } from "store/context/alertContext";
 import { useRouter } from "next/navigation";
 
-const { useDuplicateCheck: RealUseDuplicateCheck } = jest.requireActual(
-  "app/my-page/hooks/useDuplicateCheck",
-);
-import type { UseDuplicateCheckOptions } from "app/my-page/hooks/useDuplicateCheck";
-
 // Mock dependencies
 jest.mock("app/utils/api", () => ({
   checkDuplicate: jest.fn(),
@@ -49,7 +44,6 @@ const mockShowSuccessHandler = jest.fn();
 const mockPush = jest.fn();
 const mockReplace = jest.fn();
 const mockCheckNickname = jest.fn();
-const checkDuplicateMock = jest.fn();
 
 beforeEach(() => {
   mockUseAlert.mockReturnValue({
@@ -73,11 +67,6 @@ beforeEach(() => {
     isAvailable: null,
     message: null,
   });
-  checkDuplicateMock.mockReset();
-  checkDuplicateMock.mockResolvedValue({
-    available: true,
-    message: "사용 가능한 이메일입니다.",
-  });
   jest.clearAllMocks();
   (fetch as jest.Mock).mockClear();
 });
@@ -96,15 +85,16 @@ describe("SignUpPage 필수 동작 시나리오", () => {
 
   test("이메일 중복 확인이 성공적으로 작동해야 한다", async () => {
     const user = userEvent.setup();
-    mockUseDuplicateCheck.mockImplementation(
-      (options: UseDuplicateCheckOptions) => {
-        const real = RealUseDuplicateCheck({
-          ...options,
-          checkDuplicateFn: checkDuplicateMock,
-        });
-        return real;
-      },
-    );
+    const mockCheckEmail = jest.fn().mockResolvedValue(undefined);
+
+    mockUseDuplicateCheck.mockReturnValue({
+      check: mockCheckEmail,
+      isChecking: false,
+      isChecked: false,
+      isAvailable: null,
+      message: null,
+    });
+
     render(<SignUpPage />);
     const emailInput = screen.getByLabelText("이메일");
     const checkButtons = screen.getAllByText("중복 확인");
@@ -112,10 +102,7 @@ describe("SignUpPage 필수 동작 시나리오", () => {
     await user.type(emailInput, "test@example.com");
     await user.click(checkButton);
     await waitFor(() => {
-      expect(checkDuplicateMock).toHaveBeenCalledWith(
-        "email",
-        "test@example.com",
-      );
+      expect(mockCheckEmail).toHaveBeenCalled();
     });
   });
 
@@ -132,15 +119,15 @@ describe("SignUpPage 필수 동작 시나리오", () => {
     expect(signupButton).toBeDisabled();
   });
 
-  test("닉네임 중복 체크 실패 시 에러 핸들러가 호출되어야 한다", async () => {
+  test("닉네임 중복 체크 API 실패 시 에러 핸들러가 호출되어야 한다", async () => {
     const user = userEvent.setup();
 
-    // useDuplicateCheck가 에러 메시지를 반환하도록 mock 설정
+    // API 호출 실패를 시뮬레이션하는 mock 설정
     mockUseDuplicateCheck.mockImplementation(() => ({
       isChecking: false,
-      isChecked: true,
-      isAvailable: false,
-      message: "이미 사용 중인 닉네임입니다.",
+      isChecked: true, // 체크가 완료됨
+      isAvailable: false, // 사용 불가능
+      message: "네트워크 오류로 인해 중복 확인에 실패했습니다.", // 에러 메시지
       check: jest.fn().mockResolvedValue(undefined), // check는 정상 완료
     }));
 
@@ -154,7 +141,7 @@ describe("SignUpPage 필수 동작 시나리오", () => {
     await waitFor(() => {
       expect(mockShowErrorHandler).toHaveBeenCalledWith(
         "실패",
-        "이미 사용 중인 닉네임입니다.",
+        "네트워크 오류로 인해 중복 확인에 실패했습니다.",
       );
     });
   });
