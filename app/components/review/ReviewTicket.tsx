@@ -31,7 +31,7 @@ export default function ReviewTicket({ review }: ReviewTicketProps) {
               userDisplayName={review.user.displayName || "Guest"}
               size={24}
             />
-            <span className="min-w-0 truncate text-xs">
+            <span className="min-w-0 truncate text-sm">
               {review.user.displayName || "Guest"}
             </span>
           </div>
@@ -54,14 +54,14 @@ export default function ReviewTicket({ review }: ReviewTicketProps) {
         </div>
         {/* 영화 타이틀 & 좋아요 */}
         <div className="mt-2 flex items-center justify-between border-t-4 border-dotted pt-1.5">
-          <div className="flex-1 truncate pr-1.5 text-[10px] hover:underline">
+          <div className="flex-1 truncate pr-1.5 text-sm text-gray-500 hover:underline">
             <Link href={`/movie-details/${review.review.movieId}`}>
               {`${review.review.movieTitle} (${review.review.releaseYear})`}
             </Link>
           </div>
           {/* 좋아요 버튼 */}
-          <div className="flex items-center text-xs">
-            <span className="text-xs text-red-500 transition-transform duration-200 group-hover:scale-110">
+          <div className="flex items-center">
+            <span className="text-red-500 transition-transform duration-200 group-hover:scale-110">
               {review.review.isLiked ? <FaHeart /> : <FaRegHeart />}
             </span>
             <span className="ml-1 text-center">{review.review.likeCount}</span>

@@ -55,7 +55,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
         <div className="flex p-4 pb-0">
           <div className="flex-1 border-r-4 border-dotted">
             <p className="pr-2 text-xs font-bold text-black">개봉일</p>
-            <p className="p-3 text-center text-sm md:text-xs">{releaseDate}</p>
+            <p className="p-3 text-center text-sm">{releaseDate}</p>
           </div>
           <div className="flex-1 border-r-4 border-dotted">
             <p className="px-2 text-xs font-bold text-black">감독</p>

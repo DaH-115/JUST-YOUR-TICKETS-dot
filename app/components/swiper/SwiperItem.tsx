@@ -39,7 +39,7 @@ export default function SwiperItem({
         <div className="border-b-4 border-dotted pb-2">
           <div className="flex items-center gap-1 md:gap-2">
             <div className="flex-1">
-              <h3 className="line-clamp-1 text-sm font-bold">
+              <h3 className="line-clamp-1 font-bold">
                 <Link
                   href={`/movie-details/${id}`}
                   aria-label={`${movieTitle} 영화 상세정보 보기`}
@@ -48,7 +48,7 @@ export default function SwiperItem({
                   {title}
                 </Link>
               </h3>
-              <p className="line-clamp-1 text-xs text-gray-600">
+              <p className="line-clamp-1 text-sm text-gray-600">
                 {original_title}
               </p>
             </div>

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { FaHeart, FaStar } from "react-icons/fa";
-import { ImSpinner2 } from "react-icons/im";
 import ActivityBadge from "app/components/ui/feedback/ActivityBadge";
 import MoviePoster from "app/components/movie/MoviePoster";
 import ProfileAvatar from "app/components/user/ProfileAvatar";
@@ -40,7 +39,7 @@ export default function LatestReviewTicket({
       >
         {isNavigating && (
           <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-black bg-opacity-50">
-            <ImSpinner2 className="animate-spin text-4xl text-white" />
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
           </div>
         )}
         {/* 프로필 이미지, 닉네임 */}
@@ -52,7 +51,7 @@ export default function LatestReviewTicket({
               size={24}
               isPublic
             />
-            <p className="min-w-0 truncate text-xs">
+            <p className="min-w-0 truncate text-sm">
               {user?.displayName || "Guest"}
             </p>
           </div>
@@ -76,9 +75,9 @@ export default function LatestReviewTicket({
               {`${content.movieTitle}(${content.originalTitle})`}
             </Link>
           </div>
-          <div className="flex items-center justify-center">
-            <FaHeart className="text-red-500" size={12} />
-            <div className="ml-1 text-xs">{content.likeCount}</div>
+          <div className="flex items-center justify-center text-sm">
+            <FaHeart className="text-red-500" />
+            <div className="ml-1">{content.likeCount}</div>
           </div>
         </div>
       </section>

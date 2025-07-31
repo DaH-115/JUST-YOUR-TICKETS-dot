@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo, useState, useLayoutEffect } from "react";
 import MoviePoster from "app/components/movie/MoviePoster";
 import VideoPlayer from "app/components/movie/VideoPlayer";
-import MovieInfoCard from "app/home/components/MovieInfoCard";
 import Background from "app/components/ui/layout/Background";
+import MovieInfoCard from "app/home/components/MovieInfoCard";
 import getMovieTitle from "app/utils/getMovieTitle";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
+import { useLayoutEffect, useMemo, useState } from "react";
 
 interface RecommendSectionProps {
   movie: MovieList;
@@ -59,17 +59,17 @@ export default function RecommendSection({
           </div>
 
           <div
-            className={`mx-auto flex w-full max-w-4xl flex-col items-center gap-8 transition-all duration-500 ease-out md:flex-row md:items-start ${
+            className={`mx-auto flex w-full max-w-4xl flex-col items-center gap-4 transition-transform duration-300 ease-in-out md:flex-row md:items-start md:gap-6 lg:hover:scale-105 ${
               isHydrated
-                ? "translate-y-0 opacity-100 transition-delay-500"
+                ? "translate-y-0 opacity-100"
                 : "translate-y-8 opacity-0"
             }`}
           >
-            <div className="aspect-[2/3] w-60 overflow-hidden rounded-2xl transition-transform duration-500 ease-out hover:scale-105 md:w-72 lg:w-80">
+            <div className="aspect-[2/3] w-60 overflow-hidden rounded-2xl md:w-72 lg:w-80">
               <MoviePoster posterPath={movie.poster_path} title={movieTitle} />
             </div>
 
-            <div className="flex-1 transition-transform duration-500 ease-out hover:scale-105">
+            <div className="flex-1">
               <MovieInfoCard movie={movie} />
             </div>
           </div>
@@ -93,7 +93,7 @@ export default function RecommendSection({
                 </p>
               </header>
 
-              <div className="mx-auto aspect-video w-full max-w-4xl overflow-hidden rounded-xl transition-transform duration-300 ease-out hover:scale-105">
+              <div className="mx-auto aspect-video w-full max-w-4xl overflow-hidden rounded-xl">
                 <VideoPlayer trailerKey={trailerKey} thumbnailSize={"large"} />
               </div>
             </section>
