@@ -316,12 +316,13 @@ export default function CommentList({
           <div className="border-t-4 border-dotted pt-6">
             <div className="mb-3 flex items-center gap-2">
               <ProfileAvatar
-                s3photoKey={userState.photoKey}
-                userDisplayName={userState.displayName || "Guest"}
+                s3photoKey={userState.photoKey || undefined}
+                userDisplayName={userState.displayName || "사용자"}
                 size={24}
+                isPublic
               />
-              <p className="text-xs font-bold text-gray-800">
-                {userState.displayName || "Guest"}
+              <p className="min-w-0 truncate text-sm">
+                {userState.displayName || "사용자"}
               </p>
               <ActivityBadge
                 activityLevel={userState.activityLevel}

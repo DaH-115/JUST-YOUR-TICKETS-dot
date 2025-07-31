@@ -113,7 +113,7 @@ export default function ProfileAvatar({
       ) : shouldShowImage && src ? (
         <Image
           src={src}
-          alt={userDisplayName || "User"}
+          alt={userDisplayName || "사용자"}
           fill
           sizes={`${size}px`}
           className="object-cover"

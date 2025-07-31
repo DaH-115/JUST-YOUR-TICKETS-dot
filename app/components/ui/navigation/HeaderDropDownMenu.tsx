@@ -21,13 +21,13 @@ export default function HeaderDropDownMenu({
     <Menu as="div" className="relative">
       <MenuButton className="flex items-center gap-3 transition-opacity hover:opacity-80">
         <ProfileAvatar
-          userDisplayName={userDisplayName || "Guest"}
           s3photoKey={userPhotoURL || undefined}
+          userDisplayName={userDisplayName || "사용자"}
           size={32}
-          showLoading={true}
+          isPublic
         />
-        <span className="font-medium text-white">
-          {userDisplayName ? userDisplayName : "Guest"} 님
+        <span className="ml-2 text-sm font-medium text-gray-700">
+          {userDisplayName ? userDisplayName : "사용자"} 님
         </span>
         <IoIosArrowDown
           size={12}

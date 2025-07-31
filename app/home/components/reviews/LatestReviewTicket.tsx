@@ -52,7 +52,7 @@ export default function LatestReviewTicket({
               isPublic
             />
             <p className="min-w-0 truncate text-sm">
-              {user?.displayName || "Guest"}
+              {user?.displayName || "사용자"}
             </p>
           </div>
           <ActivityBadge activityLevel={user?.activityLevel} size="tiny" />
