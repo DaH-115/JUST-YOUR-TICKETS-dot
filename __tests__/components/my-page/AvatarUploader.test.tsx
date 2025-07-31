@@ -16,6 +16,8 @@ jest.mock("app/utils/file/formatFileSize", () => ({
 // 2. import 구문
 import { render, screen, fireEvent } from "@testing-library/react";
 import AvatarUploader from "app/my-page/components/profile-avatar/AvatarUploader";
+import { validateFileSize } from "app/utils/file/validateFileSize";
+import { validateFileExtension } from "app/utils/file/validateFileExtension";
 
 // 3. 테스트 코드
 global.URL.createObjectURL = jest.fn(() => "mocked-object-url");
@@ -27,6 +29,9 @@ describe("AvatarUploader", () => {
   const mockOnFileSelect = jest.fn();
   const mockOnImageChange = jest.fn();
   const mockOnError = jest.fn();
+
+  const mockedValidateFileSize = validateFileSize as jest.Mock;
+  const mockedValidateFileExtension = validateFileExtension as jest.Mock;
 
   const defaultProps = {
     previewSrc: null,
@@ -64,6 +69,8 @@ describe("AvatarUploader", () => {
     expect(mockOnFileSelect).toHaveBeenCalledWith(validFile);
     expect(mockOnPreview).toHaveBeenCalledWith("mocked-object-url");
     expect(mockOnImageChange).toHaveBeenCalledWith(true);
+    expect(mockedValidateFileSize).toHaveBeenCalledWith(validFile.size);
+    expect(mockedValidateFileExtension).toHaveBeenCalledWith(validFile.name);
   });
 
   test("파일이 선택되지 않은 경우 적절히 처리된다", () => {
