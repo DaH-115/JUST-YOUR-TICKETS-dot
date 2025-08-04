@@ -184,10 +184,11 @@ describe("ChangePassword", () => {
     const confirmButton = screen.getByRole("button", { name: "비밀번호 확인" });
 
     await act(async () => {
-      fireEvent.change(currentPasswordInput, {
+      // fireEvent로 인한 비동기 상태 업데이트를 안전하게 처리하기 위해 await로 감쌈
+      await fireEvent.change(currentPasswordInput, {
         target: { value: "currentPassword123!" },
       });
-      fireEvent.click(confirmButton);
+      await fireEvent.click(confirmButton);
     });
 
     await waitFor(() => {
@@ -208,10 +209,11 @@ describe("ChangePassword", () => {
     const changeButton = screen.getByRole("button", { name: "비밀번호 변경" });
 
     await act(async () => {
-      fireEvent.change(newPasswordInput, {
+      // fireEvent로 인한 비동기 상태 업데이트를 안전하게 처리하기 위해 await로 감쌈
+      await fireEvent.change(newPasswordInput, {
         target: { value: "newPassword123!" },
       });
-      fireEvent.click(changeButton);
+      await fireEvent.click(changeButton);
     });
 
     await waitFor(() => {
@@ -233,10 +235,11 @@ describe("ChangePassword", () => {
     const changeButton = screen.getByRole("button", { name: "비밀번호 변경" });
 
     await act(async () => {
-      fireEvent.change(newPasswordInput, {
+      // fireEvent로 인한 비동기 상태 업데이트를 안전하게 처리하기 위해 await로 감쌈
+      await fireEvent.change(newPasswordInput, {
         target: { value: "newPassword123!" },
       });
-      fireEvent.click(changeButton);
+      await fireEvent.click(changeButton);
     });
 
     await waitFor(() => {
