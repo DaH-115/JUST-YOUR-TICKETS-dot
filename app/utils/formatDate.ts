@@ -1,7 +1,4 @@
-const formatDate = (
-  dateString: string | Date | null,
-  includeTime: boolean = true,
-) => {
+const formatDate = (dateString: string | null, includeTime: boolean = true) => {
   if (!dateString) {
     return "방금 전"; // serverTimestamp가 아직 설정되지 않은 경우
   }

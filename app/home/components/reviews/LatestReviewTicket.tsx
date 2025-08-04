@@ -4,7 +4,6 @@ import ActivityBadge from "app/components/ui/feedback/ActivityBadge";
 import MoviePoster from "app/components/movie/MoviePoster";
 import ProfileAvatar from "app/components/user/ProfileAvatar";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
-import { useCallback } from "react";
 
 interface LatestReviewTicketProps {
   review: ReviewDoc;
@@ -19,10 +18,6 @@ export default function LatestReviewTicket({
 }: LatestReviewTicketProps) {
   const { user, review: content } = review;
 
-  const reviewTitleClick = useCallback(() => {
-    onReviewClick(review.id);
-  }, [onReviewClick, review.id]);
-
   return (
     <article className="flex transform-gpu items-stretch transition-transform duration-300 hover:scale-[1.02]">
       {/* 영화 포스터 */}
@@ -34,7 +29,7 @@ export default function LatestReviewTicket({
       </div>
       {/* 리뷰 컨텐츠 */}
       <section
-        onClick={reviewTitleClick}
+        onClick={() => onReviewClick(review.id)}
         className="flex h-full flex-1 cursor-pointer flex-col overflow-hidden rounded-xl border bg-white px-3 py-2 hover:bg-gray-100 sm:px-4"
       >
         {isNavigating && (

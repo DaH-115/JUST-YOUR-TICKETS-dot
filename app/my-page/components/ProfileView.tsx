@@ -82,8 +82,8 @@ export default function ProfileView() {
   }
 
   return (
-    <main className="flex min-h-full w-full flex-col pl-0 md:w-3/4 md:pl-4">
-      <div className="mb-8 flex flex-col items-stretch overflow-hidden rounded-xl bg-white shadow-xl md:flex-row">
+    <main className="flex w-full flex-col pl-0 md:w-3/4 md:pl-4">
+      <div className="flex flex-col items-stretch overflow-hidden rounded-xl bg-white shadow-xl md:flex-row">
         <div
           className={`flex flex-col items-center justify-center bg-gradient-to-b ${activityLevel.bgGradient} p-6 md:w-1/3`}
         >
@@ -146,26 +146,19 @@ export default function ProfileView() {
           </div>
 
           <div className="flex-1 pt-3">
-            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-800">
-              Biography
-            </div>
-            <p className="text-sm leading-relaxed text-gray-700">
-              {user?.biography || "소개글이 없습니다."}
-            </p>
-
+            <div className="mb-2 text-xs text-gray-800">자기 소개</div>
+            <p className="text-sm">{user?.biography || "소개글이 없습니다."}</p>
             <div className="mt-4 border-t-4 border-dotted pt-3">
-              <div className="mb-1 text-xs text-gray-800">가입일</div>
+              <div className="mb-2 text-xs text-gray-800">가입일</div>
               <div className="text-xs text-gray-700">
-                {user?.createdAt
-                  ? formatDate(new Date(user.createdAt).toISOString())
-                  : "정보 없음"}
+                {user?.createdAt ? formatDate(user.createdAt) : "정보 없음"}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-auto block pt-8 md:hidden">
+      <div className="block pt-8 md:hidden">
         <div className="space-y-4">
           <Link href="/my-page/edit" className="block">
             <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-accent-300 to-accent-500 p-5 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">

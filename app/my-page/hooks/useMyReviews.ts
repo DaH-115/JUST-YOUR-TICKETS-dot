@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
 interface UseMyReviewsOptions {
   uid: string;
@@ -16,7 +17,7 @@ export default function useMyReviews({
   page,
   pageSize = 10,
 }: UseMyReviewsOptions) {
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState<ReviewDoc[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

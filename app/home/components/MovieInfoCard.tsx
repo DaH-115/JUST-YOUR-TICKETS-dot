@@ -20,7 +20,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   return (
     // 영화 정보 카드 전체 섹션
     <>
-      <section className="mx-auto w-full overflow-hidden break-keep rounded-2xl bg-white p-6">
+      <section className="w-full overflow-hidden break-keep p-6 lg:rounded-2xl lg:bg-white">
         {/* 헤더: 영화 제목, 상세정보 아이콘, 원제목, 개봉년도, 등급 */}
         <header className="pb-2">
           <div className="flex items-center justify-between">

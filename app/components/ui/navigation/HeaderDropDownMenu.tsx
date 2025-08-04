@@ -19,14 +19,14 @@ export default function HeaderDropDownMenu({
 }: HeaderDropDownMenuProps) {
   return (
     <Menu as="div" className="relative">
-      <MenuButton className="flex items-center gap-3 transition-opacity hover:opacity-80">
+      <MenuButton className="flex items-center gap-3">
         <ProfileAvatar
           s3photoKey={userPhotoURL || undefined}
           userDisplayName={userDisplayName || "사용자"}
           size={32}
           isPublic
         />
-        <span className="ml-2 text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-white transition-opacity hover:opacity-80">
           {userDisplayName ? userDisplayName : "사용자"} 님
         </span>
         <IoIosArrowDown

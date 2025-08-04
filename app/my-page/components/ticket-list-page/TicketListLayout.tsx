@@ -6,40 +6,30 @@ import ReviewTicket from "app/components/review/ReviewTicket";
 import SearchSection from "app/components/search/SearchSection";
 import Loading from "app/loading";
 import EmptyState from "app/my-page/components/EmptyState";
-import MyTicketHeader from "app/my-page/components/MyTicketPageHeader";
+import MyTicketHeader from "app/my-page/components/ticket-list-page/MyTicketHeader";
 import { buildQueryUrl } from "app/my-page/utils/buildQueryUrl";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 import { useAppSelector } from "store/redux-toolkit/hooks";
 import { selectUser } from "store/redux-toolkit/slice/userSlice";
 import Link from "next/link";
 
-interface FetchReviewsHook {
-  reviews: ReviewDoc[];
-  totalPages: number;
-  loading: boolean;
-  error: string | null;
-  removeReview?: (reviewId: string) => void;
-  updateReviewLikeCount?: (reviewId: string, newLikeCount: number) => void;
-}
-
-interface FetchReviewsArgs {
-  uid: string;
-  search: string;
-  page: number;
-  pageSize: number;
-}
-
 interface TicketListLayoutProps {
   header: {
     title: string;
     content: string;
   };
-  useFetchReviews: (args: FetchReviewsArgs) => FetchReviewsHook;
+  reviews: ReviewDoc[];
+  totalPages: number;
+  loading: boolean;
+  error: string | null;
 }
 
 export default function TicketListLayout({
   header,
-  useFetchReviews,
+  reviews,
+  totalPages,
+  loading,
+  error,
 }: TicketListLayoutProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -47,15 +37,6 @@ export default function TicketListLayout({
   const currentPage = parseInt(params.get("page") || "1", 10);
   const searchTerm = params.get("search") || "";
   const user = useAppSelector(selectUser);
-
-  const fetchResult = useFetchReviews({
-    uid: user?.uid || "",
-    search: searchTerm,
-    page: currentPage,
-    pageSize: 10,
-  });
-
-  const { reviews, totalPages, loading, error } = fetchResult;
 
   const searchHandler = (term: string) => {
     const url = buildQueryUrl({

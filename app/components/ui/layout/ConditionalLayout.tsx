@@ -19,20 +19,20 @@ export default function ConditionalLayout({
   if (isAuthPage) {
     // 로그인/회원가입 페이지: 전용 헤더 사용, 푸터는 유지, 패딩 없이
     return (
-      <>
+      <div className="flex min-h-screen flex-col">
         <LoginHeader />
         <main className="flex-1">{children}</main>
         <div id="modal-root" />
         <div id="alert-root" />
         <Footer />
         <ScrollToTopButton />
-      </>
+      </div>
     );
   }
 
   // 일반 페이지: 헤더/푸터 포함, 상단 패딩 적용
   return (
-    <div className="pt-12 md:pt-18">
+    <div className="flex min-h-screen flex-col pt-12 md:pt-18">
       <Header />
       <main className="flex-1">{children}</main>
       <div id="modal-root" />
