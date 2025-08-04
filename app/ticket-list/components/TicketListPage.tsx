@@ -26,9 +26,6 @@ export default function TicketListPage({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // ☑️ TEST: 원본 리뷰 데이터 출력
-  console.log("initialReviews: 원본 리뷰 데이터", initialReviews);
-
   // 상태: 리스트, 페이지, 검색
   const [reviews, setReviews] = useState<ReviewDoc[]>(initialReviews);
   const [page, setPage] = useState(initialPage);
@@ -84,10 +81,14 @@ export default function TicketListPage({
     <main className="flex flex-col p-6">
       {/* 헤더 */}
       <header className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-white">
-          All Ticket List
-        </h1>
-        <span className="ml-2 font-bold text-accent-300">{reviews.length}</span>
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            All Ticket List
+          </h1>
+          <span className="ml-2 font-bold text-accent-300">
+            {reviews.length}
+          </span>
+        </div>
         <p className="text-sm text-gray-300">
           모든 사용자들의 리뷰 티켓을 확인해보세요
         </p>

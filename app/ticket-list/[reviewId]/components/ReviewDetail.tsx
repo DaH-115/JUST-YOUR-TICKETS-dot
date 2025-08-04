@@ -49,18 +49,25 @@ export default function ReviewDetail({ review, reviewId }: ReviewDetailProps) {
     try {
       const authHeaders = await getAuthHeaders();
 
-      const response = await fetch(`/api/reviews/${reviewId}/like`, {
+      const requestOptions: RequestInit = {
         method: isLiked ? "DELETE" : "POST",
         headers: {
           "Content-Type": "application/json",
           ...authHeaders,
         },
-        body: isLiked
-          ? undefined
-          : JSON.stringify({
-              movieTitle: content.movieTitle,
-            }),
-      });
+      };
+
+      // DELETE 요청이 아닐 때만 body 추가
+      if (!isLiked) {
+        requestOptions.body = JSON.stringify({
+          movieTitle: content.movieTitle,
+        });
+      }
+
+      const response = await fetch(
+        `/api/reviews/${reviewId}/like`,
+        requestOptions,
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -73,7 +80,7 @@ export default function ReviewDetail({ review, reviewId }: ReviewDetailProps) {
       }
     } catch (error) {
       console.error("좋아요 토글 실패:", error);
-      showSuccessHandler(
+      showErrorHandler(
         "오류",
         error instanceof Error
           ? error.message
@@ -82,7 +89,7 @@ export default function ReviewDetail({ review, reviewId }: ReviewDetailProps) {
     } finally {
       setIsLikeLoading(false);
     }
-  }, [reviewId, isLiked, content.movieTitle, showSuccessHandler]);
+  }, [reviewId, isLiked, content.movieTitle, showErrorHandler]);
 
   // 리뷰 수정 핸들러
   const editHandler = useCallback(() => {

@@ -1,4 +1,4 @@
-import TicketSwiper from "app/components/swiper/SwiperList";
+import SwiperList from "app/components/swiper/SwiperList";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
 export default function SimilarMovieList({
@@ -14,7 +14,7 @@ export default function SimilarMovieList({
       <p className="pb-2 text-sm text-gray-300">이런 영화는 어떠세요</p>
       {/* 비슷한 영화 목록 */}
       {movieList.length > 0 ? (
-        <TicketSwiper movieList={movieList} />
+        <SwiperList movieList={movieList} />
       ) : (
         <div className="w-full text-gray-400">비슷한 영화가 없습니다</div>
       )}

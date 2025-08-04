@@ -12,11 +12,16 @@ import { Fragment, ReactNode } from "react";
 interface AlertProps {
   onConfirm: () => void;
   children: ReactNode;
+  show?: boolean; // 모달 표시 여부를 외부에서 제어할 수 있도록 추가
 }
 
-export default function Alert({ onConfirm, children }: AlertProps) {
+export default function Alert({
+  onConfirm,
+  children,
+  show = true,
+}: AlertProps) {
   return (
-    <Transition appear show={true} as={Fragment}>
+    <Transition appear show={show} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-50"

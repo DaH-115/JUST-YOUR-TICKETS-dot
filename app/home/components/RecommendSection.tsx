@@ -34,7 +34,7 @@ export default function RecommendSection({
         <Background imageUrl={movie.backdrop_path} isFixed={true} />
       )}
       <div className="relative z-10 flex min-h-screen items-center">
-        <div className="mx-auto w-full max-w-6xl">
+        <div className="mx-auto w-full">
           <div className="pb-10 md:pb-8">
             <div
               className={`mb-2 flex items-center justify-center space-x-3 transition-all duration-500 ease-out md:justify-start ${
@@ -59,18 +59,40 @@ export default function RecommendSection({
           </div>
 
           <div
-            className={`mx-auto flex w-full max-w-4xl flex-col items-center gap-4 transition-transform duration-300 ease-in-out md:flex-row md:items-start md:gap-6 lg:hover:scale-105 ${
+            className={`mx-auto transition-transform duration-300 ease-in-out lg:hover:scale-105 ${
               isHydrated
                 ? "translate-y-0 opacity-100"
                 : "translate-y-8 opacity-0"
             }`}
           >
-            <div className="aspect-[2/3] w-60 overflow-hidden rounded-2xl md:w-72 lg:w-80">
-              <MoviePoster posterPath={movie.poster_path} title={movieTitle} />
+            {/* 모바일/태블릿: 세로 배치 */}
+            <div className="mx-auto max-w-lg lg:hidden">
+              {/* 영화 포스터 */}
+              <div className="aspect-[2/2.5] overflow-hidden rounded-t-2xl">
+                <MoviePoster
+                  posterPath={movie.poster_path}
+                  title={movieTitle}
+                />
+              </div>
+
+              {/* 영화 정보 카드 */}
+              <div className="rounded-b-2xl border bg-white">
+                <MovieInfoCard movie={movie} />
+              </div>
             </div>
 
-            <div className="flex-1">
-              <MovieInfoCard movie={movie} />
+            {/* 데스크톱: 가로 배치 */}
+            <div className="mx-auto hidden max-w-4xl md:flex md:flex-row md:items-stretch md:gap-6">
+              <div className="aspect-[2/3] w-60 overflow-hidden rounded-2xl md:w-72 lg:w-80">
+                <MoviePoster
+                  posterPath={movie.poster_path}
+                  title={movieTitle}
+                />
+              </div>
+
+              <div className="flex-1">
+                <MovieInfoCard movie={movie} />
+              </div>
             </div>
           </div>
 

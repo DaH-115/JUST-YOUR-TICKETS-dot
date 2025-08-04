@@ -1,7 +1,7 @@
 // 프로필 아바타(이미지) 업로드 관련 비즈니스 로직을 담당하는 커스텀 훅
 // - 파일 선택, 확장자/용량/타입 검증, 프리뷰, 에러 상태, 입력 리셋 등 UI와 분리된 로직을 제공
 // - UI 컴포넌트는 이 훅에서 반환하는 상태와 함수만 사용하면 됨
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, ChangeEvent, useEffect } from "react";
 import { validateFileExtension } from "app/utils/file/validateFileExtension";
 import { validateFileType } from "app/utils/file/validateFileType";
 import { validateFileSize } from "app/utils/file/validateFileSize";
@@ -27,6 +27,22 @@ export function useAvatarUpload(callbacks: AvatarUploadCallbacks = {}) {
   // 파일 입력(input) DOM 참조
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  // URL cleanup 함수
+  const cleanupUrl = (url: string | null) => {
+    if (url && url.startsWith("blob:")) {
+      URL.revokeObjectURL(url);
+    }
+  };
+
+  // 컴포넌트 언마운트 시 URL 해제
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        cleanupUrl(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
   /**
    * 편집 모드 토글 핸들러
    * - 편집 모드 진입/종료 시 상태 초기화
@@ -37,6 +53,10 @@ export function useAvatarUpload(callbacks: AvatarUploadCallbacks = {}) {
     setError(null);
     // 편집 종료 시 프리뷰/파일/입력값 초기화
     if (!nextIsEditing) {
+      // 기존 URL 해제
+      if (previewUrl) {
+        cleanupUrl(previewUrl);
+      }
       setPreviewUrl(null);
       setFile(null);
       if (inputRef.current) inputRef.current.value = "";
@@ -56,6 +76,10 @@ export function useAvatarUpload(callbacks: AvatarUploadCallbacks = {}) {
     const file = e.target.files?.[0] ?? null;
     setError(null);
     if (!file) {
+      // 기존 URL 해제
+      if (previewUrl) {
+        cleanupUrl(previewUrl);
+      }
       setFile(null);
       setPreviewUrl(null);
       callbacks.onFileSelect?.(null);
@@ -89,6 +113,10 @@ export function useAvatarUpload(callbacks: AvatarUploadCallbacks = {}) {
       return;
     }
     // 검증 통과 시 상태 업데이트
+    // 기존 URL 해제 후 새로운 URL 생성
+    if (previewUrl) {
+      cleanupUrl(previewUrl);
+    }
     setFile(file);
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);

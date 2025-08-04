@@ -6,6 +6,7 @@ interface UserAlertProps {
   description: string;
   onConfirm: () => void;
   onClose?: () => void;
+  show?: boolean; // 알림 표시 여부를 외부에서 제어할 수 있도록 추가
 }
 
 export default function UserAlert({
@@ -13,9 +14,10 @@ export default function UserAlert({
   description,
   onConfirm,
   onClose,
+  show = true, // 기본값은 true로 설정
 }: UserAlertProps) {
   return (
-    <AlertPortal onConfirm={onConfirm}>
+    <AlertPortal onConfirm={onConfirm} show={show}>
       <div className="animate-in fade-in-0 zoom-in-95 mx-4 w-full max-w-sm rounded-3xl bg-white p-4 shadow-2xl ring-1 ring-gray-200/50 backdrop-blur-sm duration-300">
         {/* Alert Header */}
         <div className="mb-4 text-center">

@@ -8,7 +8,7 @@ import SwiperButton from "app/components/swiper/SwiperButton";
 import SwiperItem from "app/components/swiper/SwiperItem";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 
-// TicketSwiper용 스켈레톤 컴포넌트
+// SwiperList용 스켈레톤 컴포넌트
 function SwiperListSkeleton() {
   const skeletonItems = Array.from({ length: 8 });
 

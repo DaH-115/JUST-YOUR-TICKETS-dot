@@ -32,9 +32,12 @@ export default function MovieDetailCard({
   } = movieDetails;
 
   const movieDate = formatMovieDate(release_date);
-  const convertedRuntime = convertRuntime(Number(runtime));
   const casts = movieCredits?.cast || [];
   const crews = movieCredits?.crew || [];
+
+  // 런타임 유효성 검사 및 변환
+  const isValidRuntime = runtime && typeof runtime === "number" && runtime > 0;
+  const convertedRuntime = isValidRuntime ? convertRuntime(runtime) : null;
 
   // 출연진, 감독 프로필 이미지 주소 생성 함수
   const profilePath = (profile_path: string | null) => {
@@ -173,7 +176,7 @@ export default function MovieDetailCard({
                   )}
                 </MetaInfoItem>
                 <MetaInfoItem label={"러닝 타임"}>
-                  {convertedRuntime && convertedRuntime !== "NaN분" ? (
+                  {convertedRuntime ? (
                     <p>{convertedRuntime}</p>
                   ) : (
                     <span className="text-gray-400">
