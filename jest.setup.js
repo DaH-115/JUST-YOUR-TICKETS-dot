@@ -190,10 +190,4 @@ jest.mock("store/context/auth/authContext", () => ({
   AuthProvider: ({ children }) => children,
 }));
 
-// Mock usePresignedUrl hook
-jest.mock("app/components/user/hooks/usePresignedUrl", () => ({
-  usePresignedUrl: () => ({
-    getPresignedUrl: jest.fn().mockResolvedValue("mock-presigned-url"),
-    isLoading: false,
-  }),
-}));
+// usePresignedUrl 훅 모킹 제거 - 실제 훅을 테스트에서 사용할 수 있도록 함

@@ -48,9 +48,15 @@ export default function ChangePassword() {
 
   // 새 비밀번호 변경 핸들러: 성공 시 입력값 리셋
   const handleChangePassword = async (data: NewPasswordForm) => {
-    await onChangePassword(data);
-    resetCurrentPassword(); // 현재 비밀번호 폼 리셋
-    resetNewPassword(); // 새 비밀번호 폼 리셋
+    try {
+      await onChangePassword(data);
+      // 성공 시에만 폼 리셋
+      resetCurrentPassword();
+      resetNewPassword();
+    } catch (error) {
+      // 에러 발생 시 폼은 그대로 유지하여 사용자가 수정할 수 있도록 함
+      console.error("비밀번호 변경 실패:", error);
+    }
   };
 
   return (
