@@ -10,8 +10,9 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { path: "/my-page", label: "MY PROFILE" },
-  { path: "/my-page/my-ticket-list", label: "MY TICKET LIST" },
-  { path: "/my-page/liked-ticket-list", label: "LIKED TICKET LIST" },
+  { path: "/my-page/my-ticket-list", label: "MY TICKETS" },
+  { path: "/my-page/liked-ticket-list", label: "LIKED TICKETS" },
+  { path: "/my-page/watchlist", label: "WATCHLIST" },
 ];
 
 export default function SideMenu() {
