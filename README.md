@@ -33,7 +33,8 @@ yarn test
 - 🏆 **등급 배지 시스템** - 사용자 활동 등급 표시
 - 🎬 **동영상 플레이어** - YouTube 트레일러 재생
 - 🎠 **캐러셀 UI** - Swiper 기반 반응형 영화 목록
-- 🧪 **테스트 환경** - Jest + MSW 기반 완전한 테스트 커버리지
+- 📚 **보고 싶은 영화(Watchlist)** - 보고 싶은 영화 저장 및 관리
+- 🧪 **테스트 환경** - Jest Mock 기반 포괄적인 테스트 환경
 
 ## 🛠 기술 스택
 
@@ -58,7 +59,7 @@ yarn test
 ### Testing & Development
 
 - **Jest + React Testing Library** - 테스트 프레임워크
-- **MSW** - API 모킹
+- **Jest Mock** - 모듈 및 API 모킹
 - **ESLint + Prettier** - 코드 품질 관리
 
 ## 🌟 주요 특징
@@ -78,9 +79,9 @@ yarn test
 
 ### 🧪 테스트 환경
 
-- **Jest + MSW** - 완전한 테스트 커버리지
-- **React Testing Library** - 컴포넌트 테스트
-- **API 모킹** - 실제 API 호출 없이 테스트 가능
+- **Jest + React Testing Library** - 포괄적인 테스트 환경
+- **Jest Mock** - 모듈 및 API 모킹
+- **Firebase 모킹** - Firebase 서비스 모킹
 
 ## 🚀 RESTful API
 
@@ -116,6 +117,12 @@ yarn test
 - `PUT /api/comments/[reviewId]/[commentId]` - 댓글 수정
 - `DELETE /api/comments/[reviewId]/[commentId]` - 댓글 삭제
 
+### 와치리스트 API
+
+- `GET /api/watchlist?uid=[uid]` - 사용자의 보고 싶은 영화 목록 조회
+- `POST /api/watchlist` - 영화를 보고 싶은 영화 목록에 추가
+- `DELETE /api/watchlist` - 보고 싶은 영화 목록에서 영화 제거
+
 ### 기타 API
 
 - `GET /api/s3`, `POST /api/s3` - AWS S3 파일 업로드
@@ -147,9 +154,16 @@ yarn test
 
 ## 📝 버전 히스토리
 
-### v2.4.0 (2025-07-09)
+### v2.4.0 (2025-08-27)
 
-- **테스트 환경 구축**: Jest + MSW 기반 완전한 테스트 커버리지
+- **와치리스트 시스템**: 보고 싶은 영화 저장 및 관리 기능 추가
+- **영화 북마크**: 영화 상세 페이지에서 와치리스트 추가/제거
+- **개인화된 영화 관리**: 사용자별 보고 싶은 영화 목록 관리
+- **Redux 상태 관리**: 와치리스트 전역 상태 관리 및 실시간 동기화
+
+### v2.3.0 (2025-07-09)
+
+- **테스트 환경 구축**: Jest Mock 기반 포괄적인 테스트 환경
 - **Swiper 캐러셀**: 반응형 영화 목록 UI 개선
 - **이미지 최적화**: Plaiceholder 기반 플레이스홀더 시스템
 - **Redux Persist**: 상태 지속성으로 사용자 경험 개선
