@@ -13,7 +13,7 @@ export default async function Page() {
     await Promise.all([
       fetchNowPlayingMovies(),
       fetchTrendingMovies(),
-      fetchReviewsPaginated({ page: 1, pageSize: 10 }),
+      fetchReviewsPaginated({ page: 1, pageSize: 12 }),
     ]);
 
   if (!nowPlayingMovies?.length) {

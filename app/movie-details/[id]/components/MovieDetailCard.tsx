@@ -1,4 +1,3 @@
-import GenreList from "app/components/movie/GenreList";
 import MovieCertification from "app/components/movie/MovieCertification";
 import MoviePoster from "app/components/movie/MoviePoster";
 import WriteButton from "app/components/ui/buttons/WriteButton";
@@ -9,6 +8,7 @@ import { MovieCredits } from "lib/movies/fetchMovieCredits";
 import { MovieDetails } from "lib/movies/fetchMovieDetails";
 import ProfileAvatar from "app/components/user/ProfileAvatar";
 import { FaStar } from "react-icons/fa";
+import AddWatchlistButton from "app/components/movie/AddWatchlistButton";
 
 interface MovieDetailCardProps {
   movieDetails: MovieDetails;
@@ -60,30 +60,40 @@ export default function MovieDetailCard({
           <article className="shadow-lg">
             <div className="rounded-2xl bg-white px-8 py-6">
               {/* 영화 정보 & 제목 */}
-              <div className="mb-2">
-                <h1 className="sr-only">MOVIE DETAILS</h1>
-                <div className="flex items-center">
-                  <h2 className="mr-3 break-keep text-3xl font-bold">
-                    {title}
-                  </h2>
-                  {certification && (
-                    <MovieCertification
-                      certification={certification}
-                      showLabel={true}
-                    />
-                  )}
-                </div>
-                <div className="flex items-center">
-                  <p className="text-gray-600">
-                    {original_title}(
-                    {release_date ? release_date.slice(0, 4) : "개봉일 미정"})
-                  </p>
-                </div>
+              <h1 className="sr-only">MOVIE DETAILS</h1>
+              <div className="flex items-center">
+                <h2 className="mr-3 break-keep text-3xl font-bold">{title}</h2>
+                {certification && (
+                  <MovieCertification
+                    certification={certification}
+                    showLabel={true}
+                  />
+                )}
               </div>
+              <div className="flex items-center">
+                <p className="text-gray-600">
+                  {original_title}(
+                  {release_date ? release_date.slice(0, 4) : "개봉일 미정"})
+                </p>
+              </div>
+
               {/* 장르 */}
-              <div className="border-b-4 border-dotted">
-                <GenreList genres={genres.map((genre) => genre.name)} />
-              </div>
+              <ul className="flex w-full items-center overflow-x-scroll pt-4 scrollbar-hide">
+                {genres
+                  .map((genre) => genre.name)
+                  .map((genre: string, idx: number) => (
+                    <li key={idx} className="flex items-center">
+                      <p className="text-nowrap text-sm">
+                        {genre}
+                        {/* 마지막 아이템이 아니면 점 표시 */}
+                        {idx < genres.length - 1 && (
+                          <span className="mx-2">·</span>
+                        )}
+                      </p>
+                    </li>
+                  ))}
+              </ul>
+
               {/* 평점 */}
               <div className="py-4">
                 <div className="flex items-center">
@@ -93,9 +103,10 @@ export default function MovieDetailCard({
                   </p>
                 </div>
               </div>
+
               {/* 줄거리 */}
               {overview && (
-                <div className="mb-6 px-2">
+                <div className="mb-6">
                   <p className="break-keep leading-relaxed text-gray-800">
                     {overview}
                   </p>
@@ -167,7 +178,7 @@ export default function MovieDetailCard({
                 )}
               </div>
               {/* 기타 정보 */}
-              <div className="flex w-full items-center justify-center border-t-4 border-dotted pb-4 pt-2">
+              <div className="flex w-full items-center justify-center py-4">
                 <MetaInfoItem label={"개봉일"}>
                   {movieDate ? (
                     <p>{movieDate}</p>
@@ -186,7 +197,7 @@ export default function MovieDetailCard({
                 </MetaInfoItem>
               </div>
               {/* 제작사 */}
-              <div className="border-t-4 border-dotted pt-4">
+              <div className="py-4">
                 <h3 className="mb-3 text-xs font-bold">제작</h3>
                 <ul className="flex flex-wrap">
                   {movieDetails.production_companies.map(
@@ -202,12 +213,13 @@ export default function MovieDetailCard({
                   )}
                 </ul>
               </div>
+              {/* 리뷰 작성 & 워치리스트 버튼 */}
+              <div className="flex items-center gap-3 border-t-4 border-dotted pt-4">
+                <WriteButton movieId={movieDetails.id} />
+                <AddWatchlistButton movieId={movieDetails.id} />
+              </div>
             </div>
           </article>
-          {/* 리뷰 작성 버튼 */}
-          <div className="px-1 py-4">
-            <WriteButton movieId={movieDetails.id} />
-          </div>
         </div>
       </div>
     </main>

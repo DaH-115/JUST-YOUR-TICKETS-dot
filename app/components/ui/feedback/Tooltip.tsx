@@ -71,7 +71,9 @@ export default function Tooltip({ children }: { children: ReactNode }) {
   return (
     <>
       <div ref={triggerRef} className="pointer-events-none absolute inset-0" />
-      {mounted && createPortal(tooltipContent, document.body)}
+      {mounted &&
+        typeof document !== "undefined" &&
+        createPortal(tooltipContent, document.body)}
     </>
   );
 }

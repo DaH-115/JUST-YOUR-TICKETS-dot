@@ -21,6 +21,13 @@
       "Noto Color Emoji";
     font-display: swap;
   }
+
+  body {
+    /* 기본 여백 제거 및 가로 스크롤 방지 */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
 }
 
 @layer utilities {

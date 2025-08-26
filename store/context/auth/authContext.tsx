@@ -13,6 +13,7 @@ import { useAppDispatch } from "store/redux-toolkit/hooks";
 import {
   clearUser,
   fetchUserProfile,
+  setUser,
 } from "store/redux-toolkit/slice/userSlice";
 import { useRouter } from "next/navigation";
 import { useAlert } from "store/context/alertContext";
@@ -57,9 +58,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const unsubscribe = onAuthStateChanged(isAuth, (user) => {
       if (user) {
-        // 완전한 프로필 정보 가져오기 (Firestore 데이터 포함)
-        dispatch(fetchUserProfile(user.uid));
+        // Firebase Auth의 기본 정보로 즉시 사용자 정보 설정
+        const basicUserInfo = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoKey: null, // 기본값
+          biography: null, // 기본값
+          provider: user.providerData[0]?.providerId || null,
+          activityLevel: "NEWBIE", // 기본값
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          myTicketsCount: 0, // 기본값
+          likedTicketsCount: 0, // 기본값
+        };
+
+        // 기본 정보로 즉시 설정
+        dispatch(setUser(basicUserInfo));
         setAuthState({ isAuthenticated: true, isLoading: false });
+
+        // 백그라운드에서 완전한 프로필 정보 가져오기
+        dispatch(fetchUserProfile(user.uid));
       } else {
         dispatch(clearUser());
         setAuthState({ isAuthenticated: false, isLoading: false });

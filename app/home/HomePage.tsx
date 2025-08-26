@@ -33,7 +33,7 @@ export default function HomePage({
     <main className="px-4 md:px-6 lg:px-8">
       <MovieSection
         title="Now Playing"
-        description="지금 상영 중인 영화들을 확인하고 티켓을 예매하세요"
+        description="지금 상영 중인 영화들을 만나보세요"
         movieList={movieList}
         maxItems={10}
       />

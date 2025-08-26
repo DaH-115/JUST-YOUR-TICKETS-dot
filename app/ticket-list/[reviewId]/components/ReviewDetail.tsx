@@ -98,6 +98,8 @@ export default function ReviewDetail({ review, reviewId }: ReviewDetailProps) {
 
   // 리뷰 삭제 핸들러
   const deleteHandler = useCallback(async () => {
+    if (typeof window === "undefined") return;
+
     const confirmed = window.confirm("정말로 이 리뷰를 삭제하시겠습니까?");
     if (!confirmed) return;
 
@@ -133,7 +135,7 @@ export default function ReviewDetail({ review, reviewId }: ReviewDetailProps) {
   return (
     <main className="py-24">
       {/* 영화 포스터 */}
-      <div className="mx-auto aspect-[2/2.5] max-w-lg overflow-hidden rounded-t-2xl">
+      <div className="mx-auto aspect-[2/3] max-w-lg overflow-hidden rounded-t-2xl">
         <MoviePoster
           posterPath={content.moviePosterPath}
           title={content.movieTitle}

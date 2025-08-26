@@ -17,7 +17,7 @@ export default function ConditionalLayout({
   const isAuthPage = pathname === "/login" || pathname === "/sign-up";
 
   if (isAuthPage) {
-    // 로그인/회원가입 페이지: 전용 헤더 사용, 푸터는 유지, 패딩 없이
+    // 로그인/회원가입 페이지: 전용 헤더 사용
     return (
       <div className="flex min-h-screen flex-col">
         <LoginHeader />
@@ -30,9 +30,9 @@ export default function ConditionalLayout({
     );
   }
 
-  // 일반 페이지: 헤더/푸터 포함, 상단 패딩 적용
+  // 일반 페이지: 헤더/푸터 포함
   return (
-    <div className="flex min-h-screen flex-col pt-12 md:pt-18">
+    <div className="flex min-h-screen flex-col pt-18 md:pt-24">
       <Header />
       <main className="flex-1">{children}</main>
       <div id="modal-root" />

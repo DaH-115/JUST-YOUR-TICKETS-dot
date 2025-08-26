@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FaInfoCircle, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import AnimatedOverview from "app/components/movie/AnimatedOverview";
 import GenreList from "app/components/movie/GenreList";
 import MovieCertification from "app/components/movie/MovieCertification";
@@ -10,6 +10,7 @@ import WriteButton from "app/components/ui/buttons/WriteButton";
 import formatMovieDate from "app/utils/formatMovieDate";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
 import { useMovieDetails } from "store/context/movieDetailsContext";
+import { IoInformationCircle } from "react-icons/io5";
 
 export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   const { id, title, original_title, release_date, vote_average, overview } =
@@ -18,12 +19,11 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
   const { genres, uniqueDirectors } = useMovieDetails();
 
   return (
-    // 영화 정보 카드 전체 섹션
-    <>
-      <section className="w-full overflow-hidden break-keep p-6 lg:rounded-2xl lg:bg-white">
+    <section className="w-full overflow-hidden break-keep rounded-t-2xl border-t-4 border-dotted border-gray-300 bg-white">
+      <div className="p-6">
         {/* 헤더: 영화 제목, 상세정보 아이콘, 원제목, 개봉년도, 등급 */}
-        <header className="pb-2">
-          <div className="flex items-center justify-between">
+        <header>
+          <div className="flex justify-between">
             <h2 className="mb-2 text-3xl font-bold">{title}</h2>
             {/* 상세정보 아이콘 및 툴팁 */}
             <div className="relative">
@@ -31,9 +31,9 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
                 href={`/movie-details/${id}`}
                 aria-label={`${title}(${original_title}) 영화 상세정보 보기`}
                 role="button"
-                className="inline-block text-primary-700 transition-all duration-300 ease-in-out hover:scale-110 hover:text-accent-300 hover:drop-shadow-lg active:scale-95 active:text-accent-400"
+                className="inline-block transition-all duration-300 ease-in-out hover:scale-110 hover:text-accent-300"
               >
-                <FaInfoCircle className="text-lg" aria-hidden />
+                <IoInformationCircle className="text-2xl" aria-hidden />
               </Link>
               <Tooltip>
                 {title}({original_title}) 영화 상세정보 보기
@@ -41,24 +41,27 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <h2 className="text-gray-600">{`${original_title}(${release_date ? release_date.slice(0, 4) : "개봉일 미정"})`}</h2>
+            <h2 className="text-gray-500">{`${original_title}(${release_date ? release_date.slice(0, 4) : "개봉일 미정"})`}</h2>
             <MovieCertification certification={movie.certification ?? null} />
           </div>
         </header>
+
         {/* 장르 리스트 */}
-        <div className="border-b-4 border-dotted">
+        <section className="py-6">
           <GenreList genres={genres} />
-        </div>
+        </section>
+
         {/* 영화 개요 */}
         {overview && <AnimatedOverview overview={overview} />}
+
         {/* 개봉일, 감독, 평점 */}
-        <div className="flex p-4 pb-0">
-          <div className="flex-1 border-r-4 border-dotted">
-            <p className="pr-2 text-xs font-bold text-black">개봉일</p>
-            <p className="p-3 text-center text-sm">{releaseDate}</p>
+        <section className="flex p-4 pb-0">
+          <div className="flex-1">
+            <p className="mb-2 text-xs font-semibold text-black">개봉일</p>
+            <p className="p-3 text-center text-xs">{releaseDate}</p>
           </div>
-          <div className="flex-1 border-r-4 border-dotted">
-            <p className="px-2 text-xs font-bold text-black">감독</p>
+          <div className="flex-1">
+            <p className="mb-2 text-xs font-semibold text-black">감독</p>
             <ul className="p-3 text-center">
               {uniqueDirectors.length > 0 ? (
                 uniqueDirectors.map((director) => (
@@ -75,7 +78,7 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
             </ul>
           </div>
           <div className="flex-1">
-            <p className="px-2 text-xs font-bold text-black">평점</p>
+            <p className="mb-2 text-xs font-semibold text-black">평점</p>
             <div className="flex flex-1 items-center justify-center p-3">
               <FaStar className="mr-1 text-accent-300" size={24} />
               <div className="text-2xl font-bold">
@@ -83,12 +86,15 @@ export default function MovieInfoCard({ movie }: { movie: MovieList }) {
               </div>
             </div>
           </div>
+        </section>
+      </div>
+
+      {/* 리뷰 작성 버튼 */}
+      <section className="border-t-4 border-dotted p-4">
+        <div className="flex w-full items-center justify-center rounded-full bg-primary-500 text-white">
+          <WriteButton movieId={id} />
         </div>
       </section>
-      {/* 리뷰 작성 버튼 */}
-      <div className="mt-4">
-        <WriteButton movieId={id} />
-      </div>
-    </>
+    </section>
   );
 }

@@ -17,10 +17,22 @@ interface HeaderSideMenuProps {
   onClose: () => void;
 }
 
-const menuItems = [
-  { href: "/", label: "Home" },
-  { href: "/search", label: "Search" },
-  { href: "/ticket-list", label: "Ticket List" },
+interface MenuItem {
+  href: string;
+  label: string;
+}
+
+const menuItems: MenuItem[] = [
+  { href: "/", label: "HOME" },
+  { href: "/search", label: "SEARCH" },
+  { href: "/ticket-list", label: "TICKETS" },
+];
+
+const userMenuItems: MenuItem[] = [
+  { href: "/my-page", label: "MY PROFILE" },
+  { href: "/my-page/my-ticket-list", label: "MY TICKETS" },
+  { href: "/my-page/liked-ticket-list", label: "LIKED TICKETS" },
+  { href: "/my-page/watchlist", label: "WATCHLIST" },
 ];
 
 export default function HeaderSideMenu({
@@ -32,30 +44,27 @@ export default function HeaderSideMenu({
 }: HeaderSideMenuProps) {
   const user = useAppSelector(selectUser);
   const pathname = usePathname();
-  const [isMounted, setIsMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    setMounted(true);
   }, []);
 
   // 스크롤 방지
   useEffect(() => {
-    if (!isMounted) return;
-
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+    if (typeof document !== "undefined") {
+      if (isOpen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
+      return () => {
+        document.body.style.overflow = "";
+      };
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen, isMounted]);
+  }, [isOpen]);
 
-  // 서버에서는 렌더링하지 않음
-  if (!isMounted) {
-    return null;
-  }
+  if (!mounted) return null;
 
   return createPortal(
     <div
@@ -68,7 +77,7 @@ export default function HeaderSideMenu({
 
       {/* 메뉴 패널 */}
       <div
-        className={`fixed right-0 top-0 h-full w-full bg-black transition-transform duration-300 ease-out sm:w-80 ${
+        className={`fixed right-0 top-0 h-full w-full bg-black transition-transform duration-300 ease-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -143,33 +152,24 @@ export default function HeaderSideMenu({
                 My Menu
               </h3>
               <ul className="space-y-2">
-                <li>
-                  <Link
-                    href="/my-page"
-                    onClick={onClose}
-                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 hover:bg-white/10 hover:text-white"
-                  >
-                    My Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/my-page/my-ticket-list"
-                    onClick={onClose}
-                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 hover:bg-white/10 hover:text-white"
-                  >
-                    My Tickets
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/my-page/liked-ticket-list"
-                    onClick={onClose}
-                    className="block w-full rounded-full px-6 py-3 text-left text-base text-gray-300 hover:bg-white/10 hover:text-white"
-                  >
-                    Liked Reviews
-                  </Link>
-                </li>
+                {userMenuItems.map(({ href, label }) => {
+                  const isActive = pathname === href;
+                  return (
+                    <li key={href}>
+                      <Link
+                        href={href}
+                        onClick={onClose}
+                        className={`block w-full rounded-full px-6 py-3 text-left text-base ${
+                          isActive
+                            ? "bg-white/20 text-white"
+                            : "text-gray-300 hover:bg-white/10 hover:text-white"
+                        }`}
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}

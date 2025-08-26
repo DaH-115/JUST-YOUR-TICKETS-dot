@@ -13,22 +13,21 @@ export default function Background({
 
   return (
     <div
-      className={`${isFixed ? "fixed" : "absolute"} inset-0 -z-10 min-h-screen w-full transition-all duration-1000 ease-out`}
+      className={`${isFixed ? "fixed" : "absolute"} inset-0 -z-10 w-full transition-all duration-1000 ease-out`}
+      style={{ height: isFixed ? "100vh" : "100%" }}
     >
-      <div className="relative h-full min-h-[100vh] w-full overflow-hidden">
-        <Image
-          src={`https://image.tmdb.org/t/p/original/${imageUrl}`}
-          alt=""
-          role="presentation"
-          width={1920}
-          height={1080}
-          priority
-          quality={100}
-          placeholder="blur"
-          blurDataURL={blurImageUrl}
-          className="h-full w-full object-cover object-center"
-        />
-      </div>
+      <Image
+        src={`https://image.tmdb.org/t/p/original/${imageUrl}`}
+        alt=""
+        role="presentation"
+        width={1920}
+        height={1080}
+        priority
+        quality={100}
+        placeholder="blur"
+        blurDataURL={blurImageUrl}
+        className="h-full w-full object-cover object-center"
+      />
       {/* 기존 히어로 섹션과 동일한 그라데이션 오버레이 */}
       <div className="absolute inset-0 bg-black/60" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/80" />

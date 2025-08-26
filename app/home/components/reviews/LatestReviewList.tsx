@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import LatestReviewTicket from "app/home/components/reviews/LatestReviewTicket";
 import { ReviewDoc } from "lib/reviews/fetchReviewsPaginated";
 
@@ -14,11 +14,44 @@ export default function LatestReviewList({
   const [navigatingReviewId, setNavigatingReviewId] = useState<string | null>(
     null,
   );
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   const router = useRouter();
+
   const reviewsWithLike = reviews.map((review) => ({
     ...review,
     isLiked: false,
   }));
+
+  // IntersectionObserver 설정
+  useEffect(() => {
+    const currentSection = sectionRef.current;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // 컴포넌트가 화면에 20% 이상 보일 때 애니메이션 시작
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // 한 번 트리거되면 더 이상 관찰하지 않음
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        threshold: 0.2, // 20% 이상 보일 때 트리거
+        rootMargin: "0px 0px -50px 0px", // 하단에서 50px 전에 트리거
+      },
+    );
+
+    if (currentSection) {
+      observer.observe(currentSection);
+    }
+
+    return () => {
+      if (currentSection) {
+        observer.unobserve(currentSection);
+      }
+    };
+  }, []);
 
   const onReviewClickHandler = useCallback(
     (reviewId: string) => {
@@ -29,8 +62,13 @@ export default function LatestReviewList({
   );
 
   return (
-    <section className="py-8 md:py-16">
-      <div className="mb-4">
+    <section ref={sectionRef} className="py-8 md:py-16">
+      {/* 헤더 영역 애니메이션 */}
+      <div
+        className={`mb-4 transition-all duration-500 ease-out ${
+          isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+        }`}
+      >
         <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
           Latest Reviews
         </h2>
@@ -46,8 +84,15 @@ export default function LatestReviewList({
           </Link>
         </div>
       </div>
-      {/* 리뷰 티켓 목록 */}
-      <div className="mx-auto grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4 md:py-4 lg:grid-cols-3">
+
+      {/* 리뷰 티켓 목록 애니메이션 */}
+      <div
+        className={`mx-auto grid grid-cols-1 gap-4 transition-all duration-500 ease-out md:grid-cols-2 md:gap-4 md:py-4 lg:grid-cols-4 ${
+          isVisible
+            ? "translate-y-0 opacity-100 transition-delay-300"
+            : "translate-y-8 opacity-0"
+        }`}
+      >
         {reviewsWithLike.map((review) => (
           <LatestReviewTicket
             key={review.id}

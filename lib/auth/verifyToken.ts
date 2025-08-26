@@ -4,6 +4,7 @@ import { adminAuth } from "firebase-admin-config";
 export interface AuthResult {
   success: boolean;
   uid?: string;
+  email?: string;
   error?: string;
   statusCode?: number;
 }
@@ -51,6 +52,7 @@ export async function verifyAuthToken(req: NextRequest): Promise<AuthResult> {
     return {
       success: true,
       uid: decodedToken.uid,
+      email: decodedToken.email || undefined,
     };
   } catch (error) {
     console.error("토큰 검증 실패:", error);

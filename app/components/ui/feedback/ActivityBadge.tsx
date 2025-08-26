@@ -7,7 +7,6 @@ import {
 
 interface ActivityBadgeProps {
   activityLevel?: string; // "NEWBIE", "REGULAR", "ACTIVE", "EXPERT"
-  uid?: string; // 호환성을 위해 유지 (사용하지 않음)
   size?: "tiny" | "small" | "medium";
   className?: string;
 }

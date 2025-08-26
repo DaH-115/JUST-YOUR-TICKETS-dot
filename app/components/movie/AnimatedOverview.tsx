@@ -66,7 +66,7 @@ export default function AnimatedOverview({
   const collapsedHeight = `${maxLines * 1.5}rem`; // 3줄 = 4.5rem
 
   return (
-    <div className={`border-b-4 border-dotted px-4 py-6 ${className}`}>
+    <div className={`${className}`}>
       {/* 실제 표시되는 콘텐츠 */}
       <div className="relative">
         <div

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { isAuth } from "firebase-config";
+import { getAuthHeaders } from "app/utils/getIdToken/getAuthHeaders";
 
 // 사용자 정보 타입 정의
 export interface User {
@@ -35,109 +36,34 @@ const initialState: UserState = {
   error: null,
 };
 
-// 사용자 프로필 조회 API
+/**
+ * 사용자 프로필 데이터 조회
+ * @param uid - 사용자 ID
+ * @returns 최신 사용자 정보 또는 에러
+ */
 export const fetchUserProfile = createAsyncThunk<
-  User, // 성공시 반환 타입
-  string, // 매개변수 타입 (uid)
-  { rejectValue: string } // 에러 타입
+  User,
+  string,
+  { rejectValue: string }
 >("user/fetchUserProfile", async (uid, { rejectWithValue }) => {
   try {
-    const user = isAuth.currentUser;
-    if (!user) {
-      return rejectWithValue("로그인이 필요합니다.");
-    }
-
-    const idToken = await user.getIdToken();
+    const authHeaders = await getAuthHeaders();
     const response = await fetch(`/api/users/${uid}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${idToken}` },
+      headers: {
+        ...authHeaders,
+        "Content-Type": "application/json",
+      },
     });
-
     if (!response.ok) {
-      if (response.status === 404) {
-        // Firestore에 사용자 문서가 없으면 생성 요청 (최초 소셜 로그인 시)
-        const providerId = user.providerData[0]?.providerId.split(".")[0];
-
-        const setupResponse = await fetch("/api/auth/social-setup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${idToken}`,
-          },
-          body: JSON.stringify({ provider: providerId }),
-        });
-
-        if (!setupResponse.ok) {
-          throw new Error("사용자 프로필 생성에 실패했습니다.");
-        }
-        const setupData = await setupResponse.json();
-        return {
-          ...setupData.data, // uid, displayName, provider 등
-          email: user.email, // email은 Auth에서 가져옴
-        };
-      }
-
-      // 그 외의 오류는 이전처럼 폴백 처리
-      console.warn(
-        "API 호출 실패, Firebase Auth 정보로 폴백:",
-        response.status,
-      );
-      return {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoKey: null,
-        biography: null,
-        provider: null,
-        activityLevel: null,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        myTicketsCount: 0,
-        likedTicketsCount: 0,
-      };
+      throw new Error("사용자 프로필 조회에 실패했습니다.");
     }
 
-    const data = await response.json();
-
-    // Firebase Auth 정보와 Firestore 데이터를 하나로 통합
-    return {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoKey: data.photoKey,
-      biography: data.biography,
-      provider: data.provider,
-      activityLevel: data.activityLevel,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
-      myTicketsCount: data.myTicketsCount,
-      likedTicketsCount: data.likedTicketsCount,
-    };
-  } catch (error: unknown) {
-    // 네트워크 에러 등의 경우에도 Firebase Auth 정보로 폴백
-    const user = isAuth.currentUser;
-    if (user) {
-      console.warn(
-        "네트워크 에러, Firebase Auth 정보로 폴백:",
-        error instanceof Error ? error.message : "알 수 없는 오류",
-      );
-      return {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoKey: null,
-        biography: null,
-        provider: null,
-        activityLevel: null,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        myTicketsCount: 0,
-        likedTicketsCount: 0,
-      };
-    }
-
+    return await response.json();
+  } catch (error) {
     return rejectWithValue(
-      error instanceof Error ? error.message : "알 수 없는 오류",
+      error instanceof Error
+        ? error.message
+        : "사용자 프로필 조회에 실패했습니다.",
     );
   }
 });
@@ -247,7 +173,15 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
+        // 기존 Firebase Auth 정보는 유지하고 Firestore 데이터만 업데이트
+        if (state.user) {
+          state.user = {
+            ...state.user, // 기존 Firebase Auth 정보 유지
+            ...action.payload, // Firestore 데이터로 업데이트
+          };
+        } else {
+          state.user = action.payload;
+        }
         state.error = null;
       })
       .addCase(fetchUserProfile.rejected, (state, action) => {

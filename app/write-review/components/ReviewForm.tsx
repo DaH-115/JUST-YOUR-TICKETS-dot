@@ -71,17 +71,17 @@ export default function ReviewForm({
         newLevel={currentLevel || ""}
       />
       {movieData.backdrop_path && (
-        <Background imageUrl={movieData.backdrop_path} />
+        <Background imageUrl={movieData.backdrop_path} isFixed={true} />
       )}
       <main className="relative mb-16 mt-8 drop-shadow-lg lg:mb-20 lg:mt-16">
         {/* 티켓 컨테이너 */}
         <div className="mx-auto w-11/12 max-w-2xl">
           {/* 티켓 메인 부분 */}
-          <div className="relative rounded-3xl border-2 border-accent-300/30 bg-white p-8 shadow-2xl">
+          <div className="relative rounded-3xl border-2 bg-white p-8 shadow-2xl">
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(submitHandler)}>
                 {/* 티켓 헤더 */}
-                <div className="mb-8 border-b-2 border-dashed border-accent-300/50 pb-6">
+                <div className="mb-8 border-b-4 border-dotted pb-6">
                   <ReviewFormHeader isEditMode={onSubmitMode === "edit"} />
                 </div>
 
@@ -103,7 +103,7 @@ export default function ReviewForm({
                 {/* 작성 중 안내 메시지 */}
                 {isDirty && (
                   <div className="mb-4 rounded-lg">
-                    <div className="flex items-center">
+                    <div className="flex items-center justify-center">
                       <MdWarning className="text-yellow-500" size={20} />
                       <div className="ml-1">
                         <p className="text-sm text-gray-700">
@@ -135,7 +135,7 @@ export default function ReviewForm({
             </FormProvider>
 
             {/* 티켓 하단 정보 */}
-            <div className="mt-8 border-t-2 border-dashed border-accent-300/50 pt-6 text-center">
+            <div className="mt-8 border-t-4 border-dotted pt-6 text-center">
               <div className="space-y-1 font-mono text-xs text-gray-600">
                 <div>PERSONAL REVIEW</div>
                 <div>SHARE YOUR THOUGHTS</div>

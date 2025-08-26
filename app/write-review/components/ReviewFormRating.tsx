@@ -6,29 +6,37 @@ import {
 } from "@headlessui/react";
 import { useFormContext, Controller } from "react-hook-form";
 import { IoChevronDown } from "react-icons/io5";
-import { FaExclamationTriangle, FaStar } from "react-icons/fa";
+import { FaExclamationTriangle, FaStar, FaStarHalf } from "react-icons/fa";
 import { ReviewFormValues } from "app/write-review/types";
 
 const ratingOptions = [
-  { value: 1, label: "1점", stars: 1, description: "매우 나쁨" },
+  { value: 1, label: "1점", stars: 0.5, description: "매우 나쁨" },
   { value: 2, label: "2점", stars: 1, description: "나쁨" },
-  { value: 3, label: "3점", stars: 2, description: "별로" },
+  { value: 3, label: "3점", stars: 1.5, description: "별로" },
   { value: 4, label: "4점", stars: 2, description: "그저 그럼" },
-  { value: 5, label: "5점", stars: 3, description: "보통" },
+  { value: 5, label: "5점", stars: 2.5, description: "보통" },
   { value: 6, label: "6점", stars: 3, description: "괜찮음" },
-  { value: 7, label: "7점", stars: 4, description: "좋음" },
+  { value: 7, label: "7점", stars: 3.5, description: "좋음" },
   { value: 8, label: "8점", stars: 4, description: "매우 좋음" },
-  { value: 9, label: "9점", stars: 5, description: "훌륭함" },
+  { value: 9, label: "9점", stars: 4.5, description: "훌륭함" },
   { value: 10, label: "10점", stars: 5, description: "완벽함" },
 ];
 
-const Stars = ({ count }: { count: number }) => (
-  <div className="flex space-x-1">
-    {Array.from({ length: count }, (_, i) => (
-      <FaStar key={i} className="text-accent-400" size={14} />
-    ))}
-  </div>
-);
+const Stars = ({ count }: { count: number }) => {
+  const fullStars = Math.floor(count);
+  const hasHalfStar = count % 1 !== 0;
+
+  return (
+    <div className="flex">
+      {/* 꽉 찬 별들 */}
+      {Array.from({ length: fullStars }, (_, i) => (
+        <FaStar key={`full-${i}`} className="text-accent-400" size={14} />
+      ))}
+      {/* 반개 별 */}
+      {hasHalfStar && <FaStarHalf className="text-accent-400" size={14} />}
+    </div>
+  );
+};
 
 export default function ReviewFormRating() {
   const { control } = useFormContext<ReviewFormValues>();
@@ -62,11 +70,14 @@ export default function ReviewFormRating() {
                       {selected ? (
                         <>
                           <Stars count={selected.stars} />
-                          <span className="text-gray-800">
-                            {selected.label}
-                            {selected.description &&
-                              ` - ${selected.description}`}
-                          </span>
+                          <div className="space-x-2 text-gray-800">
+                            <span className="text-xs text-gray-700">
+                              {selected.label}
+                            </span>
+                            <span className="ml-2 text-xs text-gray-500">
+                              {selected.description && selected.description}
+                            </span>
+                          </div>
                         </>
                       ) : (
                         <span className="text-gray-400">
@@ -81,7 +92,7 @@ export default function ReviewFormRating() {
                   </div>
                 </ListboxButton>
 
-                <ListboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl border-2 border-gray-200 bg-white shadow-lg focus:outline-none">
+                <ListboxOptions className="absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded-xl border-2 border-gray-200 bg-white shadow-lg focus:outline-none">
                   {ratingOptions.map((option) => (
                     <ListboxOption
                       key={option.value}
@@ -89,10 +100,14 @@ export default function ReviewFormRating() {
                       className="flex cursor-pointer items-center space-x-3 px-4 py-3 transition-colors first:rounded-t-xl last:rounded-b-xl hover:bg-accent-50 data-[focus]:bg-accent-100 data-[selected]:bg-accent-50"
                     >
                       <Stars count={option.stars} />
-                      <span className="text-gray-800">
-                        {option.label}
-                        {option.description && ` - ${option.description}`}
-                      </span>
+                      <div className="space-x-2 text-gray-800">
+                        <span className="text-xs text-gray-700">
+                          {option.label}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {option.description && option.description}
+                        </span>
+                      </div>
                     </ListboxOption>
                   ))}
                 </ListboxOptions>

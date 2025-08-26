@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FaArrowRight } from "react-icons/fa";
 import { z } from "zod";
@@ -14,6 +14,8 @@ import { setRememberMe } from "app/utils/authPersistence";
 import { firebaseErrorHandler } from "app/utils/firebaseError";
 import { isAuth } from "firebase-config";
 import { useAlert } from "store/context/alertContext";
+import { useAppSelector } from "store/redux-toolkit/hooks";
+import { selectUser } from "store/redux-toolkit/slice/userSlice";
 
 const loginSchema = z.object({
   email: z
@@ -33,6 +35,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { showErrorHandler } = useAlert();
+  const user = useAppSelector(selectUser);
   const {
     register,
     watch,
@@ -43,6 +46,13 @@ export default function LoginPage() {
     mode: "onTouched",
   });
   const isRememberMe = watch("rememberMe");
+
+  // 이미 로그인된 사용자 처리
+  useEffect(() => {
+    if (user) {
+      router.replace("/");
+    }
+  }, [user, router]);
 
   const onSubmit: SubmitHandler<LoginInputs> = useCallback(
     async (data) => {
@@ -66,6 +76,9 @@ export default function LoginPage() {
     },
     [router, showErrorHandler],
   );
+
+  // 로딩 상태는 Redux store의 user 상태가 로딩 중일 때만 표시
+  // user가 null이면 로그인되지 않은 상태이므로 로그인 폼을 표시
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-accent-900 via-black to-accent-800 px-4 py-10 pt-32 md:pt-36 lg:pt-28">

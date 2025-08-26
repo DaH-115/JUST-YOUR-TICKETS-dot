@@ -8,6 +8,7 @@ import {
 } from "@headlessui/react";
 import debounce from "lodash/debounce";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, useMemo, useRef } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
@@ -22,31 +23,34 @@ export default function HeaderSearchBar({
   isSideMenuOpen,
   onSearchOpenChange,
 }: HeaderSearchBarProps) {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<MovieList[]>([]);
   const [visibleCount, setVisibleCount] = useState(5);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState<MovieList | null>(null);
   const searchBarRef = useRef<HTMLDivElement>(null);
 
   const iconClickHandler = useCallback(() => {
     setIsSearchOpen(true);
   }, []);
 
-  const handleMovieSelect = useCallback((movie: MovieList | null) => {
-    if (movie) {
-      // 영화 선택 시 해당 페이지로 이동
-      window.location.href = `/movie-details/${movie.id}`;
-    }
-  }, []);
-
   const resetSearch = useCallback(() => {
     setSearchQuery("");
     setResults([]);
     setVisibleCount(5);
-    setSelectedMovie(null);
     setIsSearchOpen(false);
   }, []);
+
+  const movieSelect = useCallback(
+    (movie: MovieList | null) => {
+      if (movie) {
+        // 영화 선택 시 해당 페이지로 이동
+        router.push(`/movie-details/${movie.id}`);
+        resetSearch();
+      }
+    },
+    [router, resetSearch],
+  );
 
   const debouncedSearch = useMemo(
     () =>
@@ -92,17 +96,19 @@ export default function HeaderSearchBar({
         resetSearch();
       }
     };
-    if (isSearchOpen) {
+    if (isSearchOpen && typeof document !== "undefined") {
       document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      if (typeof document !== "undefined") {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
     };
   }, [isSearchOpen, resetSearch]);
 
   return (
     <div className="ml-4 hidden lg:flex" ref={searchBarRef}>
-      <Combobox value={selectedMovie} onChange={handleMovieSelect}>
+      <Combobox value={null} onChange={movieSelect}>
         <div className="relative flex items-center justify-end">
           <div
             className={`relative flex items-center rounded-full border border-white/30 bg-white/10 transition-all duration-300 ease-in-out hover:border-white/50 hover:bg-white/20 ${

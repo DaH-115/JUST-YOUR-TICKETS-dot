@@ -1,28 +1,27 @@
 "use client";
 
-import { signOut } from "firebase/auth";
-import Link from "next/link";
+import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useEffect } from "react";
-import { FaEdit, FaArrowRight, FaSignOutAlt } from "react-icons/fa";
-import Loading from "app/loading";
-import ProfileAvatar from "app/components/user/ProfileAvatar";
-import UserGradeInfo from "app/my-page/components/UserGradeInfo";
-import { clearAuthPersistence } from "app/utils/authPersistence";
-import formatDate from "app/utils/formatDate";
+import Link from "next/link";
+import { FaEdit, FaSignOutAlt, FaArrowRight } from "react-icons/fa";
+import { useAppDispatch, useAppSelector } from "store/redux-toolkit/hooks";
+import {
+  clearUser,
+  selectUser,
+  selectUserStatus,
+} from "store/redux-toolkit/slice/userSlice";
+import { signOut } from "firebase/auth";
 import { isAuth } from "firebase-config";
 import {
   getActivityLevel,
   getActivityLevelInfo,
   getLoadingActivityLevel,
 } from "lib/utils/getActivityLevel";
-import { useAppSelector, useAppDispatch } from "store/redux-toolkit/hooks";
-import {
-  clearUser,
-  selectUser,
-  selectUserStatus,
-  fetchUserProfile,
-} from "store/redux-toolkit/slice/userSlice";
+import ProfileAvatar from "app/components/user/ProfileAvatar";
+import { clearAuthPersistence } from "app/utils/authPersistence";
+import UserGradeInfo from "app/my-page/components/UserGradeInfo";
+import WatchlistSection from "app/my-page/components/WatchlistSection";
+import formatDate from "app/utils/formatDate";
 
 export default function ProfileView() {
   const router = useRouter();
@@ -30,60 +29,44 @@ export default function ProfileView() {
   const user = useAppSelector(selectUser);
   const userStatus = useAppSelector(selectUserStatus);
 
-  useEffect(() => {
-    if (!user?.uid) return;
-
-    if (userStatus === "idle" || userStatus === "loading") {
-      const needsProfileData =
-        !user.biography ||
-        !user.activityLevel ||
-        !user.provider ||
-        user.myTicketsCount === undefined ||
-        user.likedTicketsCount === undefined;
-      if (needsProfileData) {
-        dispatch(fetchUserProfile(user.uid));
-      }
-    }
-  }, [
-    dispatch,
-    user?.uid,
-    userStatus,
-    user?.biography,
-    user?.activityLevel,
-    user?.provider,
-    user?.myTicketsCount,
-    user?.likedTicketsCount,
-  ]);
-
+  // 사용자 활동 레벨 계산 (메모이제이션)
   const activityLevel = useMemo(() => {
+    // 로딩 중일 때는 로딩 상태의 활동 레벨 반환
     if (userStatus === "loading") {
       return getLoadingActivityLevel();
     }
+
+    // 사용자에게 저장된 활동 레벨이 있으면 사용, 없으면 티켓 수로 계산
     if (user?.activityLevel) {
       return getActivityLevelInfo(user.activityLevel);
     }
     return getActivityLevel(user?.myTicketsCount || 0);
   }, [userStatus, user?.activityLevel, user?.myTicketsCount]);
 
+  // 로그아웃 처리 함수
   const logoutHandler = useCallback(async () => {
     try {
+      // Firebase에서 로그아웃
       await signOut(isAuth);
+      // 로컬 인증 정보 클리어
       clearAuthPersistence();
+      // Redux 상태에서 사용자 정보 제거
       dispatch(clearUser());
+      // 로그인 페이지로 리다이렉트
       router.replace("/login");
     } catch (error: unknown) {
       console.error("로그아웃 실패:", error);
-      window.alert("로그아웃 중 오류가 발생했습니다.");
+      if (typeof window !== "undefined") {
+        window.alert("로그아웃 중 오류가 발생했습니다.");
+      }
     }
   }, [dispatch, router]);
 
-  if (userStatus === "loading") {
-    return <Loading />;
-  }
-
   return (
     <main className="flex w-full flex-col pl-0 md:w-3/4 md:pl-4">
-      <div className="flex flex-col items-stretch overflow-hidden rounded-xl bg-white shadow-xl md:flex-row">
+      {/* 메인 프로필 카드 */}
+      <section className="flex flex-col items-stretch overflow-hidden rounded-xl bg-white shadow-xl md:flex-row">
+        {/* 프로필 아바타 섹션 */}
         <div
           className={`flex flex-col items-center justify-center bg-gradient-to-b ${activityLevel.bgGradient} p-6 md:w-1/3`}
         >
@@ -94,8 +77,9 @@ export default function ProfileView() {
             showLoading={true}
           />
         </div>
-
+        {/* 프로필 정보 섹션 */}
         <div className="flex flex-1 flex-col p-6">
+          {/* 사용자 이름과 편집 버튼 */}
           <div className="border-b-4 border-dotted pb-3">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
@@ -103,6 +87,7 @@ export default function ProfileView() {
                   <h1 className="text-xl font-bold text-gray-800">
                     {user?.displayName || "사용자"}
                   </h1>
+                  {/* 사용자 등급 정보 */}
                   <UserGradeInfo
                     currentLevel={activityLevel}
                     currentReviewCount={user?.myTicketsCount || 0}
@@ -110,6 +95,7 @@ export default function ProfileView() {
                 </div>
                 <p className="text-sm text-gray-600">{user?.email}</p>
               </div>
+              {/* 프로필 편집 링크 */}
               <Link
                 href="/my-page/edit"
                 className="flex items-center gap-2 rounded-full bg-accent-300 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-500"
@@ -120,8 +106,10 @@ export default function ProfileView() {
             </div>
           </div>
 
+          {/* 티켓 통계 섹션 */}
           <div className="border-b-4 border-dotted py-3">
             <div className="flex gap-6">
+              {/* 내 티켓 수 */}
               <Link
                 href={`/my-page/my-ticket-list?uid=${user?.uid}`}
                 className="text-center transition-opacity hover:opacity-80"
@@ -132,6 +120,7 @@ export default function ProfileView() {
                 <div className="text-xs text-gray-600">내 티켓</div>
               </Link>
               <div className="border-l-4 border-dotted pl-6">
+                {/* 좋아요한 티켓 수 */}
                 <Link
                   href={`/my-page/liked-ticket-list?uid=${user?.uid}`}
                   className="text-center transition-opacity hover:opacity-80"
@@ -145,6 +134,7 @@ export default function ProfileView() {
             </div>
           </div>
 
+          {/* 자기소개 및 가입일 정보 */}
           <div className="flex-1 pt-3">
             <div className="mb-2 text-xs text-gray-800">자기 소개</div>
             <p className="text-sm">{user?.biography || "소개글이 없습니다."}</p>
@@ -156,10 +146,15 @@ export default function ProfileView() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
+      {/* 보고 싶은 영화 목록 섹션 */}
+      <WatchlistSection uid={user?.uid} />
+
+      {/* 모바일 전용 메뉴 섹션 */}
       <div className="block pt-8 md:hidden">
         <div className="space-y-4">
+          {/* 프로필 편집 카드 */}
           <Link href="/my-page/edit" className="block">
             <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-accent-300 to-accent-500 p-5 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
               <div className="flex items-center justify-between">
@@ -176,6 +171,8 @@ export default function ProfileView() {
               <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white opacity-10"></div>
             </div>
           </Link>
+
+          {/* 내 티켓 목록 카드 */}
           <Link
             href={`/my-page/my-ticket-list?uid=${user?.uid}`}
             className="block"
@@ -195,6 +192,8 @@ export default function ProfileView() {
               <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-gray-200 opacity-20"></div>
             </div>
           </Link>
+
+          {/* 좋아요한 티켓 카드 */}
           <Link
             href={`/my-page/liked-ticket-list?uid=${user?.uid}`}
             className="block"
@@ -215,6 +214,7 @@ export default function ProfileView() {
             </div>
           </Link>
 
+          {/* 로그아웃 버튼 */}
           <button
             onClick={logoutHandler}
             className="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-red-400 to-red-600 p-5 shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"

@@ -15,7 +15,9 @@ export default function MyTicketHeader({
         <h1 className="text-2xl font-bold tracking-tight text-white">
           {title}
         </h1>
-        <span className="ml-2 font-bold text-accent-300">{reviewsCount}</span>
+        <span className="ml-2 text-lg font-bold text-accent-300">
+          {reviewsCount}
+        </span>
       </div>
       <p className="text-sm text-gray-300">{content}</p>
     </header>

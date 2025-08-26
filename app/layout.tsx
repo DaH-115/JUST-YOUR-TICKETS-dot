@@ -11,22 +11,22 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   title: {
-    template: "%s | Just Your Tickets.",
-    default: "Just Your Tickets.",
+    template: "%s | Just Your Tickets",
+    default: "Just Your Tickets",
   },
   description: "Make a ticket for your own movie ticket.",
   keywords: ["movie", "ticket", "booking"],
   openGraph: {
-    title: "Just Your Tickets.",
+    title: "Just Your Tickets",
     description: "Make a ticket for your own movie ticket.",
     url: "/",
-    siteName: "Just Your Tickets.",
+    siteName: "Just Your Tickets",
     images: [
       {
         url: "/images/og-card.jpg",
         width: 1200,
         height: 630,
-        alt: "Just Your Tickets.",
+        alt: "Just Your Tickets",
       },
     ],
   },

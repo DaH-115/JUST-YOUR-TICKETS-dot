@@ -97,7 +97,7 @@ export default function TicketListPage({
       {loading ? (
         <Loading />
       ) : reviews.length > 0 ? (
-        <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+        <div className="grid grid-cols-3 gap-x-2 gap-y-6 sm:grid-cols-4 sm:gap-x-3 sm:gap-y-8 md:grid-cols-5 md:gap-x-3 md:gap-y-8 lg:grid-cols-6 lg:gap-x-4 lg:gap-y-10 xl:grid-cols-7 xl:gap-x-4 xl:gap-y-12 2xl:grid-cols-8 2xl:gap-x-5 2xl:gap-y-14">
           {reviews.map((review) => (
             <Link key={review.id} href={`/ticket-list/${review.id}`}>
               <ReviewTicket review={review} />

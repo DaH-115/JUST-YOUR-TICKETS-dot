@@ -32,15 +32,12 @@ export default function MovieCertification({
     certificationColors[certification] || certificationColors.default;
   const label = certificationLabels[certification];
 
-  if (!label) {
-    return null;
-  }
-
   return (
     <div
-      className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${colorClass} ${
+      className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold text-white ${colorClass} ${
         className || ""
       }`}
+      aria-label={`${label} 관람 등급`}
     >
       {showLabel && label}
     </div>

@@ -19,7 +19,7 @@ export default function LatestReviewTicket({
   const { user, review: content } = review;
 
   return (
-    <article className="flex transform-gpu items-stretch transition-transform duration-300 hover:scale-[1.02]">
+    <article className="flex transform-gpu items-stretch drop-shadow-lg transition-transform duration-300 hover:scale-[1.02] hover:drop-shadow-xl">
       {/* 영화 포스터 */}
       <div className="aspect-[2/3] h-full overflow-hidden rounded-xl">
         <MoviePoster
@@ -30,7 +30,7 @@ export default function LatestReviewTicket({
       {/* 리뷰 컨텐츠 */}
       <section
         onClick={() => onReviewClick(review.id)}
-        className="flex h-full flex-1 cursor-pointer flex-col overflow-hidden rounded-xl border bg-white px-3 py-2 hover:bg-gray-100 sm:px-4"
+        className="flex h-full flex-1 cursor-pointer flex-col overflow-hidden rounded-l-xl border-l-4 border-dotted border-gray-300 bg-white px-3 py-2 hover:bg-gray-100 sm:px-4"
       >
         {isNavigating && (
           <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-black bg-opacity-50">
@@ -38,7 +38,7 @@ export default function LatestReviewTicket({
           </div>
         )}
         {/* 프로필 이미지, 닉네임 */}
-        <div className="mb-2 flex items-center">
+        <div className="mb-4 flex items-center">
           <div className="flex min-w-0 flex-1 items-center gap-1.5">
             <ProfileAvatar
               s3photoKey={user?.photoKey || undefined}
@@ -56,9 +56,11 @@ export default function LatestReviewTicket({
         <div className="flex items-center gap-2 border-b-4 border-dotted pb-2">
           <div className="flex items-center">
             <FaStar className="text-accent-300" size={16} />
-            <span className="ml-1 text-sm font-bold">{content.rating}</span>
+            <span className="ml-1 font-bold">{content.rating}</span>
           </div>
-          <p className="w-full truncate font-semibold">{content.reviewTitle}</p>
+          <p className="w-full truncate font-semibold">
+            {`"${content.reviewTitle}"`}
+          </p>
         </div>
         {/* 영화 타이틀 & 좋아요 */}
         <div className="mt-auto flex items-center justify-between pt-2">

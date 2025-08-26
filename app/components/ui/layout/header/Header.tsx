@@ -77,7 +77,7 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-4 py-4 text-xs transition-all duration-300 ease-in-out ${
+      className={`fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between px-6 pb-4 pt-8 text-xs transition-all duration-300 ease-in-out ${
         // 스크롤 시 블러 효과 없이 블랙→투명 그라데이션만 적용
         isScrolled && !isSideMenuOpen
           ? "bg-gradient-to-b from-black via-black/80 to-transparent"
@@ -86,8 +86,7 @@ export default function Header() {
     >
       {/* LOGO */}
       <h1 className="mr-2 bg-gradient-to-r from-white via-accent-200 to-white bg-clip-text text-lg font-bold text-transparent sm:mr-4 sm:text-lg md:text-xl">
-        <span className="hidden sm:inline">Just Your Tickets</span>
-        <span className="sm:hidden">JYT</span>
+        <span>Just Your Tickets</span>
       </h1>
 
       {/* DESKTOP NAVIGATION - 중앙 배치 */}
@@ -151,7 +150,7 @@ export default function Header() {
           className="rounded-full p-2 text-white transition-colors duration-300 hover:bg-white/20 md:hidden"
           aria-label="메뉴 열기"
         >
-          <IoIosMenu size={20} aria-hidden />
+          <IoIosMenu size={24} aria-hidden />
         </button>
       </div>
 

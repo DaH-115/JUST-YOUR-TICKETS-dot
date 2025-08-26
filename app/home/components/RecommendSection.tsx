@@ -4,9 +4,9 @@ import MoviePoster from "app/components/movie/MoviePoster";
 import VideoPlayer from "app/components/movie/VideoPlayer";
 import Background from "app/components/ui/layout/Background";
 import MovieInfoCard from "app/home/components/MovieInfoCard";
-import getMovieTitle from "app/utils/getMovieTitle";
+import getMovieTitle from "app/utils/getEnrichMovieTitle";
 import { MovieList } from "lib/movies/fetchNowPlayingMovies";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface RecommendSectionProps {
   movie: MovieList;
@@ -17,28 +17,59 @@ export default function RecommendSection({
   movie,
   trailerKey,
 }: RecommendSectionProps) {
-  const [isHydrated, setIsHydrated] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const movieTitle = useMemo(
     () => getMovieTitle(movie.original_title, movie.title),
     [movie],
   );
 
-  useLayoutEffect(() => {
-    setIsHydrated(true);
+  useEffect(() => {
+    // ref 값을 변수에 저장
+    const currentSection = sectionRef.current;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // 컴포넌트가 화면에 20% 이상 보일 때 애니메이션 시작
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // 한 번 트리거되면 더 이상 관찰하지 않음
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        threshold: 0.2, // 20% 이상 보일 때 트리거
+        rootMargin: "0px 0px -50px 0px", // 하단에서 50px 전에 트리거
+      },
+    );
+
+    if (currentSection) {
+      observer.observe(currentSection);
+    }
+
+    return () => {
+      if (currentSection) {
+        observer.unobserve(currentSection);
+      }
+    };
   }, []);
 
   return (
-    <section className="relative min-h-screen overflow-hidden py-8">
+    <section
+      ref={sectionRef}
+      className="relative min-h-screen overflow-hidden py-8"
+    >
       {movie?.backdrop_path && (
         <Background imageUrl={movie.backdrop_path} isFixed={true} />
       )}
       <div className="relative z-10 flex min-h-screen items-center">
         <div className="mx-auto w-full">
-          <div className="pb-10 md:pb-8">
+          {/* 헤더 */}
+          <header className="pb-8">
             <div
               className={`mb-2 flex items-center justify-center space-x-3 transition-all duration-500 ease-out md:justify-start ${
-                isHydrated
+                isVisible
                   ? "translate-y-0 opacity-100"
                   : "translate-y-8 opacity-0"
               }`}
@@ -49,26 +80,26 @@ export default function RecommendSection({
             </div>
             <p
               className={`text-center text-base text-gray-300 transition-all duration-500 ease-out md:text-left ${
-                isHydrated
+                isVisible
                   ? "translate-y-0 opacity-100 transition-delay-300"
                   : "translate-y-8 opacity-0"
               }`}
             >
               오늘의 추천 영화
             </p>
-          </div>
+          </header>
 
+          {/* 영화 포스터 & 정보 카드 */}
           <div
-            className={`mx-auto transition-transform duration-300 ease-in-out lg:hover:scale-105 ${
-              isHydrated
+            className={`mx-auto transition-transform duration-300 ease-in-out ${
+              isVisible
                 ? "translate-y-0 opacity-100"
                 : "translate-y-8 opacity-0"
             }`}
           >
-            {/* 모바일/태블릿: 세로 배치 */}
-            <div className="mx-auto max-w-lg lg:hidden">
+            <div className="mx-auto max-w-md drop-shadow-xl transition-transform duration-300 ease-in-out hover:scale-105 hover:drop-shadow-2xl">
               {/* 영화 포스터 */}
-              <div className="aspect-[2/2.5] overflow-hidden rounded-t-2xl">
+              <div className="aspect-[2/3] overflow-hidden rounded-2xl">
                 <MoviePoster
                   posterPath={movie.poster_path}
                   title={movieTitle}
@@ -76,30 +107,14 @@ export default function RecommendSection({
               </div>
 
               {/* 영화 정보 카드 */}
-              <div className="rounded-b-2xl border bg-white">
-                <MovieInfoCard movie={movie} />
-              </div>
-            </div>
-
-            {/* 데스크톱: 가로 배치 */}
-            <div className="mx-auto hidden max-w-4xl md:flex md:flex-row md:items-stretch md:gap-6">
-              <div className="aspect-[2/3] w-60 overflow-hidden rounded-2xl md:w-72 lg:w-80">
-                <MoviePoster
-                  posterPath={movie.poster_path}
-                  title={movieTitle}
-                />
-              </div>
-
-              <div className="flex-1">
-                <MovieInfoCard movie={movie} />
-              </div>
+              <MovieInfoCard movie={movie} />
             </div>
           </div>
 
           {trailerKey && (
             <section
               className={`w-full pt-16 transition-all duration-500 ease-out ${
-                isHydrated
+                isVisible
                   ? "translate-y-0 opacity-100 transition-delay-700"
                   : "translate-y-8 opacity-0"
               }`}

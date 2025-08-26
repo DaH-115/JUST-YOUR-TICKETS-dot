@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import debounce from "lodash/debounce";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoSearchOutline } from "react-icons/io5";
 import * as z from "zod";
@@ -19,6 +19,12 @@ export default function SearchPage({
 }: {
   nowPlayingMovies: MovieList[];
 }) {
+  const resultsRef = useRef<HTMLElement>(null);
+  const nowPlayingRef = useRef<HTMLElement>(null);
+
+  const [isResultsVisible, setIsResultsVisible] = useState(false);
+  const [isNowPlayingVisible, setIsNowPlayingVisible] = useState(false);
+
   const router = useRouter();
   const params = useSearchParams();
   const pathname = usePathname();
@@ -28,6 +34,56 @@ export default function SearchPage({
     resolver: zodResolver(searchSchema),
     defaultValues: { searchQuery: searchTerm },
   });
+
+  // 검색 결과 섹션 Observer
+  useEffect(() => {
+    const currentResults = resultsRef.current;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsResultsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.2, rootMargin: "0px 0px -50px 0px" },
+    );
+
+    if (currentResults) {
+      observer.observe(currentResults);
+    }
+
+    return () => {
+      if (currentResults) {
+        observer.unobserve(currentResults);
+      }
+    };
+  }, []);
+
+  // Now Playing 섹션 Observer
+  useEffect(() => {
+    const currentNowPlaying = nowPlayingRef.current;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsNowPlayingVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.2, rootMargin: "0px 0px -50px 0px" },
+    );
+
+    if (currentNowPlaying) {
+      observer.observe(currentNowPlaying);
+    }
+
+    return () => {
+      if (currentNowPlaying) {
+        observer.unobserve(currentNowPlaying);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     reset({ searchQuery: searchTerm });
@@ -56,7 +112,8 @@ export default function SearchPage({
 
   return (
     <main className="p-6">
-      <div className="mb-8">
+      {/* 헤더 영역 */}
+      <div className="mb-8 transition-all duration-700 ease-out">
         <h1 className="mb-2 text-2xl font-bold tracking-tight text-white">
           Search
         </h1>
@@ -82,8 +139,14 @@ export default function SearchPage({
 
       {/* 결과 또는 Now Playing */}
       {searchTerm ? (
-        <section>
-          <div className="mb-6">
+        <section ref={resultsRef}>
+          <div
+            className={`mb-6 transition-all duration-700 ease-out ${
+              isResultsVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-12 opacity-0"
+            }`}
+          >
             <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
               Search Results
             </h2>
@@ -91,11 +154,25 @@ export default function SearchPage({
               {`"${searchTerm}" 검색 결과입니다`}
             </p>
           </div>
-          <SearchResultList searchQuery={searchTerm} />
+          <div
+            className={`transition-all duration-700 ease-out ${
+              isResultsVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-12 opacity-0"
+            }`}
+          >
+            <SearchResultList searchQuery={searchTerm} />
+          </div>
         </section>
       ) : (
-        <section>
-          <div className="mb-4">
+        <section ref={nowPlayingRef} className="mb-16">
+          <div
+            className={`mb-8 transition-all duration-700 ease-out ${
+              isNowPlayingVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-12 opacity-0"
+            }`}
+          >
             <h2 className="mb-2 text-2xl font-bold tracking-tight text-white">
               Now Playing
             </h2>
@@ -103,7 +180,13 @@ export default function SearchPage({
               지금 상영 중인 영화들을 확인하고 리뷰를 작성하세요
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-5 xl:grid-cols-6">
+          <div
+            className={`grid grid-cols-3 gap-x-2 gap-y-6 transition-all duration-700 ease-out sm:grid-cols-4 sm:gap-x-3 sm:gap-y-8 md:grid-cols-5 md:gap-x-3 md:gap-y-8 lg:grid-cols-8 lg:gap-x-4 lg:gap-y-10 xl:grid-cols-10 xl:gap-x-4 xl:gap-y-12 ${
+              isNowPlayingVisible
+                ? "translate-y-0 opacity-100"
+                : "translate-y-12 opacity-0"
+            }`}
+          >
             {nowPlayingMovies.map((movie, idx) => (
               <SwiperItem key={movie.id} movie={movie} idx={idx} />
             ))}
